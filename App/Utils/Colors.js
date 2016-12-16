@@ -25,7 +25,7 @@ export default  Colors = {
     transparent: 'transparent',//全透明色111
     DeepPink: '#FF1493',
     HotPink: '#FF69B4',
-    appUnifiedBackColor: '#FF69B4',//app统一背景色
+    appUnifiedBackColor: 'rgba(67, 187, 78, 1)',//app统一背景色
     // RandomColor: this.getRandomColor,
     /**
      * 随即色

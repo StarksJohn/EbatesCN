@@ -15,7 +15,7 @@ import {
 } from 'react-native'
 import GlobalStyles from '../../Global/GlobalStyles'
 import Colors from '../../Utils/Colors';
-// import FontAwesomeIconBts from './FontAwesomeIconBts';
+import FontAwesomeIconBts from './FontAwesomeIconBts';
 // import {showToast} from '../../comp/CommonComp';
 // import Log from '../../utils/Log'
 // import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
@@ -179,23 +179,50 @@ export class NavBarButton extends Component {
         super(props);
     }
 
-    // static getLeftButton(callBack) {
-    //     return<FontAwesomeIconBts
-    //         btStyle={{
-    //             width: 30,
-    //             height: 30,
-    //             /*justifyContent: 'center', alignItems: 'center', marginTop: 15,  */ marginLeft: 10 ,
-    //             //backgroundColor:Colors.green
-    //         }}
-    //         btSelectColor={Colors.blackTranslucent}
-    //         normalName={'angle-left'}
-    //         selectName={'angle-left'}
-    //         iconSize={30}
-    //         iconColor={Colors.white}
-    //         onPress={callBack}
-    //     />
-    //
-    // }
+    /**
+     * 返回按钮
+     * @param callBack
+     * @returns {XML}
+     */
+    static getBackButton(callBack) {
+        return<FontAwesomeIconBts
+            btStyle={{
+                width: 30,
+                height: 30,
+                /*justifyContent: 'center', alignItems: 'center', marginTop: 15,  */ marginLeft: 10 ,
+                //backgroundColor:Colors.green
+            }}
+            btSelectColor={Colors.blackTranslucent}
+            normalName={'angle-left'}
+            selectName={'angle-left'}
+            iconSize={30}
+            iconColor={Colors.white}
+            onPress={callBack}
+        />
+    }
+
+    /**
+     * 首页左上角按钮
+     * @param callBack
+     * @returns {XML}
+     */
+    static getBarsButton(callBack) {
+        return<FontAwesomeIconBts
+            btStyle={{
+                width: 36,
+                height: 36,
+                /*justifyContent: 'center', alignItems: 'center', marginTop: 15,  */ marginLeft: 15 ,
+                //backgroundColor:Colors.green
+            }}
+            btSelectColor={Colors.blackTranslucent}
+            normalName={'bars'}
+            selectName={'angle-left'}
+            iconSize={30}
+            iconColor={Colors.white}
+            onPress={callBack}
+        />
+    }
+
 
     render() {
         const {style, tintColor, margin, title, handler} = this.props;

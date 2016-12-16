@@ -8,7 +8,7 @@ import {StyleSheet, View, Text} from 'react-native';
 // import RecommendedFoodListContanier from '../containers/RecommendedFoodListContanier';
 // import CollectedListContainer from '../containers/CollectedListContainer';
 import Colors from '../Utils/Colors';
-import BaseNavigationBar from '../Comp/Base/BaseNavigationBar'
+import  BaseNavigationBar ,{NavBarButton} from '../Comp/Base/BaseNavigationBar'
 import *as GlobalConst from '../Global/GlobalConst'
 
 /**
@@ -53,18 +53,28 @@ class HomePage extends Component {
     //     }
     // };
 
+    /*
+    左上角点击
+     */
+    onBarsPress() {
+        ShowToast('onBarsPress');
+
+    }
+
     render() {
         const {HomePageReducer, navigator} = this.props;
 
         var statusBar = {//外部自定义statusBar的属性
-            backgroundColor: /*this.state.theme.themeColor*/Colors.appUnifiedBackColor,
+            backgroundColor: Colors.appUnifiedBackColor,
             networkActivityIndicatorVisible: true,
             barStyle: 'light-content'
         };
         let navigationBar =
             <BaseNavigationBar
+                navigator={navigator}
+                leftButton={NavBarButton.getBarsButton(()=>this.onBarsPress())}
                 title={GlobalConst.AppName}
-                style={/*this.state.theme.styles.navBar*/ {backgroundColor: Colors.appUnifiedBackColor}}
+                style={{backgroundColor: Colors.appUnifiedBackColor}}
                 statusBarCustomStyle={statusBar}
                 hide={false}/>;
 
