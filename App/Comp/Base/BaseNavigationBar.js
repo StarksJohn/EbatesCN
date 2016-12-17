@@ -196,7 +196,7 @@ export class NavBarButton extends Component {
             normalName={'angle-left'}
             selectName={'angle-left'}
             iconSize={30}
-            iconColor={Colors.white}
+            iconColor={Colors.backGray}
             onPress={callBack}
         />
     }

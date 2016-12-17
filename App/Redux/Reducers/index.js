@@ -1,11 +1,8 @@
 import {combineReducers} from 'redux';
-// import mainPageReducerIOS from './mainPageReducer.ios';
-// import mainPageReducerAndroid from './mainPageReducer.android';
 import RootPageReducer from './RootPageReducer';
 import HomePageReducer from './HomePageReducer'
+import LogRegisterPageReducer from './LogRegisterPageReducer'
 
 export default combineReducers({
-    // mainPageReducerIOS,
-    // mainPageReducerAndroid,
-    RootPageReducer,HomePageReducer
+    RootPageReducer,HomePageReducer,LogRegisterPageReducer
 });

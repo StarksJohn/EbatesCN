@@ -1,21 +1,19 @@
 /**
- 首页
+ 登录注册 页
  */
 import React, {Component} from 'react';
-import {StyleSheet, View, Text,InteractionManager} from 'react-native';
+import {StyleSheet, View, Text} from 'react-native';
 // import {getTitleBarTab} from '../actions/titleBarTab';
 // import ScrollableTabView, {DefaultTabBar} from 'react-native-scrollable-tab-view';
 // import RecommendedFoodListContanier from '../containers/RecommendedFoodListContanier';
 // import CollectedListContainer from '../containers/CollectedListContainer';
 import Colors from '../Utils/Colors';
 import  BaseNavigationBar ,{NavBarButton} from '../Comp/Base/BaseNavigationBar'
-import *as GlobalConst from '../Global/GlobalConst'
-import LogRegisterPageContainer from '../Redux/Container/LogRegisterPageContainer'
 
 /**
  *  展示组件
  */
-class HomePage extends Component {
+export default class LogRegisterPage extends Component {
 
     constructor(props) {
         super(props);
@@ -58,12 +56,8 @@ class HomePage extends Component {
     左上角点击
      */
     onBarsPress() {
-        // ShowToast('onBarsPress');
-        InteractionManager.runAfterInteractions(() => {
-            this.props.navigator.push({
-                component: LogRegisterPageContainer
-            });
-        });
+        this.props.navigator.pop();//app 页面回退
+
     }
 
     render() {
@@ -72,14 +66,15 @@ class HomePage extends Component {
         var statusBar = {//外部自定义statusBar的属性
             backgroundColor: Colors.appUnifiedBackColor,
             networkActivityIndicatorVisible: true,
-            barStyle: 'light-content'
+            barStyle: 'dark-content'
         };
         let navigationBar =
             <BaseNavigationBar
                 navigator={navigator}
-                leftButton={NavBarButton.getBarsButton(()=>this.onBarsPress())}
-                title={GlobalConst.AppName}
-                style={{backgroundColor: Colors.appUnifiedBackColor}}
+                leftButton={NavBarButton.getBackButton(()=>this.onBarsPress())}
+                title='登录/注册'
+                style={{backgroundColor: Colors.white}}
+                titleTextStyle={{color: Colors.black}}
                 statusBarCustomStyle={statusBar}
                 hide={false}/>;
 
@@ -143,4 +138,3 @@ const styles = StyleSheet.create({
     },
 });
 
-export default HomePage;
