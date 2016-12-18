@@ -12,7 +12,7 @@ export default function LogRegisterPageReducer(state=initialState, action) {
     case TYPES.GET_TITLE_BAR_TAB:
       return {
         ...state,
-          scrollTbvMenuTitles: action.menuTitles,
+          scrollTbvMenuTitles: action.scrollTbvMenuTitles,
       };
     default:
       return state;
