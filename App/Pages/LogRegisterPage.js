@@ -8,7 +8,8 @@ import {StyleSheet, View, Text} from 'react-native';
 // import RecommendedFoodListContanier from '../containers/RecommendedFoodListContanier';
 // import CollectedListContainer from '../containers/CollectedListContainer';
 import Colors from '../Utils/Colors';
-import  BaseNavigationBar ,{NavBarButton} from '../Comp/Base/BaseNavigationBar'
+import  BaseNavigationBar, {NavBarButton} from '../Comp/Base/BaseNavigationBar'
+import BackAndroidEventListener from '../Utils/BackAndroidEventListener'
 
 /**
  *  展示组件
@@ -17,6 +18,7 @@ export default class LogRegisterPage extends Component {
 
     constructor(props) {
         super(props);
+        this.backAndroidEventListener = new BackAndroidEventListener({...props, backPress: (e)=>this.onBackPress()});
 
         // this.onViewPageScroll = this._onViewPageScroll.bind(this);
     }
@@ -25,6 +27,15 @@ export default class LogRegisterPage extends Component {
 
         const {dispatch} = this.props;
         // dispatch(getTitleBarTab());//dispatch 了一个 Thunk 函数作为 action, 获取首页的数据
+        this.backAndroidEventListener.addEventListener();
+
+    }
+
+    componentWillUnmount() {
+        // BackAndroid.removeEventListener('hardwareBackPress', this.goBack);
+        this.backAndroidEventListener.removeEventListener();
+
+        // this.context.removeBackButtonListener(this.onBackButton);
     }
 
     // getHomePageListContanier(i,
@@ -53,11 +64,11 @@ export default class LogRegisterPage extends Component {
     // };
 
     /*
-    左上角点击
+     左上角点击
      */
-    onBarsPress() {
+    onBackPress() {
         this.props.navigator.pop();//app 页面回退
-
+        return true;
     }
 
     render() {
@@ -71,7 +82,7 @@ export default class LogRegisterPage extends Component {
         let navigationBar =
             <BaseNavigationBar
                 navigator={navigator}
-                leftButton={NavBarButton.getBackButton(()=>this.onBarsPress())}
+                leftButton={NavBarButton.getBackButton(()=>this.onBackPress())}
                 title='登录/注册'
                 style={{backgroundColor: Colors.white}}
                 titleTextStyle={{color: Colors.black}}
