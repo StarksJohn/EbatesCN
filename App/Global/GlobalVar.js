@@ -3,8 +3,8 @@
  * 全局变量, 此文件 只需 被import 一次
  */
 
-// import Log from '../utils/Log'
-// global.Log = Log;
+import Log from '../Utils/Log'
+global.Log = Log;
 
 import {showToast} from '../Comp/BizToast';
 global.ShowToast = showToast;

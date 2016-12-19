@@ -5,7 +5,7 @@
 export default  Colors = {
     lightGray: "#F0F0F0",
     lineGray: '#F0F0F0',
-    borderColor:'#dddddd',//一般用于 边框颜色
+    borderColor:'#dddddd',//一般用于 边框颜色|分割线 颜色
     green: '#80BD01',
     orange:'#FFA500',
     backGray: '#E5E5E5',
