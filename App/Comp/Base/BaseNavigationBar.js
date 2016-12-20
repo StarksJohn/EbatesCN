@@ -19,6 +19,7 @@ import FontAwesomeIconBts from './FontAwesomeIconBts';
 // import {showToast} from '../../comp/CommonComp';
 // import Log from '../../utils/Log'
 // import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import BaseTitleBt from './BaseTitleBt'
 
 const NAV_BAR_HEIGHT_IOS = GlobalStyles.nav_bar_height_ios;
 const NAV_BAR_HEIGHT_ANDROID = GlobalStyles.nav_bar_height_android;
@@ -108,15 +109,25 @@ export default class BaseNavigationBar extends Component {
 
     getButtonElement(data = {}, style) {
         return (
-            <View style={styles.navBarButton}>
-                {(!!data.props) ? data : (
+                (!!data.props) ? data : (
+                    <View style={styles.navBarButton}>
                     <NavBarButton
                         title={data.title}
                         style={[data.style, style,]}
                         tintColor={data.tintColor}
                         handler={data.handler}/>
-                )}
-            </View>
+                    </View>
+                )
+
+            // <View style={styles.navBarButton}>
+            //     {(!!data.props) ? data : (
+            //         <NavBarButton
+            //             title={data.title}
+            //             style={[data.style, style,]}
+            //             tintColor={data.tintColor}
+            //             handler={data.handler}/>
+            //     )}
+            // </View>
         );
     }
 
@@ -189,16 +200,38 @@ export class NavBarButton extends Component {
             btStyle={{
                 width: 30,
                 height: 30,
-                /*justifyContent: 'center', alignItems: 'center', marginTop: 15,  */ marginLeft: 10 ,
+                /*justifyContent: 'center', alignItems: 'center', marginTop: 15,  */ marginLeft: 7 ,
                 //backgroundColor:Colors.green
             }}
             btSelectColor={Colors.blackTranslucent}
             normalName={'angle-left'}
             selectName={'angle-left'}
-            iconSize={30}
-            iconColor={Colors.backGray}
+            iconSize={25}
+            iconColor={Colors.black}
             onPress={callBack}
         />
+    }
+
+    //新用户注册
+    static newUserRegister(callBack) {
+        return(
+            <BaseTitleBt
+                btStyle={{
+                     height: 40, alignItems: 'center', marginRight: 15,justifyContent: 'center',
+                    backgroundColor:Colors.white
+                }}
+                selectColor={Colors.blackTranslucent}
+                onPress={callBack}
+                textStyle={{
+                    fontSize: 12,
+                    //fontFamily: 'Gill Sans',
+                    color: 'rgba(54, 166, 66, 1)',
+                }}
+                title='新用户注册'
+            >
+            </BaseTitleBt>
+
+        );
     }
 
     /**
@@ -276,7 +309,7 @@ const styles = StyleSheet.create({
         // height: Platform.OS === 'ios' ? NAV_BAR_HEIGHT_IOS : NAV_BAR_HEIGHT_ANDROID
     },
     navBarButton: {
-        alignItems: 'center', width: 30 /*, justifyContent:'center', backgroundColor: 'blue'*/,
+        alignItems: 'center', backgroundColor: 'blue'/*,width: 30 , justifyContent:'center', */,
     },
     // statusBar: {
     //     height: Platform.OS === 'ios' ? STATUS_BAR_HEIGHT : 0,

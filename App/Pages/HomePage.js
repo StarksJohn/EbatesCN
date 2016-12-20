@@ -10,7 +10,7 @@ import {StyleSheet, View, Text,InteractionManager} from 'react-native';
 import Colors from '../Utils/Colors';
 import  BaseNavigationBar ,{NavBarButton} from '../Comp/Base/BaseNavigationBar'
 import *as GlobalConst from '../Global/GlobalConst'
-import LogRegisterPageContainer from '../Redux/Container/LogRegisterPageContainer'
+import LogPage from './LogPage'
 
 /**
  *  展示组件
@@ -65,7 +65,7 @@ class HomePage extends Component {
         //     });
         // });
         this.props.navigator.push({
-            component: LogRegisterPageContainer
+            component: LogPage
         });
     }
 
