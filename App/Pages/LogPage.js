@@ -84,6 +84,7 @@ export default class LogRegisterPage extends Component {
 
     //忘记密码
     onForgetPassPress() {
+        ShowToast('onForgetPassPress');
 
     }
 
@@ -346,31 +347,31 @@ export default class LogRegisterPage extends Component {
                 <Text style={{marginTop:3, fontSize:12, color:'rgba(136, 136, 136, 1)'}}>{str}</Text>
             </View>
 
-        let content = <ScrollableTabView
-            //page={0}
-            renderTabBar={() =>
-                <DefaultTabBar
-                    tabStyle={{paddingBottom: 0 /*为了 text 上下居中*/}}
-                    style={{height: 40 /*外部改变DefaultTabBar的高度 */}}
-                    underlineHeight={2}
-                    textStyle={{fontSize: 15 /*, color:Colors.black*/}}
-                    activeTextColor={Colors.appUnifiedBackColor}
-                />
-            }
-            tabBarBackgroundColor='rgba(237, 237, 237, 1)'/*"#fcfcfc"*/ //整个tabbar的背景色
-            tabBarUnderlineColor={Colors.appUnifiedBackColor}
-            tabBarActiveTextColor={Colors.appUnifiedBackColor}
-            tabBarInactiveTextColor={Colors.black}//"#aaaaaa"
-        >
-
-            {/*{*/}
-                {/*LogRegisterPageReducer.scrollTbvMenuTitles.map((v, i) => {*/}
-                    {/*return this.renderLoginRegisterView(i, v);*/}
-                {/*})*/}
-            {/*}*/}
-
-
-        </ScrollableTabView>;
+        // let content = <ScrollableTabView
+        //     //page={0}
+        //     renderTabBar={() =>
+        //         <DefaultTabBar
+        //             tabStyle={{paddingBottom: 0 /*为了 text 上下居中*/}}
+        //             style={{height: 40 /*外部改变DefaultTabBar的高度 */}}
+        //             underlineHeight={2}
+        //             textStyle={{fontSize: 15 /*, color:Colors.black*/}}
+        //             activeTextColor={Colors.appUnifiedBackColor}
+        //         />
+        //     }
+        //     tabBarBackgroundColor='rgba(237, 237, 237, 1)'/*"#fcfcfc"*/ //整个tabbar的背景色
+        //     tabBarUnderlineColor={Colors.appUnifiedBackColor}
+        //     tabBarActiveTextColor={Colors.appUnifiedBackColor}
+        //     tabBarInactiveTextColor={Colors.black}//"#aaaaaa"
+        // >
+        //
+        //     {/*{*/}
+        //         {/*LogRegisterPageReducer.scrollTbvMenuTitles.map((v, i) => {*/}
+        //             {/*return this.renderLoginRegisterView(i, v);*/}
+        //         {/*})*/}
+        //     {/*}*/}
+        //
+        //
+        // </ScrollableTabView>;
 
         return (
             <View style={styles.container}>
@@ -381,6 +382,44 @@ export default class LogRegisterPage extends Component {
                 {baseSpeLine({marginLeft:15, marginRight:15, marginTop:-1})}
                 {this.passInputView()}
                 {baseSpeLine({marginLeft:15, marginRight:15, marginTop:-1})}
+                <BaseTitleBt
+                    btStyle={{
+                        borderRadius: 4, height: 44, alignItems: 'center',
+                        marginLeft: 15,marginRight:15,justifyContent: 'center', backgroundColor: Colors.appUnifiedBackColor, marginTop: 15
+                    }}
+                    selectColor={Colors.blackTranslucent}
+                    onPress={()=>this.onLoginPress()}
+                    textStyle={{
+                        fontSize: 15,
+                        //fontFamily: 'Gill Sans',
+                        color: Colors.white,
+                    }}
+                    title='登录'
+                >
+                </BaseTitleBt>
+                <BaseTitleBt
+                    btStyle={{
+                        borderRadius: 4, borderWidth: 0.5,borderColor:'rgba(214, 214, 214, 1)', height: 44, alignItems: 'center',
+                        marginLeft: 15,marginRight:15,justifyContent: 'center', backgroundColor: Colors.white, marginTop: 15
+                    }}
+                    selectColor={Colors.blackTranslucent}
+                    onPress={()=>this.onQuickLoginPress()}
+                    textStyle={{
+                        fontSize: 15,
+                        //fontFamily: 'Gill Sans',
+                        color: 'rgba(64, 64, 64, 1)',
+                    }}
+                    title='手机快捷登录'
+                >
+                </BaseTitleBt>
+                {/*右下角Text的容器view*/}
+                <View style={{marginTop:20,flexDirection:'row', justifyContent:'flex-end', marginRight:15,
+                    //backgroundColor:Colors.getRandomColor()
+                }}>
+                    <Text style={{color:'rgba(54, 166, 66, 1)', fontSize:12}}
+                          onPress={()=>{this.onForgetPassPress()}}
+                    >忘记密码</Text>
+                </View>
             </View>
         );
     }
