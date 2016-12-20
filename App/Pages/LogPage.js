@@ -9,6 +9,7 @@ import BackAndroidEventListener from '../Utils/BackAndroidEventListener'
 import ScrollableTabView, {DefaultTabBar} from 'react-native-scrollable-tab-view';
 import BaseTitleBt from '../Comp/Base/BaseTitleBt'
 import {baseSpeLine} from '../Comp/Base/BaseSpeLine'
+import *as OauthForm from '../Utils/LogRegisterUtils/OauthForm'
 
 /**
  *  展示组件
@@ -70,7 +71,9 @@ export default class LogRegisterPage extends Component {
     }
 
     onLoginPress() {
-
+        if (OauthForm.oauthEmail(this.email)){
+            ShowToast('oauthEmail ok');
+        }
     }
 
     onRegisterPress() {
