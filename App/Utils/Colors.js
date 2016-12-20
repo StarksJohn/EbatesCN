@@ -22,7 +22,7 @@ export default  Colors = {
     white: "white",
     COMMON_SELECT_COLOR: 'rgba(255, 80, 0, 0.1)', //统一按下颜色
     COMMON_BACKGROUND_COLOR: '#F5FCFF', //统一背景颜色
-    transparent: 'transparent',//全透明色111
+    transparent: 'transparent',//全 透明 色
     DeepPink: '#FF1493',
     HotPink: '#FF69B4',
     appUnifiedBackColor: 'rgba(67, 187, 78, 1)',//app统一背景色

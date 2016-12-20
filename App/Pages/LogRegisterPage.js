@@ -110,6 +110,7 @@ export default class LogRegisterPage extends Component {
                                         event.nativeEvent.text
                                     )}
                                     onBlur={() => this.onBlur()}
+                                    underlineColorAndroid={'transparent'}
                                 />
                             </View>
                         </View>
@@ -125,6 +126,7 @@ export default class LogRegisterPage extends Component {
                                         event.nativeEvent.text
                                     )}
                                     onBlur={() => this.onBlur()}
+                                    underlineColorAndroid={Colors.transparent}
                                 />
                             </View>
                         </View>
