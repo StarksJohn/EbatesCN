@@ -7,7 +7,7 @@ import Log from '../Utils/Log'
 global.Log = Log;
 
 import {showToast} from '../Comp/BizToast';
-global.ShowToast = showToast;
+global.showToast = showToast;
 
 // import *as UserDB from '../db/UserDB'
 // global.UserSchema=UserDB.UserSchema.tableName;//用户表名

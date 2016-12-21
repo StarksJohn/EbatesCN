@@ -20,7 +20,7 @@ export default class BizToast extends Component{
 
     componentDidMount() {
         this.listener = DeviceEventEmitter.addListener(ShowToastSignal, (text) => {
-            this.refs.toastWithStyle.show(text, DURATION.LENGTH_LONG);
+            this.refs.toastWithStyle.show(text, DURATION.LENGTH_SHORT);
 
         });
     }
@@ -33,11 +33,13 @@ export default class BizToast extends Component{
 
     render() {
         return (
-            <Toast ref="toastWithStyle" style={{backgroundColor: Colors.appUnifiedBackColor /*, opacity: 0.8*/}}
+            <Toast ref="toastWithStyle"
+                   style={{backgroundColor: Colors.black, borderRadius: 4,padding: 20 }}
+                   opacity={0.8}//透明度
+                   positionValue={200}//黑框的Y的起点
                    textStyle={{
-                       fontSize: 20,
-                       color: Colors.white, fontWeight: 'bold'
-                   }} position={'center'}/>
+                       fontSize: 13, lineHeight: 20,color: Colors.white, fontWeight: 'bold'
+                   }} position={'top'}/>
         );
     }
 }

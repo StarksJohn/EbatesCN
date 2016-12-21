@@ -58,7 +58,7 @@ class HomePage extends Component {
     左上角点击
      */
     onBarsPress() {
-        // ShowToast('onBarsPress');
+        // showToast('onBarsPress');
         // InteractionManager.runAfterInteractions(() => {
         //     this.props.navigator.push({
         //         component: LogRegisterPageContainer

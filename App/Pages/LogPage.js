@@ -45,7 +45,7 @@ export default class LogRegisterPage extends Component {
 
     //进 注册页
     gotoRegisterPage(){
-        ShowToast('gotoRegisterPage');
+        showToast('gotoRegisterPage');
     }
 
     updateEmail(text) {
@@ -71,8 +71,12 @@ export default class LogRegisterPage extends Component {
     }
 
     onLoginPress() {
-        if (OauthForm.oauthEmail(this.email)){
-            ShowToast('oauthEmail ok');
+        if (!OauthForm.oauthEmail(this.email)){
+            showToast('邮箱地址不正确');
+            return;
+        }
+        if (!OauthForm.oauthPass(this.password)){
+            showToast('密码至少6位字符或数字');
         }
     }
 
@@ -87,7 +91,7 @@ export default class LogRegisterPage extends Component {
 
     //忘记密码
     onForgetPassPress() {
-        ShowToast('onForgetPassPress');
+        showToast('onForgetPassPress');
 
     }
 
@@ -161,7 +165,7 @@ export default class LogRegisterPage extends Component {
 
     // 点服务条款
     onPressServiceProvision() {
-     ShowToast('onPressServiceProvision')
+     showToast('onPressServiceProvision')
     }
 
     renderLoginRegisterView(i, v) {
