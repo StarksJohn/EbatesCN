@@ -4,12 +4,13 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Text, TextInput, Image} from 'react-native';
 import Colors from '../Utils/Colors';
-import  BaseNavigationBar, {NavBarButton} from '../Comp/Base/BaseNavigationBar'
+import  BaseNavigationBar, {NavBarButton, baseOnBackPress} from '../Comp/Base/BaseNavigationBar'
 import BackAndroidEventListener from '../Utils/BackAndroidEventListener'
-import ScrollableTabView, {DefaultTabBar} from 'react-native-scrollable-tab-view';
+// import ScrollableTabView, {DefaultTabBar} from 'react-native-scrollable-tab-view';
 import BaseTitleBt from '../Comp/Base/BaseTitleBt'
 import {baseSpeLine} from '../Comp/Base/BaseSpeLine'
 import *as OauthForm from '../Utils/LogRegisterUtils/OauthForm'
+import GlobalStyles from '../Global/GlobalStyles'
 
 /**
  *  展示组件
@@ -18,7 +19,10 @@ export default class LogRegisterPage extends Component {
 
     constructor(props) {
         super(props);
-        this.backAndroidEventListener = new BackAndroidEventListener({...props, backPress: (e)=>this.onBackPress()});
+        this.backAndroidEventListener = new BackAndroidEventListener({
+            ...props,
+            backPress: /*(e)=>this.onBackPress()*/ (e)=>baseOnBackPress(this.props.navigator)
+        });
         this.email = '';
         this.password = '';
         this.inviteCode = '';//邀请码
@@ -38,13 +42,13 @@ export default class LogRegisterPage extends Component {
     /*
      左上角点击
      */
-    onBackPress() {
-        this.props.navigator.pop();//app 页面回退
-        return true;
-    }
+    // onBackPress() {
+    //     this.props.navigator.pop();//app 页面回退
+    //     return true;//作用: 避免安卓点Home键, 完全退出
+    // }
 
     //进 注册页
-    gotoRegisterPage(){
+    gotoRegisterPage() {
         showToast('gotoRegisterPage');
     }
 
@@ -71,11 +75,11 @@ export default class LogRegisterPage extends Component {
     }
 
     onLoginPress() {
-        if (!OauthForm.oauthEmail(this.email)){
+        if (!OauthForm.oauthEmail(this.email)) {
             showToast('邮箱地址不正确');
             return;
         }
-        if (!OauthForm.oauthPass(this.password)){
+        if (!OauthForm.oauthPass(this.password)) {
             showToast('密码至少6位字符或数字');
         }
     }
@@ -165,7 +169,7 @@ export default class LogRegisterPage extends Component {
 
     // 点服务条款
     onPressServiceProvision() {
-     showToast('onPressServiceProvision')
+        showToast('onPressServiceProvision')
     }
 
     renderLoginRegisterView(i, v) {
@@ -255,7 +259,7 @@ export default class LogRegisterPage extends Component {
             }
                 break;
             case 1: {//注册view
-                let str='注册即同意  ';
+                let str = '注册即同意  ';
                 return (
                     <View
                         key={i}
@@ -323,62 +327,35 @@ export default class LogRegisterPage extends Component {
     }
 
     render() {
-        const {LogRegisterPageReducer, navigator} = this.props;
+        const {navigator} = this.props;
 
-        var statusBar = {//外部自定义statusBar的属性
-            backgroundColor: Colors.white,
-            networkActivityIndicatorVisible: true,
-            barStyle: 'dark-content'
-        };
+        var statusBar = GlobalStyles.twoLevelPageStatusBarProps;
+
         let navigationBar =
             <BaseNavigationBar
                 navigator={navigator}
-                leftButton={NavBarButton.getBackButton(()=>this.onBackPress())}
+                leftButton={NavBarButton.getBackButton(/*()=>this.onBackPress()*/ ()=>baseOnBackPress(navigator))}
                 rightButton={NavBarButton.newUserRegister(()=>this.gotoRegisterPage())}
                 title='登录'
                 style={{backgroundColor: Colors.white}}
-                titleTextStyle={{color: Colors.black, fontSize:17}}
+                titleTextStyle={{color: Colors.black, fontSize: 17}}
                 statusBarCustomStyle={statusBar}
                 hide={false}/>;
 
-        let str='返利高 商家全 折扣大 提现快';
+        let str = '返利高 商家全 折扣大 提现快';
         let ebatesView =
-            <View style={{alignItems:'center',
+            <View style={{
+                alignItems: 'center',
                 //backgroundColor: Colors.getRandomColor()
             }}>
-                <Image source={require('../Img/common_icon_logo@2x.png')} style={{marginTop:20}}/>
-                <Text style={{marginTop:10, fontSize:18,fontWeight:'bold', color:'rgba(255, 115,' +
+                <Image source={require('../Img/common_icon_logo@2x.png')} style={{marginTop: 20}}/>
+                <Text style={{
+                    marginTop: 10, fontSize: 18, fontWeight: 'bold', color: 'rgba(255, 115,' +
                     ' 12, 1)',
                     //backgroundColor:Colors.getRandomColor()
                 }}>最好的海淘返利网站</Text>
-                <Text style={{marginTop:3, fontSize:12, color:'rgba(136, 136, 136, 1)'}}>{str}</Text>
+                <Text style={{marginTop: 3, fontSize: 12, color: 'rgba(136, 136, 136, 1)'}}>{str}</Text>
             </View>
-
-        // let content = <ScrollableTabView
-        //     //page={0}
-        //     renderTabBar={() =>
-        //         <DefaultTabBar
-        //             tabStyle={{paddingBottom: 0 /*为了 text 上下居中*/}}
-        //             style={{height: 40 /*外部改变DefaultTabBar的高度 */}}
-        //             underlineHeight={2}
-        //             textStyle={{fontSize: 15 /*, color:Colors.black*/}}
-        //             activeTextColor={Colors.appUnifiedBackColor}
-        //         />
-        //     }
-        //     tabBarBackgroundColor='rgba(237, 237, 237, 1)'/*"#fcfcfc"*/ //整个tabbar的背景色
-        //     tabBarUnderlineColor={Colors.appUnifiedBackColor}
-        //     tabBarActiveTextColor={Colors.appUnifiedBackColor}
-        //     tabBarInactiveTextColor={Colors.black}//"#aaaaaa"
-        // >
-        //
-        //     {/*{*/}
-        //         {/*LogRegisterPageReducer.scrollTbvMenuTitles.map((v, i) => {*/}
-        //             {/*return this.renderLoginRegisterView(i, v);*/}
-        //         {/*})*/}
-        //     {/*}*/}
-        //
-        //
-        // </ScrollableTabView>;
 
         return (
             <View style={styles.container}>
@@ -386,13 +363,19 @@ export default class LogRegisterPage extends Component {
                 {ebatesView}
                 {/*邮箱输入框的容器view*/}
                 {this.emailInputView()}
-                {baseSpeLine({marginLeft:15, marginRight:15, marginTop:-1})}
+                {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
                 {this.passInputView()}
-                {baseSpeLine({marginLeft:15, marginRight:15, marginTop:-1})}
+                {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
                 <BaseTitleBt
                     btStyle={{
-                        borderRadius: 4, height: 44, alignItems: 'center',
-                        marginLeft: 15,marginRight:15,justifyContent: 'center', backgroundColor: Colors.appUnifiedBackColor, marginTop: 15
+                        borderRadius: 4,
+                        height: 44,
+                        alignItems: 'center',
+                        marginLeft: 15,
+                        marginRight: 15,
+                        justifyContent: 'center',
+                        backgroundColor: Colors.appUnifiedBackColor,
+                        marginTop: 15
                     }}
                     selectColor={Colors.blackTranslucent}
                     onPress={()=>this.onLoginPress()}
@@ -406,8 +389,16 @@ export default class LogRegisterPage extends Component {
                 </BaseTitleBt>
                 <BaseTitleBt
                     btStyle={{
-                        borderRadius: 4, borderWidth: 0.5,borderColor:'rgba(214, 214, 214, 1)', height: 44, alignItems: 'center',
-                        marginLeft: 15,marginRight:15,justifyContent: 'center', backgroundColor: Colors.white, marginTop: 15
+                        borderRadius: 4,
+                        borderWidth: 0.5,
+                        borderColor: 'rgba(214, 214, 214, 1)',
+                        height: 44,
+                        alignItems: 'center',
+                        marginLeft: 15,
+                        marginRight: 15,
+                        justifyContent: 'center',
+                        backgroundColor: Colors.white,
+                        marginTop: 15
                     }}
                     selectColor={Colors.blackTranslucent}
                     onPress={()=>this.onQuickLoginPress()}
@@ -420,11 +411,14 @@ export default class LogRegisterPage extends Component {
                 >
                 </BaseTitleBt>
                 {/*右下角Text的容器view*/}
-                <View style={{marginTop:20,flexDirection:'row', justifyContent:'flex-end', marginRight:15,
+                <View style={{
+                    marginTop: 20, flexDirection: 'row', justifyContent: 'flex-end', marginRight: 15,
                     //backgroundColor:Colors.getRandomColor()
                 }}>
-                    <Text style={{color:'rgba(54, 166, 66, 1)', fontSize:12}}
-                          onPress={()=>{this.onForgetPassPress()}}
+                    <Text style={{color: 'rgba(54, 166, 66, 1)', fontSize: 12}}
+                          onPress={()=> {
+                              this.onForgetPassPress()
+                          }}
                     >忘记密码</Text>
                 </View>
             </View>
@@ -453,7 +447,7 @@ const styles = StyleSheet.create({
         // flex: 1,
         paddingRight: 30,
         justifyContent: 'center', alignItems: 'flex-start',
-         height: 44,
+        height: 44,
         // backgroundColor: Colors.getRandomColor()
     },
     //输入框左图里的text

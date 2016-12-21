@@ -39,6 +39,14 @@ const StatusBarShape = {
     animated: PropTypes.bool
 };
 
+/*
+ 通用默认的左上角点击
+ */
+export function  baseOnBackPress(navigator) {
+    navigator.pop();//app 页面回退
+    return true;//作用: 避免安卓点Home键, 完全退出
+}
+
 
 /**
  * 导航栏
@@ -73,7 +81,8 @@ export default class BaseNavigationBar extends Component {
             animated: false,
         },
         title: '带我去打网球打网球订位打网球打网球带我去的完全打网球打网球打网球打网球完全打网球打网球带我去的期望打网球打网球',
-        titleTextNumberOfLines: 1
+        titleTextNumberOfLines: 1,
+        // onLeftButtonClick:this.onLeftButtonClick()
     }
 
     constructor(props) {
