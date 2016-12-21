@@ -9,9 +9,9 @@
  * @param str2
  * @returns {boolean}
  */
-export function contain(str1,str2) {
+export function contain(str1, str2) {
     // indexOf: str第一次在str1里出现的下标
-    return str1.indexOf(str2)>0;
+    return str1.indexOf(str2) > 0;
 }
 
 /**
@@ -24,12 +24,10 @@ export function getStrLen(val) {
     let len = 0;
     for (var i = 0; i < val.length; i++) {
         var a = val.charAt(i);
-        if (a.match(/[^\x00-\xff]/ig) != null)
-        {
+        if (a.match(/[^\x00-\xff]/ig) != null) {
             len += 2;//汉字算两个字符
         }
-        else
-        {
+        else {
             len += 1;
         }
     }
@@ -45,9 +43,25 @@ export function isContainChinese(val) {
     let b = false;
     for (var i = 0; i < val.length; i++) {
         var a = val.charAt(i);
-        if (a.match(/[^\x00-\xff]/ig) != null)
-        {
-            b=true
+        if (a.match(/[^\x00-\xff]/ig) != null) {
+            b = true
+        }
+    }
+    return b;
+}
+
+/**
+ * 检测 字符串是否全是 数字
+ * @param text
+ * @returns {boolean}
+ */
+export function isAllNum(val) {
+    let b = true;
+    for (var i = 0; i < val.length; i++) {
+        let a = val.charAt(i);
+        if (isNaN(a)){
+            b=false;
+            break;
         }
     }
     return b;

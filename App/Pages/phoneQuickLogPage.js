@@ -15,7 +15,7 @@ import BaseTitleBt from '../Comp/Base/BaseTitleBt'
 import BizLogBt from '../Comp/BizCommonComp/BizLogBt'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-
+import *as OauthForm from '../Utils/LogRegisterUtils/OauthForm'
 
 export default class phoneQuickLogPage extends Component{
     constructor(props) {
@@ -38,6 +38,9 @@ export default class phoneQuickLogPage extends Component{
     updatePhone(text) {
         this.phone = text;
         Log.log('this.phone==' + this.phone);
+        if (OauthForm.oauthPhone(this.phone)){
+            showToast('oauthPhone ok')
+        }
     }
 
     updateOauthCode(text) {
@@ -109,7 +112,7 @@ export default class phoneQuickLogPage extends Component{
                             borderRadius: 4, width: 80 ,height: 30,
                             alignItems: 'center',
                             justifyContent: 'center',
-                            backgroundColor: 'rgba(67, 187, 78, 0.5)'//Colors.appUnifiedBackColor,
+                            backgroundColor: Colors.halfOpacityAppUnifiedBackColor,
                         }}
                         disabled={true}//参考 snowflake的LoginRender的 ItemCheckbox的 disabled的判断
                         onPress={()=>this.onSendOauthCode()}
@@ -159,7 +162,7 @@ export default class phoneQuickLogPage extends Component{
                 {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
                 {this.oauthCodeInputView()}
                 <View style={{flex:1, backgroundColor:'rgba(239, 239, 239, 1)'}}>
-                    {BizLogBt(()=>this.onLoginPress())}
+                    {BizLogBt(()=>this.onLoginPress(), {backgroundColor:Colors.halfOpacityAppUnifiedBackColor,disabled:true} )}
                 </View>
             </View>
             );

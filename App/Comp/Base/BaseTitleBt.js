@@ -2,7 +2,7 @@
  带 title   的 按钮
  */
 
-import React, {PropTypes, Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 import {
     Text, StyleSheet, View
 } from 'react-native';
@@ -11,6 +11,9 @@ import BaseBt from './BaseBt'
 
 
 export default class BaseTitleBt extends Component {
+    constructor(props) {
+        super(props);
+    }
 
     static propTypes = {
         onPress: PropTypes.func,
@@ -24,15 +27,11 @@ export default class BaseTitleBt extends Component {
     };
 
     static defaultProps = {
-        // selectColor: Colors.blackTranslucent,
         backgroundColor:Colors.appUnifiedBackColor,
         activeOpacity:0.5,
-        disabled:true
+        disabled:false
     };
 
-    constructor(props) {
-        super(props);
-    }
 
     componentDidMount() {
 
@@ -70,6 +69,7 @@ export default class BaseTitleBt extends Component {
     }
 
 };
+
 
 // FontAwesomeIconBts.propTypes = propTypes;
 // FontAwesomeIconBts.defaultProps = defaultProps;

@@ -366,7 +366,7 @@ export default class LogRegisterPage extends Component {
                 {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
                 {this.passInputView()}
                 {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
-                {BizLogBt(()=>this.onLoginPress())}
+                {BizLogBt(()=>this.onLoginPress(), {backgroundColor:Colors.appUnifiedBackColor,disabled:false})}
 
                 <BaseTitleBt
                     btStyle={{

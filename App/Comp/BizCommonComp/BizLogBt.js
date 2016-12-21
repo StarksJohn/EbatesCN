@@ -7,7 +7,7 @@ import React from 'react';
 import BaseTitleBt from '../Base/BaseTitleBt'
 import Colors from '../../Utils/Colors';
 
-export default function logBt(callback) {
+export default function logBt(callback,props) {
     return (
         <BaseTitleBt
             btStyle={{
@@ -17,7 +17,7 @@ export default function logBt(callback) {
                 marginLeft: 15,
                 marginRight: 15,
                 justifyContent: 'center',
-                backgroundColor: Colors.appUnifiedBackColor,
+                backgroundColor: props.backgroundColor,
                 marginTop: 15
             }}
             onPress={callback}
@@ -26,6 +26,7 @@ export default function logBt(callback) {
                 color: Colors.white,
             }}
             title='登录'
+            disabled={props.disabled}
         >
         </BaseTitleBt>
     );

@@ -19,3 +19,7 @@ export function oauthPass(pass){
     return StringOauth.getStrLen(pass)>=6 &&  !StringOauth.isContainChinese(pass) ;
 
 }
+
+export function oauthPhone(text){
+    return StringOauth.getStrLen(this.phone)==11 && StringOauth.isAllNum(this.phone)
+}
