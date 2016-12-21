@@ -6,7 +6,7 @@
 import React, {Component} from 'react';
 import {Navigator, StatusBar, StyleSheet, View, Platform, DeviceEventEmitter} from 'react-native';
 import RootPagesContainer from '../Redux/Container/RootPagesContainer'
-import BizToast from '../Comp/BizToast'
+import BizToast from '../Comp/BizCommonComp/BizToast'
 
 /**
  * 类似 reading里的 app.js,GitHubPopular 里的 setup.js

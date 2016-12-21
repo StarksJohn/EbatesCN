@@ -11,10 +11,6 @@ import BaseBt from './BaseBt'
 
 
 export default class BaseTitleBt extends Component {
-    static defaultProps = {
-        selectColor: Colors.blackTranslucent,
-        backgroundColor:Colors.appUnifiedBackColor
-    };
 
     static propTypes = {
         onPress: PropTypes.func,
@@ -22,7 +18,16 @@ export default class BaseTitleBt extends Component {
         title: PropTypes.string,
         textStyle: Text.propTypes.style,
         btStyle:View.propTypes.style,
-        selectColor: PropTypes.string //按钮按下的颜色
+        // selectColor: PropTypes.string //按钮按下的颜色
+        activeOpacity:PropTypes.number,
+        disabled:PropTypes.bool
+    };
+
+    static defaultProps = {
+        // selectColor: Colors.blackTranslucent,
+        backgroundColor:Colors.appUnifiedBackColor,
+        activeOpacity:0.5,
+        disabled:true
     };
 
     constructor(props) {
@@ -47,7 +52,9 @@ export default class BaseTitleBt extends Component {
                     alignItems: 'center',
                     justifyContent: 'center',
                 }*/ [{backgroundColor: this.props.backgroundColor},this.props.btStyle]}
-                underlayColor={/*Colors.blackTranslucent*/ this.props.selectColor}
+                //underlayColor={/*Colors.blackTranslucent*/ this.props.selectColor}
+                activeOpacity={this.props.activeOpacity}
+                disabled={this.props.disabled}
                 onPress={ this.props.onPress }
             >
                 <Text style={/*{

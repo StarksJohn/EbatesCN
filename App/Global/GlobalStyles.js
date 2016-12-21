@@ -52,9 +52,36 @@ module.exports = {
     },
     //二级页面 statusBar的统一属性
     twoLevelPageStatusBarProps: {
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.getRandomColor(),
         networkActivityIndicatorVisible: true,
         barStyle: 'dark-content'
-    }
+    },
 
+    //输入框的容器view
+    InputItemContainer: {
+        // marginTop: 40,
+        height: 44,
+        flexDirection: 'row',
+        paddingLeft: 15, paddingRight: 15,
+        //borderColor: Colors.borderColor, borderWidth: 1,
+        // backgroundColor: Colors.getRandomColor()//'rgba(252, 254, 254, 1)'
+    },
+    //输入框容器里的左图
+    IpputItemLeftView: {
+        // flex: 1,
+        paddingRight: 30,
+        justifyContent: 'center', alignItems: 'flex-start',
+        height: 44,
+        // backgroundColor: Colors.getRandomColor()
+    },
+    //输入框容器里的右图
+    InputItemRightView: {flex: 4, height: 40 /*, backgroundColor: Colors.getRandomColor()*/},
+    textInput: {
+        marginTop: 3,//因 input的内容偏高,此处为了下移点, 和 input左边的 邮箱,密码2个Text 对齐
+        height: 40,
+        fontSize: 15,
+        // alignItems: 'center',
+        color: Colors.black,
+        // backgroundColor: Colors.getRandomColor()
+    },
 };

@@ -10,7 +10,7 @@ import Colors from '../../Utils/Colors'
 export function baseSpeLine(props) {
     return (
         <View
-            style={[{height:1,backgroundColor: Colors.borderColor},props]}
+            style={[{height:0.5,backgroundColor: Colors.borderColor},props]}
         >
         </View>
     );

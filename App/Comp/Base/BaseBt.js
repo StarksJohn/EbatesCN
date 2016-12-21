@@ -7,7 +7,9 @@ function BaseBt(props) {
         <TouchableOpacity
             onPress={props.onPress}
             style={props.style}
-            underlayColor={props.underlayColor}
+            //underlayColor={props.underlayColor}//没用,activeOpacity 有用
+            activeOpacity={props.activeOpacity}
+            disabled={props.disabled}//
             {...props}
         >
 

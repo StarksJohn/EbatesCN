@@ -11,6 +11,8 @@ import BaseTitleBt from '../Comp/Base/BaseTitleBt'
 import {baseSpeLine} from '../Comp/Base/BaseSpeLine'
 import *as OauthForm from '../Utils/LogRegisterUtils/OauthForm'
 import GlobalStyles from '../Global/GlobalStyles'
+import phoneQuickLogPage from './phoneQuickLogPage'
+import BizLogBt from '../Comp/BizCommonComp/BizLogBt'
 
 /**
  *  展示组件
@@ -84,13 +86,11 @@ export default class LogRegisterPage extends Component {
         }
     }
 
-    onRegisterPress() {
-
-    }
-
     //快捷登录
     onQuickLoginPress() {
-
+        this.props.navigator.push({
+            component: phoneQuickLogPage
+        });
     }
 
     //忘记密码
@@ -102,14 +102,14 @@ export default class LogRegisterPage extends Component {
     /*邮箱输入框的容器view*/
     emailInputView() {
         return (
-            <View style={styles.InputItemContainer}>
-                <View style={styles.IpputItemLeftView}>
+            <View style={[GlobalStyles.InputItemContainer,{marginTop: 40}]}>
+                <View style={GlobalStyles.IpputItemLeftView}>
                     <Text style={styles.IpputItemLeftText}>邮箱</Text>
                 </View>
-                <View style={styles.InputItemRightView}>
+                <View style={GlobalStyles.InputItemRightView}>
                     <TextInput
-                        style={styles.textInput}
-                        autoFocus={true}
+                        style={GlobalStyles.textInput}
+                        autoFocus={false}
                         placeholder='输入邮箱地址'
                         onChange={(event) => this.updateEmail(
                             event.nativeEvent.text
@@ -126,13 +126,13 @@ export default class LogRegisterPage extends Component {
     /*密码输入框的容器view*/
     passInputView() {
         return (
-            <View style={[styles.InputItemContainer, {marginTop: 0}]}>
-                <View style={styles.IpputItemLeftView}>
+            <View style={[GlobalStyles.InputItemContainer]}>
+                <View style={GlobalStyles.IpputItemLeftView}>
                     <Text style={styles.IpputItemLeftText}>密码</Text>
                 </View>
-                <View style={styles.InputItemRightView}>
+                <View style={GlobalStyles.InputItemRightView}>
                     <TextInput
-                        style={styles.textInput}
+                        style={GlobalStyles.textInput}
                         placeholder='输入至少6位字符或数字'
                         onChange={(event) => this.updatePassword(
                             event.nativeEvent.text
@@ -146,185 +146,185 @@ export default class LogRegisterPage extends Component {
     }
 
     //邀请码输入view
-    InviteCodeInputView() {
-        return (
-            <View style={[styles.InputItemContainer, {marginTop: -1}]}>
-                <View style={styles.IpputItemLeftView}>
-                    <Text style={styles.IpputItemLeftText}>邀请码</Text>
-                </View>
-                <View style={styles.InputItemRightView}>
-                    <TextInput
-                        style={styles.textInput}
-                        placeholder='输入好友邀请码 (选填)'
-                        onChange={(event) => this.updateInviteCode(
-                            event.nativeEvent.text
-                        )}
-                        onBlur={() => this.onBlur()}
-                        underlineColorAndroid={Colors.transparent}
-                    />
-                </View>
-            </View>
-        );
-    }
+    // InviteCodeInputView() {
+    //     return (
+    //         <View style={[styles.InputItemContainer, {marginTop: -1}]}>
+    //             <View style={styles.IpputItemLeftView}>
+    //                 <Text style={styles.IpputItemLeftText}>邀请码</Text>
+    //             </View>
+    //             <View style={styles.InputItemRightView}>
+    //                 <TextInput
+    //                     style={styles.textInput}
+    //                     placeholder='输入好友邀请码 (选填)'
+    //                     onChange={(event) => this.updateInviteCode(
+    //                         event.nativeEvent.text
+    //                     )}
+    //                     onBlur={() => this.onBlur()}
+    //                     underlineColorAndroid={Colors.transparent}
+    //                 />
+    //             </View>
+    //         </View>
+    //     );
+    // }
 
     // 点服务条款
     onPressServiceProvision() {
         showToast('onPressServiceProvision')
     }
 
-    renderLoginRegisterView(i, v) {
-        switch (i) {
-            case 0: {//登录viiew
-                return (
-                    // 登录注册view的 容器view
-                    <View
-                        key={i}
-                        tabLabel={v}/*有几个tabLabel,决定有几个tab*/
-                        style={styles.renderLoginRegisterView}
-                    >
-                        {/*邮箱输入框的容器view*/}
-                        {this.emailInputView()}
-                        {/*密码输入框的容器view*/}
-                        {this.passInputView()}
-                        {/*按钮和忘记密码的容器view*/}
-                        <View
-                            style={{paddingLeft: 20, paddingRight: 20}}
-                        >
-                            <BaseTitleBt
-                                btStyle={{
-                                    borderRadius: 3, height: 40, alignItems: 'center',
-                                    justifyContent: 'center', backgroundColor: Colors.appUnifiedBackColor, marginTop: 15
-                                }}
-                                selectColor={Colors.blackTranslucent}
-                                onPress={()=>this.onLoginPress()}
-                                textStyle={{
-                                    fontSize: 18,
-                                    fontFamily: 'Gill Sans',
-                                    color: Colors.white,
-                                }}
-                                title='登录'
-                            >
-                            </BaseTitleBt>
-                            <BaseTitleBt
-                                btStyle={{
-                                    marginTop: 10,
-                                    borderRadius: 3,
-                                    height: 40,
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    backgroundColor: Colors.white,
-                                    borderColor: Colors.borderColor,
-                                    borderWidth: 1,
-                                }}
-                                selectColor={Colors.blackTranslucent}
-                                onPress={()=>this.onQuickLoginPress()}
-                                textStyle={{
-                                    fontSize: 18,
-                                    fontFamily: 'Gill Sans',
-                                    color: Colors.appUnifiedBackColor,
-                                }}
-                                title='手机号快捷登录'
-                            >
-                            </BaseTitleBt>
-                            {/*忘记密码容器view*/}
-                            <View
-                                style={{
-                                    height: 40, marginTop: 10, flexDirection: 'row', justifyContent: 'flex-start',
-                                    alignItems: 'center'
-                                }}
-                            >
-                                {baseSpeLine({flex: 1})}
-                                <BaseTitleBt
-                                    btStyle={{
-                                        flex: 1,
-                                        height: 40, alignItems: 'center',
-                                        justifyContent: 'center', backgroundColor: 'rgba(242, 244, 244, 1)',
-                                    }}
-                                    //selectColor={Colors.blackTranslucent}
-                                    onPress={()=>this.onForgetPassPress()}
-                                    textStyle={{
-                                        fontSize: 14,
-                                        fontFamily: 'Gill Sans',
-                                        color: Colors.textGray,
-                                    }}
-                                    title='忘记密码'
-                                >
-                                </BaseTitleBt>
-                                {baseSpeLine({flex: 1})}
-                            </View>
-                        </View>
-
-                    </View>
-                );
-            }
-                break;
-            case 1: {//注册view
-                let str = '注册即同意  ';
-                return (
-                    <View
-                        key={i}
-                        tabLabel={v}/*有几个tabLabel,决定有几个tab*/
-                        style={styles.renderLoginRegisterView}
-                    >
-                        {/*邮箱输入框的容器view*/}
-                        {this.emailInputView()}
-                        {/*密码输入框的容器view*/}
-                        {this.passInputView()}
-                        {this.InviteCodeInputView()}
-                        {/*服务条款容器view*/}
-                        <View style={{
-                            height: 40,
-                            paddingLeft: 55,
-                            flexDirection: 'row',
-                            justifyContent: 'flex-start',
-                            alignItems: 'center',
-                            //backgroundColor: Colors.getRandomColor()
-                        }}>
-                            <Text style={{
-                                color: Colors.textGray,
-                                fontSize: 13,
-                                //backgroundColor: Colors.getRandomColor()
-                            }}>
-                                {str}
-                            </Text>
-                            <Text style={{
-                                color: Colors.appUnifiedBackColor,
-                                fontSize: 13,
-                                //backgroundColor: Colors.getRandomColor()
-                            }}
-                                  onPress={
-                                      ()=>this.onPressServiceProvision()
-                                  }
-                            >
-                                Ebates.cn服务条款
-                            </Text>
-                        </View>
-                        {/*view*/}
-                        <View
-                            style={{paddingLeft: 15, paddingRight: 15}}
-                        >
-                            <BaseTitleBt
-                                btStyle={{
-                                    borderRadius: 3, height: 40, alignItems: 'center',
-                                    justifyContent: 'center', backgroundColor: Colors.appUnifiedBackColor
-                                }}
-                                selectColor={Colors.blackTranslucent}
-                                onPress={()=>this.onRegisterPress()}
-                                textStyle={{
-                                    fontSize: 18,
-                                    fontFamily: 'Gill Sans',
-                                    color: Colors.white,
-                                }}
-                                title='免费注册赠$5'
-                            >
-                            </BaseTitleBt>
-                        </View>
-                    </View>
-                );
-            }
-                break;
-        }
-    }
+    // renderLoginRegisterView(i, v) {
+    //     switch (i) {
+    //         case 0: {//登录viiew
+    //             return (
+    //                 // 登录注册view的 容器view
+    //                 <View
+    //                     key={i}
+    //                     tabLabel={v}/*有几个tabLabel,决定有几个tab*/
+    //                     style={styles.renderLoginRegisterView}
+    //                 >
+    //                     {/*邮箱输入框的容器view*/}
+    //                     {this.emailInputView()}
+    //                     {/*密码输入框的容器view*/}
+    //                     {this.passInputView()}
+    //                     {/*按钮和忘记密码的容器view*/}
+    //                     <View
+    //                         style={{paddingLeft: 20, paddingRight: 20}}
+    //                     >
+    //                         <BaseTitleBt
+    //                             btStyle={{
+    //                                 borderRadius: 3, height: 40, alignItems: 'center',
+    //                                 justifyContent: 'center', backgroundColor: Colors.appUnifiedBackColor, marginTop: 15
+    //                             }}
+    //                             selectColor={Colors.blackTranslucent}
+    //                             onPress={()=>this.onLoginPress()}
+    //                             textStyle={{
+    //                                 fontSize: 18,
+    //                                 fontFamily: 'Gill Sans',
+    //                                 color: Colors.white,
+    //                             }}
+    //                             title='登录'
+    //                         >
+    //                         </BaseTitleBt>
+    //                         <BaseTitleBt
+    //                             btStyle={{
+    //                                 marginTop: 10,
+    //                                 borderRadius: 3,
+    //                                 height: 40,
+    //                                 alignItems: 'center',
+    //                                 justifyContent: 'center',
+    //                                 backgroundColor: Colors.white,
+    //                                 borderColor: Colors.borderColor,
+    //                                 borderWidth: 1,
+    //                             }}
+    //                             selectColor={Colors.blackTranslucent}
+    //                             onPress={()=>this.onQuickLoginPress()}
+    //                             textStyle={{
+    //                                 fontSize: 18,
+    //                                 fontFamily: 'Gill Sans',
+    //                                 color: Colors.appUnifiedBackColor,
+    //                             }}
+    //                             title='手机号快捷登录'
+    //                         >
+    //                         </BaseTitleBt>
+    //                         {/*忘记密码容器view*/}
+    //                         <View
+    //                             style={{
+    //                                 height: 40, marginTop: 10, flexDirection: 'row', justifyContent: 'flex-start',
+    //                                 alignItems: 'center'
+    //                             }}
+    //                         >
+    //                             {baseSpeLine({flex: 1})}
+    //                             <BaseTitleBt
+    //                                 btStyle={{
+    //                                     flex: 1,
+    //                                     height: 40, alignItems: 'center',
+    //                                     justifyContent: 'center', backgroundColor: 'rgba(242, 244, 244, 1)',
+    //                                 }}
+    //                                 //selectColor={Colors.blackTranslucent}
+    //                                 onPress={()=>this.onForgetPassPress()}
+    //                                 textStyle={{
+    //                                     fontSize: 14,
+    //                                     fontFamily: 'Gill Sans',
+    //                                     color: Colors.textGray,
+    //                                 }}
+    //                                 title='忘记密码'
+    //                             >
+    //                             </BaseTitleBt>
+    //                             {baseSpeLine({flex: 1})}
+    //                         </View>
+    //                     </View>
+    //
+    //                 </View>
+    //             );
+    //         }
+    //             break;
+    //         case 1: {//注册view
+    //             let str = '注册即同意  ';
+    //             return (
+    //                 <View
+    //                     key={i}
+    //                     tabLabel={v}/*有几个tabLabel,决定有几个tab*/
+    //                     style={styles.renderLoginRegisterView}
+    //                 >
+    //                     {/*邮箱输入框的容器view*/}
+    //                     {this.emailInputView()}
+    //                     {/*密码输入框的容器view*/}
+    //                     {this.passInputView()}
+    //                     {this.InviteCodeInputView()}
+    //                     {/*服务条款容器view*/}
+    //                     <View style={{
+    //                         height: 40,
+    //                         paddingLeft: 55,
+    //                         flexDirection: 'row',
+    //                         justifyContent: 'flex-start',
+    //                         alignItems: 'center',
+    //                         //backgroundColor: Colors.getRandomColor()
+    //                     }}>
+    //                         <Text style={{
+    //                             color: Colors.textGray,
+    //                             fontSize: 13,
+    //                             //backgroundColor: Colors.getRandomColor()
+    //                         }}>
+    //                             {str}
+    //                         </Text>
+    //                         <Text style={{
+    //                             color: Colors.appUnifiedBackColor,
+    //                             fontSize: 13,
+    //                             //backgroundColor: Colors.getRandomColor()
+    //                         }}
+    //                               onPress={
+    //                                   ()=>this.onPressServiceProvision()
+    //                               }
+    //                         >
+    //                             Ebates.cn服务条款
+    //                         </Text>
+    //                     </View>
+    //                     {/*view*/}
+    //                     <View
+    //                         style={{paddingLeft: 15, paddingRight: 15}}
+    //                     >
+    //                         <BaseTitleBt
+    //                             btStyle={{
+    //                                 borderRadius: 3, height: 40, alignItems: 'center',
+    //                                 justifyContent: 'center', backgroundColor: Colors.appUnifiedBackColor
+    //                             }}
+    //                             selectColor={Colors.blackTranslucent}
+    //                             onPress={()=>this.onRegisterPress()}
+    //                             textStyle={{
+    //                                 fontSize: 18,
+    //                                 fontFamily: 'Gill Sans',
+    //                                 color: Colors.white,
+    //                             }}
+    //                             title='免费注册赠$5'
+    //                         >
+    //                         </BaseTitleBt>
+    //                     </View>
+    //                 </View>
+    //             );
+    //         }
+    //             break;
+    //     }
+    // }
 
     render() {
         const {navigator} = this.props;
@@ -334,7 +334,7 @@ export default class LogRegisterPage extends Component {
         let navigationBar =
             <BaseNavigationBar
                 navigator={navigator}
-                leftButton={NavBarButton.getBackButton(/*()=>this.onBackPress()*/ ()=>baseOnBackPress(navigator))}
+                leftButton={NavBarButton.getBackButton( ()=>baseOnBackPress(navigator) )}
                 rightButton={NavBarButton.newUserRegister(()=>this.gotoRegisterPage())}
                 title='登录'
                 style={{backgroundColor: Colors.white}}
@@ -366,27 +366,8 @@ export default class LogRegisterPage extends Component {
                 {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
                 {this.passInputView()}
                 {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
-                <BaseTitleBt
-                    btStyle={{
-                        borderRadius: 4,
-                        height: 44,
-                        alignItems: 'center',
-                        marginLeft: 15,
-                        marginRight: 15,
-                        justifyContent: 'center',
-                        backgroundColor: Colors.appUnifiedBackColor,
-                        marginTop: 15
-                    }}
-                    selectColor={Colors.blackTranslucent}
-                    onPress={()=>this.onLoginPress()}
-                    textStyle={{
-                        fontSize: 15,
-                        //fontFamily: 'Gill Sans',
-                        color: Colors.white,
-                    }}
-                    title='登录'
-                >
-                </BaseTitleBt>
+                {BizLogBt(()=>this.onLoginPress())}
+
                 <BaseTitleBt
                     btStyle={{
                         borderRadius: 4,
@@ -432,36 +413,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    renderLoginRegisterView: {flex: 1, backgroundColor: 'rgba(242, 244, 244, 1)'},
-    //输入框的容器view
-    InputItemContainer: {
-        marginTop: 40,
-        height: 44,
-        flexDirection: 'row',
-        paddingLeft: 15, paddingRight: 15,
-        //borderColor: Colors.borderColor, borderWidth: 1,
-        //backgroundColor: Colors.getRandomColor()//'rgba(252, 254, 254, 1)'
-    },
-    //输入框容器里的左图
-    IpputItemLeftView: {
-        // flex: 1,
-        paddingRight: 30,
-        justifyContent: 'center', alignItems: 'flex-start',
-        height: 44,
-        // backgroundColor: Colors.getRandomColor()
-    },
     //输入框左图里的text
     IpputItemLeftText: {},
-    //输入框容器里的右图
-    InputItemRightView: {flex: 4, height: 40 /*, backgroundColor: Colors.getRandomColor()*/},
-    textInput: {
-        marginTop: 3,//因 input的内容偏高,此处为了下移点, 和 input左边的 邮箱,密码2个Text 对齐
-        height: 40,
-        fontSize: 15,
-        // alignItems: 'center',
-        color: Colors.textGray,
-        // backgroundColor: Colors.getRandomColor()
-    },
 
 
 });

@@ -6,7 +6,7 @@
 import Log from '../Utils/Log'
 global.Log = Log;
 
-import {showToast} from '../Comp/BizToast';
+import {showToast} from '../Comp/BizCommonComp/BizToast';
 global.showToast = showToast;
 
 // import *as UserDB from '../db/UserDB'

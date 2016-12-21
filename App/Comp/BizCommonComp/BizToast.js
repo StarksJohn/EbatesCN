@@ -21,6 +21,7 @@ export default class BizToast extends Component{
     componentDidMount() {
         this.listener = DeviceEventEmitter.addListener(ShowToastSignal, (text) => {
             this.refs.toastWithStyle.show(text, DURATION.LENGTH_SHORT);
+            this.refs.toastWithStyle
 
         });
     }
