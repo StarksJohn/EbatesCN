@@ -7,18 +7,18 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Text, TextInput} from 'react-native';
 import Colors from '../Utils/Colors';
-import  BaseNavigationBar, {NavBarButton,baseOnBackPress} from '../Comp/Base/BaseNavigationBar'
+import  BaseNavigationBar, {NavBarButton, baseOnBackPress} from '../Comp/Base/BaseNavigationBar'
 import BackAndroidEventListener from '../Utils/BackAndroidEventListener'
 import GlobalStyles from '../Global/GlobalStyles'
 import {baseSpeLine} from '../Comp/Base/BaseSpeLine'
 import BaseTitleBt from '../Comp/Base/BaseTitleBt'
 import BizLogBt from '../Comp/BizCommonComp/BizLogBt'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import {connect} from 'react-redux'
+import {bindActionCreators} from 'redux'
 import *as OauthForm from '../Utils/LogRegisterUtils/OauthForm'
 import *as QuickLogAction from '../Redux/Actions/QuickLogAction'
 
-class phoneQuickLogPage extends Component{
+class phoneQuickLogPage extends Component {
     constructor(props) {
         super(props);
         // this.backAndroidEventListener = new BackAndroidEventListener({...props, backPress: (e)=>this.onBackPress()});
@@ -39,9 +39,12 @@ class phoneQuickLogPage extends Component{
     updatePhone(text) {
         this.phone = text;
         Log.log('this.phone==' + this.phone);
-        if (OauthForm.oauthPhone(this.phone)){
+        if (OauthForm.oauthPhone(this.phone)) {
             showToast('oauthPhone ok')
-
+            this.props.dispatchActions.onAuthCodeBtEnableAction();
+        }else if(this.props.quickLogReducer.oauthCodeBtState.id === QuickLogAction.oauthCodeBtState.enable.id){//当前从 enable 状态 ==> unable 状态
+            showToast('onAuthCodeBtUnableAction()')
+            this.props.dispatchActions.onAuthCodeBtUnableAction();
         }
     }
 
@@ -106,17 +109,20 @@ class phoneQuickLogPage extends Component{
                     />
                 </View>
                 {/*发送验证码按钮容器view*/}
-                <View style={{flex:2, justifyContent:'center',alignItems: 'flex-end',
+                <View style={{
+                    flex: 2, justifyContent: 'center', alignItems: 'flex-end',
                     //backgroundColor:Colors.getRandomColor()
                 }}>
                     <BaseTitleBt
                         btStyle={{
-                            borderRadius: 4, width: 80 ,height: 30,
+                            borderRadius: 4, width: 80, height: 30,
                             alignItems: 'center',
                             justifyContent: 'center',
-                            backgroundColor: Colors.halfOpacityAppUnifiedBackColor,
+                            backgroundColor: this.props.quickLogReducer.oauthCodeBtState.backColor,
                         }}
-                        disabled={true}//参考 snowflake的LoginRender的 ItemCheckbox的 disabled的判断
+                        disabled={!(this.props.quickLogReducer.oauthCodeBtState.id === QuickLogAction.oauthCodeBtState.enable.id)}//参考
+                        // snowflake的LoginRender的
+                        // ItemCheckbox的 disabled的判断
                         onPress={()=>this.onSendOauthCode()}
                         textStyle={{
                             fontSize: 12,
@@ -131,22 +137,28 @@ class phoneQuickLogPage extends Component{
         );
     }
 
-    render(){
-        const { navigator} = this.props;
+    render() {
+        const {navigator} = this.props;
         var statusBar = GlobalStyles.twoLevelPageStatusBarProps;
         let navigationBar =
             <BaseNavigationBar
                 navigator={navigator}
-                leftButton={NavBarButton.getBackButton( ()=>baseOnBackPress(navigator) )}
+                leftButton={NavBarButton.getBackButton(()=>baseOnBackPress(navigator))}
                 //rightButton={NavBarButton.newUserRegister(()=>this.gotoRegisterPage())}
                 title='手机快捷登录'
                 style={{backgroundColor: Colors.white}}
-                titleTextStyle={{color: Colors.black, fontSize:17}}
+                titleTextStyle={{color: Colors.black, fontSize: 17}}
                 statusBarCustomStyle={statusBar}
                 hide={false}/>;
-        let bindingPhoneTextView=
-            <View style={{paddingTop:20,paddingBottom:10, backgroundColor:'rgba(239, 239, 239, 1)'}}>
-                <Text style={{marginLeft:15, marginRight:15,fontSize:12, lineHeight:18, color:'rgba(85, 85, 85, 1)'}}>目前只支持在网站上绑定手机号的用户快捷登录,未绑定过的用户请使用浏览器前往
+        let bindingPhoneTextView =
+            <View style={{paddingTop: 20, paddingBottom: 10, backgroundColor: 'rgba(239, 239, 239, 1)'}}>
+                <Text style={{
+                    marginLeft: 15,
+                    marginRight: 15,
+                    fontSize: 12,
+                    lineHeight: 18,
+                    color: 'rgba(85, 85, 85, 1)'
+                }}>目前只支持在网站上绑定手机号的用户快捷登录,未绑定过的用户请使用浏览器前往
                     <Text style={{color: Colors.appUnifiedBackColor}}>
                         Ebates.cn
                         <Text style={{color: 'rgba(85, 85, 85, 1)'}}>
@@ -163,11 +175,14 @@ class phoneQuickLogPage extends Component{
                 {this.phoneInputView()}
                 {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
                 {this.oauthCodeInputView()}
-                <View style={{flex:1, backgroundColor:'rgba(239, 239, 239, 1)'}}>
-                    {BizLogBt(()=>this.onLoginPress(), {backgroundColor:Colors.halfOpacityAppUnifiedBackColor,disabled:true} )}
+                <View style={{flex: 1, backgroundColor: 'rgba(239, 239, 239, 1)'}}>
+                    {BizLogBt(()=>this.onLoginPress(), {
+                        backgroundColor: Colors.halfOpacityAppUnifiedBackColor,
+                        disabled: true
+                    })}
                 </View>
             </View>
-            );
+        );
     }
 }
 
@@ -176,17 +191,17 @@ class phoneQuickLogPage extends Component{
  * @param dispatch
  * @returns {{dispatchActions: *}}
  */
-function mapDispatchToProps (dispatch) {
+function mapDispatchToProps(dispatch) {
     return {
         /**
          * dispatchActions: 注入到 this.props 里 ,用于本控件统一发 action的对象,且被发送 的action 函数 不需要 被包在 dispatch() 内,
          */
-        dispatchActions: bindActionCreators({ ...QuickLogAction }, dispatch)
+        dispatchActions: bindActionCreators({...QuickLogAction}, dispatch)
     }
 }
 
 
-function mapStateToProps (state) {
+function mapStateToProps(state) {
     // return {
     //     auth: state.auth,
     //     global: state.global
@@ -197,5 +212,5 @@ function mapStateToProps (state) {
     return {quickLogReducer};
 }
 
-export default connect( mapStateToProps , mapDispatchToProps)(phoneQuickLogPage)
+export default connect(mapStateToProps, mapDispatchToProps)(phoneQuickLogPage)
 

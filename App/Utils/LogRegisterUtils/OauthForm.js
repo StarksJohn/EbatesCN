@@ -21,5 +21,5 @@ export function oauthPass(pass){
 }
 
 export function oauthPhone(text){
-    return StringOauth.getStrLen(this.phone)==11 && StringOauth.isAllNum(this.phone)
+    return StringOauth.getStrLen(text)==11 && StringOauth.isAllNum(text)
 }

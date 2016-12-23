@@ -66,11 +66,11 @@ class HomePage extends Component {
         //     });
         // });
 
-        // this.props.navigator.push({
-        //     component: LogPage
-        // });
+        this.props.navigator.push({
+            component: LogPage
+        });
 
-        Token.getUnLoginToken();
+        // Token.getUnLoginToken();
     }
 
     render() {
