@@ -11,6 +11,7 @@ import Colors from '../Utils/Colors';
 import  BaseNavigationBar ,{NavBarButton} from '../Comp/Base/BaseNavigationBar'
 import *as GlobalConst from '../Global/GlobalConst'
 import LogPage from './LogPage'
+import *as Token from '../NetWork/API/Token'
 
 /**
  *  展示组件
@@ -64,9 +65,12 @@ class HomePage extends Component {
         //         component: LogRegisterPageContainer
         //     });
         // });
-        this.props.navigator.push({
-            component: LogPage
-        });
+
+        // this.props.navigator.push({
+        //     component: LogPage
+        // });
+
+        Token.getUnLoginToken();
     }
 
     render() {
