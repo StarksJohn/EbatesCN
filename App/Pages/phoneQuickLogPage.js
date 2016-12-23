@@ -16,8 +16,9 @@ import BizLogBt from '../Comp/BizCommonComp/BizLogBt'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import *as OauthForm from '../Utils/LogRegisterUtils/OauthForm'
+import *as QuickLogAction from '../Redux/Actions/QuickLogAction'
 
-export default class phoneQuickLogPage extends Component{
+class phoneQuickLogPage extends Component{
     constructor(props) {
         super(props);
         // this.backAndroidEventListener = new BackAndroidEventListener({...props, backPress: (e)=>this.onBackPress()});
@@ -40,6 +41,7 @@ export default class phoneQuickLogPage extends Component{
         Log.log('this.phone==' + this.phone);
         if (OauthForm.oauthPhone(this.phone)){
             showToast('oauthPhone ok')
+
         }
     }
 
@@ -179,7 +181,7 @@ function mapDispatchToProps (dispatch) {
         /**
          * dispatchActions: 注入到 this.props 里 ,用于本控件统一发 action的对象,且被发送 的action 函数 不需要 被包在 dispatch() 内,
          */
-        dispatchActions: bindActionCreators({  }, dispatch)
+        dispatchActions: bindActionCreators({ ...QuickLogAction }, dispatch)
     }
 }
 
@@ -191,9 +193,9 @@ function mapStateToProps (state) {
     // }
 
     // 把 state里的 homePageReducer 注入到 this.props里
-    const {HomePageReducer}=state;
-    return {HomePageReducer};
+    const {quickLogReducer}=state;
+    return {quickLogReducer};
 }
 
-// export default connect( mapStateToProps , mapDispatchToProps)(phoneQuickLogPage)
+export default connect( mapStateToProps , mapDispatchToProps)(phoneQuickLogPage)
 
