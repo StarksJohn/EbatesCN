@@ -221,8 +221,8 @@ export class NavBarButton extends Component {
         />
     }
 
-    //新用户注册
-    static newUserRegister(callBack) {
+    //新用户注册|已有账号去登录
+    static newUserRegister(callBack,props) {
         return(
             <BaseTitleBt
                 btStyle={{
@@ -236,7 +236,7 @@ export class NavBarButton extends Component {
                     //fontFamily: 'Gill Sans',
                     color: 'rgba(54, 166, 66, 1)',
                 }}
-                title='新用户注册'
+                title={props.title}
             >
             </BaseTitleBt>
 

@@ -72,7 +72,7 @@ module.exports = {
         paddingRight: 30,
         justifyContent: 'center', alignItems: 'flex-start',
         height: 44,
-        // backgroundColor: Colors.white
+        // backgroundColor: Colors.getRandomColor()
     },
     //输入框容器里的右图
     InputItemRightView: {flex: 4, height: 40 /*, backgroundColor: Colors.getRandomColor()*/},

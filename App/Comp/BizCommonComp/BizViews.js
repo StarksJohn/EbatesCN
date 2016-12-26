@@ -1,0 +1,29 @@
+/**
+ * Created by Ebates on 16/12/26.
+ *
+ * 业务逻辑层可共用的view
+ */
+import React from 'react';
+import {View,Image ,Text} from 'react-native';
+
+/**
+ * 登录注册页共用
+ * @returns {XML}
+ */
+export function ebatesViews() {
+    let str = '返利高 商家全 折扣大 提现快';
+    return (
+        <View style={{
+            alignItems: 'center',
+            backgroundColor: Colors.white
+        }}>
+            <Image source={require('../../Img/common_icon_logo@2x.png')} style={{marginTop: 20}}/>
+            <Text style={{
+                marginTop: 10, fontSize: 18, fontWeight: 'bold', color: 'rgba(255, 115,' +
+                ' 12, 1)',
+                //backgroundColor:Colors.getRandomColor()
+            }}>最好的海淘返利网站</Text>
+            <Text style={{marginTop: 3, fontSize: 12, color: 'rgba(136, 136, 136, 1)'}}>{str}</Text>
+        </View>
+    );
+}

@@ -1,7 +1,7 @@
 /**
  * Created by Ebates on 16/12/21.
  *
- * 业务逻辑需要的 登录按钮
+ * 业务逻辑需要的 登录注册按钮
  */
 import React from 'react';
 import BaseTitleBt from '../Base/BaseTitleBt'
@@ -25,7 +25,7 @@ export default function logBt(callback,props) {
                 fontSize: 15,
                 color: Colors.white,
             }}
-            title='登录'
+            title={props.title}
             disabled={props.disabled}
         >
         </BaseTitleBt>

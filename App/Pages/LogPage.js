@@ -13,6 +13,8 @@ import *as OauthForm from '../Utils/LogRegisterUtils/OauthForm'
 import GlobalStyles from '../Global/GlobalStyles'
 import phoneQuickLogPage from './phoneQuickLogPage'
 import BizLogBt from '../Comp/BizCommonComp/BizLogBt'
+import *as BizViews from '../Comp/BizCommonComp/BizViews'
+import registerPage from './RegisterPage'
 
 /**
  *  展示组件
@@ -52,6 +54,10 @@ export default class LogRegisterPage extends Component {
     //进 注册页
     gotoRegisterPage() {
         showToast('gotoRegisterPage');
+
+        this.props.navigator.push({
+            component: registerPage
+        });
     }
 
     updateEmail(text) {
@@ -83,7 +89,11 @@ export default class LogRegisterPage extends Component {
         }
         if (!OauthForm.oauthPass(this.password)) {
             showToast('密码至少6位字符或数字');
+            return;
         }
+
+        showToast('onLoginPress ok ');
+
     }
 
     //快捷登录
@@ -144,28 +154,6 @@ export default class LogRegisterPage extends Component {
             </View>
         );
     }
-
-    //邀请码输入view
-    // InviteCodeInputView() {
-    //     return (
-    //         <View style={[styles.InputItemContainer, {marginTop: -1}]}>
-    //             <View style={styles.IpputItemLeftView}>
-    //                 <Text style={styles.IpputItemLeftText}>邀请码</Text>
-    //             </View>
-    //             <View style={styles.InputItemRightView}>
-    //                 <TextInput
-    //                     style={styles.textInput}
-    //                     placeholder='输入好友邀请码 (选填)'
-    //                     onChange={(event) => this.updateInviteCode(
-    //                         event.nativeEvent.text
-    //                     )}
-    //                     onBlur={() => this.onBlur()}
-    //                     underlineColorAndroid={Colors.transparent}
-    //                 />
-    //             </View>
-    //         </View>
-    //     );
-    // }
 
     // 点服务条款
     onPressServiceProvision() {
@@ -335,38 +323,23 @@ export default class LogRegisterPage extends Component {
             <BaseNavigationBar
                 navigator={navigator}
                 leftButton={NavBarButton.getBackButton( ()=>baseOnBackPress(navigator) )}
-                rightButton={NavBarButton.newUserRegister(()=>this.gotoRegisterPage())}
+                rightButton={NavBarButton.newUserRegister(()=>this.gotoRegisterPage(),{title:'新用户注册'})}
                 title='登录'
                 style={{backgroundColor: Colors.white}}
                 titleTextStyle={{color: Colors.black, fontSize: 17}}
                 statusBarCustomStyle={statusBar}
                 hide={false}/>;
 
-        let str = '返利高 商家全 折扣大 提现快';
-        let ebatesView =
-            <View style={{
-                alignItems: 'center',
-                //backgroundColor: Colors.getRandomColor()
-            }}>
-                <Image source={require('../Img/common_icon_logo@2x.png')} style={{marginTop: 20}}/>
-                <Text style={{
-                    marginTop: 10, fontSize: 18, fontWeight: 'bold', color: 'rgba(255, 115,' +
-                    ' 12, 1)',
-                    //backgroundColor:Colors.getRandomColor()
-                }}>最好的海淘返利网站</Text>
-                <Text style={{marginTop: 3, fontSize: 12, color: 'rgba(136, 136, 136, 1)'}}>{str}</Text>
-            </View>
-
         return (
             <View style={styles.container}>
                 {navigationBar}
-                {ebatesView}
+                {BizViews.ebatesViews()}
                 {/*邮箱输入框的容器view*/}
                 {this.emailInputView()}
                 {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
                 {this.passInputView()}
                 {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
-                {BizLogBt(()=>this.onLoginPress(), {backgroundColor:Colors.appUnifiedBackColor,disabled:false})}
+                {BizLogBt(()=>this.onLoginPress(), {backgroundColor:Colors.appUnifiedBackColor,disabled:false,title:'登录'})}
 
                 <BaseTitleBt
                     btStyle={{

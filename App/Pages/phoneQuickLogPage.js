@@ -18,6 +18,7 @@ import {connect} from 'react-redux'
 import *as OauthForm from '../Utils/LogRegisterUtils/OauthForm'
 import *as QuickLogAction from '../Redux/Actions/QuickLogAction'
 import SMSTimer from '../Utils/SMSTimer'
+import registerPage from './RegisterPage'
 
 class phoneQuickLogPage extends Component {
     constructor(props) {
@@ -119,7 +120,9 @@ class phoneQuickLogPage extends Component {
     //去注册
     onRegister() {
         showToast('onRegister');
-
+        this.props.navigator.push({
+            component: registerPage
+        });
     }
 
     /*验证码 输入框的容器view*/
@@ -211,7 +214,7 @@ class phoneQuickLogPage extends Component {
                 <View style={{flex: 1, backgroundColor: 'rgba(239, 239, 239, 1)'}}>
                     {BizLogBt(()=>this.onLoginPress(), {
                         backgroundColor: this.props.quickLogReducer.loginBtBtState.backColor,//Colors.halfOpacityAppUnifiedBackColor,
-                        disabled: this.props.quickLogReducer.loginBtBtState.disabled
+                        disabled: this.props.quickLogReducer.loginBtBtState.disabled,title:'登录'
                     })}
                     {/*右下角Text的容器view*/}
                     <View style={{
