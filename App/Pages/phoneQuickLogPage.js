@@ -89,7 +89,7 @@ class phoneQuickLogPage extends Component {
      * 点击登陆按钮, 验证 验证码是否过期 和是否 输错,满足其一,就提示 '请重新获取验证码'
      */
     onLoginPress() {
-
+        showToast('该手机未在网站上绑定过, 若您已有账号,请前往ebates.cn,登录并绑定您的手机号,若您还没有账号,请先注册')
     }
 
     /*手机号 输入框的容器view*/
@@ -114,6 +114,12 @@ class phoneQuickLogPage extends Component {
 
             </View>
         );
+    }
+
+    //去注册
+    onRegister() {
+        showToast('onRegister');
+
     }
 
     /*验证码 输入框的容器view*/
@@ -207,6 +213,17 @@ class phoneQuickLogPage extends Component {
                         backgroundColor: this.props.quickLogReducer.loginBtBtState.backColor,//Colors.halfOpacityAppUnifiedBackColor,
                         disabled: this.props.quickLogReducer.loginBtBtState.disabled
                     })}
+                    {/*右下角Text的容器view*/}
+                    <View style={{
+                        marginTop: 20, flexDirection: 'row', justifyContent: 'flex-end', marginRight: 15,
+                        //backgroundColor:Colors.getRandomColor()
+                    }}>
+                        <Text style={{color: 'rgba(54, 166, 66, 1)', fontSize: 12}}
+                              onPress={()=> {
+                                  this.onRegister()
+                              }}
+                        >还没有账号, 去注册</Text>
+                    </View>
                 </View>
             </View>
         );

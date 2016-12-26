@@ -64,7 +64,7 @@ module.exports = {
         flexDirection: 'row',
         paddingLeft: 15, paddingRight: 15,
         //borderColor: Colors.borderColor, borderWidth: 1,
-        // backgroundColor: Colors.getRandomColor()//'rgba(252, 254, 254, 1)'
+        backgroundColor: Colors.white//'rgba(252, 254, 254, 1)'
     },
     //输入框容器里的左图
     IpputItemLeftView: {
@@ -72,7 +72,7 @@ module.exports = {
         paddingRight: 30,
         justifyContent: 'center', alignItems: 'flex-start',
         height: 44,
-        // backgroundColor: Colors.getRandomColor()
+        // backgroundColor: Colors.white
     },
     //输入框容器里的右图
     InputItemRightView: {flex: 4, height: 40 /*, backgroundColor: Colors.getRandomColor()*/},
@@ -82,6 +82,6 @@ module.exports = {
         fontSize: 15,
         // alignItems: 'center',
         color: Colors.black,
-        // backgroundColor: Colors.getRandomColor()
+        // backgroundColor: Colors.white
     },
 };
