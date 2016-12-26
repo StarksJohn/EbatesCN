@@ -56,6 +56,14 @@ export default function quickLogReducer (state = initialState, action){
             return nextState
         }
             break;
+        case  'loginBtStateChangeAction'://登录按钮状态变化
+        {
+            let nextState = state
+                .setIn(['loginBtBtState'], action.newState);
+            return nextState
+        }
+        break;
+
     }
         /**
      * ## Default

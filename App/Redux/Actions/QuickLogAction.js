@@ -32,7 +32,7 @@ export const oauthCodeBtState={
         backColor:Colors.appUnifiedBackColor,
         disabled:false,
         title:'重发验证码'
-    },//可点击开始第一次获取验证码状态
+    },//可点击开始 重新 获取验证码状态
 }
 
 /**
@@ -91,6 +91,13 @@ export function onAuthCodeBtCountDownAction (lastTime) {
 export function onAuthCodeBtResendAction () {
     return {
         type: oauthCodeBtState.resend,
+    }
+}
+
+export function loginBtStateChangeAction (newState) {
+    return {
+        type: 'loginBtStateChangeAction',
+        newState:newState
     }
 }
 

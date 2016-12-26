@@ -68,8 +68,15 @@ class phoneQuickLogPage extends Component {
     }
 
     updateOauthCode(text) {
+        const {dispatch} = this.props;
         this.oauthCode = text;
         Log.log('this.oauthCode==' + this.oauthCode);
+
+        if (OauthForm.oauthCode(this.oauthCode) && this.props.quickLogReducer.oauthCodeBtState.id==='2'){
+            dispatch(QuickLogAction.loginBtStateChangeAction(QuickLogAction.loginBtBtState.enable));
+        }else{
+            dispatch(QuickLogAction.loginBtStateChangeAction(QuickLogAction.loginBtBtState.unable));
+        }
     }
 
     onSendOauthCode() {
