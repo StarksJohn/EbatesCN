@@ -11,16 +11,28 @@ import Colors from '../../Utils/Colors'
 export const oauthCodeBtState={
     unable:{
         id:'0',
-        backColor:Colors.halfOpacityAppUnifiedBackColor
+        backColor:Colors.halfOpacityAppUnifiedBackColor,
+        disabled:true,
+        title:'获取验证码'
     },//无法点击状态
     enable:{
         id:'1',
-        backColor:Colors.appUnifiedBackColor
-    },//可点击开始获取验证码状态
+        backColor:Colors.appUnifiedBackColor,
+        disabled:false,
+        title:'获取验证码'
+    },//可点击开始第一次获取验证码状态
     countDown:{
         id:'2',
-        backColor:Colors.halfOpacityAppUnifiedBackColor
-    },//倒计时状态
+        backColor:Colors.halfOpacityAppUnifiedBackColor,
+        disabled:true,
+        title:'已发送'
+    },//倒计时更新状态
+    resend:{
+        id:'3',
+        backColor:Colors.appUnifiedBackColor,
+        disabled:false,
+        title:'重发验证码'
+    },//可点击开始第一次获取验证码状态
 }
 
 /**
@@ -30,11 +42,15 @@ export const oauthCodeBtState={
 export const loginBtBtState={
     unable:{
         id:'0',
-        backColor:Colors.halfOpacityAppUnifiedBackColor
+        backColor:Colors.halfOpacityAppUnifiedBackColor,
+        disabled:true
+
     },//
     enable:{
         id:'1',
-        backColor:Colors.appUnifiedBackColor
+        backColor:Colors.appUnifiedBackColor,
+        disabled:false
+
     },//
 }
 
@@ -55,6 +71,26 @@ export function onAuthCodeBtEnableAction () {
 export function onAuthCodeBtUnableAction () {
     return {
         type: oauthCodeBtState.unable,
+    }
+}
+
+/**
+ * 验证码按钮进入 countDown 状态
+ * @returns {{type: number}}
+ */
+export function onAuthCodeBtCountDownAction (lastTime) {
+    return {
+        type: oauthCodeBtState.countDown,
+        lastTime:lastTime
+    }
+}
+
+/**
+ * 重发
+//  */
+export function onAuthCodeBtResendAction () {
+    return {
+        type: oauthCodeBtState.resend,
     }
 }
 

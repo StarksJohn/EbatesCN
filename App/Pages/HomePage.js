@@ -62,7 +62,7 @@ class HomePage extends Component {
         // showToast('onBarsPress');
         // InteractionManager.runAfterInteractions(() => {
         //     this.props.navigator.push({
-        //         component: LogRegisterPageContainer
+        //         component: LogPage
         //     });
         // });
 

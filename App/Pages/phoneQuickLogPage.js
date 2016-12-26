@@ -14,16 +14,32 @@ import {baseSpeLine} from '../Comp/Base/BaseSpeLine'
 import BaseTitleBt from '../Comp/Base/BaseTitleBt'
 import BizLogBt from '../Comp/BizCommonComp/BizLogBt'
 import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
+// import {bindActionCreators} from 'redux'
 import *as OauthForm from '../Utils/LogRegisterUtils/OauthForm'
 import *as QuickLogAction from '../Redux/Actions/QuickLogAction'
+import SMSTimer from '../Utils/SMSTimer'
 
 class phoneQuickLogPage extends Component {
     constructor(props) {
         super(props);
-        // this.backAndroidEventListener = new BackAndroidEventListener({...props, backPress: (e)=>this.onBackPress()});
+        const {dispatch} = this.props;
         this.phone = '';
         this.oauthCode = '';//验证码
+        this.timer=new SMSTimer({
+            timerNums:5,
+            callBack:(time)=>{
+                Log.log('time==='+time);
+                if (time>=0){
+                    dispatch(QuickLogAction.onAuthCodeBtCountDownAction(time));
+                }else if(time==-1){
+                    dispatch(QuickLogAction.onAuthCodeBtResendAction());
+                }
+
+                // this.timer.start();
+            }
+        });
+        dispatch(QuickLogAction.onAuthCodeBtUnableAction());
+
     }
 
     componentDidMount() {
@@ -37,14 +53,17 @@ class phoneQuickLogPage extends Component {
     }
 
     updatePhone(text) {
+        const {dispatch} = this.props;
         this.phone = text;
         Log.log('this.phone==' + this.phone);
         if (OauthForm.oauthPhone(this.phone)) {
             showToast('oauthPhone ok')
-            this.props.dispatchActions.onAuthCodeBtEnableAction();
+            dispatch(QuickLogAction.onAuthCodeBtEnableAction());
         }else if(this.props.quickLogReducer.oauthCodeBtState.id === QuickLogAction.oauthCodeBtState.enable.id){//当前从 enable 状态 ==> unable 状态
             showToast('onAuthCodeBtUnableAction()')
-            this.props.dispatchActions.onAuthCodeBtUnableAction();
+            // this.props.dispatchActions.onAuthCodeBtUnableAction();
+            dispatch(QuickLogAction.onAuthCodeBtUnableAction());
+
         }
     }
 
@@ -54,7 +73,8 @@ class phoneQuickLogPage extends Component {
     }
 
     onSendOauthCode() {
-
+        this.props.dispatch(QuickLogAction.onAuthCodeBtCountDownAction(this.timer.timerNums));
+        this.timer.start();
     }
 
     /**
@@ -120,7 +140,7 @@ class phoneQuickLogPage extends Component {
                             justifyContent: 'center',
                             backgroundColor: this.props.quickLogReducer.oauthCodeBtState.backColor,
                         }}
-                        disabled={!(this.props.quickLogReducer.oauthCodeBtState.id === QuickLogAction.oauthCodeBtState.enable.id)}//参考
+                        disabled={this.props.quickLogReducer.oauthCodeBtState.disabled}//参考
                         // snowflake的LoginRender的
                         // ItemCheckbox的 disabled的判断
                         onPress={()=>this.onSendOauthCode()}
@@ -129,7 +149,7 @@ class phoneQuickLogPage extends Component {
                             //fontFamily: 'Gill Sans',
                             color: Colors.white,
                         }}
-                        title='获取验证码'
+                        title={this.props.quickLogReducer.oauthCodeBtState.title}
                     >
                     </BaseTitleBt>
                 </View>
@@ -177,8 +197,8 @@ class phoneQuickLogPage extends Component {
                 {this.oauthCodeInputView()}
                 <View style={{flex: 1, backgroundColor: 'rgba(239, 239, 239, 1)'}}>
                     {BizLogBt(()=>this.onLoginPress(), {
-                        backgroundColor: Colors.halfOpacityAppUnifiedBackColor,
-                        disabled: true
+                        backgroundColor: this.props.quickLogReducer.loginBtBtState.backColor,//Colors.halfOpacityAppUnifiedBackColor,
+                        disabled: this.props.quickLogReducer.loginBtBtState.disabled
                     })}
                 </View>
             </View>
@@ -188,17 +208,18 @@ class phoneQuickLogPage extends Component {
 
 /**
  * 看 http://www.cnblogs.com/ZSG-DoBestMe/p/5280198.html,也可看笔记里的bindActionCreators
+ * 缺点是 看不到 action 函数的 声明,故弃用
  * @param dispatch
  * @returns {{dispatchActions: *}}
  */
-function mapDispatchToProps(dispatch) {
-    return {
-        /**
-         * dispatchActions: 注入到 this.props 里 ,用于本控件统一发 action的对象,且被发送 的action 函数 不需要 被包在 dispatch() 内,
-         */
-        dispatchActions: bindActionCreators({...QuickLogAction}, dispatch)
-    }
-}
+// function mapDispatchToProps(dispatch) {
+//     return {
+//         /**
+//          * dispatchActions: 注入到 this.props 里 ,用于本控件统一发 action的对象,且被发送 的action 函数 不需要 被包在 dispatch() 内,
+//          */
+//         dispatchActions: bindActionCreators({...QuickLogAction}, dispatch)
+//     }
+// }
 
 
 function mapStateToProps(state) {
@@ -212,5 +233,5 @@ function mapStateToProps(state) {
     return {quickLogReducer};
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(phoneQuickLogPage)
+export default connect(mapStateToProps)(phoneQuickLogPage)
 

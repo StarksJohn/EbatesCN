@@ -8,7 +8,15 @@ import *as quickLogAction from '../Actions/QuickLogAction'
 
 
 var InitialState = Record({
-    oauthCodeBtState:quickLogAction.oauthCodeBtState.unable,
-    loginBtBtState:quickLogAction.loginBtBtState.unable
+    oauthCodeBtState: new (Record(
+        {
+            // quickLogAction.oauthCodeBtState.unable
+            id:quickLogAction.oauthCodeBtState.unable.id,
+            backColor:quickLogAction.oauthCodeBtState.unable.backColor,
+            disabled:quickLogAction.oauthCodeBtState.unable.disabled,
+            title:quickLogAction.oauthCodeBtState.unable.disabled.title
+        }
+    ))(),//,
+    loginBtBtState: quickLogAction.loginBtBtState.unable
 })
 export default InitialState

@@ -4,11 +4,5 @@
  * @flow
  */
 
-import React  from 'react';
-import {
-    AppRegistry
-} from 'react-native';
-import Root from './App/Root/Root';
+import Main from './Main'
 
-
-AppRegistry.registerComponent('EbatesCN', () => Root);
