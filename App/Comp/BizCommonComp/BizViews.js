@@ -5,6 +5,8 @@
  */
 import React from 'react';
 import {View,Image ,Text} from 'react-native';
+import Colors from '../../Utils/Colors'
+import FontAwesomeIconBts from '../Base/BaseFontAwesomeIconBts'
 
 /**
  * 登录注册页共用
@@ -26,4 +28,26 @@ export function ebatesViews() {
             <Text style={{marginTop: 3, fontSize: 12, color: 'rgba(136, 136, 136, 1)'}}>{str}</Text>
         </View>
     );
+}
+
+/**
+ * 勾选框
+ * @returns {XML}
+ */
+export function checkBox(callBack) {
+    return<FontAwesomeIconBts
+        btStyle={{
+            width: 20,
+            height: 20,
+            /*justifyContent: 'center', alignItems: 'center', marginTop: 15,  */ marginLeft: 15 ,
+            //backgroundColor:Colors.green
+        }}
+        //btSelectColor={Colors.blackTranslucent}
+        normalName='square'
+        selectName='check-square'
+        iconSize={20}
+        initSelected={true}
+        iconColor={Colors.appUnifiedBackColor}
+        onPress={callBack}
+    />
 }

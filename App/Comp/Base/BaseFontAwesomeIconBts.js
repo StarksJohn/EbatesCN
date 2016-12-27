@@ -33,11 +33,6 @@ import BaseBt from './BaseBt';
 // };
 
 export default class FontAwesomeIconBts extends Component {
-    static defaultProps = {
-        iconColor: 'white',
-        iconSize: 20,
-    };
-
     static propTypes = {
         onPress: PropTypes.func,
         iconColor: PropTypes.string,
@@ -45,15 +40,23 @@ export default class FontAwesomeIconBts extends Component {
         normalName: PropTypes.string,
         selectName: PropTypes.string,
         // tag:PropTypes.string,
-        isSelected: PropTypes.bool,
-        btSelectColor: PropTypes.string //按钮按下的颜色
+        initSelected: PropTypes.bool,
+        activeOpacity: PropTypes.number,
+        // btSelectColor: PropTypes.string //按钮按下的颜色
+    };
+
+    static defaultProps = {
+        iconColor: 'white',
+        iconSize: 20,
+        activeOpacity: 0.5,
+        initSelected: false
     };
 
     constructor(props) {
         super(props);
-        // this.onPress = this._onPress.bind(this);
+        this.isSelected=props.initSelected;
         this.state = {
-            name: this.props.isSelected ? this.props.selectName : this.props.normalName,
+            name: this.isSelected ? this.props.selectName : this.props.normalName,
         }
 
         // showToast('正在'+this.props.ApiName+' 列表的 收藏icon的 constructor 方法'+ '     this.state.name='+this.state.name);
@@ -66,34 +69,37 @@ export default class FontAwesomeIconBts extends Component {
 
     onPress() {
         const {onPress, normalName, selectName, dispatch, _tag} = this.props;
-        onPress();
 
         // dispatch(changeStates(_tag,name===normalName?selectName:normalName));
+        Log.log('this.isSelected===' + this.isSelected);
+        this.isSelected = this.isSelected ? false : true;
+        Log.log('isSelect===' + this.isSelected);
 
         this.setState({
-            name: this.state.name === normalName ? selectName : normalName,
+            // name: this.state.name === normalName ? selectName : normalName,
+            name: this.isSelected ? this.props.selectName : this.props.normalName,
         })
+
+        onPress(this.isSelected);
+
     }
 
     componentWillReceiveProps(nextProps) {
 
-        // showToast('正在'+this.props.ApiName+' 列表的 收藏icon的 componentWillReceiveProps 方法'+'\n'+'this.props.isSelected=='+this.props.isSelected+'\n'+'nextProps.isSelected=='+nextProps.isSelected+'\n'+'this.state.name='+this.state.name);
-
-        if (this.props.isSelected !== nextProps.isSelected) {
-            this.setState({
-                name: nextProps.isSelected ? this.props.selectName : this.props.normalName
-            })
-        }
+        // if (this.props.isSelected !== nextProps.isSelected) {
+        //     this.setState({
+        //         name: nextProps.isSelected ? this.props.selectName : this.props.normalName
+        //     })
+        // }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        // showToast('正在'+this.props.ApiName+' 列表的 收藏icon的 shouldComponentUpdate() 方法'+'\n'+'this.props.isSelected=='+this.props.isSelected+'\n'+'nextProps.isSelected=='+nextProps.isSelected+'\n'+'this.state.name='+this.state.name);
 
-        if (this.props.isSelected !== nextProps.isSelected) {
-            return true;
-        }
-        return false;
-
+        // if (this.props.isSelected !== nextProps.isSelected) {
+        //     return true;
+        // }
+        // return false;
+        return true;
     }
 
     /**
@@ -106,24 +112,16 @@ export default class FontAwesomeIconBts extends Component {
      * @returns {XML}
      */
     render() {
-        const {iconSize, iconColor, btStyle, btSelectColor} = this.props;
-        // showToast('正在画'+this.props.ApiName+' 列表的 收藏icon  ,this.state.name='+this.state.name);
-
+        const {iconSize, iconColor, btStyle} = this.props;
         return (
-
-            // <Ionicons style={style}//{{backgroundColor:Colors.red, width:20}}
-            //           name={this.state.name}//{'md-heart-outline'}
-            //           size={size}
-            //           color={color}
-            //           onPress={this.onPress}
-            // />
 
             <BaseBt
                 onPress={ ()=> {
                     this.onPress()
                 } }
                 style={   [{justifyContent: 'center', alignItems: 'center'}, btStyle] }
-                underlayColor={btSelectColor}
+                //underlayColor={btSelectColor}
+                activeOpacity={this.props.activeOpacity}
 
             >
                 <FontAwesomeIcon name={this.state.name} size={iconSize} color={iconColor}/>
@@ -135,6 +133,3 @@ export default class FontAwesomeIconBts extends Component {
     }
 
 };
-
-// FontAwesomeIconBts.propTypes = propTypes;
-// FontAwesomeIconBts.defaultProps = defaultProps;

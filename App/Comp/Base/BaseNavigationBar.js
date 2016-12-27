@@ -15,7 +15,7 @@ import {
 } from 'react-native'
 import GlobalStyles from '../../Global/GlobalStyles'
 import Colors from '../../Utils/Colors';
-import FontAwesomeIconBts from './FontAwesomeIconBts';
+import FontAwesomeIconBts from './BaseFontAwesomeIconBts';
 // import {showToast} from '../../comp/CommonComp';
 // import Log from '../../utils/Log'
 // import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';

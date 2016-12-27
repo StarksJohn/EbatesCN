@@ -89,7 +89,7 @@ export default class RegisterPage extends Component {
     /*邮箱输入框的容器view*/
     emailInputView() {
         return (
-            <View style={[GlobalStyles.InputItemContainer,{marginTop: 40}]}>
+            <View style={[GlobalStyles.InputItemContainer, {marginTop: 40}]}>
                 <View style={GlobalStyles.IpputItemLeftView}>
                     <Text style={styles.IpputItemLeftText}>邮箱</Text>
                 </View>
@@ -136,7 +136,7 @@ export default class RegisterPage extends Component {
     InviteCodeInputView() {
         return (
             <View style={[GlobalStyles.InputItemContainer]}>
-                <View style={[GlobalStyles.IpputItemLeftView,{paddingRight:16}]}>
+                <View style={[GlobalStyles.IpputItemLeftView, {paddingRight: 16}]}>
                     <Text style={styles.IpputItemLeftText}>邀请码</Text>
                 </View>
                 <View style={GlobalStyles.InputItemRightView}>
@@ -167,8 +167,8 @@ export default class RegisterPage extends Component {
         let navigationBar =
             <BaseNavigationBar
                 navigator={navigator}
-                leftButton={NavBarButton.getBackButton( ()=>baseOnBackPress(navigator) )}
-                rightButton={NavBarButton.newUserRegister(()=>this.gotoLogPage(),{title:'已有账号,去登录'})}
+                leftButton={NavBarButton.getBackButton(()=>baseOnBackPress(navigator))}
+                rightButton={NavBarButton.newUserRegister(()=>this.gotoLogPage(), {title: '已有账号,去登录'})}
                 title='注册'
                 style={{backgroundColor: Colors.white}}
                 titleTextStyle={{color: Colors.black, fontSize: 17}}
@@ -187,14 +187,18 @@ export default class RegisterPage extends Component {
                 {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
                 {this.InviteCodeInputView()}
                 {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
+                {/*服务条款容器view*/}
                 <View style={{
-                    height: 40,
-                    paddingLeft: 55,
+                    height: 65,
+                    //paddingLeft: 55,
                     flexDirection: 'row',
-                    justifyContent: 'flex-start',
+                    //justifyContent: 'flex-start',
                     alignItems: 'center',
-                    //backgroundColor: Colors.getRandomColor()
+                    backgroundColor: Colors.getRandomColor()
                 }}>
+                    {BizViews.checkBox((isSelect)=> {
+                        //Log.log('isSelect===' + isSelect);
+                    })}
                     <Text style={{
                         color: 'rgba(85, 85, 85, 1)',
                         fontSize: 13,
@@ -214,7 +218,11 @@ export default class RegisterPage extends Component {
                         Ebates.cn服务条款
                     </Text>
                 </View>
-                {BizLogBt(()=>this.onRegisterPress(), {backgroundColor:Colors.appUnifiedBackColor,disabled:false,title:'免费注册赠$5'})}
+                {BizLogBt(()=>this.onRegisterPress(), {
+                    backgroundColor: Colors.appUnifiedBackColor,
+                    disabled: false,
+                    title: '免费注册赠$5'
+                })}
             </View>
         );
     }
@@ -225,6 +233,7 @@ export default class RegisterPage extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: Colors.white
     },
     //输入框左图里的text
     IpputItemLeftText: {},
