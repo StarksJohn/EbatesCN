@@ -37,15 +37,15 @@ export function ebatesViews() {
 export function checkBox(callBack) {
     return<FontAwesomeIconBts
         btStyle={{
-            width: 20,
-            height: 20,
+            width: 30,
+            height: 30,
             /*justifyContent: 'center', alignItems: 'center', marginTop: 15,  */ marginLeft: 15 ,
             //backgroundColor:Colors.green
         }}
         //btSelectColor={Colors.blackTranslucent}
         normalName='square'
         selectName='check-square'
-        iconSize={20}
+        iconSize={25}
         initSelected={true}
         iconColor={Colors.appUnifiedBackColor}
         onPress={callBack}

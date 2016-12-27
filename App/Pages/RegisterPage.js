@@ -15,11 +15,13 @@ import phoneQuickLogPage from './phoneQuickLogPage'
 import BizLogBt from '../Comp/BizCommonComp/BizLogBt'
 import *as BizViews from '../Comp/BizCommonComp/BizViews'
 import LogPage from './LogPage'
+import *as RegisterRelevantActions from '../Redux/Actions/RegisterRelevantActions'
+import {connect} from 'react-redux'
 
 /**
  *  展示组件
  */
-export default class RegisterPage extends Component {
+export class RegisterPage extends Component {
 
     constructor(props) {
         super(props);
@@ -160,7 +162,7 @@ export default class RegisterPage extends Component {
     }
 
     render() {
-        const {navigator} = this.props;
+        const {navigator,dispath} = this.props;
 
         var statusBar = GlobalStyles.twoLevelPageStatusBarProps;
 
@@ -194,14 +196,15 @@ export default class RegisterPage extends Component {
                     flexDirection: 'row',
                     //justifyContent: 'flex-start',
                     alignItems: 'center',
-                    backgroundColor: Colors.getRandomColor()
+                    //backgroundColor: Colors.getRandomColor()
                 }}>
                     {BizViews.checkBox((isSelect)=> {
-                        //Log.log('isSelect===' + isSelect);
+                        Log.log('isSelect===' + isSelect);
+                        this.props.dispatch(RegisterRelevantActions.changeRegisterBtStatesActions(isSelect))
                     })}
                     <Text style={{
                         color: 'rgba(85, 85, 85, 1)',
-                        fontSize: 13,
+                        fontSize: 12, marginLeft:10
                         //backgroundColor: Colors.getRandomColor()
                     }}>
                         {str}
@@ -219,9 +222,10 @@ export default class RegisterPage extends Component {
                     </Text>
                 </View>
                 {BizLogBt(()=>this.onRegisterPress(), {
-                    backgroundColor: Colors.appUnifiedBackColor,
-                    disabled: false,
-                    title: '免费注册赠$5'
+                    backgroundColor: this.props.RegisterReducer.registerBtState.backColor,
+                    disabled: this.props.RegisterReducer.registerBtState.disabled,
+                    title: '免费注册赠$5',
+                    btStyle:{marginTop: 0}
                 })}
             </View>
         );
@@ -240,4 +244,13 @@ const styles = StyleSheet.create({
 
 
 });
+
+function mapStateToProps(state) {
+
+    // 把 state里的 homePageReducer 注入到 this.props里
+    const {RegisterReducer}=state;
+    return {RegisterReducer};
+}
+
+export default connect(mapStateToProps)(RegisterPage)
 

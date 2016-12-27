@@ -250,10 +250,6 @@ class phoneQuickLogPage extends Component {
 
 
 function mapStateToProps(state) {
-    // return {
-    //     auth: state.auth,
-    //     global: state.global
-    // }
 
     // 把 state里的 homePageReducer 注入到 this.props里
     const {quickLogReducer}=state;

@@ -71,14 +71,14 @@ export default class FontAwesomeIconBts extends Component {
         const {onPress, normalName, selectName, dispatch, _tag} = this.props;
 
         // dispatch(changeStates(_tag,name===normalName?selectName:normalName));
-        Log.log('this.isSelected===' + this.isSelected);
+        // Log.log('this.isSelected===' + this.isSelected);
         this.isSelected = this.isSelected ? false : true;
-        Log.log('isSelect===' + this.isSelected);
+        // Log.log('isSelect===' + this.isSelected);
 
         this.setState({
             // name: this.state.name === normalName ? selectName : normalName,
             name: this.isSelected ? this.props.selectName : this.props.normalName,
-        })
+        });
 
         onPress(this.isSelected);
 

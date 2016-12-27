@@ -10,7 +10,7 @@ import Colors from '../../Utils/Colors';
 export default function logBt(callback,props) {
     return (
         <BaseTitleBt
-            btStyle={{
+            btStyle={[{
                 borderRadius: 4,
                 height: 44,
                 alignItems: 'center',
@@ -19,7 +19,7 @@ export default function logBt(callback,props) {
                 justifyContent: 'center',
                 backgroundColor: props.backgroundColor,
                 marginTop: 15
-            }}
+            },props.btStyle]}
             onPress={callback}
             textStyle={{
                 fontSize: 15,
