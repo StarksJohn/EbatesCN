@@ -2,7 +2,7 @@
  登录 页
  */
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, TextInput, Image} from 'react-native';
+import {StyleSheet, View, Text, TextInput, Image, Platform} from 'react-native';
 import Colors from '../Utils/Colors';
 import  BaseNavigationBar, {NavBarButton, baseOnBackPress} from '../Comp/Base/BaseNavigationBar'
 import BackAndroidEventListener from '../Utils/BackAndroidEventListener'
@@ -15,18 +15,23 @@ import phoneQuickLogPage from './phoneQuickLogPage'
 import BizLogBt from '../Comp/BizCommonComp/BizLogBt'
 import *as BizViews from '../Comp/BizCommonComp/BizViews'
 import registerPage from './RegisterPage'
+// import TwoLevelPage from './TwoLevelPage'
 
 /**
  *  展示组件
  */
-export default class LogRegisterPage extends Component {
+export default class LogPage extends Component {
 
     constructor(props) {
         super(props);
-        this.backAndroidEventListener = new BackAndroidEventListener({
-            ...props,
-            backPress: /*(e)=>this.onBackPress()*/ (e)=>baseOnBackPress(this.props.navigator)
-        });
+        if (Platform.OS === 'android') {
+            this.backAndroidEventListener = new BackAndroidEventListener({
+                ...props,
+                backPress: (e)=> baseOnBackPress(this.props.navigator),
+                hardwareBackPressListenerName: 'LogPage'
+            });
+        }
+
         this.email = '';
         this.password = '';
         this.inviteCode = '';//邀请码
@@ -34,13 +39,13 @@ export default class LogRegisterPage extends Component {
 
     componentDidMount() {
 
-        const {dispatch} = this.props;
-        this.backAndroidEventListener.addEventListener();
+        // this.backAndroidEventListener.addEventListener();
 
     }
 
     componentWillUnmount() {
-        this.backAndroidEventListener.removeEventListener();
+        // super.componentWillUnmount();
+        // this.backAndroidEventListener.removeEventListener();
     }
 
     /*
@@ -112,7 +117,7 @@ export default class LogRegisterPage extends Component {
     /*邮箱输入框的容器view*/
     emailInputView() {
         return (
-            <View style={[GlobalStyles.InputItemContainer,{marginTop: 40}]}>
+            <View style={[GlobalStyles.InputItemContainer, {marginTop: 40}]}>
                 <View style={GlobalStyles.IpputItemLeftView}>
                     <Text style={styles.IpputItemLeftText}>邮箱</Text>
                 </View>
@@ -322,8 +327,10 @@ export default class LogRegisterPage extends Component {
         let navigationBar =
             <BaseNavigationBar
                 navigator={navigator}
-                leftButton={NavBarButton.getBackButton( ()=>baseOnBackPress(navigator) )}
-                rightButton={NavBarButton.newUserRegister(()=>this.gotoRegisterPage(),{title:'新用户注册'})}
+                leftButton={NavBarButton.getBackButton(()=> {
+                    return baseOnBackPress(navigator,this.backAndroidEventListener);
+                })}
+                rightButton={NavBarButton.newUserRegister(()=>this.gotoRegisterPage(), {title: '新用户注册'})}
                 title='登录'
                 style={{backgroundColor: Colors.white}}
                 titleTextStyle={{color: Colors.black, fontSize: 17}}
@@ -339,7 +346,11 @@ export default class LogRegisterPage extends Component {
                 {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
                 {this.passInputView()}
                 {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
-                {BizLogBt(()=>this.onLoginPress(), {backgroundColor:Colors.appUnifiedBackColor,disabled:false,title:'登录'})}
+                {BizLogBt(()=>this.onLoginPress(), {
+                    backgroundColor: Colors.appUnifiedBackColor,
+                    disabled: false,
+                    title: '登录'
+                })}
 
                 <BaseTitleBt
                     btStyle={{

@@ -5,7 +5,7 @@
  * 验证逻辑:一开始 , 手机号未输入 11位 前,2个按钮都不可点; 手机号输入正确位数后, 获取验证码 可点; 点击后, 按钮变灰并倒计时, 60秒内, 用户输入 正确位数的验证码,登陆按钮可点; 点击登录按钮时,检验 验证码是否过期,或者输错,满足其一, 提示 '请重新获取验证码'
  */
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, TextInput} from 'react-native';
+import {StyleSheet, View, Text, TextInput,Platform} from 'react-native';
 import Colors from '../Utils/Colors';
 import  BaseNavigationBar, {NavBarButton, baseOnBackPress} from '../Comp/Base/BaseNavigationBar'
 import BackAndroidEventListener from '../Utils/BackAndroidEventListener'
@@ -26,6 +26,13 @@ class phoneQuickLogPage extends Component {
         const {dispatch} = this.props;
         this.phone = '';
         this.oauthCode = '';//验证码
+        if (Platform.OS === 'android') {
+            this.backAndroidEventListener = new BackAndroidEventListener({
+                ...props,
+                backPress: (e)=> baseOnBackPress(this.props.navigator),
+                hardwareBackPressListenerName: 'phoneQuickLogPage'
+            });
+        }
         this.timer=new SMSTimer({
             timerNums:5,
             callBack:(time)=>{
@@ -179,7 +186,13 @@ class phoneQuickLogPage extends Component {
         let navigationBar =
             <BaseNavigationBar
                 navigator={navigator}
-                leftButton={NavBarButton.getBackButton(()=>baseOnBackPress(navigator))}
+                leftButton={NavBarButton.getBackButton(()=>{
+                    {/*if (Platform.OS === 'android' && this.backAndroidEventListener) {//二级安卓页面,点击左上角pop前,先把*/}
+                        {/*// this.backAndroidEventListener 释放*/}
+                        {/*this.backAndroidEventListener.removeEventListener();//*/}
+                    {/*}*/}
+                    return baseOnBackPress(navigator,this.backAndroidEventListener);
+                })}
                 //rightButton={NavBarButton.newUserRegister(()=>this.gotoRegisterPage())}
                 title='手机快捷登录'
                 style={{backgroundColor: Colors.white}}

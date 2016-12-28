@@ -2,7 +2,7 @@
  注册 页
  */
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, TextInput, Image} from 'react-native';
+import {StyleSheet, View, Text, TextInput, Image,Platform} from 'react-native';
 import Colors from '../Utils/Colors';
 import  BaseNavigationBar, {NavBarButton, baseOnBackPress} from '../Comp/Base/BaseNavigationBar'
 import BackAndroidEventListener from '../Utils/BackAndroidEventListener'
@@ -17,6 +17,7 @@ import *as BizViews from '../Comp/BizCommonComp/BizViews'
 import LogPage from './LogPage'
 import *as RegisterRelevantActions from '../Redux/Actions/RegisterRelevantActions'
 import {connect} from 'react-redux'
+import WebViewPage from './WebViewPage'
 
 /**
  *  展示组件
@@ -25,10 +26,13 @@ export class RegisterPage extends Component {
 
     constructor(props) {
         super(props);
-        this.backAndroidEventListener = new BackAndroidEventListener({
-            ...props,
-            backPress: /*(e)=>this.onBackPress()*/ (e)=>baseOnBackPress(this.props.navigator)
-        });
+        if (Platform.OS === 'android') {
+            this.backAndroidEventListener = new BackAndroidEventListener({
+                ...props,
+                backPress: (e)=> baseOnBackPress(this.props.navigator),
+                hardwareBackPressListenerName: 'RegisterPage'
+            });
+        }
         this.email = '';
         this.password = '';
         this.inviteCode = '';//邀请码
@@ -36,12 +40,9 @@ export class RegisterPage extends Component {
 
     componentDidMount() {
 
-        this.backAndroidEventListener.addEventListener();
-
     }
 
     componentWillUnmount() {
-        this.backAndroidEventListener.removeEventListener();
     }
 
     //进 登录 页
@@ -159,6 +160,12 @@ export class RegisterPage extends Component {
     // 点服务条款
     onPressServiceProvision() {
         showToast('onPressServiceProvision')//https://www.ebates.cn/help/terms
+        this.props.navigator.push({
+            component: WebViewPage,
+            title: '服务条款',
+            url: 'https://www.ebates.cn/help/terms',
+            name: 'WebViewPage',
+        });
     }
 
     render() {
@@ -169,7 +176,7 @@ export class RegisterPage extends Component {
         let navigationBar =
             <BaseNavigationBar
                 navigator={navigator}
-                leftButton={NavBarButton.getBackButton(()=>baseOnBackPress(navigator))}
+                leftButton={NavBarButton.getBackButton(()=>baseOnBackPress(navigator,this.backAndroidEventListener))}
                 rightButton={NavBarButton.newUserRegister(()=>this.gotoLogPage(), {title: '已有账号,去登录'})}
                 title='注册'
                 style={{backgroundColor: Colors.white}}

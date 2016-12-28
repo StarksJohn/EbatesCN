@@ -42,9 +42,14 @@ const StatusBarShape = {
 /*
  通用默认的左上角点击
  */
-export function  baseOnBackPress(navigator) {
+export function  baseOnBackPress(navigator,backAndroidEventListener) {
     navigator.pop();//app 页面回退
-    return true;//作用: 避免安卓点Home键, 完全退出
+
+    if (Platform.OS === 'android' && backAndroidEventListener) {//二级安卓页面,点击左上角pop前,先把
+        // this.backAndroidEventListener 释放
+        backAndroidEventListener.removeEventListener();//
+    }
+    return true;//作用:决定 BackAndroidEventListener 里 的 DeviceEventEmitter.emit 是否执行
 }
 
 

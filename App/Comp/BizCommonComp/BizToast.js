@@ -3,7 +3,7 @@
  * 自定义 react-native-easy-toast,实现事件监听
  */
 import React, {Component} from 'react';
-import { DeviceEventEmitter} from 'react-native';
+import { DeviceEventEmitter,InteractionManager} from 'react-native';
 import Toast, {DURATION} from 'react-native-easy-toast'
 
 export const ShowToastSignal='showToast';//显示toast 的信号
@@ -20,8 +20,9 @@ export default class BizToast extends Component{
 
     componentDidMount() {
         this.listener = DeviceEventEmitter.addListener(ShowToastSignal, (text) => {
-            this.refs.toastWithStyle.show(text, DURATION.LENGTH_SHORT);
-            this.refs.toastWithStyle
+            InteractionManager.runAfterInteractions(() => {
+                this.refs.toastWithStyle.show(text, DURATION.LENGTH_SHORT);
+            });
 
         });
     }
