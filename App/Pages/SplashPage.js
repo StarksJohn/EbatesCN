@@ -23,7 +23,7 @@ class SplashPage extends Component {
   	this._inAnim(() => {
   	  setTimeout(() => {
       	this._outAnim(() => this.props.onAnimEnd && this.props.onAnimEnd());
-    	}, 1500);
+    	}, 500);
   	});
 	}
 

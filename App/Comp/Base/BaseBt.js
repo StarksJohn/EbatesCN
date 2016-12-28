@@ -12,7 +12,7 @@ function BaseBt(props) {
             disabled={props.disabled}//
             {...props}
         >
-
+            {props.children}
         </TouchableOpacity>
     )
 }

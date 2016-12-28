@@ -15,12 +15,15 @@ import phoneQuickLogPage from './phoneQuickLogPage'
 import BizLogBt from '../Comp/BizCommonComp/BizLogBt'
 import *as BizViews from '../Comp/BizCommonComp/BizViews'
 import registerPage from './RegisterPage'
-// import TwoLevelPage from './TwoLevelPage'
+import {connect} from 'react-redux'
+import *as LogInActions from '../Redux/Actions/LogInActions'
+import BaseImgBt from '../Comp/Base/BaseImgBt'
+import *as Math from '../Utils/Math'
 
 /**
  *  展示组件
  */
-export default class LogPage extends Component {
+export class LogInPage extends Component {
 
     constructor(props) {
         super(props);
@@ -34,7 +37,9 @@ export default class LogPage extends Component {
 
         this.email = '';
         this.password = '';
-        this.inviteCode = '';//邀请码
+        this.imgOauthCode = '';//图片验证码
+        this.props.dispatch(LogInActions.hideImgOauthInputAction());
+
     }
 
     componentDidMount() {
@@ -75,9 +80,9 @@ export default class LogPage extends Component {
         Log.log('this.email==' + this.password);
     }
 
-    updateInviteCode(text) {
-        this.inviteCode = text;
-        Log.log('this.inviteCode==' + this.inviteCode);
+    updateImgOauthCode(text) {
+        this.imgOauthCode = text;
+        Log.log('this.imgOauthCode==' + this.imgOauthCode);
     }
 
     //输入框失去焦点时回调
@@ -112,6 +117,7 @@ export default class LogPage extends Component {
     onForgetPassPress() {
         showToast('onForgetPassPress');
 
+        this.props.dispatch(LogInActions.showImgOauthInputAction());
     }
 
     /*邮箱输入框的容器view*/
@@ -160,9 +166,45 @@ export default class LogPage extends Component {
         );
     }
 
-    // 点服务条款
-    onPressServiceProvision() {
-        showToast('onPressServiceProvision')
+    /*图片验证码 输入框的容器view*/
+    imgOauthCodeInputView() {
+        return (
+            <View style={[GlobalStyles.InputItemContainer]}>
+                <View style={[GlobalStyles.IpputItemLeftView, {paddingRight: 16}]}>
+                    <Text style={styles.IpputItemLeftText}>验证码</Text>
+                </View>
+                <View style={[GlobalStyles.InputItemRightView, {
+                    //flexDirection: 'row',
+                    //alignItems: 'center',
+                    //justifyContent: 'space-between'
+                }]}>
+                    <TextInput
+                        style={GlobalStyles.textInput}
+                        placeholder='输入图片验证码'
+                        onChange={(event) => this.updateImgOauthCode(
+                            event.nativeEvent.text
+                        )}
+                        onBlur={() => this.onBlur()}
+                        underlineColorAndroid={Colors.transparent}>
+                    </TextInput>
+                </View>
+                {/*图片按钮*/}
+                <BaseImgBt
+                    btStyle={{
+                        //height: 35,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: Colors.white,
+                    }}
+                    imgStyle={{width: 110, height: 35,
+                        //backgroundColor:Colors.getRandomColor()
+                    }}
+                    uri='http://media4.popsugar-assets.com/files/2014/08/08/878/n/1922507/caef16ec354ca23b_thumb_temp_cover_file32304521407524949.xxxlarge/i/Funny-Cat-GIFs.jpg'
+                    onPress={()=>Math.randomNums(0,10)}
+                >
+                </BaseImgBt>
+            </View>
+        );
     }
 
     // renderLoginRegisterView(i, v) {
@@ -328,7 +370,7 @@ export default class LogPage extends Component {
             <BaseNavigationBar
                 navigator={navigator}
                 leftButton={NavBarButton.getBackButton(()=> {
-                    return baseOnBackPress(navigator,this.backAndroidEventListener);
+                    return baseOnBackPress(navigator, this.backAndroidEventListener);
                 })}
                 rightButton={NavBarButton.newUserRegister(()=>this.gotoRegisterPage(), {title: '新用户注册'})}
                 title='登录'
@@ -346,12 +388,16 @@ export default class LogPage extends Component {
                 {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
                 {this.passInputView()}
                 {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
+                {this.props.LogInReducer.isShowImgOauthInput ?
+                    this.imgOauthCodeInputView() : null}
+                {this.props.LogInReducer.isShowImgOauthInput ?
+                    baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1}) : null}
                 {BizLogBt(()=>this.onLoginPress(), {
                     backgroundColor: Colors.appUnifiedBackColor,
                     disabled: false,
                     title: '登录'
                 })}
-
+                {/*手机快捷登录*/}
                 <BaseTitleBt
                     btStyle={{
                         borderRadius: 4,
@@ -403,3 +449,11 @@ const styles = StyleSheet.create({
 
 });
 
+function mapStateToProps(state) {
+
+    // 把 state里的 homePageReducer 注入到 this.props里
+    const {LogInReducer}=state;
+    return {LogInReducer};
+}
+
+export default connect(mapStateToProps)(LogInPage)

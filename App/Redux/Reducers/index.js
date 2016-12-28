@@ -3,7 +3,8 @@ import RootPageReducer from './RootPageReducer';
 import HomePageReducer from './HomePageReducer'
 import quickLogReducer from './QuickLogReducer'
 import RegisterReducer from './RegisterReducer'
+import LogInReducer from './LogInReducer'
 
 export default combineReducers({
-    RootPageReducer,HomePageReducer,quickLogReducer,RegisterReducer
+    RootPageReducer,HomePageReducer,quickLogReducer,RegisterReducer,LogInReducer
 });
