@@ -15,10 +15,28 @@ export const registerBtStates={
     },
 }
 
+/**
+ * 注册页面初始化state,避免 record 类型的数据 不因页面Pop而 重置
+ * @type {string}
+ */
+export const  registerPageInitState='registerPageInitState';
+export function registerPageInitStateActions() {
+    return {
+        type:registerPageInitState,
+    }
+}
+
 export const  changeRegisterBtStates='changeRegisterBtStates';
 export function changeRegisterBtStatesActions(b) {
     return {
         type:changeRegisterBtStates,
         newState:b?registerBtStates.enable:registerBtStates.unable
+    }
+}
+
+export const  showRegisterSucessbt='showRegisterSucessbt';
+export function showRegisterSucessbtAction() {
+    return {
+        type:showRegisterSucessbt,
     }
 }

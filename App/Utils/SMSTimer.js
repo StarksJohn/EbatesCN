@@ -13,28 +13,33 @@ export default class SMSTimer {
     constructor(props) {
         this.props = props;
         // this.autoplayTimer=null;
-        this.interval=null;
-        this.defaultTimerNums=props.timerNums;
-        this.timerNums=this.defaultTimerNums;
-        if (!props.timerNums){
+        this.interval = null;
+        this.defaultTimerNums = props.timerNums;
+        this.timerNums = this.defaultTimerNums;
+        this.isSuspend=false;
+        if (!props.timerNums) {
             showToast('props.timerNums 没传进来,设置 默认值')
-            this.timerNums=60;//默认 60秒
+            this.timerNums = 60;//默认 60秒
         }
     }
 
 
-
     start() {
+
         this.interval = setInterval(
             () => {
+                if (this.isSuspend){
+                    Log.log('isSuspend=true');
+                    this.timerNums=0;
+                }
                 this.timerNums--;
-                    // Log.log('this.timerNum==  '+  this.timerNums )
+                // Log.log('this.timerNum==  '+  this.timerNums )
                 this.props.callBack(this.timerNums)
                 if (this.timerNums <= 0) {
                     Log.log('clearInterval');
 
                     this.props.callBack(-1);
-                    this.timerNums=this.defaultTimerNums;
+                    this.timerNums = this.defaultTimerNums;
                     clearInterval(this.interval);
                 }
             }, 1000
@@ -52,5 +57,15 @@ export default class SMSTimer {
         //     this.props.callBack(this.props.timerNums)
         // }, 1000)
 
+        return this;
+
+    }
+
+    deallocInterval() {
+        if (this.interval) {
+            Log.log('deallocInterval');
+            // this.timerNums=0;
+            clearInterval(this.interval);
+        }
     }
 }

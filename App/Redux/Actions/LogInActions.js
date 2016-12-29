@@ -15,3 +15,15 @@ export function hideImgOauthInputAction() {
         type:hideImgOauthInput,
     }
 }
+
+/**
+ * 改变图片验证码
+ * @type {string}
+ */
+export const changeOauthCodeImg='changeOauthCodeImg';
+export function changeOauthCodeImgAction(uri) {
+    return {
+        type:changeOauthCodeImg,
+        uri:uri
+    }
+}

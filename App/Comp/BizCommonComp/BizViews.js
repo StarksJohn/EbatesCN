@@ -17,7 +17,7 @@ export function ebatesViews() {
     return (
         <View style={{
             alignItems: 'center',
-            backgroundColor: Colors.getRandomColor()
+            //backgroundColor: Colors.getRandomColor()
         }}>
             <Image source={require('../../Img/common_icon_logo@2x.png')} style={{marginTop: 20}}/>
             <Text style={{

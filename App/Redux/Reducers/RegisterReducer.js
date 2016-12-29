@@ -11,6 +11,11 @@ export default function RegisterReducer (state = initialState, action){
     }
 
     switch (action.type){
+        case RegisterRelevantActions.registerPageInitState:{
+            let nextState = initialState;
+            return nextState
+        }
+        break;
         case RegisterRelevantActions.changeRegisterBtStates:
         {
             let nextState = state
@@ -18,6 +23,13 @@ export default function RegisterReducer (state = initialState, action){
             return nextState
         }
         break;
+        case RegisterRelevantActions.showRegisterSucessbt:
+        {
+            let nextState = state
+                .setIn(['isShowRegisterSucessbt'], true);
+            return nextState
+        }
+            break;
     }
 
     /**

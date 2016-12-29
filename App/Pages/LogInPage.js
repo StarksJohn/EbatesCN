@@ -14,11 +14,19 @@ import GlobalStyles from '../Global/GlobalStyles'
 import phoneQuickLogPage from './phoneQuickLogPage'
 import BizLogBt from '../Comp/BizCommonComp/BizLogBt'
 import *as BizViews from '../Comp/BizCommonComp/BizViews'
-import registerPage from './RegisterPage'
+import RegisterPage from './RegisterPage'
 import {connect} from 'react-redux'
 import *as LogInActions from '../Redux/Actions/LogInActions'
 import BaseImgBt from '../Comp/Base/BaseImgBt'
 import *as Math from '../Utils/Math'
+//本地测试 验证码图片用, 接口好了就删了
+const IMAGES = [
+    'http://www.savethecat.com/wp-content/uploads/2015/06/cats.jpg',
+    'http://i.ytimg.com/vi/tntOCGkgt98/maxresdefault.jpg',
+    'http://media4.popsugar-assets.com/files/2014/08/08/878/n/1922507/caef16ec354ca23b_thumb_temp_cover_file32304521407524949.xxxlarge/i/Funny-Cat-GIFs.jpg',
+    'http://media1.santabanta.com/full1/Animals/Cats/cats-87a.jpg',
+    'http://awesomegifs.com/wp-content/uploads/cat-smacks-at-hands.gif',
+];
 
 /**
  *  展示组件
@@ -66,7 +74,8 @@ export class LogInPage extends Component {
         showToast('gotoRegisterPage');
 
         this.props.navigator.push({
-            component: registerPage
+            component: RegisterPage,
+            name:gRouteName.RegisterPage//'RegisterPage'
         });
     }
 
@@ -118,6 +127,13 @@ export class LogInPage extends Component {
         showToast('onForgetPassPress');
 
         this.props.dispatch(LogInActions.showImgOauthInputAction());
+        this.getOauthCodeImg();
+    }
+
+    //获取验证码图片 接口
+    getOauthCodeImg(){
+        let uri=IMAGES[Math.randomNums(0,IMAGES.length-1)];
+        this.props.dispatch(LogInActions.changeOauthCodeImgAction(uri));
     }
 
     /*邮箱输入框的容器view*/
@@ -199,8 +215,8 @@ export class LogInPage extends Component {
                     imgStyle={{width: 110, height: 35,
                         //backgroundColor:Colors.getRandomColor()
                     }}
-                    uri='http://media4.popsugar-assets.com/files/2014/08/08/878/n/1922507/caef16ec354ca23b_thumb_temp_cover_file32304521407524949.xxxlarge/i/Funny-Cat-GIFs.jpg'
-                    onPress={()=>Math.randomNums(0,10)}
+                    uri={this.props.LogInReducer.oauthCodeImgUri}
+                    onPress={()=>this.getOauthCodeImg()}
                 >
                 </BaseImgBt>
             </View>

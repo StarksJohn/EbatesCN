@@ -57,7 +57,8 @@ class RootNavigator extends Component {
                     ref={component => this.navigator = component}
                     initialRoute={
                     {
-                        component: RootPagesContainer
+                        component: RootPagesContainer,
+                        name:gRouteName.RootPagesContainer//'RootPagesContainer'
                     }
                     }
                     configureScene={this.handlerConfigureScene}

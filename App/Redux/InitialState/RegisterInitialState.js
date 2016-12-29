@@ -8,6 +8,7 @@ import *as RegisterRelevantActions from '../Actions/RegisterRelevantActions'
 
 
 var InitialState = Record({
-    registerBtState: RegisterRelevantActions.registerBtStates.enable
+    registerBtState: RegisterRelevantActions.registerBtStates.enable,
+    isShowRegisterSucessbt:false
 })
 export default InitialState

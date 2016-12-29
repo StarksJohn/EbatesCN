@@ -2,7 +2,7 @@
  注册 页
  */
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, TextInput, Image,Platform} from 'react-native';
+import {StyleSheet, View, Text, TextInput, Image, Platform} from 'react-native';
 import Colors from '../Utils/Colors';
 import  BaseNavigationBar, {NavBarButton, baseOnBackPress} from '../Comp/Base/BaseNavigationBar'
 import BackAndroidEventListener from '../Utils/BackAndroidEventListener'
@@ -18,6 +18,9 @@ import LogPage from './LogInPage'
 import *as RegisterRelevantActions from '../Redux/Actions/RegisterRelevantActions'
 import {connect} from 'react-redux'
 import WebViewPage from './WebViewPage'
+import BaseBlackTranslucentCoverView from '../Comp/Base/BaseBlackTranslucentCoverView'
+import BizRegigsterSucessBt from '../Comp/BizCommonComp/BizRegigsterSucessBt'
+import SMSTimer from '../Utils/SMSTimer'
 
 /**
  *  展示组件
@@ -36,6 +39,8 @@ export class RegisterPage extends Component {
         this.email = '';
         this.password = '';
         this.inviteCode = '';//邀请码
+
+        this.props.dispatch(RegisterRelevantActions.registerPageInitStateActions());
     }
 
     componentDidMount() {
@@ -43,6 +48,7 @@ export class RegisterPage extends Component {
     }
 
     componentWillUnmount() {
+        // Log.log('componentWillUnmount');
     }
 
     //进 登录 页
@@ -75,6 +81,20 @@ export class RegisterPage extends Component {
 
     }
 
+    /**
+     * 自动页面跳转回 注册登录页面之前的 页面
+     */
+    pageGotoAfterRegisterSucess() {
+
+        for (let i=0; i< this.props.navigator.getCurrentRoutes().length;i++ ) {
+            let route=this.props.navigator.getCurrentRoutes()[i];
+            if (route.name === "RootPagesContainer") {
+                this.props.navigator.popToRoute(route);
+                return;
+            }
+        }
+    }
+
     onRegisterPress() {
         if (!OauthForm.oauthEmail(this.email)) {
             showToast('邮箱地址不正确');
@@ -85,8 +105,17 @@ export class RegisterPage extends Component {
             return;
         }
 
-        showToast('onRegisterPress ok ');
+        this.props.dispatch(RegisterRelevantActions.showRegisterSucessbtAction());
 
+        this.timer = new SMSTimer({
+            timerNums: 5,
+            callBack: (time)=> {
+                Log.log('time===' + time);
+                if (time == -1) {
+                    this.pageGotoAfterRegisterSucess();
+                }
+            }
+        }).start();
     }
 
     /*邮箱输入框的容器view*/
@@ -168,15 +197,38 @@ export class RegisterPage extends Component {
         });
     }
 
+    stopTimer() {
+        this.timer.deallocInterval();
+    }
+
+    //话 注册成功蒙层 和 按钮
+    renderRegisterSucessbt() {
+        return (
+            <BaseBlackTranslucentCoverView
+                visible={this.props.RegisterReducer.isShowRegisterSucessbt}
+                cancel={()=> {
+
+                }}
+                {...this.props}>
+                {BizRegigsterSucessBt(//主动点 按钮
+                    ()=> {
+                        this.stopTimer();
+                        this.pageGotoAfterRegisterSucess()
+                    }
+                )}
+            </BaseBlackTranslucentCoverView>
+        )
+    }
+
     render() {
-        const {navigator,dispath} = this.props;
+        const {navigator, dispath} = this.props;
 
         var statusBar = GlobalStyles.twoLevelPageStatusBarProps;
 
         let navigationBar =
             <BaseNavigationBar
                 navigator={navigator}
-                leftButton={NavBarButton.getBackButton(()=>baseOnBackPress(navigator,this.backAndroidEventListener))}
+                leftButton={NavBarButton.getBackButton(()=>baseOnBackPress(navigator, this.backAndroidEventListener))}
                 rightButton={NavBarButton.newUserRegister(()=>this.gotoLogPage(), {title: '已有账号,去登录'})}
                 title='注册'
                 style={{backgroundColor: Colors.white}}
@@ -187,53 +239,58 @@ export class RegisterPage extends Component {
 
         return (
             <View style={styles.container}>
-                {navigationBar}
-                {BizViews.ebatesViews()}
-                {/*邮箱输入框的容器view*/}
-                {this.emailInputView()}
-                {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
-                {this.passInputView()}
-                {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
-                {this.InviteCodeInputView()}
-                {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
-                {/*服务条款容器view*/}
-                <View style={{
-                    height: 65,
-                    //paddingLeft: 55,
-                    flexDirection: 'row',
-                    //justifyContent: 'flex-start',
-                    alignItems: 'center',
-                    //backgroundColor: Colors.getRandomColor()
-                }}>
-                    {BizViews.checkBox((isSelect)=> {
-                        Log.log('isSelect===' + isSelect);
-                        this.props.dispatch(RegisterRelevantActions.changeRegisterBtStatesActions(isSelect))
-                    })}
-                    <Text style={{
-                        color: 'rgba(85, 85, 85, 1)',
-                        fontSize: 12, marginLeft:10
+                <View style={{}}>
+                    {navigationBar}
+                    {BizViews.ebatesViews()}
+                    {/*邮箱输入框的容器view*/}
+                    {this.emailInputView()}
+                    {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
+                    {this.passInputView()}
+                    {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
+                    {this.InviteCodeInputView()}
+                    {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
+                    {/*服务条款容器view*/}
+                    <View style={{
+                        height: 65,
+                        //paddingLeft: 55,
+                        flexDirection: 'row',
+                        //justifyContent: 'flex-start',
+                        alignItems: 'center',
                         //backgroundColor: Colors.getRandomColor()
                     }}>
-                        {str}
-                    </Text>
-                    <Text style={{
-                        color: 'rgba(54, 166, 66, 1)',
-                        fontSize: 12,
-                        //backgroundColor: Colors.getRandomColor()
-                    }}
-                          onPress={
-                              ()=>this.onPressServiceProvision()
-                          }
-                    >
-                        Ebates.cn服务条款
-                    </Text>
+                        {BizViews.checkBox((isSelect)=> {
+                            Log.log('isSelect===' + isSelect);
+                            this.props.dispatch(RegisterRelevantActions.changeRegisterBtStatesActions(isSelect))
+                        })}
+                        <Text style={{
+                            color: 'rgba(85, 85, 85, 1)',
+                            fontSize: 12, marginLeft: 10
+                            //backgroundColor: Colors.getRandomColor()
+                        }}>
+                            {str}
+                        </Text>
+                        <Text style={{
+                            color: 'rgba(54, 166, 66, 1)',
+                            fontSize: 12,
+                            //backgroundColor: Colors.getRandomColor()
+                        }}
+                              onPress={
+                                  ()=>this.onPressServiceProvision()
+                              }
+                        >
+                            Ebates.cn服务条款
+                        </Text>
+                    </View>
+                    {BizLogBt(()=>this.onRegisterPress(), {
+                        backgroundColor: this.props.RegisterReducer.registerBtState.backColor,
+                        disabled: this.props.RegisterReducer.registerBtState.disabled,
+                        title: '免费注册赠$5',
+                        btStyle: {marginTop: 0}
+                    })}
                 </View>
-                {BizLogBt(()=>this.onRegisterPress(), {
-                    backgroundColor: this.props.RegisterReducer.registerBtState.backColor,
-                    disabled: this.props.RegisterReducer.registerBtState.disabled,
-                    title: '免费注册赠$5',
-                    btStyle:{marginTop: 0}
-                })}
+                {this.renderRegisterSucessbt()}
+
+
             </View>
         );
     }

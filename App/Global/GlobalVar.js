@@ -9,6 +9,9 @@ global.Log = Log;
 import {showToast} from '../Comp/BizCommonComp/BizToast';
 global.showToast = showToast;
 
+import {routeName} from './GlobalConst'
+global.gRouteName = routeName;
+
 // import *as UserDB from '../db/UserDB'
 // global.UserSchema=UserDB.UserSchema.tableName;//用户表名
 //

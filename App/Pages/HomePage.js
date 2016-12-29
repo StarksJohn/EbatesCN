@@ -10,7 +10,7 @@ import {StyleSheet, View, Text,InteractionManager} from 'react-native';
 import Colors from '../Utils/Colors';
 import  BaseNavigationBar ,{NavBarButton} from '../Comp/Base/BaseNavigationBar'
 import *as GlobalConst from '../Global/GlobalConst'
-import LogPage from './LogInPage'
+import LogInPage from './LogInPage'
 import *as Token from '../NetWork/API/Token'
 
 /**
@@ -67,7 +67,8 @@ class HomePage extends Component {
         // });
 
         this.props.navigator.push({
-            component: LogPage
+            component: LogInPage,
+            name:gRouteName.LogInPage//'LogInPage'
         });
 
         // Token.getUnLoginToken();

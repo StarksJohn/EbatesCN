@@ -13,7 +13,7 @@ export function randomNums(min, max) {
     // let a= parseInt(Math.random()*(max-min+1)+min,10);
     //  Log.log('a==='+a);
     let b = Math.floor(Math.random() * (max - min + 1) + min);
-    Log.log('b===' + b);
-    showToast('产生新随机数===' + b);
+    // Log.log('b===' + b);
+    // showToast('产生新随机数===' + b);
     return b;
 }

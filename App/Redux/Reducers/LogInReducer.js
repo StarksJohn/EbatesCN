@@ -25,6 +25,13 @@ export default function LogInReducer (state = initialState, action){
             return nextState
         }
             break;
+        case LogInActions.changeOauthCodeImg:
+        {
+            let nextState = state
+                .setIn(['oauthCodeImgUri'], action.uri);
+            return nextState
+        }
+            break;
     }
 
     /**
