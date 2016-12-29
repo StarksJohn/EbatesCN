@@ -19,6 +19,8 @@ import {connect} from 'react-redux'
 import *as LogInActions from '../Redux/Actions/LogInActions'
 import BaseImgBt from '../Comp/Base/BaseImgBt'
 import *as Math from '../Utils/Math'
+import *as RootNavigator from '../Root/RootNavigator'
+
 //本地测试 验证码图片用, 接口好了就删了
 const IMAGES = [
     'http://www.savethecat.com/wp-content/uploads/2015/06/cats.jpg',
@@ -71,12 +73,16 @@ export class LogInPage extends Component {
 
     //进 注册页
     gotoRegisterPage() {
-        showToast('gotoRegisterPage');
 
-        this.props.navigator.push({
-            component: RegisterPage,
-            name:gRouteName.RegisterPage//'RegisterPage'
-        });
+
+        if (RootNavigator.routeNumsFromCurrentRoutes(this.props.navigator,global.gRouteName.RegisterPage)==1){
+            this.props.navigator.pop();
+        }else{
+            this.props.navigator.push({
+                component: RegisterPage,
+                name:gRouteName.RegisterPage//'RegisterPage'
+            });
+        }
     }
 
     updateEmail(text) {

@@ -14,13 +14,14 @@ import GlobalStyles from '../Global/GlobalStyles'
 import phoneQuickLogPage from './phoneQuickLogPage'
 import BizLogBt from '../Comp/BizCommonComp/BizLogBt'
 import *as BizViews from '../Comp/BizCommonComp/BizViews'
-import LogPage from './LogInPage'
+import LogInPage from './LogInPage'
 import *as RegisterRelevantActions from '../Redux/Actions/RegisterRelevantActions'
 import {connect} from 'react-redux'
 import WebViewPage from './WebViewPage'
 import BaseBlackTranslucentCoverView from '../Comp/Base/BaseBlackTranslucentCoverView'
 import BizRegigsterSucessBt from '../Comp/BizCommonComp/BizRegigsterSucessBt'
 import SMSTimer from '../Utils/SMSTimer'
+import *as RootNavigator from '../Root/RootNavigator'
 
 /**
  *  展示组件
@@ -53,10 +54,17 @@ export class RegisterPage extends Component {
 
     //进 登录 页
     gotoLogPage() {
-        showToast('gotoLogPage');
-        this.props.navigator.push({
-            component: LogPage
-        });
+
+        if (RootNavigator.routeNumsFromCurrentRoutes(this.props.navigator,global.gRouteName.LogInPage)==1){
+            this.props.navigator.pop();
+        }else{
+            this.props.navigator.push({
+                component: LogInPage,
+                name:gRouteName.LogInPage//'
+
+            });
+        }
+
     }
 
     updateEmail(text) {
@@ -85,14 +93,7 @@ export class RegisterPage extends Component {
      * 自动页面跳转回 注册登录页面之前的 页面
      */
     pageGotoAfterRegisterSucess() {
-
-        for (let i=0; i< this.props.navigator.getCurrentRoutes().length;i++ ) {
-            let route=this.props.navigator.getCurrentRoutes()[i];
-            if (route.name === "RootPagesContainer") {
-                this.props.navigator.popToRoute(route);
-                return;
-            }
-        }
+        RootNavigator.popToDesignatedPage(this.props.navigator,global.gRouteName.RootPagesContainer);
     }
 
     onRegisterPress() {
@@ -198,7 +199,7 @@ export class RegisterPage extends Component {
     }
 
     stopTimer() {
-        this.timer.deallocInterval();
+        this.timer&&this.timer.deallocInterval();
     }
 
     //话 注册成功蒙层 和 按钮
