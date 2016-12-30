@@ -20,6 +20,16 @@ export function oauthPass(pass){
 
 }
 
+/**
+ * 验证 图片验证码 字数
+ * @param pass
+ * @returns {boolean}
+ */
+export function oauthImgCodePass(pass){
+    return StringOauth.getStrLen(pass)==4 &&  !StringOauth.isContainChinese(pass) ;
+
+}
+
 export function oauthPhone(text){
     return StringOauth.getStrLen(text)==11 && StringOauth.isAllNum(text)
 }

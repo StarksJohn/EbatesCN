@@ -9,6 +9,8 @@ import *as RegisterRelevantActions from '../Actions/RegisterRelevantActions'
 
 var InitialState = Record({
     registerBtState: RegisterRelevantActions.registerBtStates.enable,
-    isShowRegisterSucessbt:false
+    isShowRegisterSucessbt:false,
+    oauthCodeImgUri:'',//图片验证码的默认uri
+
 })
 export default InitialState

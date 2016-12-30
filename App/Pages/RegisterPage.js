@@ -22,6 +22,8 @@ import BaseBlackTranslucentCoverView from '../Comp/Base/BaseBlackTranslucentCove
 import BizRegigsterSucessBt from '../Comp/BizCommonComp/BizRegigsterSucessBt'
 import SMSTimer from '../Utils/SMSTimer'
 import *as RootNavigator from '../Root/RootNavigator'
+import *as BizInputViews from '../Comp/BizCommonComp/BizInputViews'
+import *as ImgOauthCodeAPI from '../NetWork/API/ImgOauthCodeAPI'
 
 /**
  *  展示组件
@@ -39,9 +41,11 @@ export class RegisterPage extends Component {
         }
         this.email = '';
         this.password = '';
+        this.imgOauthCode = '';//图片验证码
         this.inviteCode = '';//邀请码
 
         this.props.dispatch(RegisterRelevantActions.registerPageInitStateActions());
+        this.getOauthCodeImg();
     }
 
     componentDidMount() {
@@ -81,17 +85,17 @@ export class RegisterPage extends Component {
     }
 
     //输入框失去焦点时回调
-    onBlur() {
-        Log.log('onBlur this.email==' + this.email);
-        Log.log('onBlur this.password==' + this.password);
-
-    }
+    // onBlur() {
+    //     Log.log('onBlur this.email==' + this.email);
+    //     Log.log('onBlur this.password==' + this.password);
+    //
+    // }
 
     /**
      * 自动页面跳转回 注册登录页面之前的 页面
      */
     pageGotoAfterRegisterSucess() {
-        RootNavigator.popToDesignatedPage(this.props.navigator, global.gRouteName.RootPagesContainer);
+        RootNavigator.popToDesignatedPage(this.props.navigator, global.popBackToRouteAfteRegisterSuceess);
     }
 
     onRegisterPress() {
@@ -101,6 +105,11 @@ export class RegisterPage extends Component {
         }
         if (!OauthForm.oauthPass(this.password)) {
             showToast('密码至少6位字符或数字');
+            return;
+        }
+
+        if (!OauthForm.oauthImgCodePass(this.imgOauthCode)) {
+            showToast('请输入正确的验证码');
             return;
         }
 
@@ -117,83 +126,21 @@ export class RegisterPage extends Component {
         }).start();
     }
 
-    /*邮箱输入框的容器view*/
-    emailInputView() {
-        return (
-            <View style={[GlobalStyles.InputItemContainer, {marginTop: 40}]}>
-                <View style={GlobalStyles.IpputItemLeftView}>
-                    <Text style={styles.IpputItemLeftText}>邮箱</Text>
-                </View>
-                <View style={GlobalStyles.InputItemRightView}>
-                    <TextInput
-                        style={GlobalStyles.textInput}
-                        autoFocus={false}
-                        placeholder='输入邮箱地址'
-                        onChange={(event) => this.updateEmail(
-                            event.nativeEvent.text
-                        )}
-                        onBlur={() => this.onBlur()}
-                        underlineColorAndroid={'transparent'}
-                    />
-                </View>
-
-            </View>
-        );
-    }
-
-    /*密码输入框的容器view*/
-    passInputView() {
-        return (
-            <View style={[GlobalStyles.InputItemContainer]}>
-                <View style={GlobalStyles.IpputItemLeftView}>
-                    <Text style={styles.IpputItemLeftText}>密码</Text>
-                </View>
-                <View style={GlobalStyles.InputItemRightView}>
-                    <TextInput
-                        style={GlobalStyles.textInput}
-                        placeholder='输入至少6位字符或数字'
-                        onChange={(event) => this.updatePassword(
-                            event.nativeEvent.text
-                        )}
-                        onBlur={() => this.onBlur()}
-                        underlineColorAndroid={Colors.transparent}
-                    />
-                </View>
-            </View>
-        );
-    }
-
-    //邀请码输入view
-    InviteCodeInputView() {
-        return (
-            <View style={[GlobalStyles.InputItemContainer]}>
-                <View style={[GlobalStyles.IpputItemLeftView, {paddingRight: 16}]}>
-                    <Text style={styles.IpputItemLeftText}>邀请码</Text>
-                </View>
-                <View style={GlobalStyles.InputItemRightView}>
-                    <TextInput
-                        style={GlobalStyles.textInput}
-                        placeholder='输入好友邀请码 (选填)'
-                        onChange={(event) => this.updateInviteCode(
-                            event.nativeEvent.text
-                        )}
-                        onBlur={() => this.onBlur()}
-                        underlineColorAndroid={Colors.transparent}
-                    />
-                </View>
-            </View>
-        );
-    }
-
     // 点服务条款
     onPressServiceProvision() {
-        showToast('onPressServiceProvision')//https://www.ebates.cn/help/terms
+        // showToast('onPressServiceProvision')//https://www.ebates.cn/help/terms
         this.props.navigator.push({
             component: WebViewPage,
             title: '服务条款',
             url: 'https://www.ebates.cn/help/terms',
             name: 'WebViewPage',
         });
+    }
+
+    //获取验证码图片 接口
+    getOauthCodeImg() {
+        this.props.dispatch(RegisterRelevantActions.changeOauthCodeImgAction(ImgOauthCodeAPI.imgOauthCodeAPI()));
+
     }
 
     stopTimer() {
@@ -219,6 +166,11 @@ export class RegisterPage extends Component {
         )
     }
 
+    updateImgOauthCode(text) {
+        this.imgOauthCode = text;
+        Log.log('this.imgOauthCode==' + this.imgOauthCode);
+    }
+
     render() {
         const {navigator, dispath} = this.props;
 
@@ -242,11 +194,28 @@ export class RegisterPage extends Component {
                     {navigationBar}
                     {BizViews.ebatesViews()}
                     {/*邮箱输入框的容器view*/}
-                    {this.emailInputView()}
+                    {BizInputViews.emailInputView({},
+                        (event) => this.updateEmail(event.nativeEvent.text)
+                    )}
                     {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
-                    {this.passInputView()}
+                    {/*密码*/}
+                    {BizInputViews.passInputView({},
+                        (event) => this.updatePassword(event.nativeEvent.text)
+                    )}
                     {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
-                    {this.InviteCodeInputView()}
+                    {/*验证码*/}
+                    {BizInputViews.imgOauthCodeInputView(
+                        {},
+                        (event) => this.updateImgOauthCode(event.nativeEvent.text),
+                        this.props.RegisterReducer.oauthCodeImgUri,
+                        ()=>this.getOauthCodeImg()
+                    )
+                    }
+                    {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
+                    {/*邀请码*/}
+                    {BizInputViews.InviteCodeInputView({},
+                        (event) => this.updateInviteCode(event.nativeEvent.text)
+                    )}
                     {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
                     {/*服务条款容器view*/}
                     <View style={{

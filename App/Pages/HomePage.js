@@ -71,6 +71,8 @@ class HomePage extends Component {
             name:gRouteName.LogInPage//'LogInPage'
         });
 
+        global.popBackToRouteAfteRegisterSuceess=gRouteName.RootPagesContainer;
+
         // Token.getUnLoginToken();
     }
 

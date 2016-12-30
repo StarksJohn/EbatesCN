@@ -25,7 +25,7 @@ export default function LogInReducer (state = initialState, action){
             return nextState
         }
             break;
-        case LogInActions.changeOauthCodeImg:
+        case LogInActions.changeLogInOauthCodeImg:
         {
             let nextState = state
                 .setIn(['oauthCodeImgUri'], action.uri);

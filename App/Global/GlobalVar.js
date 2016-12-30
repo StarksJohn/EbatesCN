@@ -12,6 +12,9 @@ global.showToast = showToast;
 import {routeName} from './GlobalConst'
 global.gRouteName = routeName;
 
+//注册成功后,pop到 进入注册 登录页面 之前的最后一个 页面
+global.popBackToRouteAfteRegisterSuceess='';
+
 // import *as UserDB from '../db/UserDB'
 // global.UserSchema=UserDB.UserSchema.tableName;//用户表名
 //

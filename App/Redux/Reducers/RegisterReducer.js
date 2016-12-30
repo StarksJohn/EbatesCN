@@ -30,6 +30,13 @@ export default function RegisterReducer (state = initialState, action){
             return nextState
         }
             break;
+        case RegisterRelevantActions.changeRegisterOauthCodeImg:
+        {
+            let nextState = state
+                .setIn(['oauthCodeImgUri'], action.uri);
+            return nextState
+        }
+            break;
     }
 
     /**

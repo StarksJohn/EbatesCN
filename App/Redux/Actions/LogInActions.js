@@ -20,10 +20,10 @@ export function hideImgOauthInputAction() {
  * 改变图片验证码
  * @type {string}
  */
-export const changeOauthCodeImg='changeOauthCodeImg';
+export const changeLogInOauthCodeImg='changeLogInOauthCodeImg';
 export function changeOauthCodeImgAction(uri) {
     return {
-        type:changeOauthCodeImg,
+        type:changeLogInOauthCodeImg,
         uri:uri
     }
 }
