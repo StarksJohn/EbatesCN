@@ -73,14 +73,20 @@ export class LogInPage extends Component {
 
     //进 注册页
     gotoRegisterPage() {
+        // if (RootNavigator.routeNumsFromCurrentRoutes(this.props.navigator,global.gRouteName.RegisterPage)==1){
+        //     this.props.navigator.pop();
+        // }else{
+        //     this.props.navigator.push({
+        //         component: RegisterPage,
+        //         name:gRouteName.RegisterPage//'RegisterPage'
+        //     });
+        // }
 
-
-        if (RootNavigator.routeNumsFromCurrentRoutes(this.props.navigator,global.gRouteName.RegisterPage)==1){
-            this.props.navigator.pop();
-        }else{
+        if (!RootNavigator.popToDesignatedPage(this.props.navigator, global.gRouteName.RegisterPage)) {
             this.props.navigator.push({
                 component: RegisterPage,
-                name:gRouteName.RegisterPage//'RegisterPage'
+                name: gRouteName.RegisterPage//'
+
             });
         }
     }

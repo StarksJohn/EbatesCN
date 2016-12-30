@@ -19,9 +19,10 @@ export function popToDesignatedPage(navigator,routeName) {
         let route=navigator.getCurrentRoutes()[i];
         if (route.name === routeName) {
             navigator.popToRoute(route);
-            return ;
+            return true;
         }
     }
+    return false;
 }
 
 /**

@@ -54,17 +54,15 @@ export class RegisterPage extends Component {
 
     //进 登录 页
     gotoLogPage() {
-
-        if (RootNavigator.routeNumsFromCurrentRoutes(this.props.navigator,global.gRouteName.LogInPage)==1){
-            this.props.navigator.pop();
-        }else{
+        if (/*RootNavigator.routeNumsFromCurrentRoutes(this.props.navigator,global.gRouteName.LogInPage)==1*/
+            !RootNavigator.popToDesignatedPage(this.props.navigator, global.gRouteName.LogInPage)) {
+            // this.props.navigator.pop();
             this.props.navigator.push({
-                component: LogInPage,
-                name:gRouteName.LogInPage//'
+                component: RegisterPage,
+                name: gRouteName.RegisterPage//'
 
             });
         }
-
     }
 
     updateEmail(text) {
@@ -93,7 +91,7 @@ export class RegisterPage extends Component {
      * 自动页面跳转回 注册登录页面之前的 页面
      */
     pageGotoAfterRegisterSucess() {
-        RootNavigator.popToDesignatedPage(this.props.navigator,global.gRouteName.RootPagesContainer);
+        RootNavigator.popToDesignatedPage(this.props.navigator, global.gRouteName.RootPagesContainer);
     }
 
     onRegisterPress() {
@@ -199,7 +197,7 @@ export class RegisterPage extends Component {
     }
 
     stopTimer() {
-        this.timer&&this.timer.deallocInterval();
+        this.timer && this.timer.deallocInterval();
     }
 
     //话 注册成功蒙层 和 按钮
