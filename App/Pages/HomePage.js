@@ -93,7 +93,6 @@ class HomePage extends Component {
                 statusBarCustomStyle={statusBar}
                 hide={false}/>;
 
-
         // let content = <ScrollableTabView
         //     //page={0}
         //     renderTabBar={() =>

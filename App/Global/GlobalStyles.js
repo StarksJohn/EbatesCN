@@ -48,13 +48,14 @@ module.exports = {
 
     statusBarStyle: {
         height: Platform.OS === 'ios' ? 20 : 0,
+        //networkActivityIndicatorVisible: true,
+        animated:true,showHideTransition:'slide',
         // backgroundColor: Colors.backGray
     },
     //二级页面 statusBar的统一属性
     twoLevelPageStatusBarProps: {
-        // backgroundColor: Colors.getRandomColor(),
-        networkActivityIndicatorVisible: true,
-        barStyle: 'dark-content'
+        backgroundColor: Colors.white,
+        barStyle: Platform.OS === 'ios' ? 'dark-content' : 'default' //
     },
 
     //输入框的容器view

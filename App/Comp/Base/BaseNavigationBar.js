@@ -42,7 +42,7 @@ const StatusBarShape = {
 /*
  通用默认的左上角点击
  */
-export function  baseOnBackPress(navigator,backAndroidEventListener) {
+export function baseOnBackPress(navigator, backAndroidEventListener) {
     navigator.pop();//app 页面回退
 
     if (Platform.OS === 'android' && backAndroidEventListener) {//二级安卓页面,点击左上角pop前,先把
@@ -123,15 +123,15 @@ export default class BaseNavigationBar extends Component {
 
     getButtonElement(data = {}, style) {
         return (
-                (!!data.props) ? data : (
-                    <View style={styles.navBarButton}>
+            (!!data.props) ? data : (
+                <View style={styles.navBarButton}>
                     <NavBarButton
                         title={data.title}
                         style={[data.style, style,]}
                         tintColor={data.tintColor}
                         handler={data.handler}/>
-                    </View>
-                )
+                </View>
+            )
 
             // <View style={styles.navBarButton}>
             //     {(!!data.props) ? data : (
@@ -148,9 +148,12 @@ export default class BaseNavigationBar extends Component {
     render() {
 
         let statusBar = !this.props.statusBarCustomStyle.hidden ?
-            <View style={ /*styles.statusBar*/ GlobalStyles.statusBarStyle}>
-                <StatusBar {...this.props.statusBarCustomStyle}
-                           style={ /*styles.statusBar*/ GlobalStyles.statusBarStyle}/>
+            <View style={ {height: Platform.OS === 'ios' ? 20 : 0}}>
+                <StatusBar
+                    {...GlobalStyles.statusBarStyle}
+                    {...this.props.statusBarCustomStyle}
+                           //style={  GlobalStyles.statusBarStyle}
+                />
             </View> : null;
 
         let titleTextView = this.props.titleTextView ? this.props.titleTextView :
@@ -210,11 +213,11 @@ export class NavBarButton extends Component {
      * @returns {XML}
      */
     static getBackButton(callBack) {
-        return<FontAwesomeIconBts
+        return <FontAwesomeIconBts
             btStyle={{
                 width: 30,
                 height: 30,
-                /*justifyContent: 'center', alignItems: 'center', marginTop: 15,  */ marginLeft: 7 ,
+                /*justifyContent: 'center', alignItems: 'center', marginTop: 15,  */ marginLeft: 7,
                 //backgroundColor:Colors.green
             }}
             btSelectColor={Colors.blackTranslucent}
@@ -227,12 +230,12 @@ export class NavBarButton extends Component {
     }
 
     //新用户注册|已有账号去登录
-    static newUserRegister(callBack,props) {
-        return(
+    static newUserRegister(callBack, props) {
+        return (
             <BaseTitleBt
                 btStyle={{
-                     height: 40, alignItems: 'center', marginRight: 15,justifyContent: 'center',
-                    backgroundColor:Colors.white
+                    height: 40, alignItems: 'center', marginRight: 15, justifyContent: 'center',
+                    backgroundColor: Colors.white
                 }}
                 selectColor={Colors.blackTranslucent}
                 onPress={callBack}
@@ -254,11 +257,11 @@ export class NavBarButton extends Component {
      * @returns {XML}
      */
     static getBarsButton(callBack) {
-        return<FontAwesomeIconBts
+        return <FontAwesomeIconBts
             btStyle={{
                 width: 36,
                 height: 36,
-                /*justifyContent: 'center', alignItems: 'center', marginTop: 15,  */ marginLeft: 15 ,
+                /*justifyContent: 'center', alignItems: 'center', marginTop: 15,  */ marginLeft: 15,
                 //backgroundColor:Colors.green
             }}
             btSelectColor={Colors.blackTranslucent}
