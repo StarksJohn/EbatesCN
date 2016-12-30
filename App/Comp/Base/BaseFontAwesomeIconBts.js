@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 // import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+// import Icon from 'react-native-vector-icons/Ionicons';
+
 import BaseBt from './BaseBt';
 // import {changeStates,InitNormalStates} from '../../actions/ActionTypes';
 
@@ -58,8 +60,6 @@ export default class FontAwesomeIconBts extends Component {
         this.state = {
             name: this.isSelected ? this.props.selectName : this.props.normalName,
         }
-
-        // showToast('正在'+this.props.ApiName+' 列表的 收藏icon的 constructor 方法'+ '     this.state.name='+this.state.name);
 
     }
 
@@ -120,7 +120,6 @@ export default class FontAwesomeIconBts extends Component {
                     this.onPress()
                 } }
                 style={   [{justifyContent: 'center', alignItems: 'center'}, btStyle] }
-                //underlayColor={btSelectColor}
                 activeOpacity={this.props.activeOpacity}
 
             >

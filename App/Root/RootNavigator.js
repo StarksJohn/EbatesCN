@@ -61,10 +61,9 @@ export default class RootNavigator extends Component {
 
     }
 
-    handlerConfigureScene = () => {
-
-        if (Platform.OS === 'android') {
-            return Navigator.SceneConfigs.FloatFromBottomAndroid;
+    handlerConfigureScene = (route, routeStack) => {
+        if (route.name===gRouteName.LogInPage || route.name===gRouteName.RegisterPage || route.name===gRouteName.phoneQuickLogPage) {
+            return Navigator.SceneConfigs.FloatFromBottom;
         } else {
             return Navigator.SceneConfigs.PushFromRight;
         }

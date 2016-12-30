@@ -27,7 +27,8 @@ export default  Colors = {
     HotPink: '#FF69B4',
     appUnifiedBackColor: 'rgba(67, 187, 78, 1)',//app统一背景色
     halfOpacityAppUnifiedBackColor: 'rgba(67, 187, 78, 0.5)',//app统一背景色的50%透明度
-    // RandomColor: this.getRandomColor,
+    backPopBtColor:'#626770',
+
     /**
      * 随即色
      * @returns {string}

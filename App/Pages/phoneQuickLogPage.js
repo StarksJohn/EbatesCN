@@ -128,7 +128,9 @@ class phoneQuickLogPage extends Component {
     onRegister() {
         showToast('onRegister');
         this.props.navigator.push({
-            component: registerPage
+            component: registerPage,
+            name: gRouteName.RegisterPage//'
+
         });
     }
 

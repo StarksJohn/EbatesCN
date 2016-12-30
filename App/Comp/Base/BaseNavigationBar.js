@@ -152,7 +152,7 @@ export default class BaseNavigationBar extends Component {
                 <StatusBar
                     {...GlobalStyles.statusBarStyle}
                     {...this.props.statusBarCustomStyle}
-                           //style={  GlobalStyles.statusBarStyle}
+                    //style={  GlobalStyles.statusBarStyle}
                 />
             </View> : null;
 
@@ -218,13 +218,13 @@ export class NavBarButton extends Component {
                 width: 30,
                 height: 30,
                 /*justifyContent: 'center', alignItems: 'center', marginTop: 15,  */ marginLeft: 7,
-                //backgroundColor:Colors.green
+                //backgroundColor:Colors.getRandomColor()
             }}
             btSelectColor={Colors.blackTranslucent}
             normalName={'angle-left'}
             selectName={'angle-left'}
-            iconSize={25}
-            iconColor={Colors.black}
+            iconSize={30}
+            iconColor={Colors.backPopBtColor}
             onPress={callBack}
         />
     }
@@ -262,12 +262,12 @@ export class NavBarButton extends Component {
                 width: 36,
                 height: 36,
                 /*justifyContent: 'center', alignItems: 'center', marginTop: 15,  */ marginLeft: 15,
-                //backgroundColor:Colors.green
+                backgroundColor: Colors.getRandomColor()
             }}
             btSelectColor={Colors.blackTranslucent}
             normalName={'bars'}
-            selectName={'angle-left'}
-            iconSize={30}
+            selectName={'bars'}
+            iconSize={20}
             iconColor={Colors.white}
             onPress={callBack}
         />
@@ -309,13 +309,13 @@ const styles = StyleSheet.create({
         // shadowOpacity: 0.8,
     },
     navBarTitleContainer: {//titleText 的 背景view
-        // backgroundColor: Colors.red,
+        backgroundColor: Colors.getRandomColor(),
         alignItems: 'center',
         justifyContent: 'center',
         position: 'absolute',
-        left: 40,//dip数值,实际像素根据屏幕计算
+        left: 60,//dip数值,实际像素根据屏幕计算
         top: 0,
-        right: 40,
+        right: 60,
         bottom: 0,
     },
     defaultTitleStyle: {//默认title的style

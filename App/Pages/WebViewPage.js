@@ -14,6 +14,7 @@ import  BaseNavigationBar, {NavBarButton, baseOnBackPress} from '../Comp/Base/Ba
 import Colors from '../Utils/Colors';
 // import BaseShareView from '../comp/Base/BaseShareView'
 import BackAndroidEventListener from '../Utils/BackAndroidEventListener'
+import GlobalStyles from '../Global/GlobalStyles'
 
 // const shareImg = require('../img/share.png');
 // let toolbarActions = [
@@ -164,18 +165,14 @@ export default class WebViewPage extends Component {
                     title={route.title}
                     titleTextStyle={{fontSize: 16,color: Colors.black}}
                     statusBarCustomStyle={
-                    {
-                        backgroundColor: Colors.appUnifiedBackColor,
-                        networkActivityIndicatorVisible: true,
-                        barStyle: 'light-content'
-                    }
+                        GlobalStyles.twoLevelPageStatusBarProps
                     }
                 />
             );
         }
 
         return (
-            <View style={{flex: 1}}>
+            <View style={{flex: 1, backgroundColor:Colors.white}}>
                 {titleBar}
                 <WebView
                     ref={WEBVIEW_REF}

@@ -11,7 +11,8 @@ export const AppName = 'Ebates 中国'; // 调试模式
 export const routeName={
     RootPagesContainer:'RootPagesContainer',
     LogInPage:'LogInPage',
-    RegisterPage:'RegisterPage'
+    RegisterPage:'RegisterPage',
+    phoneQuickLogPage:'phoneQuickLogPage'
 }
 
 

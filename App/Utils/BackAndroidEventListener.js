@@ -42,7 +42,7 @@ export default class BackAndroidEventListener {
             this.listener.remove();
             // this.listener=null;
             BackAndroid.removeEventListener('hardwareBackPress', this._onHardwareBackPress);
-            showToast('BackAndroid.removeEventListener=== '+this.props.hardwareBackPressListenerName)
+            // showToast('BackAndroid.removeEventListener=== '+this.props.hardwareBackPressListenerName)
         }
     }
 

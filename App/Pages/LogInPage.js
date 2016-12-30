@@ -122,7 +122,9 @@ export class LogInPage extends Component {
     //快捷登录
     onQuickLoginPress() {
         this.props.navigator.push({
-            component: phoneQuickLogPage
+            component: phoneQuickLogPage,
+            name: gRouteName.RegisterPage//'
+
         });
     }
 
@@ -228,7 +230,8 @@ export class LogInPage extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 1, backgroundColor: Colors.white
+
     },
     //输入框左图里的text
     //IpputItemLeftText: {},
