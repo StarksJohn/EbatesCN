@@ -14,7 +14,7 @@
 export const request = (url, method, headersAppendCallBack, body) => {
     let header=new Headers();
     header.append('Content-Type','application/x-www-form-urlencoded');//headers里固定要传的,因body传xxx&xxx 格式的字符串
-    // headersArray.map(
+    // headersArray.map( 此方式拿不到 外部的header
     //     (v,i)=>{
     //         header.append(JSON.stringify(v.key),JSON.stringify(v.value));
     //     }

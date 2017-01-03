@@ -59,10 +59,19 @@ export function isAllNum(val) {
     let b = true;
     for (var i = 0; i < val.length; i++) {
         let a = val.charAt(i);
-        if (isNaN(a)){
-            b=false;
+        if (isNaN(a)) {
+            b = false;
             break;
         }
     }
     return b;
+}
+
+/**
+ * 判断 字符串是否为 空、空格、null
+ * http://www.jb51.net/article/86543.htm
+ * @param str
+ */
+export function isNull(str) {
+    return (str.length == 0 || str == "" || str.replace(/(^s*)|(s*$)/g, "").length == 0 || new RegExp("^[ ]+$").test(str) || typeof str == "null");
 }

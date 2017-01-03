@@ -95,7 +95,7 @@ export class RegisterPage extends Component {
      * 自动页面跳转回 注册登录页面之前的 页面
      */
     pageGotoAfterRegisterSucess() {
-        RootNavigator.popToDesignatedPage(this.props.navigator, global.popBackToRouteAfteRegisterSuceess);
+        RootNavigator.popToDesignatedPage(this.props.navigator, global.gPopBackToRouteAfteRegisterSuceess);
     }
 
     onRegisterPress() {

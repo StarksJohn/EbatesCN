@@ -12,11 +12,15 @@ global.showToast = showToast;
 import {routeName} from './GlobalConst'
 global.gRouteName = routeName;
 
-//注册成功后,pop到 进入注册 登录页面 之前的最后一个 页面
-global.popBackToRouteAfteRegisterSuceess='';
+//注册|登录 成功后,pop到 进入注册| 登录页面 之前的最后一个 页面
+global.gPopBackToRouteAfteRegisterSuceess='';
 
-// import *as UserDB from '../db/UserDB'
-// global.UserSchema=UserDB.UserSchema.tableName;//用户表名
+import  UserDB from '../DB/BizDB/UserDB'
+global.gUserDB=UserDB;//用户数据库
+
+import *as BizStorage from '../DB/BizDB/BizCommonDB/BizStorage'
+global.gBizStorage=BizStorage;//业务逻辑通用 数据库api
+
 //
 // import *as BizNewSingletonRealmDB from '../db/BizDB/BizNewSingletonRealmDB'
 // global.CollectedListSchema=BizNewSingletonRealmDB.CollectedListSchema.name

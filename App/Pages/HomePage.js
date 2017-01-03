@@ -2,16 +2,17 @@
  首页
  */
 import React, {Component} from 'react';
-import {StyleSheet, View, Text,InteractionManager} from 'react-native';
+import {StyleSheet, View, Text, InteractionManager} from 'react-native';
 // import {getTitleBarTab} from '../actions/titleBarTab';
 // import ScrollableTabView, {DefaultTabBar} from 'react-native-scrollable-tab-view';
 // import RecommendedFoodListContanier from '../containers/RecommendedFoodListContanier';
 // import CollectedListContainer from '../containers/CollectedListContainer';
 import Colors from '../Utils/Colors';
-import  BaseNavigationBar ,{NavBarButton} from '../Comp/Base/BaseNavigationBar'
+import  BaseNavigationBar, {NavBarButton} from '../Comp/Base/BaseNavigationBar'
 import *as GlobalConst from '../Global/GlobalConst'
 import LogInPage from './LogInPage'
-import *as Token from '../NetWork/API/Token'
+import *as TokenAPI from '../NetWork/API/TokenAPI'
+import *as TokenDB from '../DB/BizDB/TokenDB'
 
 /**
  *  展示组件
@@ -30,33 +31,8 @@ class HomePage extends Component {
         // dispatch(getTitleBarTab());//dispatch 了一个 Thunk 函数作为 action, 获取首页的数据
     }
 
-    // getHomePageListContanier(i,
-    //                          listApiTag,
-    //                          navigator) {
-    //     switch (i) {
-    //         case  0: {
-    //             return (
-    //                 <RecommendedFoodListContanier
-    //                     listApiTag={listApiTag}
-    //                     navigator={navigator}
-    //                 />
-    //             );
-    //         }
-    //             break;
-    //         case 1: {
-    //             return (
-    //                 <CollectedListContainer
-    //                     listApiTag={listApiTag}
-    //                     navigator={navigator}
-    //                 />
-    //             );
-    //         }
-    //             break;
-    //     }
-    // };
-
     /*
-    左上角点击
+     左上角点击
      */
     onBarsPress() {
         // showToast('onBarsPress');
@@ -66,14 +42,25 @@ class HomePage extends Component {
         //     });
         // });
 
-        this.props.navigator.push({
-            component: LogInPage,
-            name:gRouteName.LogInPage//'LogInPage'
-        });
+        // this.props.navigator.push({
+        //     component: LogInPage,
+        //     name:gRouteName.LogInPage//'LogInPage'
+        // });
+        // global.gPopBackToRouteAfteRegisterSuceess=gRouteName.RootPagesContainer;
 
-        global.popBackToRouteAfteRegisterSuceess=gRouteName.RootPagesContainer;
+        if (!gUserDB.isLogin()) {
+            TokenDB.loadUnLoginStateToken().then((token)=>{
+                Log.log('token==='+token);
+            }).catch((e)=>{
+                if (e.name=='NotFoundError'){
+                    // TokenAPI.getUnLoginTokenAPI().then((responseData) => {
+                    //     TokenDB.saveUnLoginStateToken(responseData);
+                    // })
+                    storage.sync.unLoginStateToken();
+                }
+            });
 
-        // Token.getUnLoginToken();
+        }
     }
 
     render() {
