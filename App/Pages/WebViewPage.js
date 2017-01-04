@@ -13,7 +13,7 @@ import  BaseNavigationBar, {NavBarButton, baseOnBackPress} from '../Comp/Base/Ba
 // import ViewUtils from '../utils/ViewUtils'
 import Colors from '../Utils/Colors';
 // import BaseShareView from '../comp/Base/BaseShareView'
-import BackAndroidEventListener from '../Utils/BackAndroidEventListener'
+import BackAndroidEventListener from '../Utils/EventListener/BackAndroidEventListener'
 import GlobalStyles from '../Global/GlobalStyles'
 
 // const shareImg = require('../img/share.png');

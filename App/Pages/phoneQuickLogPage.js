@@ -8,7 +8,7 @@ import React, {Component} from 'react';
 import {StyleSheet, View, Text, TextInput,Platform} from 'react-native';
 import Colors from '../Utils/Colors';
 import  BaseNavigationBar, {NavBarButton, baseOnBackPress} from '../Comp/Base/BaseNavigationBar'
-import BackAndroidEventListener from '../Utils/BackAndroidEventListener'
+import BackAndroidEventListener from '../Utils/EventListener/BackAndroidEventListener'
 import GlobalStyles from '../Global/GlobalStyles'
 import {baseSpeLine} from '../Comp/Base/BaseSpeLine'
 import BaseTitleBt from '../Comp/Base/BaseTitleBt'

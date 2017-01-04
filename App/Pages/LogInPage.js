@@ -5,7 +5,7 @@ import React, {Component} from 'react';
 import {StyleSheet, View, Text, TextInput, Image, Platform} from 'react-native';
 import Colors from '../Utils/Colors';
 import  BaseNavigationBar, {NavBarButton, baseOnBackPress} from '../Comp/Base/BaseNavigationBar'
-import BackAndroidEventListener from '../Utils/BackAndroidEventListener'
+import BackAndroidEventListener from '../Utils/EventListener/BackAndroidEventListener'
 // import ScrollableTabView, {DefaultTabBar} from 'react-native-scrollable-tab-view';
 import BaseTitleBt from '../Comp/Base/BaseTitleBt'
 import {baseSpeLine} from '../Comp/Base/BaseSpeLine'

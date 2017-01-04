@@ -13,6 +13,8 @@ import *as GlobalConst from '../Global/GlobalConst'
 import LogInPage from './LogInPage'
 import *as TokenAPI from '../NetWork/API/TokenAPI'
 import *as TokenDB from '../DB/BizDB/TokenDB'
+import *as LeftDrawerComponent from '../Root/LeftDrawerComponent/LeftDrawerComponent'
+import *as EventListener from '../Utils/EventListener/EventListener'
 
 /**
  *  展示组件
@@ -48,15 +50,17 @@ class HomePage extends Component {
         // });
         // global.gPopBackToRouteAfteRegisterSuceess=gRouteName.RootPagesContainer;
 
-        if (!gUserDB.isLogin()) {
-            TokenDB.loadUnLoginStateToken().then((token)=>{
-                Log.log('token==='+token);
-            }).catch((e)=>{
-                if (e.name=='NotFoundError'){//未登录状态的token 过期
-                    storage.sync.unLoginStateToken();
-                }
-            });
-        }
+        // if (!gUserDB.isLogin()) {
+        //     TokenDB.loadUnLoginStateToken().then((token)=>{
+        //         Log.log('token==='+token);
+        //     }).catch((e)=>{
+        //         if (e.name=='NotFoundError'){//未登录状态的token 过期
+        //             storage.sync.unLoginStateToken();
+        //         }
+        //     });
+        // }
+
+        EventListener.sendEvent(LeftDrawerComponent.openDrawerEventName)
     }
 
     render() {

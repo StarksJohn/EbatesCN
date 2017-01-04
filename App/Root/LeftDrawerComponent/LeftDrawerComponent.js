@@ -3,18 +3,27 @@
  *
  * 有左图 抽屉效果的 组件
  */
-import React, {Component} from 'react';
+import React, {PropTypes, Component} from 'react'
+import { DeviceEventEmitter} from 'react-native';
 import Drawer from 'react-native-drawer';
 import LeftPanelView from './LeftPanelView'
 import tweens from './tweens'
+import EventListener from '../../Utils/EventListener/EventListener'
+
+export const openDrawerEventName = 'openDrawerEventName';//任何地方都可发送的打开左屏的事件名字
 
 export default class LeftDrawerComponent extends Component {
+
+    static propTypes = {
+        children: PropTypes.node,
+    };
+
     constructor(props, context) {
         super(props, context);
         this.state = {
             drawerType: 'static',
-            openDrawerOffset:100,
-            closedDrawerOffset:0,
+            openDrawerOffset: 100,
+            closedDrawerOffset: 0,
             panOpenMask: .1,
             panCloseMask: .9,
             relativeDrag: false,
@@ -33,22 +42,44 @@ export default class LeftDrawerComponent extends Component {
         };
     }
 
-    tweenHandler(ratio){
-        if(!this.state.tweenHandlerPreset){ return {} }
+    componentDidMount() {
+        this.listener = new EventListener({
+            eventName: openDrawerEventName, eventCallback: ()=> {
+                this.openDrawer();
+            }
+        });
+    }
+
+    componentWillUnmount() {
+        if (this.listener) {
+            this.listener.removeEventListener();
+        }
+    }
+
+    tweenHandler(ratio) {
+        if (!this.state.tweenHandlerPreset) {
+            return {}
+        }
         return tweens[this.state.tweenHandlerPreset](ratio)
     }
 
-    noopChange(){
+    noopChange() {
         this.setState({
             changeVal: Math.random()
         })
     }
 
-    render(){
+    //打开侧屏
+    openDrawer() {
+        this.drawer.open();
+
+    }
+
+    render() {
         //左图
-        let  controlPanel = <LeftPanelView closeDrawer={() => {
+        let controlPanel = <LeftPanelView closeDrawer={() => {
             this.drawer.close();
-        }} />;
+        }}/>;
 
         return (
             <Drawer
