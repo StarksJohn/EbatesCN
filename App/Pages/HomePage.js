@@ -52,14 +52,10 @@ class HomePage extends Component {
             TokenDB.loadUnLoginStateToken().then((token)=>{
                 Log.log('token==='+token);
             }).catch((e)=>{
-                if (e.name=='NotFoundError'){
-                    // TokenAPI.getUnLoginTokenAPI().then((responseData) => {
-                    //     TokenDB.saveUnLoginStateToken(responseData);
-                    // })
+                if (e.name=='NotFoundError'){//未登录状态的token 过期
                     storage.sync.unLoginStateToken();
                 }
             });
-
         }
     }
 

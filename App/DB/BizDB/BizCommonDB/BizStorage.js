@@ -61,7 +61,7 @@ export const loadStorage = (key, id, autoSync, syncInBackground) => {
  * @param key
  * @param id: 没有时传 ''
  * @param rawData
- * @param expires
+ * @param expires  毫秒
  */
 export const saveStorage = (key, id, rawData, expires) => {
     storage.save({

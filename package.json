@@ -10,6 +10,7 @@
     "hellojs": "^1.14.0",
     "react": "^15.3.1",
     "react-native": "^0.37.0",
+    "react-native-drawer": "^2.3.0",
     "react-native-easy-toast": "^1.0.5",
     "react-native-image-progress": "^0.6.0",
     "react-native-progress": "^3.2.0",

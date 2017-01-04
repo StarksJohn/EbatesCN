@@ -21,7 +21,8 @@ export const tokenSchema = {
  * @param tokenSchema
  */
 export function saveUnLoginStateToken(tokenSchema) {
-    gBizStorage.saveStorage(UnLoginStateToken, '', tokenSchema, tokenSchema.expires_in);
+    gBizStorage.saveStorage(UnLoginStateToken, '', tokenSchema, tokenSchema.expires_in/*服务器发来的是 秒,故得换算成 毫秒再缓存*/ *1000 /*10 *
+     1000*/);
 }
 
 /**

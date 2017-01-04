@@ -7,7 +7,7 @@ import React  from 'react';
 import {
     AppRegistry
 } from 'react-native';
-import Root from './App/Root/Root';
+import RootProvider from './App/Root/RootProvider';
 
 
-AppRegistry.registerComponent('EbatesCN', () => Root);
+AppRegistry.registerComponent('EbatesCN', () => RootProvider);
