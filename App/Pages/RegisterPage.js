@@ -53,7 +53,7 @@ export class RegisterPage extends Component {
     }
 
     componentWillUnmount() {
-        // Log.log('componentWillUnmount');
+        Log.log('componentWillUnmount');
     }
 
     //进 登录 页

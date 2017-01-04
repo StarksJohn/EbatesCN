@@ -11,6 +11,7 @@ import RootNavigator from '../../Root/RootNavigator'
 var InitialState = Record({
     // homeNav:RootNavigator,
     // RecommendFriendsNav:LogInPage,// 推荐好友
+
     curNav:RootNavigator,//跟页面 默认的 nav
 
 })

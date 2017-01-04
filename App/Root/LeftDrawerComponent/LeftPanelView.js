@@ -4,18 +4,38 @@ import {
     View,
     Text
 } from 'react-native';
+import {connect} from 'react-redux'
 import BaseTitleBt from '../../Comp/Base/BaseTitleBt'
 import Colors from '../../Utils/Colors'
-
+import *as RootComponentActions from '../../Redux/Actions/RootComponentActions'
+import RootNavigator from '../../Root/RootNavigator'
+import RegisterPage from '../../Pages/RegisterPage'
+import *as LeftDrawerComponent from './LeftDrawerComponent'
+import *as EventListener from '../../Utils/EventListener/EventListener'
 
 //左图
-export default class LeftPanelView extends Component {
+export  class LeftPanelView extends Component {
 
-    onBtSelect() {
-        showToast('onBtSelect  type==');
-        // switch (type) {
-        //
-        // }
+    onBtSelect(i) {
+        // showToast('onBtSelect  type=='+i);
+        switch (i) {
+            case 0:
+            {
+                if (this.props.RootComponentReducer.curNav!=RootNavigator){
+                    this.props.dispatch(RootComponentActions.changeNavActions(RootNavigator));
+                }
+            }
+            break;
+            case 1:
+            {
+                if (this.props.RootComponentReducer.curNav!=RegisterPage){
+                    this.props.dispatch(RootComponentActions.changeNavActions(RegisterPage));
+                }
+            }
+                break;
+        }
+
+        EventListener.sendEvent(LeftDrawerComponent.closeDrawerEventName)
     }
 
     render() {
@@ -35,7 +55,7 @@ export default class LeftPanelView extends Component {
                         backgroundColor: Colors.getRandomColor(),
                         marginTop: 15
                     }]}
-                    onPress={()=>this.onBtSelect()}
+                    onPress={()=>this.onBtSelect(0)}
                     textStyle={{
                         fontSize: 15,
                         color: Colors.white,
@@ -56,7 +76,7 @@ export default class LeftPanelView extends Component {
                         backgroundColor: Colors.getRandomColor(),
                         marginTop: 15
                     }]}
-                    onPress={()=>this.onBtSelect()}
+                    onPress={()=>this.onBtSelect(1)}
                     textStyle={{
                         fontSize: 15,
                         color: Colors.white,
@@ -70,3 +90,11 @@ export default class LeftPanelView extends Component {
         )
     }
 }
+
+function mapStateToProps(state) {
+
+    // 把 state里的 RootComponentReducer 注入到 this.props里
+    const {RootComponentReducer}=state;
+    return {RootComponentReducer};
+}
+export default connect(mapStateToProps)(LeftPanelView)

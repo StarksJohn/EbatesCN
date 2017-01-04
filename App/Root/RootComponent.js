@@ -6,7 +6,6 @@
 import React, {Component} from 'react';
 import {} from 'react-native';
 import {connect} from 'react-redux'
-import RootNavigator from './RootNavigator'
 import LeftDrawerComponent from './LeftDrawerComponent/LeftDrawerComponent'
 
 export  class RootComponent extends Component {

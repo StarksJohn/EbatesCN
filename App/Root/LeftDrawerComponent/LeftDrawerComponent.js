@@ -11,6 +11,8 @@ import tweens from './tweens'
 import EventListener from '../../Utils/EventListener/EventListener'
 
 export const openDrawerEventName = 'openDrawerEventName';//任何地方都可发送的打开左屏的事件名字
+export const closeDrawerEventName = 'closeDrawerEventName';//任何地方都可发送的关闭左屏的事件名字
+
 
 export default class LeftDrawerComponent extends Component {
 
@@ -21,38 +23,48 @@ export default class LeftDrawerComponent extends Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-            drawerType: 'static',
-            openDrawerOffset: 100,
+            drawerType: 'displace',
+            openDrawerOffset: 100,//中图view 在左图打开时 显示的 宽度
             closedDrawerOffset: 0,
             panOpenMask: .1,
             panCloseMask: .9,
             relativeDrag: false,
-            panThreshold: .25,
+            panThreshold: .25,//拖动多大距离就打开左屏|关闭左屏
             tweenHandlerOn: false,
-            tweenDuration: 350,
-            tweenEasing: 'linear',
+            tweenDuration: 350/2, //展开|关闭 左屏动画的 速度
+            tweenEasing: 'easeInOutCirc',//加速效果
             disabled: false,
             tweenHandlerPreset: null,
             acceptDoubleTap: false,
             acceptTap: false,
             acceptPan: true,
-            tapToClose: false,
+            tapToClose: true,
             negotiatePan: false,
             rightSide: false,
         };
     }
 
     componentDidMount() {
-        this.listener = new EventListener({
+        this.openListener = new EventListener({
             eventName: openDrawerEventName, eventCallback: ()=> {
-                this.openDrawer();
+                this.drawer.open();
+            }
+        });
+
+        this.closeListener = new EventListener({
+            eventName: closeDrawerEventName, eventCallback: ()=> {
+                this.drawer.close();
             }
         });
     }
 
     componentWillUnmount() {
-        if (this.listener) {
-            this.listener.removeEventListener();
+        if (this.openListener) {
+            this.openListener.removeEventListener();
+        }
+
+        if (this.closeListener) {
+            this.closeListener.removeEventListener();
         }
     }
 

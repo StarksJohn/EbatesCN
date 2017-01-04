@@ -33,6 +33,10 @@ class HomePage extends Component {
         // dispatch(getTitleBarTab());//dispatch 了一个 Thunk 函数作为 action, 获取首页的数据
     }
 
+    componentWillUnmount() {
+        Log.log('componentWillUnmount');
+    }
+
     /*
      左上角点击
      */
