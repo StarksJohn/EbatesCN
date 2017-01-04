@@ -5,20 +5,32 @@
  */
 import React, {Component} from 'react';
 import {} from 'react-native';
+import {connect} from 'react-redux'
 import RootNavigator from './RootNavigator'
 import LeftDrawerComponent from './LeftDrawerComponent/LeftDrawerComponent'
 
-export default class RootComponent extends Component {
+export  class RootComponent extends Component {
 
     render() {
+        let Component = this.props.RootComponentReducer.curNav;
+
         return (
             <LeftDrawerComponent
             >
-                <RootNavigator
-                />
+                {/*左屏的 子节点 就是 左屏里 切换  的不同的 nav*/}
+                <Component />
             </LeftDrawerComponent>
         );
     }
 }
+
+function mapStateToProps(state) {
+
+    // 把 state里的 RootComponentReducer 注入到 this.props里
+    const {RootComponentReducer}=state;
+    return {RootComponentReducer};
+}
+
+export default connect(mapStateToProps)(RootComponent)
 
 

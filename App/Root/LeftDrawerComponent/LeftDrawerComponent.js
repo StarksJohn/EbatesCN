@@ -36,7 +36,7 @@ export default class LeftDrawerComponent extends Component {
             acceptDoubleTap: false,
             acceptTap: false,
             acceptPan: true,
-            tapToClose: true,
+            tapToClose: false,
             negotiatePan: false,
             rightSide: false,
         };
@@ -77,9 +77,9 @@ export default class LeftDrawerComponent extends Component {
 
     render() {
         //左图
-        let controlPanel = <LeftPanelView closeDrawer={() => {
-            this.drawer.close();
-        }}/>;
+        let controlPanel = <LeftPanelView
+            //closeDrawer={() => {this.drawer.close();}}
+        />;
 
         return (
             <Drawer

@@ -1,7 +1,7 @@
 /**
  * Created by Ebates on 16/12/15.
  *
- * 跟页面里需要的action
+ * 有 底部 tabbar 的 一级页面 里需要的action
  */
 import {AllContainers} from '../Container/AllPageContainers';
 

@@ -3,6 +3,7 @@
  */
 import React, {Component} from 'react';
 import {StyleSheet, View, Text, TextInput, Image, Platform} from 'react-native';
+import {connect} from 'react-redux'
 import Colors from '../Utils/Colors';
 import  BaseNavigationBar, {NavBarButton, baseOnBackPress} from '../Comp/Base/BaseNavigationBar'
 import BackAndroidEventListener from '../Utils/EventListener/BackAndroidEventListener'
@@ -15,7 +16,6 @@ import phoneQuickLogPage from './phoneQuickLogPage'
 import BizLogBt from '../Comp/BizCommonComp/BizLogBt'
 import *as BizViews from '../Comp/BizCommonComp/BizViews'
 import RegisterPage from './RegisterPage'
-import {connect} from 'react-redux'
 import *as LogInActions from '../Redux/Actions/LogInActions'
 import *as RootNavigator from '../Root/RootNavigator'
 import *as BizInputViews from '../Comp/BizCommonComp/BizInputViews'
