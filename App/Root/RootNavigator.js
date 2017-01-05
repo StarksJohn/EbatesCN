@@ -5,7 +5,7 @@
  */
 import React, {Component} from 'react';
 import {Navigator, StatusBar, StyleSheet, View, Platform, DeviceEventEmitter} from 'react-native';
-import RootPagesContainer from '../Redux/Container/RootPagesContainer'
+// import RootPagesContainer from '../Redux/Container/RootPagesContainer'
 import BizToast from '../Comp/BizCommonComp/BizToast'
 
 /**
@@ -89,12 +89,7 @@ export default class RootNavigator extends Component {
             <View style={styles.container}>
                 <Navigator
                     ref={component => this.navigator = component}
-                    initialRoute={
-                    {
-                        component: RootPagesContainer,
-                        name:gRouteName.RootPagesContainer//'RootPagesContainer'
-                    }
-                    }
+                    initialRoute={this.props.initialRoute}//{{component: RootPagesContainer, name:gRouteName.RootPagesContainer}}
                     configureScene={this.handlerConfigureScene}
                     renderScene={this.renderScene}
                 />

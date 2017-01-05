@@ -4,15 +4,21 @@
  */
 'use strict'
 const {Record} = require('immutable') //导入  Immutable.js 的 Record API
-import RootNavigator from '../../Root/RootNavigator'
-// import LogInPage from '../../Pages/LogInPage'
+import RootHomeNavigatorContainer from '../Container/RootHomeNavigatorContainer'
+import RooRecommendFriendNavContainer from '../Container/RooRecommendFriendNavContainer'
 
+/**
+ * 根页面左图里的 nav
+ * @type {{RootHomeNavigatorContainer: *}}
+ */
+export const rootNavs={
+    RootHomeNavigatorContainer:RootHomeNavigatorContainer,
+    RootRecommendFriendNavContainer:RooRecommendFriendNavContainer,
+}
 
 var InitialState = Record({
-    // homeNav:RootNavigator,
-    // RecommendFriendsNav:LogInPage,// 推荐好友
 
-    curNav:RootNavigator,//跟页面 默认的 nav
+    curNav:rootNavs.RootHomeNavigatorContainer,//跟页面 默认的 nav
 
 })
 export default InitialState

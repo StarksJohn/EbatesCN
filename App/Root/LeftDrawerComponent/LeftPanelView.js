@@ -8,10 +8,12 @@ import {connect} from 'react-redux'
 import BaseTitleBt from '../../Comp/Base/BaseTitleBt'
 import Colors from '../../Utils/Colors'
 import *as RootComponentActions from '../../Redux/Actions/RootComponentActions'
-import RootNavigator from '../../Root/RootNavigator'
-import RegisterPage from '../../Pages/RegisterPage'
+// import RootNavigator from '../../Root/RootNavigator'
+// import RegisterPage from '../../Pages/RegisterPage'
 import *as LeftDrawerComponent from './LeftDrawerComponent'
 import *as EventListener from '../../Utils/EventListener/EventListener'
+import *as RootComponentInitialState from '../../Redux/InitialState/RootComponentInitialState'
+
 
 //左图
 export  class LeftPanelView extends Component {
@@ -21,15 +23,15 @@ export  class LeftPanelView extends Component {
         switch (i) {
             case 0:
             {
-                if (this.props.RootComponentReducer.curNav!=RootNavigator){
-                    this.props.dispatch(RootComponentActions.changeNavActions(RootNavigator));
+                if (this.props.RootComponentReducer.curNav!=RootComponentInitialState.rootNavs.RootHomeNavigatorContainer){
+                    this.props.dispatch(RootComponentActions.changeNavActions(RootComponentInitialState.rootNavs.RootHomeNavigatorContainer));
                 }
             }
             break;
             case 1:
             {
-                if (this.props.RootComponentReducer.curNav!=RegisterPage){
-                    this.props.dispatch(RootComponentActions.changeNavActions(RegisterPage));
+                if (this.props.RootComponentReducer.curNav!=RootComponentInitialState.rootNavs.RootRecommendFriendNavContainer){
+                    this.props.dispatch(RootComponentActions.changeNavActions(RootComponentInitialState.rootNavs.RootRecommendFriendNavContainer));
                 }
             }
                 break;

@@ -1,5 +1,6 @@
 import React, {Component, Alert} from 'react';
 import {Provider} from 'react-redux';
+import GlobalVar from '../Global/GlobalVar'
 import configureStore from '../Redux/Store';
 import SplashPage from '../Pages/SplashPage';
 import RootComponent from './RootComponent'
@@ -7,7 +8,6 @@ import RootComponent from './RootComponent'
 // MainPageContainer.android.js
 // import {DEBUG, RDEBUG} from '../constants/GlobalConst';
 // import Storage from '../db/CommonDB/Storage'
-import GlobalVar from '../Global/GlobalVar'
 
 const store = configureStore();//唯一的State树
 
