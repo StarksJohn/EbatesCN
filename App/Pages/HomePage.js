@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         // flexDirection: 'column',
-        backgroundColor: Colors.getRandomColor(),
+        // backgroundColor: Colors.getRandomColor(),
     },
 });
 

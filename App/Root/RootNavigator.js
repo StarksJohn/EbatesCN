@@ -89,7 +89,8 @@ export default class RootNavigator extends Component {
             <View style={styles.container}>
                 <Navigator
                     ref={component => this.navigator = component}
-                    initialRoute={this.props.initialRoute}//{{component: RootPagesContainer, name:gRouteName.RootPagesContainer}}
+                    initialRoute={this.props.initialRoute/*不同 container 注入不同的 initialRoute ,如
+                     RootHomeNavigatorContainer和 RooRecommendFriendNavContainer */}
                     configureScene={this.handlerConfigureScene}
                     renderScene={this.renderScene}
                 />

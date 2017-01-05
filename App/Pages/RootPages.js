@@ -55,8 +55,9 @@ class RootPages extends React.Component {
                             }
                         }
                     }}
-                    titleStyle={{color: Colors.textBlack /*, fontWeight: 'bold'*/}}/*item的 title的text 的 默认 style*/
-                    selectedTitleStyle={{color: Colors.appUnifiedBackColor /*, fontWeight: 'bold'*/}} /*item的
+                    titleStyle={{color: 'rgba(85, 85, 85, 1)' /*, fontWeight: 'bold'*/}}/*item的 title的text 的 默认
+                     style*/
+                    selectedTitleStyle={{color: 'rgba(54, 166, 66, 1)' /*, fontWeight: 'bold'*/}} /*item的
                  title的text 的
                  选中状态 style*/
                 >
@@ -65,7 +66,7 @@ class RootPages extends React.Component {
             }
         );
         return <TabNavigator
-            tabBarStyle={{opacity: 0.8,}}
+            tabBarStyle={{opacity: 0.95,}}
             sceneStyle={{paddingBottom: 0}}
         >{cp}</TabNavigator>
     }
