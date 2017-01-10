@@ -65,6 +65,7 @@ export default class BaseNavigationBar extends Component {
         onLeftButtonClick: PropTypes.func,
         title: PropTypes.string,
         titleTextView: PropTypes.element,
+        searchBar: PropTypes.element,
         hide: PropTypes.bool,
         statusBarCustomStyle: PropTypes.shape(StatusBarShape),
         rightButton: PropTypes.oneOfType([
@@ -85,7 +86,7 @@ export default class BaseNavigationBar extends Component {
             translucent: false,
             animated: false,
         },
-        title: '带我去打网球打网球订位打网球打网球带我去的完全打网球打网球打网球打网球完全打网球打网球带我去的期望打网球打网球',
+        title: '',
         titleTextNumberOfLines: 1,
         // onLeftButtonClick:this.onLeftButtonClick()
     }
@@ -156,20 +157,25 @@ export default class BaseNavigationBar extends Component {
                 />
             </View> : null;
 
-        let titleTextView = this.props.titleTextView ? this.props.titleTextView :
-            <Text style={[styles.defaultTitleStyle, this.props.titleTextStyle]}
-                  numberOfLines={this.props.titleTextNumberOfLines}
-            >
-                {this.props.title}
-            </Text>;
+        let titleTextView=null;
+        if (!this.props.searchBar){//有 searchBar,就无 titleTextView
+            titleTextView= this.props.titleTextView ? this.props.titleTextView :
+                <Text style={[styles.defaultTitleStyle, this.props.titleTextStyle]}
+                      numberOfLines={this.props.titleTextNumberOfLines}
+                >
+                    {this.props.title}
+                </Text>;
+        }
 
-        //画nav
+        //画nav的 子节点
         let content = this.props.hide ? null :
             <View style={styles.navBar}>
                 {this.getButtonElement(this.props.leftButton)}
-                <View style={styles.navBarTitleContainer}>
-                    {titleTextView}
-                </View>
+                {titleTextView?
+                    <View style={styles.navBarTitleContainer}>
+                        {titleTextView}
+                    </View>
+                :this.props.searchBar}
                 {this.getButtonElement(this.props.rightButton, {marginRight: 8,})}
             </View>;
         return (

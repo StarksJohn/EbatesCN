@@ -21,6 +21,9 @@ export function emailInputView(styles, updateEmailCallBack) {
                     style={GlobalStyles.textInput}
                     autoFocus={false}
                     placeholder='输入邮箱地址'
+                    onFocus={() => {
+                        Log.log('111');
+                    }}
                     onChange={
                         //(event) => this.updateEmail(event.nativeEvent.text)
                         updateEmailCallBack

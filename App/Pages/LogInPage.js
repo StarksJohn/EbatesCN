@@ -141,7 +141,7 @@ export class LogInPage extends Component {
     render() {
         const {navigator} = this.props;
 
-        var statusBar = GlobalStyles.twoLevelPageStatusBarProps;
+        var statusBar = GlobalStyles.statusBarDefaultProps;
 
         let navigationBar =
             <BaseNavigationBar

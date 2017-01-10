@@ -4,7 +4,7 @@
 
 import React, {Component, PropTypes} from 'react';
 import {
-    Text, StyleSheet, View
+    Text, StyleSheet, View, Platform
 } from 'react-native';
 import Colors from '../../Utils/Colors';
 import BaseBt from './BaseBt'

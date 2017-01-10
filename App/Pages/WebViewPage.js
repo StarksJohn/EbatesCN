@@ -165,7 +165,7 @@ export default class WebViewPage extends Component {
                     title={route.title}
                     titleTextStyle={{fontSize: 16,color: Colors.black}}
                     statusBarCustomStyle={
-                        GlobalStyles.twoLevelPageStatusBarProps
+                        GlobalStyles.statusBarDefaultProps
                     }
                 />
             );

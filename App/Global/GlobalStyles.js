@@ -52,8 +52,8 @@ module.exports = {
         animated:true,showHideTransition:'slide',
         // backgroundColor: Colors.backGray
     },
-    //二级页面 statusBar的统一属性
-    twoLevelPageStatusBarProps: {
+    // statusBar的默认 统一样式
+    statusBarDefaultProps: {
         backgroundColor: Colors.white,
         barStyle: Platform.OS === 'ios' ? 'dark-content' : 'default' //
     },

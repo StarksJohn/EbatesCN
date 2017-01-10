@@ -23,7 +23,7 @@ class SplashPage extends Component {
   	this._inAnim(() => {
   	  setTimeout(() => {
       	this._outAnim(() => this.props.onAnimEnd && this.props.onAnimEnd());
-    	}, 500);
+    	}, 100);
   	});
 	}
 
@@ -65,11 +65,11 @@ class SplashPage extends Component {
   	Animated.sequence([
   		Animated.timing(this.state.fadeAnim,  {
     		toValue: 1,
-    		duration: 1000,
+    		duration: 100,
     	}),
     	Animated.timing(this.state.fadeAnimOther,  {
     		toValue: 1,
-    		duration: 500,
+    		duration: 100,
     	}),
   	]).start(() => callback && callback()); 
   }
@@ -78,15 +78,15 @@ class SplashPage extends Component {
   	Animated.sequence([
   		Animated.timing(this.state.fadeAnim,  {
     		toValue: 0,
-    		duration: 1000,
+    		duration: 100,
     	}),
     	Animated.timing(this.state.fadeAnimOther,  {
     		toValue: 0,
-    		duration: 500,
+    		duration: 100,
     	}),
     	Animated.timing(this.state.fadeAnimContainer,  {
     		toValue: 0,
-    		duration: 500,
+    		duration: 100,
     	}),
   	]).start(() => callback && callback()); 
   }

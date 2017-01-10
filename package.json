@@ -7,7 +7,9 @@
     "test": "jest"
   },
   "dependencies": {
+    "antd-mobile": "^0.9.13",
     "hellojs": "^1.14.0",
+    "object-assign": "^4.1.0",
     "react": "^15.3.1",
     "react-native": "^0.37.0",
     "react-native-drawer": "^2.3.0",
@@ -26,6 +28,7 @@
   },
   "devDependencies": {
     "babel-jest": "17.0.2",
+    "babel-plugin-import": "^1.1.0",
     "babel-preset-react-native": "1.9.0",
     "jest": "17.0.3",
     "react-test-renderer": "15.4.1",

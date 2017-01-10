@@ -184,7 +184,7 @@ class phoneQuickLogPage extends Component {
 
     render() {
         const {navigator} = this.props;
-        var statusBar = GlobalStyles.twoLevelPageStatusBarProps;
+        var statusBar = GlobalStyles.statusBarDefaultProps;
         let navigationBar =
             <BaseNavigationBar
                 navigator={navigator}

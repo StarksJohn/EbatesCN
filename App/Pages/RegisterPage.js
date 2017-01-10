@@ -174,7 +174,7 @@ export class RegisterPage extends Component {
     render() {
         const {navigator, dispath} = this.props;
 
-        var statusBar = GlobalStyles.twoLevelPageStatusBarProps;
+        var statusBar = GlobalStyles.statusBarDefaultProps;
 
         let navigationBar =
             <BaseNavigationBar
