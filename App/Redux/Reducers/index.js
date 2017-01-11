@@ -7,7 +7,8 @@ import LogInReducer from './LogInReducer'
 import RootComponentReducer from './RootComponentReducer'
 import RootHomeNavReducer from './RootHomeNavReducer'
 import RootRecommendFriendNavReducer from './RootRecommendFriendNavReducer'
+import SearchPageListReducer from './SearchPageListReducer'
 
 export default combineReducers({
-    RootPageReducer,HomePageReducer,quickLogReducer,RegisterReducer,LogInReducer,RootComponentReducer,RootHomeNavReducer,RootRecommendFriendNavReducer
+    RootPageReducer,HomePageReducer,quickLogReducer,RegisterReducer,LogInReducer,RootComponentReducer,RootHomeNavReducer,RootRecommendFriendNavReducer,SearchPageListReducer
 });

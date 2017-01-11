@@ -6,7 +6,7 @@
 
 import React from 'react';
 import assign from 'object-assign';
-import {View, TextInput, Text, Image} from 'react-native';
+import {View, TextInput, Text, Image, Animated, Easing} from 'react-native';
 import {defaultProps} from './PropsType';
 import styles from './style/index';
 import Colors from '../../../Utils/Colors'
@@ -26,6 +26,9 @@ export default class BaseSearchBar extends React.Component {
 
             this.refs.searchInput.blur();//主动失去光标焦点和 隐藏键盘
             this.setState({isShowCancelButton: false, paddingRight: 15});
+
+            // this.closeAnimated();
+
         };
         this.onChangeText = (value) => {
             if (!('value' in this.props)) {
@@ -43,12 +46,21 @@ export default class BaseSearchBar extends React.Component {
             this.refs.searchInput.clear();//清除 text
             this.setState({isShowCancelButton: false, paddingRight: 15});
 
+            // this.closeAnimated();
+
+
         };
-        this.onFocus=() => {
+        this.onFocus = () => {
             this.setState({isShowCancelButton: true, paddingRight: 0});
+
+            // this.beginAnimated();
         };
+
         this.onBlur = () => {
             this.setState({isShowCancelButton: false});
+
+            // this.closeAnimated();
+
         };
 
         let value;
@@ -61,7 +73,13 @@ export default class BaseSearchBar extends React.Component {
         else {
             value = '';
         }
-        this.state = {value, isShowCancelButton: false, paddingRight: 15 /*一开始默认 容器view的 右 补白距离*/};
+
+        this.state = {
+            value,
+            isShowCancelButton: false,
+             paddingRight:15 /*new Animated.Value(15)*/, /*一开始默认 容器view的 右 补白距离*/
+            // cancleBtopacity: new Animated.Value(0),
+        };
     }
 
     componentWillReceiveProps(nextProps) {
@@ -70,6 +88,34 @@ export default class BaseSearchBar extends React.Component {
                 value: nextProps.value,
             });
         }
+    }
+
+    beginAnimated(){
+        // Animated.timing(this.state.paddingRight, {
+        //     toValue: 0, // 目标值
+        //     duration: 100, // 动画时间
+        //     easing: Easing.linear // 缓动函数
+        // }).start();
+        //
+        // Animated.timing(this.state.cancleBtopacity, {
+        //     toValue: 1, // 目标值
+        //     duration: 500, // 动画时间
+        //     easing: Easing.linear // 缓动函数
+        // }).start();
+    }
+
+    closeAnimated(){
+        // Animated.timing(this.state.paddingRight, {
+        //     toValue: 15, // 目标值
+        //     duration: 100, // 动画时间
+        //     easing: Easing.linear // 缓动函数
+        // }).start();
+        //
+        // Animated.timing(this.state.cancleBtopacity, {
+        //     toValue: 0, // 目标值
+        //     duration: 100, // 动画时间
+        //     easing: Easing.linear // 缓动函数
+        // }).start();
     }
 
     render() {
@@ -119,9 +165,9 @@ export default class BaseSearchBar extends React.Component {
                 <Image source={require('./Img/search.png')} style={styles.search}
                        resizeMode="stretch"
                 />
-                {/*showCancelButton*/ this.state.isShowCancelButton ?
+                { this.state.isShowCancelButton ?
                     (
-                        <View style={styles.cancelTextContainer}>
+                        <View style={[styles.cancelTextContainer,/*{opacity: this.state.cancleBtopacity}*/]}>
                             {cancleBt}
                         </View>
                     ) : null

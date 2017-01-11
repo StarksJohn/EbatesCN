@@ -1,11 +1,11 @@
 /**
- * 全局样式
+ * 全局样式 GlobalStyles
  * @flow
  */
 import {
     Dimensions, Platform
 } from 'react-native'
-// import {statusBarH} from './GlobalConst'
+import Layout from 'react-native-tab-navigator/Layout';
 import Colors from '../Utils/Colors';
 
 const {height, width} = Dimensions.get('window');
@@ -88,4 +88,5 @@ module.exports = {
         color: Colors.black,
         // backgroundColor: Colors.white
     },
+    bottomTabBarHeight:Layout.tabBarHeight,//一级页面底部tabbar的整体高度
 };

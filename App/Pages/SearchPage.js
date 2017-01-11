@@ -8,11 +8,12 @@ import BaseNavigationBar from '../Comp/Base/BaseNavigationBar'
 import *as GlobalConst from '../Global/GlobalConst'
 import GlobalStyles from '../Global/GlobalStyles'
 import BaseSearchBar from '../Comp/Base/BaseSearchBar/BaseSearchBar'
+import SearchPageListComp from '../Comp/BizList/SearchPageListComp'
 
 /**
  *  展示组件
  */
-class HomePage extends Component {
+export default class SearchPage extends Component {
 
     constructor(props) {
         super(props);
@@ -38,11 +39,12 @@ class HomePage extends Component {
                 titleTextView={null}
                 searchBar={searchBar}
                 hide={false}/>;
+        let searchList= <SearchPageListComp />;
 
         return (
             <View style={styles.container}>
                 {navigationBar}
-
+                {searchList}
             </View>
         );
     }
@@ -54,8 +56,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         // flexDirection: 'column',
-        backgroundColor: Colors.getRandomColor(),
+        backgroundColor: Colors.white,
     },
 });
 
-export default HomePage;
