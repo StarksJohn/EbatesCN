@@ -322,7 +322,8 @@ export default class BaseListComp extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.getRandomColor(),
+        backgroundColor: 'rgba(239, 239, 239, 1)',
+        // paddingBottom:GlobalStyles.bottomTabBarHeight 此方式不能让listview的底部和 底部tabbar 有半透明效果
     },
     footerContainer: {
         flexDirection: 'row',

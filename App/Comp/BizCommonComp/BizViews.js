@@ -1,12 +1,13 @@
 /**
  * Created by Ebates on 16/12/26.
- *
+ *  BizViews
  * 业务逻辑层可共用的view
  */
 import React from 'react';
 import {View,Image ,Text} from 'react-native';
 import Colors from '../../Utils/Colors'
 import FontAwesomeIconBts from '../Base/BaseFontAwesomeIconBts'
+import GlobalStyles from '../../Global/GlobalStyles'
 
 /**
  * 登录注册页共用
@@ -50,4 +51,29 @@ export function checkBox(callBack) {
         iconColor={Colors.appUnifiedBackColor}
         onPress={callBack}
     />
+}
+
+/**
+ * 列表最底部 用于 tabbar 的 占位view, 为了 footerview 能显示在 底部tabbar上边
+ */
+export function renderBottomTabbarBackView() {
+    return<View style={{height: GlobalStyles.bottomTabBarHeight /*, backgroundColor: Colors.blue*/}}>
+    </View>;
+}
+
+/**
+ * 画 带阴影的 线
+ * @returns {XML}
+ */
+export function renderShadowLine() {
+    return <View style={{
+        height: 0.5, borderWidth:0.5, //backgroundColor: 'rgba(228, 228, 228, 1)',
+        borderColor: Colors.borderColor,//'#dddddd',
+        borderStyle: null,
+        borderRadius: 4,
+        shadowColor: 'gray',
+        shadowOffset: {width: 0.5, height: 0.5},
+        shadowOpacity: 0.4,
+    }}>
+    </View>
 }

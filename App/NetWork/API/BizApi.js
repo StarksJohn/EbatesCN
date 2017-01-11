@@ -12,7 +12,7 @@ import *as BaseListActions from '../../Redux/Actions/BaseListActions'
 export const SearchPageListApi={
     ApiName:'SearchPageListApi',
     fetchData(opt){
-        let data=[{}];
+        let data=[{},{}];
         return (dispatch) => {
 
             dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, data));

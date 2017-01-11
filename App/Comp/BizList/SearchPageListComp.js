@@ -4,12 +4,13 @@
 
 import React, {Component} from 'react';
 import {
-    View,
+    View,Text
 } from 'react-native';
 import {connect} from 'react-redux';
 // import RecommendedFoodListCellContainer from '../../containers/RecommendedFoodListCellContainer'
 import Colors from '../../Utils/Colors'
 import BaseListComp from '../Base/BaseListComp';
+import *as BizViews from '../BizCommonComp/BizViews'
 
 
 class SearchPageListComp extends Component {
@@ -34,11 +35,26 @@ class SearchPageListComp extends Component {
         //     navigator={this.props.navigator}
         // />
 
+        //最底部画 占位view
+        if (rowID==this.props.baseReducer.dataArray.length-1){
+            return BizViews.renderBottomTabbarBackView();
+        }
+
+
         switch (rowID) {
             case '0': {
                 return (
-                    <View style={{flex: 1, height: 1000, backgroundColor: Colors.getRandomColor()}}>
-
+                    <View style={{height: 205,
+                    //    backgroundColor: Colors.getRandomColor()
+                    }}>
+                        {BizViews.renderShadowLine()}
+                        <Text style={{
+                            color: 'rgba(64, 64, 64, 1)',
+                            fontSize: 14, marginLeft: 15, marginTop: 25,
+                            backgroundColor: Colors.getRandomColor()
+                        }}>
+                            热门搜索
+                        </Text>
                     </View>
 
                 )
