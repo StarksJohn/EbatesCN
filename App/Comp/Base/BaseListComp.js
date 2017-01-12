@@ -283,6 +283,7 @@ export default class BaseListComp extends Component {
             contentView = (
                 <ListView
                     ref="ListView"
+                    initialListSize={1}
                     dataSource={this.props.baseReducer.dataSource}
                     renderRow={ this.props.renderRow }
                     automaticallyAdjustContentInsets={this.props.automaticallyAdjustContentInsets}

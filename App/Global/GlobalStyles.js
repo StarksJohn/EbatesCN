@@ -89,4 +89,8 @@ module.exports = {
         // backgroundColor: Colors.white
     },
     bottomTabBarHeight:Layout.tabBarHeight,//一级页面底部tabbar的整体高度
+    window:{
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
+    }
 };

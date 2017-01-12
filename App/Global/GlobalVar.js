@@ -7,7 +7,7 @@ import Log from '../Utils/Log'
 global.Log = Log;
 
 import {showToast} from '../Comp/BizCommonComp/BizToast';
-global.showToast = showToast;
+global.BizShowToast = showToast;
 
 import {routeName} from './GlobalConst'
 global.gRouteName = routeName;
