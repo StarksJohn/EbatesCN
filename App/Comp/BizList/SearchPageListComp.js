@@ -6,7 +6,7 @@ import React, {Component} from 'react';
 import {
     View, Text
 } from 'react-native';
-import {connect} from 'react-redux';
+// import {connect} from 'react-redux';
 // import RecommendedFoodListCellContainer from '../../containers/RecommendedFoodListCellContainer'
 import Colors from '../../Utils/Colors'
 import BaseListComp from '../Base/BaseListComp';
@@ -15,14 +15,32 @@ import BaseTitleBt from '../Base/BaseTitleBt'
 import *as GlobalStyles from '../../Global/GlobalStyles'
 import BaseGridView from '../Base/BaseGridView'
 
-class SearchPageListComp extends Component {
+
+export default class SearchPageListComp extends Component {
 
     constructor(props) {
         super(props);
     }
 
+    /**
+     * 点击 热门搜索的 按钮
+     * @param model
+     */
     onPress(model) {
         BizShowToast(model.title);
+    }
+
+    // refreshHistoryList(){
+    //     this.props.dispatch(BizApi.fetchApi(BaseListActions.BaseListFetchDataType.REFRESH, 0, this.props.baseReducer.ApiName));
+    //
+    // }
+
+    /**
+     * 全部清除 历史搜索
+     */
+    clearAllHistorySearch(){
+        BizShowToast('clearAllHistorySearch');
+
     }
 
     /**
@@ -48,40 +66,41 @@ class SearchPageListComp extends Component {
 
         switch (rowID) {
             case '0': {
-                let arr=[{title: '1'}, {title: '2'}, {title: '22222333'}, {title: '4'}, {title: '5'}, {title: '6'}, {title: '332323233232323'}, {title: '332323233232323'}, {title: '332323233232323'}];
+                let arr = rowData['hotSearchCell'];
                 return (
                     <View style={{
-                        height: 205,
+                        height: 208,
                         //    backgroundColor: Colors.getRandomColor()
                     }}>
-                        {BizViews.renderShadowLine()}
                         <Text style={{
                             color: 'rgba(64, 64, 64, 1)',
-                            fontSize: 14, marginLeft: 15, marginTop: 20,
-                            backgroundColor: Colors.getRandomColor()
+                            fontSize: 14, marginLeft: 15, marginTop: 23,
+                            //backgroundColor: Colors.getRandomColor()
                         }}>
                             热门搜索
                         </Text>
                         <BaseGridView
                             items={Array.from(arr)}//数组元素是 {id:'',name:''}
-                            containerStyle={{paddingLeft: 10,
-                                paddingRight: 10, paddingTop: 10,paddingBottom: 10,
-                                backgroundColor:Colors.getRandomColor()
+                            containerStyle={{
+                                paddingLeft: 10,
+                                paddingRight: 10, paddingTop: 8, paddingBottom: 8,
+                                backgroundColor: Colors.getRandomColor()
                             }}
-                            renderItem={(model)=>{
+                            renderItem={(model)=> {
                                 return (
                                     <BaseTitleBt
+                                        key={model.title}
                                         btStyle={[{
                                             width: (GlobalStyles.window.width - 30 - 20) / 3,
                                             borderRadius: 4, margin: 5, height: 45,
                                             alignItems: 'center',
                                             justifyContent: 'center',
-                                            backgroundColor: Colors.getRandomColor(),
+                                            backgroundColor: Colors.white,
                                         }]}
                                         onPress={() => this.onPress(model)}
                                         textStyle={{
-                                            fontSize: 15,
-                                            color: Colors.black,
+                                            fontSize: 14,
+                                            color: 'rgba(85, 85, 85, 1)',
                                         }}
                                         title={model.title}
                                         disabled={false}
@@ -95,63 +114,89 @@ class SearchPageListComp extends Component {
                 )
             }
                 break;
+            case '1'://历史搜索
+            {
+                return (
+                    <View style={{
+                        height: 40, justifyContent:'space-between',alignItems: 'center', flexDirection: 'row',
+                        marginTop: 10,
+                        backgroundColor: Colors.getRandomColor()
+                    }}>
+                        <Text style={{
+                            color: 'rgba(64, 64, 64, 1)',
+                            fontSize: 14, marginLeft: 15,
+                            //backgroundColor: Colors.getRandomColor()
+                        }}>
+                            历史搜索
+                        </Text>
+                        {/*q全部清除按钮*/}
+                        <BaseTitleBt
+                            btStyle={[{
+                                height: 40,
+                                alignItems: 'center',
+                                justifyContent: 'center', marginRight: 15,
+                                //backgroundColor: Colors.getRandomColor(),
+                            }]}
+                            onPress={() => this.clearAllHistorySearch()}
+                            textStyle={{
+                                fontSize: 12,
+                                color: 'rgba(136, 136, 136, 1)',
+                            }}
+                            title='全部清除'
+                            disabled={false}
+                        >
+                        </BaseTitleBt>
+                    </View>
+                );
+            }
+                break;
+            default://画 关键字cell
+            {
+                return (
+                    <View style={{flex: 1, height:45, flexDirection: 'row', justifyContent:'space-between' ,
+                        alignItems: 'center',
+                        backgroundColor:Colors.getRandomColor()
+                    }}>
+                        <Text style={{
+                            color: 'rgba(85, 85, 85, 1)',
+                            fontSize: 15, marginLeft: 15,
+                            //backgroundColor: Colors.getRandomColor()
+                        }}>
+                            {rowData}
+                        </Text>
+                    </View>
+                );
+            }
+                break;
         }
         return (null);
 
     }
 
     render() {
-        return ( <
-                BaseListComp
-                {...this.props }
-                renderRow={
-                    this.renderRow
-                }
+        return (
+            <View style={{flex: 1}}>
+                {BizViews.renderShadowLine()}
+                <BaseListComp
+                    {...this.props }
+                    renderRow={
+                        this.renderRow
+                    }
 
-            />
+                />
+            </View>
+
         );
     }
 
 }
 
-function mapStateToProps(state) {
+// function mapStateToProps(state) {
+//
+//     //推荐此种  解构赋值的写法
+//     const {SearchPageListReducer}=state;
+//     // let newProps={...SearchPageListReducer};
+//     return {baseReducer: SearchPageListReducer};
+// }
 
-    //推荐此种  解构赋值的写法
-    const {SearchPageListReducer}=state;
-    // let newProps={...SearchPageListReducer};
-    return {baseReducer: SearchPageListReducer};
-}
-
-export default connect(mapStateToProps)(SearchPageListComp);
-
-/*
- <View style={{
- backgroundColor: Colors.getRandomColor(), paddingTop: 10, paddingLeft: 10,
- paddingRight: 10,
- paddingBottom: 10,
- }}>
- {
- arr.map((model, i) => {
- return (
- <BaseTitleBt
- btStyle={[{
- width: (GlobalStyles.window.width - 30 - 20) / 3,
- borderRadius: 4, margin: 5, height: 45,
- alignItems: 'center',
- justifyContent: 'center',
- backgroundColor: Colors.getRandomColor(),
- }]}
- onPress={null}
- textStyle={{
- fontSize: 15,
- color: Colors.black,
- }}
- title={model.title}
- disabled={false}
- >
- </BaseTitleBt>
- )
- })
- }
- </View>
- */
+// export default connect(mapStateToProps)(SearchPageListComp);

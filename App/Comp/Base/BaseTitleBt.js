@@ -27,7 +27,7 @@ export default class BaseTitleBt extends Component {
     };
 
     static defaultProps = {
-        backgroundColor:Colors.appUnifiedBackColor,
+        backgroundColor:Colors.white,
         activeOpacity:0.5,
         disabled:false
     };
@@ -36,7 +36,6 @@ export default class BaseTitleBt extends Component {
     componentDidMount() {
 
     }
-
 
     componentWillReceiveProps(nextProps) {
 

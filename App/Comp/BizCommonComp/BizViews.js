@@ -68,7 +68,7 @@ export function renderBottomTabbarBackView() {
 export function renderShadowLine() {
     return <View style={{
         height: 0.5, borderWidth:0.5, //backgroundColor: 'rgba(228, 228, 228, 1)',
-        borderColor: Colors.borderColor,//'#dddddd',
+        borderColor: 'rgba(228, 228, 228, 1)',//'#dddddd',
         borderStyle: null,
         borderRadius: 4,
         shadowColor: 'gray',

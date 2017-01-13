@@ -35,7 +35,7 @@ export const loadStorage = (key, id, autoSync, syncInBackground) => {
                 // 也没有办法“变成”同步返回
                 // 你也可以使用“看似”同步的async/await语法
 
-                Log.log('loadCachedata OK ===' + ret);
+                Log.log('load  '+key+' OK ===' + ret);
                 // dispatch(LogInAction(ret));
                 resolve(ret);
             }).catch(err => {
@@ -60,16 +60,18 @@ export const loadStorage = (key, id, autoSync, syncInBackground) => {
  * 使用key和id来保存数据，一般是保存同类别（key）的大量数据。
  * @param key
  * @param id: 没有时传 ''
- * @param rawData
+ * @param rawData :{} 或 [] 类型
  * @param expires  毫秒
  */
 export const saveStorage = (key, id, rawData, expires) => {
+    // Log.log('saveStorage  '+key+' begin rawData ===' + rawData);
+
     storage.save({
         key: key, //global.UserSchema  表名
         id: id,
         rawData: rawData,// result:一行数据,不能改名
 
-        // 如果不指定过期时间，则会使用defaultExpires参数
+        // 如果不指定过期时间，则会使用 defaultExpires 参数
         // 如果设为 null，则永不过期
         expires: expires //null //1000 * 3600
     });

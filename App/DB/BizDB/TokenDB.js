@@ -27,7 +27,7 @@ export function saveUnLoginStateToken(tokenSchema) {
 
 /**
  * 读取 非登录token的缓存
- * @returns {Promise}
+ * @returns {Promise}, 外部调 loadUnLoginStateToken 时 也得 加 then()
  */
 export function loadUnLoginStateToken() {
     return new Promise(

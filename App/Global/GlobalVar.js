@@ -1,7 +1,9 @@
 /**
  * Created by Ebates on 16/12/2.
+ * GlobalVar
  * 全局变量, 此文件 只需 被import 一次
  */
+import ArrayUtils from '../Utils/ArrayUtils'
 
 import Log from '../Utils/Log'
 global.Log = Log;
