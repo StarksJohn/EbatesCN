@@ -50,6 +50,41 @@ export function saveHistoryDB(word) {
 }
 
 /**
+ * 缓存里删除一个 关键字
+ * @param word
+ * @returns {Promise}
+ */
+export function deleteOneKeyWordFromHistoryDB(word) {
+    return new Promise(
+        (resolve, reject) => {
+            this.loadHistoryDB().then((rawData)=> {
+
+                if (rawData.isContainValue(word)) {//
+
+                    rawData.remove(word);//remove是 本项目的 ArrayUtils.js 里 自己添加的 方法
+
+                    if (rawData.length<=0){
+                        this.clearHistoryDB();
+                    }else{
+                        gBizStorage.saveStorage(historySearchDBKey, '', rawData, null);
+                    }
+
+                    resolve(rawData);
+
+                }else{
+                    reject(rawData);
+                }
+
+            }).catch((e)=> {
+                if (e.name == 'NotFoundError') {//没 缓存
+                    resolve([]);
+                }
+            });
+        }
+    );
+}
+
+/**
  * 读取 历史搜索 列表的 缓存
  * @returns {Promise}
  */

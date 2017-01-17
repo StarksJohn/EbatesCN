@@ -54,6 +54,29 @@ export function checkBox(callBack) {
 }
 
 /**
+ * 删除按钮
+ * @param callBack
+ * @returns {XML}
+ */
+export function deleteBox(callBack) {
+    return<FontAwesomeIconBts
+        btStyle={{
+            width: 30,
+            height: 30,
+            /*justifyContent: 'center', alignItems: 'center', marginTop: 15,  */ marginRight: 5 ,
+            backgroundColor:Colors.getRandomColor()
+        }}
+        //btSelectColor={Colors.blackTranslucent}
+        normalName='close'
+        selectName='close'
+        iconSize={15}
+        initSelected={false}
+        iconColor={Colors.lineGray}
+        onPress={callBack}
+    />
+}
+
+/**
  * 列表最底部 用于 tabbar 的 占位view, 为了 footerview 能显示在 底部tabbar上边
  */
 export function renderBottomTabbarBackView() {

@@ -31,21 +31,27 @@ export default class SearchPageListComp extends Component {
      */
     onPress(model) {
         BizShowToast(model.title);
+        this.props.onSubmit(model.title);
     }
-
-    // refreshHistoryList(){
-    //     this.props.dispatch(BizApi.fetchApi(BaseListActions.BaseListFetchDataType.REFRESH, 0, this.props.baseReducer.ApiName));
-    //
-    // }
 
     /**
      * 全部清除 历史搜索
      */
     clearAllHistorySearch(){
         BizShowToast('clearAllHistorySearch');
-        // this.props.dispatch(BizApi.fetchApi(BaseListActions.BaseListFetchDataType.REFRESH, 0, this.props.baseReducer.ApiName));
         this.props.dispatch(BizApi.SearchPageListApi.clearAllHistorySearch(BaseListActions.BaseListFetchDataType.REFRESH));
         HistorySearchDB.clearHistoryDB();
+    }
+
+    /**
+     * 删除一个关键词
+     * @param word
+     */
+    deleteOneKeyWord(word){
+        // BizShowToast('deleteOneKeyWord  '+word);
+
+        this.props.dispatch(BizApi.SearchPageListApi.deleteOneKeyWord(word,BaseListActions.BaseListFetchDataType.REFRESH));
+
     }
 
     /**
@@ -166,6 +172,9 @@ export default class SearchPageListComp extends Component {
                         }}>
                             {rowData}
                         </Text>
+                        {BizViews.deleteBox(()=> {
+                            this.deleteOneKeyWord(rowData);
+                        })}
                     </View>
                 );
             }

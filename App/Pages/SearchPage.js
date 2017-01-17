@@ -62,7 +62,12 @@ export class SearchPage extends Component {
                 titleTextView={null}
                 searchBar={searchBar}
                 hide={false}/>;
-        let searchList= <SearchPageListComp ref="searchList" {...this.props }/>;
+        let searchList= <SearchPageListComp ref="searchList" {...this.props }
+                                            onSubmit={(value)=>{
+                                            this.onSubmit(value)
+                                            }
+                                            }
+        />;
 
         return (
             <View style={styles.container}>
