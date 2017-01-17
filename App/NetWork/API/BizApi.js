@@ -47,6 +47,14 @@ export const SearchPageListApi = {
         }
     },
 
+    clearAllHistorySearch(opt){
+        return (dispatch) => {
+            let data = [this.hotSearchCellData, '底部为了留白的cell'];
+
+            dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, data));
+        }
+    },
+
 }
 
 

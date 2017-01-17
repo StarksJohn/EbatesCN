@@ -14,6 +14,9 @@ import *as BizViews from '../BizCommonComp/BizViews'
 import BaseTitleBt from '../Base/BaseTitleBt'
 import *as GlobalStyles from '../../Global/GlobalStyles'
 import BaseGridView from '../Base/BaseGridView'
+import *as BizApi from '../../NetWork/API/BizApi'
+import *as BaseListActions from '../../Redux/Actions/BaseListActions'
+import *as HistorySearchDB from '../../DB/BizDB/HistorySearchDB'
 
 
 export default class SearchPageListComp extends Component {
@@ -40,7 +43,9 @@ export default class SearchPageListComp extends Component {
      */
     clearAllHistorySearch(){
         BizShowToast('clearAllHistorySearch');
-
+        // this.props.dispatch(BizApi.fetchApi(BaseListActions.BaseListFetchDataType.REFRESH, 0, this.props.baseReducer.ApiName));
+        this.props.dispatch(BizApi.SearchPageListApi.clearAllHistorySearch(BaseListActions.BaseListFetchDataType.REFRESH));
+        HistorySearchDB.clearHistoryDB();
     }
 
     /**

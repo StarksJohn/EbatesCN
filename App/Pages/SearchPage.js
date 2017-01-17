@@ -38,8 +38,6 @@ export class SearchPage extends Component {
             return;
         }
         let self=this;
-        // Log.log('点击 onSubmit');
-
         HistorySearchDB.saveHistoryDB(value).then(()=> {
             Log.log('成功 缓存一个新的 历史搜索 关键字  '+ value);
             self.props.dispatch(BizApi.fetchApi(BaseListActions.BaseListFetchDataType.REFRESH, 0, self.props.baseReducer.ApiName));
