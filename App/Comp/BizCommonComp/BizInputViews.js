@@ -10,7 +10,7 @@ import Colors from '../../Utils/Colors'
 import BaseImgBt from '../Base/BaseImgBt'
 
 /*邮箱输入框的容器view*/
-export function emailInputView(styles, updateEmailCallBack) {
+export function emailInputView(styles, updateEmailCallBack , onSubmitEditingCallback) {
     return (
         <View style={[GlobalStyles.InputItemContainer, {marginTop: 40}]}>
             <View style={GlobalStyles.IpputItemLeftView}>
@@ -24,6 +24,8 @@ export function emailInputView(styles, updateEmailCallBack) {
                     onFocus={() => {
                         Log.log('111');
                     }}
+                    onSubmitEditing={onSubmitEditingCallback}
+
                     onChange={
                         //(event) => this.updateEmail(event.nativeEvent.text)
                         updateEmailCallBack

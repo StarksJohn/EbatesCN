@@ -1,7 +1,10 @@
 /**
  * Created by Ebates on 16/12/27.
  */
-import InitialState from '../InitialState/ListInitialState'
+import {
+    ListView,
+} from 'react-native';
+import InitialState,{loadMore} from '../InitialState/ListInitialState'
 import *as BaseListActions from '../Actions/BaseListActions'
 import *as BizApi from '../../NetWork/API/BizApi'
 
@@ -10,7 +13,6 @@ const initialState = new InitialState()/*通用列表的初始UI状态*/
     .setIn(['ApiName'], BizApi.SearchPageListApi.ApiName)
     .setIn(['isRenderRefreshControl'], false)
     .setIn(['isRenderFooterView'], false);
-
 
 export default function SearchPageListReducer(state = initialState, action) {
     if (state.ApiName && state.ApiName != action.ApiName) {
@@ -23,7 +25,7 @@ export default function SearchPageListReducer(state = initialState, action) {
 
     switch (action.type) {
         case BaseListActions.BaseListStatus.SUCCESS: {
-            let allContent = action.opt === BaseListActions.BaseListFetchDataType.MORE ? [...state.dataArray, ...action.newData] : action.newData;
+            let allContent = action.opt === BaseListActions.BaseListFetchDataType.MORE ? loadMore(state.dataArray,action.newData): action.newData;
 
             let nextState = state
                 .setIn(['dataArray'], allContent)
@@ -31,7 +33,7 @@ export default function SearchPageListReducer(state = initialState, action) {
                 .setIn(['status'], BaseListActions.BaseListStatus.SUCCESS)
                 .setIn(['opt'], action.opt);
 
-            return nextState
+            return nextState ;
         }
             break;
     }

@@ -57,7 +57,9 @@ export function checkBox(callBack) {
  * 列表最底部 用于 tabbar 的 占位view, 为了 footerview 能显示在 底部tabbar上边
  */
 export function renderBottomTabbarBackView() {
-    return<View style={{height: GlobalStyles.bottomTabBarHeight /*, backgroundColor: Colors.blue*/}}>
+    return<View style={{height: GlobalStyles.bottomTabBarHeight ,
+        backgroundColor: Colors.getRandomColor()
+    }}>
     </View>;
 }
 

@@ -13,5 +13,5 @@ exports.defaultProps = {
     showCancelButton: false,
     cancelText: '取消',
     disabled: false,
-    returnKeyType:'search'
+    returnKeyType:'go'
 };

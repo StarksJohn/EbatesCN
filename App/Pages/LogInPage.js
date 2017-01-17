@@ -79,6 +79,10 @@ export class LogInPage extends Component {
         Log.log('this.email==' + this.email);
     }
 
+    onSubmit() {
+        Log.log('LogInPage onSubmit' );
+    }
+
     updatePassword(text) {
         this.password = text;
         Log.log('this.email==' + this.password);
@@ -162,7 +166,8 @@ export class LogInPage extends Component {
                 {BizViews.ebatesViews()}
                 {/*邮箱输入框的容器view*/}
                 {BizInputViews.emailInputView({},
-                    (event) => this.updateEmail(event.nativeEvent.text)
+                    (event) => this.updateEmail(event.nativeEvent.text),
+                    () => this.onSubmit(),
                 )}
                 {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
                 {/*密码*/}

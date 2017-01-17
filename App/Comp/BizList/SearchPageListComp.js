@@ -52,21 +52,18 @@ export default class SearchPageListComp extends Component {
      * @returns {XML}
      */
     renderRow = (rowData, sectionID, rowID, highlightRow)=> {
-        // <RecommendedFoodListCellContainer
-        //     ApiName={this.props.ApiName}
-        //     rowData={rowData}
-        //     navigator={this.props.navigator}
-        // />
+
+        console.log('rowID==' + rowID);
 
         //最底部画 占位view
         if (rowID == this.props.baseReducer.dataArray.length - 1) {
+            // Log.log('this.props.baseReducer.dataArray.length=='+this.props.baseReducer.dataArray.length);
             return BizViews.renderBottomTabbarBackView();
         }
 
-
         switch (rowID) {
             case '0': {
-                let arr = rowData['hotSearchCell'];
+                let arr = rowData;
                 return (
                     <View style={{
                         height: 208,

@@ -18,18 +18,22 @@ export default class BaseSearchBar extends React.Component {
         super(props);
 
         //按下键盘右下角的 搜索按钮
-        this.onSubmit = (e) => {
-            e.preventDefault();
-            if (this.props.onSubmit) {
-                this.props.onSubmit(this.state.value);
-            }
-
-            this.refs.searchInput.blur();//主动失去光标焦点和 隐藏键盘
-            this.setState({isShowCancelButton: false, paddingRight: 15});
-
-            // this.closeAnimated();
-
-        };
+        // this.onSubmit = (e) => {
+        //     e.preventDefault();
+        //     if (this.props.onSubmit)
+        //     {
+        //
+        //         Log.log('点击 onSubmit');
+        //
+        //         this.props.onSubmit(this.state.value);
+        //     }
+        //
+        //     this.refs.searchInput.blur();//主动失去光标焦点和 隐藏键盘
+        //     this.setState({isShowCancelButton: false, paddingRight: 15});
+        //
+        //     // this.closeAnimated();
+        //
+        // };
         this.onChangeText = (value) => {
             if (!('value' in this.props)) {
                 this.setState({value});
@@ -80,6 +84,25 @@ export default class BaseSearchBar extends React.Component {
              paddingRight:15 /*new Animated.Value(15)*/, /*一开始默认 容器view的 右 补白距离*/
             // cancleBtopacity: new Animated.Value(0),
         };
+    }
+
+    onSubmit() {
+        if (!this.state.isShowCancelButton){
+            Log.log('BaseSearchBar 不能 再 onSubmit,避免安卓的 点击 右下角键盘后, onSubmitEditing 回调2此的 BUG ' );
+
+            return;
+        }
+
+        Log.log('BaseSearchBar onSubmit' );
+
+        // e.preventDefault();
+        if (this.props.onSubmit)
+        {
+            this.props.onSubmit(this.state.value);
+        }
+
+        this.refs.searchInput.blur();//主动失去光标焦点和 隐藏键盘
+        this.setState({isShowCancelButton: false, paddingRight: 15});
     }
 
     componentWillReceiveProps(nextProps) {
@@ -153,7 +176,7 @@ export default class BaseSearchBar extends React.Component {
                     onChangeText={this.onChangeText}
                     style={styles.input}
                     editable={!disabled}
-                    onSubmitEditing={this.onSubmit}
+                    onSubmitEditing={() => this.onSubmit()}
                     clearButtonMode="always"
                     underlineColorAndroid="transparent"
                     selectionColor={Colors.appUnifiedBackColor}

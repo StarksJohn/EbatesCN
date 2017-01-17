@@ -14,40 +14,37 @@ import *as HistorySearchDB from '../../DB/BizDB/HistorySearchDB'
 export const SearchPageListApi = {
     ApiName: 'SearchPageListApi',
 
-    //热门搜索 cell 的  数据源
-    hotSearchCellData: [{hotSearchCell: [{title: 'GNC'}, {title: 'Walgreens'}, {title: '普丽普莱'}, {title: '黑五'}, {title: '雅诗兰黛'}, {title: 'shoebuy'}, {title: 'Amazon'}, {title: '联名卡'}, {title: 'shoebuy2'}]},
-        {bottomForPaddingCell: '底部为了留白的cell'}],
+    //搜索 页 最大列表  的  数据源, 9个按钮+热门搜索 text 是一个 cell, 默认是 热门搜索cell 和 底部留白cell 2个 数据源
+    // searchPageListData: [{key: [{title: 'GNC'}, {title: 'Walgreens'}, {title: '普丽普莱'}, {title: '黑五'}, {title: '雅诗兰黛'}, {title: 'shoebuy'}, {title: 'Amazon'}, {title: '联名卡'}, {title: 'shoebuy2'}]},
+    //     {key: '底部为了留白的cell'}],
+    hotSearchCellData:[{title: 'GNC'}, {title: 'Walgreens'}, {title: '普丽普莱'}, {title: '黑五'}, {title: '雅诗兰黛'}, {title: 'shoebuy'}, {title: 'Amazon'}, {title: '联名卡'}, {title: 'shoebuy2'}],
 
     /**
-     * 第一次 | 刷新 获取数据
+     * 历史搜索 列表 第一次 挂载时| commit后 刷新列表时 获取数据源
      * @param opt
      * @returns {function(*)}
      */
     fetchData(opt){
-        return (dispatch)=> {
+        return (dispatch) => {
+            let data = [this.hotSearchCellData, '底部为了留白的cell'];
 
-            let data = this.hotSearchCellData;
-
+            //rawData:  缓存的 关键词
             HistorySearchDB.loadHistoryDB().then((rawData)=> {
-                if (rawData.length > 0) {
-                    if (opt==BaseListActions.BaseListFetchDataType.INITIALIZE){
-                        data.splice(-1, 0, {historySearchCell: '历史搜索'});//数组倒数第二个元素插入一个 元素
-                    }
-
+                if (rawData.length > 0) {//有缓存
+                    data.splice(1, 0, '历史搜索' );//数组倒数第二个元素插入一个 元素
                     rawData.map(
                         (v, i)=> {
-                            data.splice(-1, 0, v);//数组倒数第二个元素 循环 插入一个 关键字
+                            data.splice(-1, 0, v);//数组倒数第二个下标 循环 插入一个 关键字
                         }
                     );
-                    dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, data));
 
+                    dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, data));
                 }
             }).catch(err => {
                 dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, data));
 
             });
         }
-            ;
     },
 
 }
@@ -63,6 +60,9 @@ export const SearchPageListApi = {
 export function fetchApi(opt, pageNo, ApiName) {
     switch (ApiName) {
         case SearchPageListApi.ApiName: {
+            // if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE){
+            //     return SearchPageListApi.fetchData(opt);
+            // }else if(opt == BaseListActions.BaseListFetchDataType.REFRESH)
             return SearchPageListApi.fetchData(opt);
         }
             break;

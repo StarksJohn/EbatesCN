@@ -1,6 +1,7 @@
 /**
  * Created by Ebates on 16/12/20.
  * 字符串验证
+ * StringOauth
  */
 
 /**
