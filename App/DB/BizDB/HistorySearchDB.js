@@ -50,7 +50,7 @@ export function saveHistoryDB(word) {
 }
 
 /**
- * 缓存里删除一个 关键字
+ * 缓存里删除一个 关键字,返回删除后的 rawData
  * @param word
  * @returns {Promise}
  */

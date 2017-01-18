@@ -8,6 +8,7 @@ import {View,Image ,Text} from 'react-native';
 import Colors from '../../Utils/Colors'
 import FontAwesomeIconBts from '../Base/BaseFontAwesomeIconBts'
 import GlobalStyles from '../../Global/GlobalStyles'
+import *as BaseSpeLine from '../Base/BaseSpeLine'
 
 /**
  * 登录注册页共用
@@ -28,6 +29,16 @@ export function ebatesViews() {
             }}>最好的海淘返利网站</Text>
             <Text style={{marginTop: 3, fontSize: 12, color: 'rgba(136, 136, 136, 1)'}}>{str}</Text>
         </View>
+    );
+}
+
+/**
+ * 分割线
+ * @returns {*}
+ */
+export function baseSpeLine(props) {
+    return (
+        BaseSpeLine.baseSpeLine(props)
     );
 }
 
@@ -64,14 +75,13 @@ export function deleteBox(callBack) {
             width: 30,
             height: 30,
             /*justifyContent: 'center', alignItems: 'center', marginTop: 15,  */ marginRight: 5 ,
-            backgroundColor:Colors.getRandomColor()
+            //backgroundColor:Colors.getRandomColor()
         }}
-        //btSelectColor={Colors.blackTranslucent}
         normalName='close'
         selectName='close'
         iconSize={15}
         initSelected={false}
-        iconColor={Colors.lineGray}
+        iconColor={Colors.borderColor}
         onPress={callBack}
     />
 }
@@ -81,7 +91,7 @@ export function deleteBox(callBack) {
  */
 export function renderBottomTabbarBackView() {
     return<View style={{height: GlobalStyles.bottomTabBarHeight ,
-        backgroundColor: Colors.getRandomColor()
+        //backgroundColor: Colors.getRandomColor()
     }}>
     </View>;
 }

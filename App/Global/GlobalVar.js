@@ -4,6 +4,7 @@
  * 全局变量, 此文件 只需 被import 一次
  */
 import ArrayUtils from '../Utils/ArrayUtils'
+import ImmutableUtils from '../Utils/ImmutableUtils'
 
 import Log from '../Utils/Log'
 global.Log = Log;

@@ -5,6 +5,7 @@
  */
 'use strict'
 const {Record} = require('immutable') //导入  Immutable.js 的 Record API
+
 import {
     ListView,
 } from 'react-native';

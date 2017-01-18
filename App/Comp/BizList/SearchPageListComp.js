@@ -29,16 +29,16 @@ export default class SearchPageListComp extends Component {
      * 点击 热门搜索的 按钮
      * @param model
      */
-    onPress(model) {
-        BizShowToast(model.title);
-        this.props.onSubmit(model.title);
+    onPress(title) {
+        // BizShowToast(title);
+        this.props.onSubmit(title);
     }
 
     /**
      * 全部清除 历史搜索
      */
-    clearAllHistorySearch(){
-        BizShowToast('clearAllHistorySearch');
+    clearAllHistorySearch() {
+        // BizShowToast('clearAllHistorySearch');
         this.props.dispatch(BizApi.SearchPageListApi.clearAllHistorySearch(BaseListActions.BaseListFetchDataType.REFRESH));
         HistorySearchDB.clearHistoryDB();
     }
@@ -47,10 +47,10 @@ export default class SearchPageListComp extends Component {
      * 删除一个关键词
      * @param word
      */
-    deleteOneKeyWord(word){
+    deleteOneKeyWord(word) {
         // BizShowToast('deleteOneKeyWord  '+word);
 
-        this.props.dispatch(BizApi.SearchPageListApi.deleteOneKeyWord(word,BaseListActions.BaseListFetchDataType.REFRESH));
+        this.props.dispatch(BizApi.SearchPageListApi.deleteOneKeyWord(word, BaseListActions.BaseListFetchDataType.REFRESH));
 
     }
 
@@ -74,7 +74,7 @@ export default class SearchPageListComp extends Component {
 
         switch (rowID) {
             case '0': {
-                let arr = rowData;
+                let arr = rowData.array();
                 return (
                     <View style={{
                         height: 208,
@@ -92,12 +92,12 @@ export default class SearchPageListComp extends Component {
                             containerStyle={{
                                 paddingLeft: 10,
                                 paddingRight: 10, paddingTop: 8, paddingBottom: 8,
-                                backgroundColor: Colors.getRandomColor()
+                                //backgroundColor: Colors.getRandomColor()
                             }}
-                            renderItem={(model)=> {
+                            renderItem={(model/*此处的model是 Immutable .map 结构*/)=> {
                                 return (
                                     <BaseTitleBt
-                                        key={model.title}
+                                        key={model.get('title')}
                                         btStyle={[{
                                             width: (GlobalStyles.window.width - 30 - 20) / 3,
                                             borderRadius: 4, margin: 5, height: 45,
@@ -105,12 +105,12 @@ export default class SearchPageListComp extends Component {
                                             justifyContent: 'center',
                                             backgroundColor: Colors.white,
                                         }]}
-                                        onPress={() => this.onPress(model)}
+                                        onPress={() => this.onPress(model.get('title'))}
                                         textStyle={{
                                             fontSize: 14,
                                             color: 'rgba(85, 85, 85, 1)',
                                         }}
-                                        title={model.title}
+                                        title={model.get('title')}
                                         disabled={false}
                                     >
                                     </BaseTitleBt>
@@ -126,9 +126,9 @@ export default class SearchPageListComp extends Component {
             {
                 return (
                     <View style={{
-                        height: 40, justifyContent:'space-between',alignItems: 'center', flexDirection: 'row',
+                        height: 40, justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row',
                         marginTop: 10,
-                        backgroundColor: Colors.getRandomColor()
+                        //backgroundColor: Colors.getRandomColor()
                     }}>
                         <Text style={{
                             color: 'rgba(64, 64, 64, 1)',
@@ -143,7 +143,7 @@ export default class SearchPageListComp extends Component {
                                 height: 40,
                                 alignItems: 'center',
                                 justifyContent: 'center', marginRight: 15,
-                                //backgroundColor: Colors.getRandomColor(),
+                                backgroundColor: Colors.transparent,
                             }]}
                             onPress={() => this.clearAllHistorySearch()}
                             textStyle={{
@@ -161,20 +161,26 @@ export default class SearchPageListComp extends Component {
             default://画 关键字cell
             {
                 return (
-                    <View style={{flex: 1, height:45, flexDirection: 'row', justifyContent:'space-between' ,
-                        alignItems: 'center',
-                        backgroundColor:Colors.getRandomColor()
+                    <View style={{
+                        flex: 1
                     }}>
-                        <Text style={{
-                            color: 'rgba(85, 85, 85, 1)',
-                            fontSize: 15, marginLeft: 15,
-                            //backgroundColor: Colors.getRandomColor()
+                        <View style={{
+                            /*flex: 1,*/ height: 45, flexDirection: 'row', justifyContent: 'space-between',
+                            alignItems: 'center',
+                            backgroundColor: Colors.white
                         }}>
-                            {rowData}
-                        </Text>
-                        {BizViews.deleteBox(()=> {
-                            this.deleteOneKeyWord(rowData);
-                        })}
+                            <Text style={{
+                                color: 'rgba(85, 85, 85, 1)',
+                                fontSize: 15, marginLeft: 15,
+                                //backgroundColor: Colors.getRandomColor()
+                            }}>
+                                {rowData}
+                            </Text>
+                            {BizViews.deleteBox(()=> {
+                                this.deleteOneKeyWord(rowData);
+                            })}
+                        </View>
+                        {BizViews.baseSpeLine({marginLeft: 15, marginTop: -0.5 })}
                     </View>
                 );
             }

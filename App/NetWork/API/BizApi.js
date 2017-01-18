@@ -5,6 +5,7 @@
  */
 import *as BaseListActions from '../../Redux/Actions/BaseListActions'
 import *as HistorySearchDB from '../../DB/BizDB/HistorySearchDB'
+const {fromJS} = require('immutable'); //导入  Immutable.js 的 Record API
 
 
 /**
@@ -15,9 +16,9 @@ export const SearchPageListApi = {
     ApiName: 'SearchPageListApi',
 
     //搜索 页 最大列表  的  数据源, 9个按钮+热门搜索 text 是一个 cell, 默认是 热门搜索cell 和 底部留白cell 2个 数据源
-    // searchPageListData: [{key: [{title: 'GNC'}, {title: 'Walgreens'}, {title: '普丽普莱'}, {title: '黑五'}, {title: '雅诗兰黛'}, {title: 'shoebuy'}, {title: 'Amazon'}, {title: '联名卡'}, {title: 'shoebuy2'}]},
-    //     {key: '底部为了留白的cell'}],
-    hotSearchCellData: [{title: 'GNC'}, {title: 'Walgreens'}, {title: '普丽普莱'}, {title: '黑五'}, {title: '雅诗兰黛'}, {title: 'shoebuy'}, {title: 'Amazon'}, {title: '联名卡'}, {title: 'shoebuy2'}],
+    // hotSearchCellData: [{title: 'GNC'}, {title: 'Walgreens'}, {title: '普丽普莱'}, {title: '黑五'}, {title: '雅诗兰黛'}, {title: 'shoebuy'}, {title: 'Amazon'}, {title: '联名卡'}, {title: 'shoebuy2'}],
+
+    $dataArray:fromJS([ [{title: 'GNC'}, {title: 'Walgreens'}, {title: '普丽普莱'}, {title: '黑五'}, {title: '雅诗兰黛'}, {title: 'shoebuy'}, {title: 'Amazon'}, {title: '联名卡'}, {title: 'shoebuy2'}],  '底部为了留白的cell' ] ),
 
     /**
      * 历史搜索 列表 第一次 挂载时| commit后 刷新列表时 获取数据源
@@ -26,16 +27,15 @@ export const SearchPageListApi = {
      */
     fetchData(opt){
         return (dispatch) => {
-            let data = [this.hotSearchCellData, '底部为了留白的cell'];
 
             //rawData:  缓存的 关键词
             HistorySearchDB.loadHistoryDB().then((rawData)=> {
                 if (rawData.length > 0) {//有缓存
-                    data = this.packageCachedDataToListDataSource(rawData, data);
-                    dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, data));
+                    this.packageCachedDataToListDataSource(rawData);
+                    dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, this.$dataArray.array()));
                 }
             }).catch(err => {
-                dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, data));
+                dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, this.$dataArray.array()));
 
             });
         }
@@ -47,14 +47,21 @@ export const SearchPageListApi = {
      * @param data
      * @returns {boolean}
      */
-    packageCachedDataToListDataSource(rawData, data){
-        data.splice(1, 0, '历史搜索' );//数组倒数第二个元素插入一个 元素
+    packageCachedDataToListDataSource(rawData /*, data*/){
+
+        if(this.$dataArray.size==2){
+            this.$dataArray=this.$dataArray.insert(1, '历史搜索');
+        }else{
+            while (this.$dataArray.size>3){//删除 关键词 cell, 只保留 热门搜索, 历史搜索,和 底部空白 cell
+                this.$dataArray=this.$dataArray.delete(2);
+            }
+        }
+
         rawData.map(
             (v, i)=> {
-                data.splice(-1, 0, v);//数组倒数第二个下标 循环 插入一个 关键字
+                this.$dataArray=this.$dataArray.insert(-1, v);//数组倒数第二个下标 循环 插入一个 关键字
             }
         );
-        return data;
     },
 
     /**
@@ -64,9 +71,19 @@ export const SearchPageListApi = {
      */
     clearAllHistorySearch(opt){
         return (dispatch) => {
-            let data = [this.hotSearchCellData, '底部为了留白的cell'];
 
-            dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, data));
+            this.reset$dataArray();
+
+            dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, this.$dataArray.array()));
+        }
+    },
+
+    /**
+     * 重置 $dataArray 为初始状态, 只保留 热门搜索,和 底部空白 cell
+     */
+    reset$dataArray(){
+        while (this.$dataArray.size>2){//删除 关键词 cell, 只保留 热门搜索,和 底部空白 cell
+            this.$dataArray=this.$dataArray.delete(1);
         }
     },
 
@@ -77,15 +94,16 @@ export const SearchPageListApi = {
      */
     deleteOneKeyWord(word, opt){
         return (dispatch) => {
-            let data = [this.hotSearchCellData, '底部为了留白的cell'];
 
             HistorySearchDB.deleteOneKeyWordFromHistoryDB(word).then((rawData)=> {
                 if (rawData.length > 0) {//有缓存
-                    data = this.packageCachedDataToListDataSource(rawData, data);
+                     this.packageCachedDataToListDataSource(rawData);
+                }else{
+                    this.reset$dataArray();
                 }
-                dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, data));
+                dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, this.$dataArray.array()));
             }).catch(err => {
-                dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, data));
+                dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, this.$dataArray.array()));
 
             });
         }
