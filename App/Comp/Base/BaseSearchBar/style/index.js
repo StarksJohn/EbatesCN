@@ -58,7 +58,7 @@ exports["default"] = _reactNative.StyleSheet.create({
     search: {
         tintColor: _default2["default"].input_color_icon,
         position: 'absolute',
-        left: _default2["default"].h_spacing_md + 17,
+        left: _default2["default"].h_spacing_md + 17,//默认 37
         top: (_default2["default"].search_bar_input_height - _default2["default"].icon_size_xxs) / 2 + (Platform.OS=='ios'?1:1),
         width: _default2["default"].icon_size_xxs,
         height: _default2["default"].icon_size_xxs

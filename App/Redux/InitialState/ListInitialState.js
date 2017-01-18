@@ -29,6 +29,6 @@ var InitialState = Record({
 export default InitialState
 
 
-export function loadMore(arr1, arr2) {
-    return arr1.concat(arr2);
-}
+// export function loadMore(arr1, arr2) {
+//     return arr1.concat(arr2);
+// }

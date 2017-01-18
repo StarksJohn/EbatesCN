@@ -32,6 +32,8 @@ export default class SearchPageListComp extends Component {
     onPress(title) {
         // BizShowToast(title);
         this.props.onSubmit(title);
+        this.props.onChangeBaseSearchBarText(title);
+        // this.props.onCancel(false);
     }
 
     /**
@@ -193,7 +195,7 @@ export default class SearchPageListComp extends Component {
     render() {
         return (
             <View style={{flex: 1}}>
-                {BizViews.renderShadowLine()}
+                {/*{BizViews.renderShadowLine()}*/}
                 <BaseListComp
                     {...this.props }
                     renderRow={

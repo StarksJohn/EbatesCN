@@ -10,7 +10,9 @@ import Colors from '../Utils/Colors';
 
 const {height, width} = Dimensions.get('window');
 
-module.exports = {
+module.exports =
+// export default GlobalStyles=  这样导出报错
+{
     line: {
         flex: 1,
         height: 0.4,
@@ -92,5 +94,10 @@ module.exports = {
     window:{
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
-    }
+    },
+    //每个页面的最大的view的 style
+    pageContainer: {
+        flex: 1,
+        backgroundColor: Colors.white,
+    },
 };

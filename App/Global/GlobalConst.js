@@ -12,7 +12,8 @@ export const routeName={
     RootPagesContainer:'RootPagesContainer',
     LogInPage:'LogInPage',
     RegisterPage:'RegisterPage',
-    phoneQuickLogPage:'phoneQuickLogPage'
+    phoneQuickLogPage:'phoneQuickLogPage',
+    SearchResultPage:'SearchResultPage'
 }
 
 
