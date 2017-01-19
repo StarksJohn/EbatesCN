@@ -166,22 +166,26 @@ export default class SearchPageListComp extends Component {
                     <View style={{
                         flex: 1
                     }}>
-                        <View style={{
-                            /*flex: 1,*/ height: 45, flexDirection: 'row', justifyContent: 'space-between',
-                            alignItems: 'center',
-                            backgroundColor: Colors.white
-                        }}>
-                            <Text style={{
-                                color: 'rgba(85, 85, 85, 1)',
-                                fontSize: 15, marginLeft: 15,
+                        <BaseTitleBt
+                            key={rowData}
+                            btStyle={[{
+                                height: 45,flexDirection: 'row',justifyContent: 'space-between',
+                                alignItems: 'center',
+                                //backgroundColor: Colors.getRandomColor(),
+                            }]}
+                            onPress={() => this.onPress(rowData)}
+                            textStyle={{
+                                fontSize: 15,
+                                color: 'rgba(85, 85, 85, 1)',marginLeft: 15,
                                 //backgroundColor: Colors.getRandomColor()
-                            }}>
-                                {rowData}
-                            </Text>
+                            }}
+                            title={rowData}
+                            disabled={false}
+                        >
                             {BizViews.deleteBox(()=> {
                                 this.deleteOneKeyWord(rowData);
                             })}
-                        </View>
+                        </BaseTitleBt>
                         {BizViews.baseSpeLine({marginLeft: 15, marginTop: -0.5 })}
                     </View>
                 );

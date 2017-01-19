@@ -63,6 +63,7 @@ export default class BaseTitleBt extends Component {
                 }*/ this.props.textStyle}>
                     {this.props.title}
                 </Text>
+                {this.props.children}
             </BaseBt>
         );
     }
