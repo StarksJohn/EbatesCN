@@ -18,7 +18,7 @@ export default class SMSTimer {
         this.timerNums = this.defaultTimerNums;
         this.isSuspend=false;
         if (!props.timerNums) {
-            showToast('props.timerNums 没传进来,设置 默认值')
+            BizShowToast('props.timerNums 没传进来,设置 默认值')
             this.timerNums = 60;//默认 60秒
         }
     }

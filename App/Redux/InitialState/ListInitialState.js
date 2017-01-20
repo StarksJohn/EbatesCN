@@ -24,11 +24,6 @@ var InitialState = Record({
     isRenderRefreshControl:true,// 是否画 下拉刷新 控件
     isRenderFooterView:true,// 是否画列表底部 的 加载更多| 加载完毕 控件
     opt: BaseListActions.BaseListFetchDataType.INITIALIZE,//请求接口的方式
-
+    tabLabel:'',//如果 列表用于 react-native-scrollable-tab-view 的 child, 此属性就用于 react-native-scrollable-tab-view
 })
 export default InitialState
-
-
-// export function loadMore(arr1, arr2) {
-//     return arr1.concat(arr2);
-// }

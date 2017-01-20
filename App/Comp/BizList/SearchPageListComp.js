@@ -199,7 +199,6 @@ export default class SearchPageListComp extends Component {
     render() {
         return (
             <View style={{flex: 1}}>
-                {/*{BizViews.renderShadowLine()}*/}
                 <BaseListComp
                     {...this.props }
                     renderRow={

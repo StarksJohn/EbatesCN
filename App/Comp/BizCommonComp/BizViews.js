@@ -100,15 +100,15 @@ export function renderBottomTabbarBackView() {
  * 画 带阴影的 线
  * @returns {XML}
  */
-export function renderShadowLine() {
-    return <View style={{
+export function renderShadowLine(props) {
+    return <View style={[{
         height: 0.5, borderWidth:0.5, //backgroundColor: 'rgba(228, 228, 228, 1)',
-        borderColor: 'rgba(228, 228, 228, 1)',//'#dddddd',
+        borderColor: 'rgba(228, 228, 228, 1)', //Colors.getRandomColor(),//,//'#dddddd',
         borderStyle: null,
         borderRadius: 4,
         shadowColor: 'gray',
         shadowOffset: {width: 0.5, height: 0.5},
         shadowOpacity: 0.4,
-    }}>
+    },props]}>
     </View>
 }

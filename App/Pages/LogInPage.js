@@ -102,16 +102,16 @@ export class LogInPage extends Component {
 
     onLoginPress() {
         if (!OauthForm.oauthEmail(this.email)) {
-            showToast('邮箱地址不正确');
+            BizShowToast('邮箱地址不正确');
             return;
         }
         if (!OauthForm.oauthPass(this.password)) {
-            showToast('密码至少6位字符或数字');
+            BizShowToast('密码至少6位字符或数字');
             return;
         }
 
         if ((this.props.LogInReducer.isShowImgOauthInput && !OauthForm.oauthImgCodePass(this.imgOauthCode))) {
-            showToast('请输入正确的验证码');
+            BizShowToast('请输入正确的验证码');
             return;
         }
 

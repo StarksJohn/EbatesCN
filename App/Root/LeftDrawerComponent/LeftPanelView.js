@@ -83,7 +83,7 @@ export  class LeftPanelView extends Component {
                         fontSize: 15,
                         color: Colors.white,
                     }}
-                    title='推荐好友'
+                    title='登录注册相关'
                     disabled={false}
                 >
                 </BaseTitleBt>

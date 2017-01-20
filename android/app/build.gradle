@@ -82,6 +82,9 @@ def enableSeparateBuildPerCPUArchitecture = false
  */
 def enableProguardInReleaseBuilds = false
 
+//http://blog.csdn.net/fengyuzhengfan/article/details/51958848  RN Android 笔记里有 参数 截图
+def pass = getPassword("Ebatescn","com.ebates.EbatesCN")
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
@@ -96,6 +99,16 @@ android {
             abiFilters "armeabi-v7a", "x86"
         }
     }
+
+     signingConfigs {
+       release {
+            storeFile file('com.ebates.EbatesCN.keystore')
+            storePassword pass
+            keyAlias 'com.ebates.EbatesCN'
+            keyPassword pass
+        }
+    }
+
     splits {
         abi {
             reset()
@@ -107,7 +120,9 @@ android {
     buildTypes {
         release {
             minifyEnabled enableProguardInReleaseBuilds
-            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"            
+            signingConfig signingConfigs.release
+
         }
     }
     // applicationVariants are e.g. debug, release
@@ -137,4 +152,18 @@ dependencies {
 task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
+}
+
+//http://blog.csdn.net/fengyuzhengfan/article/details/51958848
+def getPassword(String currentUser, String keyChain) {
+   def stdout = new ByteArrayOutputStream()
+   def stderr = new ByteArrayOutputStream()
+   exec {
+       commandLine 'security', '-q', 'find-generic-password', '-a', currentUser, '-s', keyChain, '-w'
+       standardOutput = stdout
+       errorOutput = stderr
+       ignoreExitValue true
+   }
+   //noinspection GroovyAssignabilityCheck
+      stdout.toString().trim()
 }

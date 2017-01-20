@@ -1,24 +1,24 @@
 /**
  * Created by Ebates on 16/12/27.
  *
- * 搜索页 列表的 reducer
+ * 搜索结果页 商家 列表的 reducer
  */
 import {
     ListView,
 } from 'react-native';
-import InitialState, {loadMore} from '../InitialState/ListInitialState'
+import InitialState from '../InitialState/ListInitialState'
 import *as BaseListActions from '../Actions/BaseListActions'
 import *as BizApi from '../../NetWork/API/BizApi'
 const {List,fromJS} = require('immutable') //导入  Immutable.js 的 Record API
 
 
 const initialState = new InitialState()/*通用列表的初始UI状态*/
-/*搜索页列表的 特殊状态*/
-    .setIn(['ApiName'], BizApi.SearchPageListApi.ApiName)
+/*搜索结果页 商家 列表的 特殊状态*/
+    .setIn(['ApiName'], BizApi.SearchResultPageMerchantListAPI.ApiName)
     .setIn(['isRenderRefreshControl'], false)
-    .setIn(['isRenderFooterView'], false);
+    .setIn(['tabLabel'], BizApi.SearchResultPageMerchantListAPI.tabLabel);
 
-export default function SearchPageListReducer(state = initialState, action) {
+export default function SearchResultPageMerchantListReducer(state = initialState, action) {
     if (state.ApiName && state.ApiName != action.ApiName) {
         return state;
     }

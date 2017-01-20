@@ -48,7 +48,7 @@ export class SearchPage extends Component {
         let self = this;
         HistorySearchDB.saveHistoryDB(value).then(()=> {
             // Log.log('成功 缓存一个新的 历史搜索 关键字  '+ value);
-            self.props.dispatch(BizApi.fetchApi(BaseListActions.BaseListFetchDataType.REFRESH, 0, self.props.baseReducer.ApiName));
+            self.props.dispatch(BizApi.fetchApi(BaseListActions.BaseListFetchDataType.REFRESH, 0, self.props));
 
         }).catch((e)=> {
 

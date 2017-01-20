@@ -100,16 +100,16 @@ export class RegisterPage extends Component {
 
     onRegisterPress() {
         if (!OauthForm.oauthEmail(this.email)) {
-            showToast('邮箱地址不正确');
+            BizShowToast('邮箱地址不正确');
             return;
         }
         if (!OauthForm.oauthPass(this.password)) {
-            showToast('密码至少6位字符或数字');
+            BizShowToast('密码至少6位字符或数字');
             return;
         }
 
         if (!OauthForm.oauthImgCodePass(this.imgOauthCode)) {
-            showToast('请输入正确的验证码');
+            BizShowToast('请输入正确的验证码');
             return;
         }
 

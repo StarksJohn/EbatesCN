@@ -68,7 +68,9 @@ export default class BaseListComp extends Component {
         // Log.log('this.countCurPageNo(opt)== ' +this.countCurPageNo(opt) )
         // Log.log('this.props.baseReducer.ApiName== ' +this.props.baseReducer.ApiName )
 
-        this.props.dispatch(BizApi.fetchApi(opt, this.countCurPageNo(opt), this.props.baseReducer.ApiName));
+        Log.log('')
+        this.props.dispatch(BizApi.fetchApi(opt, this.countCurPageNo(opt) /*, this.props.baseReducer.ApiName*/ ,
+         this.props));
     }
 
 
@@ -93,11 +95,11 @@ export default class BaseListComp extends Component {
 
             if (nextProps.opt === BaseListActions.BaseListFetchDataType.REFRESH) {
                 // 下拉刷新失败
-                showToast('刷新数据失败了...');
+                BizShowToast('刷新数据失败了...');
                 return false;
             } else if (nextProps.opt === BaseListActions.BaseListFetchDataType.MORE) {
                 // 加载更多失败
-                showToast('加载更多数据失败了...');
+                BizShowToast('加载更多数据失败了...');
                 this.curPageNo--;
                 this.isLoadingMore = false;
                 return false;

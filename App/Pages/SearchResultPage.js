@@ -12,9 +12,14 @@ import GlobalStyles from '../Global/GlobalStyles'
 import BackAndroidEventListener from '../Utils/EventListener/BackAndroidEventListener'
 import BaseSearchBar from '../Comp/Base/BaseSearchBar/BaseSearchBar'
 import *as BizViews from '../Comp/BizCommonComp/BizViews'
+import ScrollableTabView from 'react-native-scrollable-tab-view'
+import BizSearchResultPagScrollableTabBar from '../Comp/BizCommonComp/BizSearchResultPagScrollableTabBar'
+import SearchResultPageMerchantListContanier from '../Redux/Container/SearchResultPageMerchantListContanier'
+import *as BizApi from '../NetWork/API/BizApi'
+import *as SearchResultPageActions from '../Redux/Actions/SearchResultPageActions'
 
 /**
- *  展示组件
+ *
  */
 export class SearchResultPage extends Component {
     constructor(props) {
@@ -28,8 +33,11 @@ export class SearchResultPage extends Component {
         }
     }
 
-    componentDidMount() {
+    componentWillMount() {
+        this.props.dispatch(SearchResultPageActions.getDefultTabLabelsAction());
+    }
 
+    componentDidMount() {
     }
 
     componentWillUnmount() {
@@ -37,6 +45,7 @@ export class SearchResultPage extends Component {
     }
 
     onSubmit(value) {
+        this.props.dispatch(SearchResultPageActions.updateTabLabelsAction(BizApi.SearchResultPageMerchantListAPI.tabLabel, 111110));
 
     }
 
@@ -60,28 +69,49 @@ export class SearchResultPage extends Component {
                 leftButton={NavBarButton.getBackButton(()=>baseOnBackPress(navigator, this.backAndroidEventListener))}
                 searchBar={searchBar}
                 hide={false}/>;
-        // let searchList= <SearchPageListComp ref="searchList" {...this.props }
-        //                                     onSubmit={(value)=>{
-        //                                         this.onSubmit(value)
-        //                                     }
-        //                                     }
-        // />;
+
+        let content =
+            <ScrollableTabView
+                ref="scrollableTabView"
+                renderTabBar={() =>
+                    <BizSearchResultPagScrollableTabBar
+                        style={{height: 45, borderWidth: 0, elevation: 2}}
+                        tabStyle={{height: 45}}
+                        activeTextColor='rgba(54, 166, 66, 1)'
+                        tabBarBackgroundColor={Colors.white}
+                        tabBarUnderlineColor={Colors.appUnifiedBackColor}
+                        inactiveTextColor={Colors.BizCommonBlack}
+                        textStyle={{
+                            fontSize: 14,
+                            //backgroundColor: Colors.getRandomColor()
+                        }}
+                        underlineColor='rgba(67, 187, 78, 1)'
+                        underLineBottom={10}
+                        underlineHeight={2}/>}
+            >
+                <SearchResultPageMerchantListContanier {...this.props}
+                                                       tabLabel={this.props.baseReducer.merchantListTabLable }
+                />
+                <SearchResultPageMerchantListContanier {...this.props}
+                                                       tabLabel={this.props.baseReducer.merchantListTabLable }
+                />
+            </ScrollableTabView>
 
         return (
             <View style={GlobalStyles.pageContainer}>
                 {navigationBar}
-                {BizViews.renderShadowLine()}
-                {/*{searchList}*/}
+                {/*{BizViews.renderShadowLine()}*/}
+                {content}
             </View>
         );
     }
 
 }
 
-// function mapStateToProps(state) {
-//
-//     //推荐此种  解构赋值的写法
-//     const {SearchPageListReducer}=state;
-//     return {baseReducer: SearchPageListReducer};
-// }
-export default connect()(SearchResultPage);
+function mapStateToProps(state) {
+
+    //推荐此种  解构赋值的写法
+    const {SearchResultPageReducer}=state;
+    return {baseReducer: SearchResultPageReducer};
+}
+export default connect(mapStateToProps)(SearchResultPage);

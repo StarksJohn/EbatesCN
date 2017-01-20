@@ -17,6 +17,7 @@ export default  Colors = {
     textGold: '#BC7233',
     // borderColor: '#E2E2E2',
     black: '#000000',
+    BizCommonBlack:'rgba(64, 64, 64, 1)',//Ebates 中国 项目的 通用 黑色
     blackTranslucent: 'rgba(0, 0, 0, 0.1)',//黑色半透明
     blue: '#3e9ce9',
     white: "white",

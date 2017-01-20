@@ -268,7 +268,7 @@ export class NavBarButton extends Component {
                 width: 36,
                 height: 36,
                 /*justifyContent: 'center', alignItems: 'center', marginTop: 15,  */ marginLeft: 15,
-                backgroundColor: Colors.getRandomColor()
+                //backgroundColor: Colors.getRandomColor()
             }}
             btSelectColor={Colors.blackTranslucent}
             normalName={'bars'}
@@ -315,7 +315,7 @@ const styles = StyleSheet.create({
         // shadowOpacity: 0.8,
     },
     navBarTitleContainer: {//titleText 的 背景view
-        backgroundColor: Colors.getRandomColor(),
+        //backgroundColor: Colors.getRandomColor(),
         alignItems: 'center',
         justifyContent: 'center',
         position: 'absolute',

@@ -65,10 +65,10 @@ class phoneQuickLogPage extends Component {
         this.phone = text;
         Log.log('this.phone==' + this.phone);
         if (OauthForm.oauthPhone(this.phone)) {
-            showToast('oauthPhone ok')
+            BizShowToast('oauthPhone ok')
             dispatch(QuickLogAction.onAuthCodeBtEnableAction());
         }else if(this.props.quickLogReducer.oauthCodeBtState.id === QuickLogAction.oauthCodeBtState.enable.id){//当前从 enable 状态 ==> unable 状态
-            showToast('onAuthCodeBtUnableAction()')
+            BizShowToast('onAuthCodeBtUnableAction()')
             // this.props.dispatchActions.onAuthCodeBtUnableAction();
             dispatch(QuickLogAction.onAuthCodeBtUnableAction());
 
@@ -97,7 +97,7 @@ class phoneQuickLogPage extends Component {
      * 点击登陆按钮, 验证 验证码是否过期 和是否 输错,满足其一,就提示 '请重新获取验证码'
      */
     onLoginPress() {
-        showToast('该手机未在网站上绑定过, 若您已有账号,请前往ebates.cn,登录并绑定您的手机号,若您还没有账号,请先注册')
+        BizShowToast('该手机未在网站上绑定过, 若您已有账号,请前往ebates.cn,登录并绑定您的手机号,若您还没有账号,请先注册')
     }
 
     /*手机号 输入框的容器view*/
@@ -126,7 +126,6 @@ class phoneQuickLogPage extends Component {
 
     //去注册
     onRegister() {
-        showToast('onRegister');
         this.props.navigator.push({
             component: registerPage,
             name: gRouteName.RegisterPage//'
