@@ -4,8 +4,7 @@
  * 通用列表的  初始 Immutable 状态, 参考 snowflake 项目 的 authInitialState,
  */
 'use strict'
-const {Record} = require('immutable') //导入  Immutable.js 的 Record API
-
+const {Record,fromJS} = require('immutable') //导入  Immutable.js 的 Record API
 import {
     ListView,
 } from 'react-native';
@@ -15,6 +14,7 @@ import *as BaseListActions from '../Actions/BaseListActions'
 var InitialState = Record({
     status: BaseListActions.BaseListStatus.INITIALIZE,
     dataArray: [], //已经拿到的数据
+    $dataArray: fromJS(['']), //已经拿到的数据,immutable.Array 结构
     dataSource: new ListView.DataSource({
         rowHasChanged: (row1, row2) => row1 !== row2,
     }),

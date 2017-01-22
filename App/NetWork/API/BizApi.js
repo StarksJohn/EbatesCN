@@ -120,8 +120,12 @@ export const SearchResultPageMerchantListAPI = {
     fetchData(opt, BaseListCompProps){
         return (dispatch) => {
 
-            Log.log('SearchResultPageMerchantListAPI fetchData updateTabLabelsAction=' );
+            // Log.log('SearchResultPageMerchantListAPI fetchData updateTabLabelsAction=' );
             // dispatch(SearchResultPageActions.updateTabLabelsAction(this.tabLabel, 10));
+
+            {//模拟没搜索到 关键词 相关的 商家 数据后,发 商家列表的 Nodata action
+                dispatch(SearchResultPageActions.merchantListNodataAction(BaseListCompProps.route.value,this.ApiName,opt));
+            }
         }
     },
 }

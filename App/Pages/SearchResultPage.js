@@ -100,7 +100,7 @@ export class SearchResultPage extends Component {
         return (
             <View style={GlobalStyles.pageContainer}>
                 {navigationBar}
-                {/*{BizViews.renderShadowLine()}*/}
+                {BizViews.renderShadowLine()}
                 {content}
             </View>
         );

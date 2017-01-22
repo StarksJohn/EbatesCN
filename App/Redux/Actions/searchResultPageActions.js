@@ -3,6 +3,7 @@
  * SearchResultPageActions
  * 搜索结果页的 actions
  */
+import *as BaseListActions from './BaseListActions'
 
 export const defultTabLabels = 'getDefultTabLabels';
 /**
@@ -26,5 +27,18 @@ export function updateTabLabelsAction(tabLabelTag,nums) {
     return {
         type: updateTabLabels,
         value:{tabLabelTag:tabLabelTag,nums:nums}
+    }
+}
+
+/**
+ * 商家列表 无数据 action
+ * @param keyWord 搜索的关键词
+ * @returns {{type: string, value: {tabLabelTag: *, nums: *}}}
+ */
+export function merchantListNodataAction(keyWord,ApiName,opt) {
+    return {
+        type: BaseListActions.BaseListStatus.NODATA,
+        ApiName:ApiName,
+        opt:opt
     }
 }

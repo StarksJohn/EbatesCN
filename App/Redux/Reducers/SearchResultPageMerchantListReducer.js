@@ -43,6 +43,18 @@ export default function SearchResultPageMerchantListReducer(state = initialState
             return nextState;
         }
             break;
+
+        case BaseListActions.BaseListStatus.NODATA: {
+
+            let _nextState=state
+                // .setIn(['dataArray'], newdataArray)
+                // .setIn(['dataSource'], state.dataSource.cloneWithRows(newdataArray))
+                .setIn(['status'], action.type)
+                .setIn(['opt'], action.opt);
+
+            return _nextState;
+        }
+            break;
     }
 
     /**

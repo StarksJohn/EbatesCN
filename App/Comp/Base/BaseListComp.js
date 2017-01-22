@@ -39,6 +39,9 @@ export default class BaseListComp extends Component {
     static propTypes = {
         renderRow: PropTypes.func.isRequired,
         // listApiTag: PropTypes.object.isRequired  // 当前列表加载的接口对应的tag,区分其它列表的接口
+
+        renderNoDataView: PropTypes.any,//外部可自定义如何绘制 列表无数据 状态的 view
+
     };
 
     static defaultProps = {
@@ -52,9 +55,6 @@ export default class BaseListComp extends Component {
     };
 
     componentDidMount() {
-
-        // this.props.dispatch({type:BaseListActions.BaseListStatus.INITIALIZE});//初始化 列表的 定制 UI
-
         this._fetchData(BaseListActions.BaseListFetchDataType.INITIALIZE);
 
     }
@@ -64,15 +64,19 @@ export default class BaseListComp extends Component {
      * opt: BaseListFetchDataType 类型
      */
     _fetchData(opt) {
-        // Log.log('opt== ' +opt )
-        // Log.log('this.countCurPageNo(opt)== ' +this.countCurPageNo(opt) )
-        // Log.log('this.props.baseReducer.ApiName== ' +this.props.baseReducer.ApiName )
-
-        Log.log('')
         this.props.dispatch(BizApi.fetchApi(opt, this.countCurPageNo(opt) /*, this.props.baseReducer.ApiName*/ ,
          this.props));
     }
 
+    renderNoDataViews() {
+        if (this.props.renderNoDataView === false) {
+            return null;
+        } else if (this.props.renderNoDataView) {
+            return React.cloneElement(this.props.renderNoDataView(this.props), this.props);
+        } else {
+            return null;
+        }
+    }
 
     /**
      * 返回false就 不改变 state
@@ -276,7 +280,7 @@ export default class BaseListComp extends Component {
         } else if (this.props.baseReducer.status === BaseListActions.BaseListStatus.FAILURE && this.props.baseReducer.dataArray.length == 0) {//一开始加载数据失败&&列表无数据
             // contentView = <CommonLoadView loadState={LOAD_STATE.LOAD_STATE_ERROR} onRetry={() => this._onRetry()}/>
         } else if (this.props.baseReducer.status === BaseListActions.BaseListStatus.NODATA) {//列表无缓存数据
-            // contentView = <CommonLoadView loadState={LOAD_STATE.LOAD_STATE_NOCACHEDATA}/>
+            contentView = this.renderNoDataViews(); //<CommonLoadView loadState={LOAD_STATE.LOAD_STATE_NOCACHEDATA}/>
 
         } else {
             // showToast('BaseListComp  render');
