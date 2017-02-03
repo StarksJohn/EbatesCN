@@ -9,6 +9,7 @@ import Colors from '../../Utils/Colors'
 import FontAwesomeIconBts from '../Base/BaseFontAwesomeIconBts'
 import GlobalStyles from '../../Global/GlobalStyles'
 import *as BaseSpeLine from '../Base/BaseSpeLine'
+import BaseTitleBt from '../Base/BaseTitleBt'
 
 /**
  * 登录注册页共用
@@ -21,7 +22,7 @@ export function ebatesViews() {
             alignItems: 'center',
             //backgroundColor: Colors.getRandomColor()
         }}>
-            <Image source={require('../../Img/common_icon_logo@2x.png')} style={{marginTop: 20}}/>
+            <Image source={require('../../Img/common_icon_logo.png')} style={{marginTop: 20}}/>
             <Text style={{
                 marginTop: 10, fontSize: 18, fontWeight: 'bold', color: 'rgba(255, 115,' +
                 ' 12, 1)',
@@ -111,4 +112,51 @@ export function renderShadowLine(props) {
         shadowOpacity: 0.4,
     },props]}>
     </View>
+}
+
+/**
+ * 搜索结果页 商家和优惠列表 无数据的 共用 view
+ * @param keyWord 关键词
+ * @param type 0:商家 1:优惠
+ * @param callback 点击按钮回调
+ * @returns {XML}
+ */
+export function renderSearchResultPageNoDataView(keyWord,type,callback) {
+    let merchantOrCouponKeyWord=(type==0?'商家':'优惠');
+    let bigText='抱歉! 目前没有搜索到和'+keyWord+'相关的'+merchantOrCouponKeyWord+'!';
+    let smallText='您可以重新搜索,  发现感兴趣的'+merchantOrCouponKeyWord+'.';
+    let btTitle='查看全部'+merchantOrCouponKeyWord;
+    return (
+        <View style={{flex: 1,alignItems: 'center',
+            //backgroundColor: Colors.getRandomColor()
+        }}>
+            <Image source={require('../../Img/common_icon_noresult.png')} style={{marginTop: 60}}/>
+            <Text style={{
+                marginTop: 30, fontSize: 15, color: 'rgba(64, 64,' +
+                ' 64, 1)',
+               // backgroundColor:Colors.getRandomColor()
+            }}>{bigText}</Text>
+            <Text style={{marginTop: 15, fontSize: 12, color: 'rgba(136, 136, 136, 1)',
+                //backgroundColor:Colors.getRandomColor()
+            }}>{smallText}</Text>
+            <BaseTitleBt
+                key={merchantOrCouponKeyWord}
+                btStyle={[{
+                    width: 170,height: 44,
+                    borderRadius: 4,borderColor:'rgba(54, 166, 66, 1)', borderWidth:0.5, marginTop: 20 ,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: Colors.transparent,
+                }]}
+                onPress={callback}
+                textStyle={{
+                    fontSize: 15,
+                    color: 'rgba(54, 166, 66, 1)',
+                }}
+                title={btTitle}
+                disabled={false}
+            >
+            </BaseTitleBt>
+        </View>
+    );
 }

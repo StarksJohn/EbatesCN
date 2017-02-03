@@ -75,7 +75,7 @@ export class SearchResultPage extends Component {
                 ref="scrollableTabView"
                 renderTabBar={() =>
                     <BizSearchResultPagScrollableTabBar
-                        style={{height: 45, borderWidth: 0, elevation: 2}}
+                        style={{height: 45, borderWidth: 0, elevation: 0.1}}
                         tabStyle={{height: 45}}
                         activeTextColor='rgba(54, 166, 66, 1)'
                         tabBarBackgroundColor={Colors.white}

@@ -11,6 +11,7 @@ import {
 import {connect} from 'react-redux';
 import MerchantListComp from '../../Comp/BizList/MerchantListComp'
 import Colors from '../../Utils/Colors'
+import *as BizViews from '../../Comp/BizCommonComp/BizViews'
 
 class SearchResultPageMerchantListContanier extends React.Component {
 
@@ -22,11 +23,15 @@ class SearchResultPageMerchantListContanier extends React.Component {
     renderNoDataView(props) {
         Log.log('MerchantListComp renderNoDataView props.route.value==' + props.route.value);
 
-        return (
-            <View style={{flex: 1, backgroundColor: Colors.getRandomColor()}}>
+        // return (
+        //     <View style={{flex: 1, backgroundColor: Colors.getRandomColor()}}>
+        //
+        //     </View>
+        // );
 
-            </View>
-        );
+        return BizViews.renderSearchResultPageNoDataView(props.route.value,0,()=>{
+
+        });
     }
 
     render() {
