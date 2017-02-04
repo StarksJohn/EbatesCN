@@ -120,12 +120,17 @@ export const SearchResultPageMerchantListAPI = {
     fetchData(opt, BaseListCompProps){
         return (dispatch) => {
 
-            // Log.log('SearchResultPageMerchantListAPI fetchData updateTabLabelsAction=' );
-            // dispatch(SearchResultPageActions.updateTabLabelsAction(this.tabLabel, 10));
+            dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
 
-            {//模拟没搜索到 关键词 相关的 商家 数据后,发 商家列表的 Nodata action
-                dispatch(SearchResultPageActions.nodataAction(/*BaseListCompProps.route.value,*/this.ApiName,opt));
+
+            {//模拟拿到网络数据
+                // dispatch(SearchResultPageActions.updateTabLabelsAction(this.tabLabel, 1));
+
             }
+
+            // {//模拟没搜索到 关键词 相关的 商家 数据后,发 商家列表的 Nodata action
+            //     dispatch(SearchResultPageActions.nodataAction(/*BaseListCompProps.route.value,*/this.ApiName,opt));
+            // }
         }
     },
 }

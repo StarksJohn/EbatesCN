@@ -11,18 +11,12 @@ import {
     ActivityIndicator as ProgressBar, InteractionManager, Image
 } from 'react-native';
 
-// import CommonLoadView, {LOAD_STATE,} from './CommonLoadView';
-// import {FETCH_LIST_DATA_STATUS, LIST_FETCH_TYPE, InitFetchinglist} from '../../actions/ActionTypes';
 import *as BaseListActions from '../../Redux/Actions/BaseListActions'
 import *as BizApi from '../../NetWork/API/BizApi'
 import GlobalStyles from '../../Global/GlobalStyles'
 import Colors from '../../Utils/Colors'
-// import ViewUtils from '../../utils/ViewUtils'
+import Spinner from 'react-native-spinkit'
 
-// const propTypes = {
-//     renderRow: PropTypes.func.isRequired,
-//     listApiTag: PropTypes.object  // 当前列表加载的接口对应的tag,区分其它列表的接口
-// };
 
 export default class BaseListComp extends Component {
 
@@ -64,8 +58,8 @@ export default class BaseListComp extends Component {
      * opt: BaseListFetchDataType 类型
      */
     _fetchData(opt) {
-        this.props.dispatch(BizApi.fetchApi(opt, this.countCurPageNo(opt) /*, this.props.baseReducer.ApiName*/ ,
-         this.props));
+        this.props.dispatch(BizApi.fetchApi(opt, this.countCurPageNo(opt) /*, this.props.baseReducer.ApiName*/,
+            this.props));
     }
 
     renderNoDataViews() {
@@ -83,18 +77,20 @@ export default class BaseListComp extends Component {
      */
     shouldComponentUpdate(nextProps, nextState) {
 
-        Log.log('shouldComponentUpdate nextProps=='+Log.log(Log.writeObjToJson(nextProps)));
+        // Log.log('shouldComponentUpdate nextProps==' + Log.log(Log.writeObjToJson(nextProps)));
 
         // if ( !(this.props.baseReducer.ApiName == nextProps.ApiName)) {
         //     Log.log('this.props.baseReducer.ApiName=='+this.props.baseReducer.ApiName);
         //     return false;
         // }
 
-        if (nextProps.status === BaseListActions.BaseListStatus.START) {
-            Log.log('nextProps.status === BaseListActions.BaseListStatus.START')
+        // if (nextProps.status === BaseListActions.BaseListStatus.START) {
+        //     Log.log('nextProps.status === BaseListActions.BaseListStatus.START')
+        //
+        //     return false;
+        // } else
 
-            return false;
-        } else if (nextProps.status === BaseListActions.BaseListStatus.FAILURE) {
+        if (nextProps.status === BaseListActions.BaseListStatus.FAILURE) {
             Log.log('nextProps.status === BaseListActions.BaseListStatus.FAILURE')
 
             if (nextProps.opt === BaseListActions.BaseListFetchDataType.REFRESH) {
@@ -211,7 +207,7 @@ export default class BaseListComp extends Component {
     //             <View style={styles.footerContainer}>
     //                 <Text>
     //                     加载失败,点击重试
-    //                 </Text>
+    //             `    </Text>
     //             </View>
     //         </CommonTouchableComp>
 
@@ -225,10 +221,17 @@ export default class BaseListComp extends Component {
         return (
             <View style={{flex: 1}}>
                 <View style={styles.footerContainer}>
-                    <ProgressBar styleAttr="Small"/>
-                    <Text>
-                        正在加载中...
+                    {/*<ProgressBar styleAttr="Small"/>*/}
+                    <Text style={{marginLeft: 10, fontSize: 15, color: 'rgba(136, 136, 136, 1)'}}>
+                        加载中
                     </Text>
+                    <Spinner style={{
+                        marginLeft: 5,
+                        //backgroundColor: Colors.white
+                    }} isVisible={true}
+                             size={GlobalStyles.bottomTabBarHeight / 2.5} type='ThreeBounce'
+                             color={Colors.backPopBtColor}//'rgba(136, 136, 136, 1)'
+                    />
                 </View>
                 {/*{ViewUtils.renderBottomTabbarBackView()}*/}
 
@@ -275,9 +278,10 @@ export default class BaseListComp extends Component {
     render() {
 
         let contentView;
-        if (this.props.baseReducer.status === BaseListActions.BaseListStatus.INITIALIZE) {
-            // contentView = <CommonLoadView loadState={LOAD_STATE.LOAD_STATE_ING}/>;
-        } else if (this.props.baseReducer.status === BaseListActions.BaseListStatus.FAILURE && this.props.baseReducer.dataArray.length == 0) {//一开始加载数据失败&&列表无数据
+        // if (this.props.baseReducer.status === BaseListActions.BaseListStatus.INITIALIZE) {
+        //     // contentView = <CommonLoadView loadState={LOAD_STATE.LOAD_STATE_ING}/>;
+        // } else
+        if (this.props.baseReducer.status === BaseListActions.BaseListStatus.FAILURE && this.props.baseReducer.dataArray.length == 0) {//一开始加载数据失败&&列表无数据
             // contentView = <CommonLoadView loadState={LOAD_STATE.LOAD_STATE_ERROR} onRetry={() => this._onRetry()}/>
         } else if (this.props.baseReducer.status === BaseListActions.BaseListStatus.NODATA) {//列表无缓存数据
             contentView = this.renderNoDataViews(); //<CommonLoadView loadState={LOAD_STATE.LOAD_STATE_NOCACHEDATA}/>
@@ -296,7 +300,7 @@ export default class BaseListComp extends Component {
                     onScroll={this.props.onScroll}
                     onEndReachedThreshold={this.props.onEndReachedThreshold}
                     onEndReached={this.props.baseReducer.couldLoadMore ? /*this._onLoadMore.bind(this)*/ this.onLoadMore : null}
-                    renderFooter={ this.props.baseReducer.isRenderFooterView?() => this._renderFooter():null}
+                    renderFooter={ this.props.baseReducer.isRenderFooterView ? () => this._renderFooter() : null}
                     refreshControl={this.props.baseReducer.isRenderRefreshControl ?
                         <RefreshControl
                             style={{backgroundColor: Colors.transparent}}
@@ -339,7 +343,7 @@ const styles = StyleSheet.create({
         // paddingTop: 10,
         // paddingBottom: 10,
         height: GlobalStyles.bottomTabBarHeight,
-        backgroundColor: Colors.getRandomColor()
+        // backgroundColor: Colors.getRandomColor()
     },
 
     plainTitleContainer: {

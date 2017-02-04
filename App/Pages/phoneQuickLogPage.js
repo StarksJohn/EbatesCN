@@ -42,8 +42,6 @@ class phoneQuickLogPage extends Component {
                 }else if(time==-1){
                     dispatch(QuickLogAction.onAuthCodeBtResendAction());
                 }
-
-                // this.timer.start();
             }
         });
         dispatch(QuickLogAction.onAuthCodeBtUnableAction());

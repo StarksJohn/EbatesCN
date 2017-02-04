@@ -28,6 +28,15 @@ export default function SearchResultPageMerchantListReducer(state = initialState
     }
 
     switch (action.type) {
+        case BaseListActions.BaseListStatus.Loading: {//正在 加载网络 状态
+            let _nextState=state
+                .setIn(['status'], action.type)
+                .setIn(['couldLoadMore'],action.opt==BaseListActions.BaseListFetchDataType.INITIALIZE/*第一次获取列表数据时,显示footerView*/)
+                .setIn(['opt'], action.opt);
+
+            return _nextState;
+        }
+            break;
         case BaseListActions.BaseListStatus.SUCCESS: {
 
             let allContent =
@@ -47,8 +56,6 @@ export default function SearchResultPageMerchantListReducer(state = initialState
         case BaseListActions.BaseListStatus.NODATA: {
 
             let _nextState=state
-                // .setIn(['dataArray'], newdataArray)
-                // .setIn(['dataSource'], state.dataSource.cloneWithRows(newdataArray))
                 .setIn(['status'], action.type)
                 .setIn(['opt'], action.opt);
 
