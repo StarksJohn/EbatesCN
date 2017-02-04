@@ -1,5 +1,6 @@
 /**
- 商家 列表,可能在 搜索结果页 画,也可能 在 商家页 画
+ 优惠 列表,可能在 搜索结果页 画,也可能 在 其他页面 画,不同页面,外部包不同的 container, 可让此控件获取不同的 数据源
+ CouponListComp
  */
 
 import React, {Component, PropTypes } from 'react';
@@ -9,7 +10,7 @@ import {
 import BaseListComp from '../Base/BaseListComp';
 
 
-export default class MerchantListComp extends Component {
+export default class CouponListComp extends Component {
 
     static propTypes = {
         renderNoDataView: PropTypes.any,//外部可自定义如何绘制 列表无数据 状态的 view
@@ -29,7 +30,7 @@ export default class MerchantListComp extends Component {
      */
     renderRow = (rowData, sectionID, rowID, highlightRow)=> {
 
-        Log.log('MerchantListComp rowID==' + rowID);
+        Log.log('CouponListComp rowID==' + rowID);
 
         if (rowID=='0'){
             Log.log(rowData);

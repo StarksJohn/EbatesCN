@@ -10,7 +10,8 @@ import RootRecommendFriendNavReducer from './RootRecommendFriendNavReducer'
 import SearchPageListReducer from './SearchPageListReducer'
 import SearchResultPageMerchantListReducer from './SearchResultPageMerchantListReducer'
 import SearchResultPageReducer from './SearchResultPageReducer'
+import SearchResultPageCouponListReducer from './SearchResultPageCouponListReducer'
 
 export default combineReducers({
-    RootPageReducer,HomePageReducer,quickLogReducer,RegisterReducer,LogInReducer,RootComponentReducer,RootHomeNavReducer,RootRecommendFriendNavReducer,SearchPageListReducer,SearchResultPageMerchantListReducer,SearchResultPageReducer
+    RootPageReducer,HomePageReducer,quickLogReducer,RegisterReducer,LogInReducer,RootComponentReducer,RootHomeNavReducer,RootRecommendFriendNavReducer,SearchPageListReducer,SearchResultPageMerchantListReducer,SearchResultPageReducer,SearchResultPageCouponListReducer
 });

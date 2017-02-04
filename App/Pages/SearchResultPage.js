@@ -15,6 +15,7 @@ import *as BizViews from '../Comp/BizCommonComp/BizViews'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import BizSearchResultPagScrollableTabBar from '../Comp/BizCommonComp/BizSearchResultPagScrollableTabBar'
 import SearchResultPageMerchantListContanier from '../Redux/Container/SearchResultPageMerchantListContanier'
+import SearchResultPageCouponListContanier from '../Redux/Container/SearchResultPageCouponListContanier'
 import *as BizApi from '../NetWork/API/BizApi'
 import *as SearchResultPageActions from '../Redux/Actions/SearchResultPageActions'
 
@@ -56,6 +57,7 @@ export class SearchResultPage extends Component {
                                        onSubmit={(value)=>this.onSubmit(value)
                                        }
                                        customContainerStyle={{paddingLeft: 10}}
+                                       customInputStyle={{color: 'rgba(64, 64, 64, 1)', fontSize:15}}
                                        customSearchStyle={{left: 16}}
                                        defaultPaddingRight={50}
                                        onFocusPaddingRight={37}
@@ -92,8 +94,8 @@ export class SearchResultPage extends Component {
                 <SearchResultPageMerchantListContanier {...this.props}
                                                        tabLabel={this.props.baseReducer.merchantListTabLable }
                 />
-                <SearchResultPageMerchantListContanier {...this.props}
-                                                       tabLabel={this.props.baseReducer.merchantListTabLable }
+                <SearchResultPageCouponListContanier {...this.props}
+                                                       tabLabel={this.props.baseReducer.couponListTabLable }
                 />
             </ScrollableTabView>
 

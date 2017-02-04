@@ -17,6 +17,7 @@ export default class BaseSearchBar extends React.Component {
     static propTypes = {
         customContainerStyle: View.propTypes.style,//外部可自定义BaseSearchBar 的style
         customSearchStyle: View.propTypes.style,//外部可自定义 search 图片 的style
+        customInputStyle:View.propTypes.style,//外部自定义 TextInput的 style
         defaultPaddingRight: React.PropTypes.number,
         onFocusPaddingRight: React.PropTypes.number,//选中时 的 paddingRight
     };
@@ -211,7 +212,7 @@ export default class BaseSearchBar extends React.Component {
                     ref="searchInput"
                     value={value}
                     onChangeText={(value) => this.onChangeText(value)}
-                    style={styles.input}
+                    style={[styles.input,this.props.customInputStyle]}
                     editable={!disabled}
                     onSubmitEditing={() => this.onSubmit()}
                     clearButtonMode="always"

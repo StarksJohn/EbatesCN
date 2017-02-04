@@ -12,7 +12,7 @@ import *as BizApi from '../../NetWork/API/BizApi'
 
 const initialState = {
     merchantListTabLable: BizApi.SearchResultPageMerchantListAPI.tabLabel + '(0)',//商家 列表的 tabLabel
-    // couponTabLable: BizApi.SearchResultPageMerchantListAPI.tabLabel+'(0)',
+    couponListTabLable: BizApi.SearchResultPageCouponListAPI.tabLabel+'(0)',
 };
 
 export default function SearchResultPageReducer(state = initialState, action) {

@@ -88,6 +88,7 @@ export class SearchPage extends Component {
                                        placeholder="输入商家,  优惠名称"
                                        onSubmit={(value)=>this.onSubmit(value)
                                        }
+                                       customInputStyle={{color: 'rgba(64, 64, 64, 1)', fontSize:15}}
                                        onBlur={()=> {
                                            this.onBlur();
                                        }

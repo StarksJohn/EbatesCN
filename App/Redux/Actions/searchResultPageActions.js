@@ -35,7 +35,7 @@ export function updateTabLabelsAction(tabLabelTag,nums) {
  * @param keyWord 搜索的关键词
  * @returns {{type: string, value: {tabLabelTag: *, nums: *}}}
  */
-export function merchantListNodataAction(keyWord,ApiName,opt) {
+export function nodataAction(/*keyWord,*/ApiName,opt) {
     return {
         type: BaseListActions.BaseListStatus.NODATA,
         ApiName:ApiName,

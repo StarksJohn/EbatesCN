@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import {connect} from 'react-redux';
 import MerchantListComp from '../../Comp/BizList/MerchantListComp'
-import Colors from '../../Utils/Colors'
 import *as BizViews from '../../Comp/BizCommonComp/BizViews'
 
 class SearchResultPageMerchantListContanier extends React.Component {

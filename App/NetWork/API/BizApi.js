@@ -124,7 +124,28 @@ export const SearchResultPageMerchantListAPI = {
             // dispatch(SearchResultPageActions.updateTabLabelsAction(this.tabLabel, 10));
 
             {//模拟没搜索到 关键词 相关的 商家 数据后,发 商家列表的 Nodata action
-                dispatch(SearchResultPageActions.merchantListNodataAction(BaseListCompProps.route.value,this.ApiName,opt));
+                dispatch(SearchResultPageActions.nodataAction(/*BaseListCompProps.route.value,*/this.ApiName,opt));
+            }
+        }
+    },
+}
+
+/**
+ * 搜索结果页 的 优惠 列表 的 API
+ * @type {{ApiName: string}}
+ */
+export const SearchResultPageCouponListAPI = {
+    ApiName: 'SearchResultPageCouponListAPI',
+    tabLabel: '优惠',
+
+    fetchData(opt, BaseListCompProps){
+        return (dispatch) => {
+
+            // Log.log('SearchResultPageMerchantListAPI fetchData updateTabLabelsAction=' );
+            // dispatch(SearchResultPageActions.updateTabLabelsAction(this.tabLabel, 10));
+
+            {//模拟没搜索到 关键词 相关的 优惠 数据后,发 优惠 列表的 Nodata action
+                dispatch(SearchResultPageActions.nodataAction(/*BaseListCompProps.route.value,*/this.ApiName,opt));
             }
         }
     },
@@ -146,6 +167,10 @@ export function fetchApi(opt, pageNo, BaseListCompProps) {
             break;
         case SearchResultPageMerchantListAPI.ApiName: {
             return SearchResultPageMerchantListAPI.fetchData(opt, BaseListCompProps);
+        }
+            break;
+        case SearchResultPageCouponListAPI.ApiName: {
+            return SearchResultPageCouponListAPI.fetchData(opt, BaseListCompProps);
         }
             break;
     }
