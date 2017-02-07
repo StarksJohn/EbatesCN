@@ -166,7 +166,7 @@ const BizSearchResultPagScrollableTabBar = React.createClass({
             accessibilityLabel={name}
             accessibilityTraits='button'
             onPress={() => /*this.props.goToPage(page)*/ {
-                this.curTabIndex = page;//@cham
+                {/*this.curTabIndex = page;//@cham*/}
                 {/*Log.log('BizSearchResultPagScrollableTabBar renderTabOption onPress page=='+page);*/}
                 this.props.goToPage(page);
             }}
