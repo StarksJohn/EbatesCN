@@ -25,7 +25,7 @@ export default class BaseListComp extends Component {
 
         // this.category = this.props.category;
         this.curPageNo = 1;//页数从1开始
-        this.isLoadingMore = false;//是否正在加载更多
+        // this.isLoadingMore = false;//是否正在加载更多, 被 BaseListActions.BaseListStatus.Loading 代替
         // this.onScroll = this.onScroll.bind(this);
         // this.isLoadAll = false;//列表数据是否全部加载完毕
     }
@@ -39,7 +39,7 @@ export default class BaseListComp extends Component {
     };
 
     static defaultProps = {
-        onEndReachedThreshold: 10,
+        onEndReachedThreshold: GlobalStyles.bottomTabBarHeight, //10,
         automaticallyAdjustContentInsets: false,
         onScroll: ()=> {
         },
@@ -101,12 +101,12 @@ export default class BaseListComp extends Component {
                 // 加载更多失败
                 BizShowToast('加载更多数据失败了...');
                 this.curPageNo--;
-                this.isLoadingMore = false;
+                // this.isLoadingMore = false;
                 return false;
             }
         }
 
-        Log.log('shouldComponentUpdate true')
+        // Log.log('shouldComponentUpdate true')
         return true;
     }
 
@@ -121,7 +121,7 @@ export default class BaseListComp extends Component {
         // showToast('BaseListComp.componentDidUpdate.SUCCESS  prevProps.opt=='+prevProps.opt);
 
         if (prevProps.opt === BaseListActions.BaseListFetchDataType.MORE) {
-            this.isLoadingMore = false;
+            // this.isLoadingMore = false;
         }
     }
 
@@ -147,39 +147,42 @@ export default class BaseListComp extends Component {
     /**
      * 一开始加载失败后 重加载第一页 , 和 下拉刷新 不一样
      */
-    _onRetry() {
-
-        // this.props.dispatch(InitFetchinglist(this.props.listApiTag.ApiName));
-
-        // 延迟2秒再调用数据
-        setTimeout(() => {
-            // showToast('_onRetry');
-
-            Log.log('_onRetry');
-            this._fetchData(BaseListActions.BaseListFetchDataType.INITIALIZE);
-        }, 2000)
-
-    }
+    // _onRetry() {
+    //
+    //     // this.props.dispatch(InitFetchinglist(this.props.listApiTag.ApiName));
+    //
+    //     // 延迟2秒再调用数据
+    //     setTimeout(() => {
+    //         // showToast('_onRetry');
+    //
+    //         Log.log('_onRetry');
+    //         this._fetchData(BaseListActions.BaseListFetchDataType.INITIALIZE);
+    //     }, 2000)
+    //
+    // }
 
     /**
      * 加载更多
      */
     onLoadMore = () => {
-        if (this.isLoadingMore || !this.props.baseReducer.couldLoadMore) {
+        if (/*this.isLoadingMore || !this.props.baseReducer.couldLoadMore*/ this.props.baseReducer.status === BaseListActions.BaseListStatus.Loading) {
 
             // showToast('_onLoadMore 出错 !!!  this.isLoadingMore==' + this.isLoadingMore + 'this.props.couldLoadMore==' + this.props.couldLoadMore);
 
             return;
         }
 
-        this.isLoadingMore = true;
+        this._fetchData(BaseListActions.BaseListFetchDataType.MORE);
+
+
+        // this.isLoadingMore = true;
 
         // 延迟1秒再调用数据
-        setTimeout(() => {
-            // showToast('_onLoadMore');
-
-            this._fetchData(BaseListActions.BaseListFetchDataType.MORE);
-        }, 1000)
+        // setTimeout(() => {
+        //     // showToast('_onLoadMore');
+        //
+        //     this._fetchData(BaseListActions.BaseListFetchDataType.MORE);
+        // }, 1000)
     }
 
     /**
@@ -195,6 +198,9 @@ export default class BaseListComp extends Component {
         //     this._fetchData(LIST_FETCH_TYPE.INITIALIZE);
         //
         // }
+
+        this._fetchData(BaseListActions.BaseListFetchDataType.REFRESH);
+
     }
 
     /**
@@ -258,15 +264,18 @@ export default class BaseListComp extends Component {
     }
 
     _renderFooter() {
-        if (!this.props.baseReducer.couldLoadMore) {
-            return this._allDataHasLoadedFooterView();
-        }
+        // if (!this.props.baseReducer.couldLoadMore) {
+        //     return this._allDataHasLoadedFooterView();
+        // }
         //  else if (this.props.status === FETCH_LIST_DATA_STATUS.FAILURE) {
         //     return this._loadFaildFooterView();
         // } 
         // else if(this.isLoadingMore)
-        {
+
+        if (this.props.baseReducer.status === BaseListActions.BaseListStatus.Loading) {
             return this._LoadingMoreFooterView();
+        } else {
+            return null;
         }
     }
 
@@ -294,6 +303,7 @@ export default class BaseListComp extends Component {
                 <ListView
                     ref="ListView"
                     initialListSize={1}
+                    //pageSize={10}
                     dataSource={this.props.baseReducer.dataSource}
                     renderRow={ this.props.renderRow }
                     automaticallyAdjustContentInsets={this.props.automaticallyAdjustContentInsets}

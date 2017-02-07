@@ -32,6 +32,16 @@ export const BaseListFetchDataType = {
 };
 
 /**
+ * 控件在 componentDidMount 时 回调的 ,避免 之前此控件的 $dataArray 里有数据, 故 负责把 $dataArray 里的数据 清空
+ * @param ApiName
+ * @returns {{type: string, ApiName: *}}
+ * @constructor
+ */
+export function InitListDataSource( ApiName) {
+    return { type: BaseListStatus.INITIALIZE,  ApiName };
+}
+
+/**
  * 切换 列表的 状态 为 BaseListStatus.Loading 状态, 可能是 第一次获取列表数据时的Loading, 也可能是 刷新列表 时的 Loading, 也可能是 加载 更多时的 Loading,具体看 opt
  * @param opt : BaseListFetchDataType 类型
  * @param ApiName : 哪个列表

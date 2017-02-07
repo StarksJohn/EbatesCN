@@ -66,7 +66,7 @@ export default class SearchPageListComp extends Component {
      */
     renderRow = (rowData, sectionID, rowID, highlightRow)=> {
 
-        console.log('rowID==' + rowID);
+        // console.log('SearchPageListComp rowID==' + rowID);
 
         //最底部画 占位view
         if (rowID == this.props.baseReducer.dataArray.length - 1) {
@@ -76,7 +76,7 @@ export default class SearchPageListComp extends Component {
 
         switch (rowID) {
             case '0': {
-                let arr = rowData.array();
+                let arr = rowData.toJSArray();
                 return (
                     <View style={{
                         height: 208,

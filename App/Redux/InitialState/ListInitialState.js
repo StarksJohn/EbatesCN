@@ -13,8 +13,8 @@ import *as BaseListActions from '../Actions/BaseListActions'
 
 var InitialState = Record({
     status: BaseListActions.BaseListStatus.INITIALIZE,
-    dataArray: [], //已经拿到的数据
-    $dataArray: fromJS(['']), //已经拿到的数据,immutable.Array 结构
+    dataArray: [], //已经拿到的数据,慢慢被 $dataArray 代替
+    $dataArray: fromJS([]), //已经拿到的数据,immutable.Array 结构 , 里边放 model
     dataSource: new ListView.DataSource({
         rowHasChanged: (row1, row2) => row1 !== row2,
     }),
@@ -26,4 +26,65 @@ var InitialState = Record({
     opt: BaseListActions.BaseListFetchDataType.INITIALIZE,//请求接口的方式
     tabLabel:'',//如果 列表用于 react-native-scrollable-tab-view 的 child, 此属性就用于 react-native-scrollable-tab-view
 })
-export default InitialState
+export default InitialState;
+
+/**
+ * 通用的 初始化 列表的 state, 在 控件第一次 componentDidMount 挂载时 回调
+ * @param state
+ * @constructor
+ */
+export function InitListState(state,action) {
+    let temp$dataArray = state.getIn(['$dataArray']);
+    if (temp$dataArray.toJS().length > 0) {
+        temp$dataArray = temp$dataArray.clear();
+    }
+
+    let _nextState = state
+        .setIn(['$dataArray'], temp$dataArray)
+        .setIn(['dataSource'], state.dataSource.cloneWithRows(temp$dataArray.toJS()))
+        .setIn(['status'], action.type)
+        .setIn(['couldLoadMore'], false)
+        .setIn(['opt'], action.opt)
+        .setIn(['isRefreshing'], false);
+
+    return _nextState;
+}
+
+/**
+ * 通用的 listview 转化为 Loading 状态
+ * @param state
+ * @param action
+ * @returns {Cursor}
+ * @constructor
+ */
+export function ListToLoadingState(state,action) {
+    let _nextState = state
+            .setIn(['status'], action.type)
+            .setIn(['couldLoadMore'], action.opt == BaseListActions.BaseListFetchDataType.INITIALIZE/*第一次获取列表数据时,显示footerView*/)
+            .setIn(['opt'], action.opt)
+            .setIn(['isRefreshing'], action.opt == BaseListActions.BaseListFetchDataType.REFRESH)
+        ;
+    return _nextState;
+}
+
+/**
+ * 通用的 处理 成功状态 的 数据
+ * @constructor
+ */
+export function ListSuccesState(state,action,newContentArray) {
+    let temp$dataArray = state.getIn(['$dataArray']);
+    //新获取到的数据添加到数组 结尾
+    if (temp$dataArray) {
+        if (action.opt == BaseListActions.BaseListFetchDataType.REFRESH) {
+            temp$dataArray = temp$dataArray.clear();
+        }
+
+        newContentArray.map(
+            (v, i)=> {
+                temp$dataArray = temp$dataArray.push(v);
+            }
+        );
+    }
+
+    return temp$dataArray;
+}

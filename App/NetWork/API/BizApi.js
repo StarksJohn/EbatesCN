@@ -7,6 +7,7 @@ import *as BaseListActions from '../../Redux/Actions/BaseListActions'
 import *as HistorySearchDB from '../../DB/BizDB/HistorySearchDB'
 const {fromJS} = require('immutable'); //导入  Immutable.js 的 Record API
 import *as SearchResultPageActions from '../../Redux/Actions/SearchResultPageActions'
+import SMSTimer from '../../Utils/SMSTimer'
 
 /**
  * 搜索页 列表的 API
@@ -30,10 +31,10 @@ export const SearchPageListApi = {
             HistorySearchDB.loadHistoryDB().then((rawData)=> {
                 if (rawData.length > 0) {//有缓存
                     this.packageCachedDataToListDataSource(rawData);
-                    dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, this.$dataArray.array()));
+                    dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, this.$dataArray.toJSArray()));
                 }
             }).catch(err => {
-                dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, this.$dataArray.array()));
+                dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, this.$dataArray.toJSArray()));
 
             });
         }
@@ -72,7 +73,7 @@ export const SearchPageListApi = {
 
             this.reset$dataArray();
 
-            dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, this.$dataArray.array()));
+            dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, this.$dataArray.toJSArray()));
         }
     },
 
@@ -99,9 +100,9 @@ export const SearchPageListApi = {
                 } else {
                     this.reset$dataArray();
                 }
-                dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, this.$dataArray.array()));
+                dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, this.$dataArray.toJSArray()));
             }).catch(err => {
-                dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, this.$dataArray.array()));
+                dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, this.$dataArray.toJSArray()));
 
             });
         }
@@ -116,21 +117,70 @@ export const SearchPageListApi = {
 export const SearchResultPageMerchantListAPI = {
     ApiName: 'SearchResultPageMerchantListApi',
     tabLabel: '商家',
+    tabLabelnums:0,//用于 商家列表 tab的 数据源
 
     fetchData(opt, BaseListCompProps){
         return (dispatch) => {
+            Log.log('SearchResultPageMerchantListAPI fetchData() ')
 
+            if (opt==BaseListActions.BaseListFetchDataType.INITIALIZE){
+                dispatch(SearchResultPageActions.updateTabLabelsAction(this.tabLabel, 0));
+                dispatch(BaseListActions.InitListDataSource( this.ApiName));
+            }
             dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
 
+            {
+                // {//模拟没搜索到 关键词 相关的 商家 数据后,发 商家列表的 Nodata action
+                //     dispatch(SearchResultPageActions.nodataAction(/*BaseListCompProps.route.value,*/this.ApiName, opt));
+                // }
 
-            {//模拟拿到网络数据
-                // dispatch(SearchResultPageActions.updateTabLabelsAction(this.tabLabel, 1));
-
+                // {//模拟拿到网络数据
+                //     let arr = [];
+                //     for (let i=0;i<20;i++){
+                //         arr.push({index:i});
+                //     }
+                //     this.tabLabelnums+=arr.length;
+                //     dispatch(SearchResultPageActions.updateTabLabelsAction(this.tabLabel, this.tabLabelnums));
+                //     dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
+                //         couldLoadMore: true,
+                //         newContentArray: arr
+                //     }));
+                //
+                // }
             }
 
-            // {//模拟没搜索到 关键词 相关的 商家 数据后,发 商家列表的 Nodata action
-            //     dispatch(SearchResultPageActions.nodataAction(/*BaseListCompProps.route.value,*/this.ApiName,opt));
-            // }
+            this.timer = new SMSTimer({
+                timerNums: 3,
+                callBack: (time)=> {
+                    Log.log('time===' + time);
+                    if (time == -1) {
+                        // {//模拟没搜索到 关键词 相关的 商家 数据后,发 商家列表的 Nodata action
+                        //     dispatch(SearchResultPageActions.nodataAction(/*BaseListCompProps.route.value,*/this.ApiName, opt));
+                        // }
+
+                        {//模拟拿到网络数据
+                            let arr = [];
+                            if (opt==BaseListActions.BaseListFetchDataType.REFRESH || opt==BaseListActions.BaseListFetchDataType.INITIALIZE){
+                                this.tabLabelnums=0;
+                            }
+                            for (let i=0;i<10;i++){
+                                arr.push({index:this.tabLabelnums+i});
+                            }
+                            this.tabLabelnums+=arr.length;
+
+                            dispatch(SearchResultPageActions.updateTabLabelsAction(this.tabLabel, this.tabLabelnums));
+                            dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
+                                couldLoadMore: true,
+                                newContentArray: arr
+                            }));
+
+                        }
+                    }
+                }
+            });
+
+            this.timer.start();
+
         }
     },
 }
@@ -150,7 +200,7 @@ export const SearchResultPageCouponListAPI = {
             // dispatch(SearchResultPageActions.updateTabLabelsAction(this.tabLabel, 10));
 
             {//模拟没搜索到 关键词 相关的 优惠 数据后,发 优惠 列表的 Nodata action
-                dispatch(SearchResultPageActions.nodataAction(/*BaseListCompProps.route.value,*/this.ApiName,opt));
+                dispatch(SearchResultPageActions.nodataAction(/*BaseListCompProps.route.value,*/this.ApiName, opt));
             }
         }
     },

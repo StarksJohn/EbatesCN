@@ -7,6 +7,7 @@ import {
     View, Text
 } from 'react-native';
 import BaseListComp from '../Base/BaseListComp';
+import Colors from '../../Utils/Colors'
 
 
 export default class MerchantListComp extends Component {
@@ -31,14 +32,14 @@ export default class MerchantListComp extends Component {
 
         Log.log('MerchantListComp rowID==' + rowID);
 
-        if (rowID=='0'){
-            Log.log(rowData);
-        }
-        return (null);
+        return (
+            <View style={{flex: 1, height: 100,
+                backgroundColor: Colors.getRandomColor()
+            }}>
+            </View>
+        );
 
     }
-
-
 
     render() {
         return (
