@@ -35,7 +35,9 @@ const BizSearchResultPagScrollableTabBar = React.createClass({
         tabsContainerStyle: View.propTypes.style,
         textStyle: Text.propTypes.style,
         renderTabName: React.PropTypes.func,
-        underLineBottom:React.PropTypes.number,
+        underLineBottom: React.PropTypes.number,
+        customRefs: React.PropTypes.array,//@cham 装 renderTabName 方法里 不同 Text 控件的ref, 因 Text 控件的宽 可能不一样,每次 切换 tab,
+        // 都得重新计算底部 横线的宽
     },
 
     getDefaultProps() {
@@ -50,12 +52,14 @@ const BizSearchResultPagScrollableTabBar = React.createClass({
             tabStyle: {},
             tabsContainerStyle: {},
             renderTabName: this.renderTabName,
-            underLineBottom:0,
+            underLineBottom: 0,
         };
     },
 
     getInitialState() {
         this._tabsMeasurements = [];
+        this.curTabIndex = 0;//@cham 当前 选中的 下标,用于 计算 2个 tab的 text 控件 内容不一样宽时, 每次 切换 tab前,都得重新计算 下横线的 宽
+
         return {
             _leftTabUnderline: new Animated.Value(0),
             _widthTabUnderline: new Animated.Value(0),
@@ -118,29 +122,39 @@ const BizSearchResultPagScrollableTabBar = React.createClass({
         const lineRight = this._tabsMeasurements[position].right;
 
         //@cham 为了 Ebates 中国 项目 ,改了此处的 源码 start
-        let UnderlineW=0
-        let UnderlineLeft=lineLeft;
+        let UnderlineW = 0
+        let UnderlineLeft = lineLeft;
 
-        this.refs.textRef.measure((fx, fy, width, height, px, py)=>{
-            UnderlineW=width;//@cham
+        {
+            /*this.refs.merchent*/
+            this.refs[this.props.customRefs[this.curTabIndex]]/*@cham 根据 curTabIndex 拿到 refs 里的 text 控件,计算 其 宽度*/.measure((fx, fy, width, height, px, py)=> {
+                UnderlineW = width;//@cham
 
-            if (position < tabCount - 1) {
+                // Log.log('BizSearchResultPagScrollableTabBar updateTabUnderline curTabIndex=='+this.curTabIndex)
 
-                const nextTabLeft = this._tabsMeasurements[position + 1].left;//下次要移动到的 按钮的 left
-                const nextTabRight = this._tabsMeasurements[position + 1].right;
+                if (position < tabCount - 1) {
 
-                const newLineLeft = (pageOffset * nextTabLeft + (1 - pageOffset) * lineLeft);
-                const newLineRight = (pageOffset * nextTabRight + (1 - pageOffset) * lineRight);
+                    const nextTabLeft = this._tabsMeasurements[position + 1].left;//下次要移动到的 按钮的 left
+                    const nextTabRight = this._tabsMeasurements[position + 1].right;
 
-                this.state._leftTabUnderline.setValue(newLineLeft +20 /*@cham 按钮的 宽总比 其 里边的Text 宽 40 */);
-                this.state._widthTabUnderline.setValue(/*newLineRight - newLineLeft*/ UnderlineW);
-            } else {
-                UnderlineLeft=px;
+                    const newLineLeft = (pageOffset * nextTabLeft + (1 - pageOffset) * lineLeft);
+                    const newLineRight = (pageOffset * nextTabRight + (1 - pageOffset) * lineRight);
 
-                this.state._leftTabUnderline.setValue(/*lineLeft*/ UnderlineLeft );
-                this.state._widthTabUnderline.setValue(/*lineRight - lineLeft*/ UnderlineW /*@cham 按钮的 宽总比 其 里边的Text 宽 40 */);
-            }
-        })
+                    this.state._leftTabUnderline.setValue(newLineLeft + 20 /*@cham 按钮的 宽总比 其 里边的Text 宽 40 */);
+                    this.state._widthTabUnderline.setValue(/*newLineRight - newLineLeft*/ UnderlineW);
+
+                    // Log.log('BizSearchResultPagScrollableTabBar updateTabUnderline  (position < tabCount - 1) curTabIndex=='+this.curTabIndex)
+
+                } else {
+                    UnderlineLeft = px;
+
+                    this.state._leftTabUnderline.setValue(/*lineLeft*/ UnderlineLeft);
+                    this.state._widthTabUnderline.setValue(/*lineRight - lineLeft*/ UnderlineW /*@cham 按钮的 宽总比 其 里边的Text 宽 40 */);
+                    // Log.log('BizSearchResultPagScrollableTabBar updateTabUnderline  curTabIndex=='+this.curTabIndex)
+
+                }
+            })
+        }
     },
 
     renderTabOption(name, page) {
@@ -151,7 +165,11 @@ const BizSearchResultPagScrollableTabBar = React.createClass({
             accessible={true}
             accessibilityLabel={name}
             accessibilityTraits='button'
-            onPress={() => this.props.goToPage(page)}
+            onPress={() => /*this.props.goToPage(page)*/ {
+                this.curTabIndex = page;//@cham
+                {/*Log.log('BizSearchResultPagScrollableTabBar renderTabOption onPress page=='+page);*/}
+                this.props.goToPage(page);
+            }}
             onLayout={this.measureTab.bind(this, page)}
         >
             {this.renderTabName(name, page, isTabActive)}
@@ -164,7 +182,7 @@ const BizSearchResultPagScrollableTabBar = React.createClass({
         const fontWeight = isTabActive ? 'normal' : 'normal';
 
         return <View style={[styles.tab, this.props.tabStyle,]}>
-            <Text ref="textRef"/*@cham*/ style={[{color: textColor, fontWeight,}, textStyle,]}>
+            <Text /*@cham*/ ref={this.props.customRefs[page]} style={[{color: textColor, fontWeight,}, textStyle,]}>
                 {name}
             </Text>
         </View>;
@@ -174,6 +192,15 @@ const BizSearchResultPagScrollableTabBar = React.createClass({
         const {x, width, height,} = event.nativeEvent.layout;
         this._tabsMeasurements[page] = {left: x, right: x + width, width, height,};
         this.updateView({value: this.props.scrollValue._value,});
+    },
+
+    _onMomentumScrollEnd(e) {
+        Log.log('ScrollableTabView _onMomentumScrollBeginAndEnd e=' + e);
+        const offsetX = e.nativeEvent.contentOffset.x;
+        const page = Math.round(offsetX / this.state.containerWidth);
+        // if (this.state.currentPage !== page) {
+        //     this._updateSelectedPage(page);
+        // }
     },
 
     render() {
@@ -186,7 +213,7 @@ const BizSearchResultPagScrollableTabBar = React.createClass({
 
         const dynamicTabUnderline = {
             left: this.state._leftTabUnderline,
-            width:this.state._widthTabUnderline,
+            width: this.state._widthTabUnderline,
         };
 
         return <View
@@ -203,8 +230,9 @@ const BizSearchResultPagScrollableTabBar = React.createClass({
                 directionalLockEnabled={true}
                 bounces={false}
                 scrollsToTop={false}
+                onMomentumScrollEnd={this._onMomentumScrollEnd}
             >
-                <View style={{flex:1}}>
+                <View style={{flex: 1}}>
                     <View
                         style={[styles.tabs, {width: this.state._containerWidth,}, this.props.tabsContainerStyle,]}
                         ref={'tabContainer'}
@@ -213,7 +241,7 @@ const BizSearchResultPagScrollableTabBar = React.createClass({
                         {this.props.tabs.map((tab, i) => this.renderTabOption(tab, i))}
                         <Animated.View style={[tabUnderlineStyle, dynamicTabUnderline,]}/>
                     </View>
-                    {BizViews.renderShadowLine({bottom:0.5})}
+                    {BizViews.renderShadowLine({bottom: 0.5})}
                 </View>
 
 

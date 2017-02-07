@@ -111,65 +111,45 @@ export const SearchPageListApi = {
 }
 
 /**
- * 搜索结果页 的 商家 列表 的 API
- * @type {{ApiName: string}}
+ * 搜索 结果页 搜索关键词 接口 的 API
  */
-export const SearchResultPageMerchantListAPI = {
-    ApiName: 'SearchResultPageMerchantListApi',
-    tabLabel: '商家',
-    tabLabelnums:0,//用于 商家列表 tab的 数据源
+export const SearchResultPageSearchKeyWordAPI = {
+    ApiName: 'SearchResultPageSearchKeyWordAPI',
 
-    fetchData(opt, BaseListCompProps){
+    //模拟 搜索结果页 搜素关键词后 拿到的 商家列表 和 优惠列表 的数据,此方法第一次由 一进入 搜索结果页 ,商家列表 挂载 后 触发
+    searchKeyWord(opt, tabLabelnums, ApiName, tabLabel){
+
         return (dispatch) => {
-            Log.log('SearchResultPageMerchantListAPI fetchData() ')
-
-            if (opt==BaseListActions.BaseListFetchDataType.INITIALIZE){
-                dispatch(SearchResultPageActions.updateTabLabelsAction(this.tabLabel, 0));
-                dispatch(BaseListActions.InitListDataSource( this.ApiName));
-            }
-            dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
-
-            {
-                // {//模拟没搜索到 关键词 相关的 商家 数据后,发 商家列表的 Nodata action
-                //     dispatch(SearchResultPageActions.nodataAction(/*BaseListCompProps.route.value,*/this.ApiName, opt));
-                // }
-
-                // {//模拟拿到网络数据
-                //     let arr = [];
-                //     for (let i=0;i<20;i++){
-                //         arr.push({index:i});
-                //     }
-                //     this.tabLabelnums+=arr.length;
-                //     dispatch(SearchResultPageActions.updateTabLabelsAction(this.tabLabel, this.tabLabelnums));
-                //     dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
-                //         couldLoadMore: true,
-                //         newContentArray: arr
-                //     }));
-                //
-                // }
-            }
 
             this.timer = new SMSTimer({
                 timerNums: 3,
                 callBack: (time)=> {
                     Log.log('time===' + time);
                     if (time == -1) {
-                        // {//模拟没搜索到 关键词 相关的 商家 数据后,发 商家列表的 Nodata action
-                        //     dispatch(SearchResultPageActions.nodataAction(/*BaseListCompProps.route.value,*/this.ApiName, opt));
-                        // }
 
-                        {//模拟拿到网络数据
+                        {//模拟拿到 优惠 列表的 第一页 网络数据, 先 刷新 优惠列表的 tabLabel是因为, 商家列表 的 tabLabl 在 第一次进入页面后 先显示,所以 得 最后 发送 商家列表的 updateTabLabelsAction, 让 tabLable底部的 横线 的 长度 适配 商家列表 的 tabLabel
+                            SearchResultPageCouponListAPI.tabLabelnums=0;
+                            dispatch(SearchResultPageActions.updateTabLabelsAction(SearchResultPageCouponListAPI.tabLabel, SearchResultPageCouponListAPI.tabLabelnums));//
+                        }
+
+                        // if (ApiName == SearchResultPageMerchantListAPI.ApiName)
+                        {//模拟拿到 商家列表的 第一页 网络数据
+
+                            // {//模拟没搜索到 关键词 相关的 商家 数据后,发 商家列表的 Nodata action
+                            //     dispatch(SearchResultPageActions.nodataAction(/*BaseListCompProps.route.value,*/this.ApiName, opt));
+                            // }
+
                             let arr = [];
-                            if (opt==BaseListActions.BaseListFetchDataType.REFRESH || opt==BaseListActions.BaseListFetchDataType.INITIALIZE){
-                                this.tabLabelnums=0;
+                            if (opt == BaseListActions.BaseListFetchDataType.REFRESH || opt == BaseListActions.BaseListFetchDataType.INITIALIZE) {
+                                tabLabelnums = 0;
                             }
-                            for (let i=0;i<10;i++){
-                                arr.push({index:this.tabLabelnums+i});
+                            for (let i = 0; i < 100; i++) {
+                                arr.push({index: tabLabelnums + i});
                             }
-                            this.tabLabelnums+=arr.length;
+                            tabLabelnums += arr.length;
 
-                            dispatch(SearchResultPageActions.updateTabLabelsAction(this.tabLabel, this.tabLabelnums));
-                            dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
+                            dispatch(SearchResultPageActions.updateTabLabelsAction(tabLabel, tabLabelnums));
+                            dispatch(BaseListActions.SuccessFetchinglist(opt, ApiName, {
                                 couldLoadMore: true,
                                 newContentArray: arr
                             }));
@@ -180,7 +160,35 @@ export const SearchResultPageMerchantListAPI = {
             });
 
             this.timer.start();
+        }
+    }
+}
 
+/**
+ * 搜索结果页 的 商家 列表 的 API
+ * @type {{ApiName: string}}
+ */
+export const SearchResultPageMerchantListAPI = {
+    ApiName: 'SearchResultPageMerchantListApi',
+    tabLabel: '商家',
+    tabLabelnums: 0,//用于 商家列表 tab的 数据源
+
+    fetchData(opt, BaseListCompProps){
+        return (dispatch) => {
+            // Log.log('SearchResultPageMerchantListAPI fetchData() ')
+
+            if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE) {//控件 挂载时 回调的
+                dispatch(SearchResultPageActions.updateTabLabelsAction(this.tabLabel, 0));//商家列表的 tabLabel 清零
+                dispatch(BaseListActions.InitListDataSource(this.ApiName));// 商家 列表的 $dataArray 清0
+            }
+            dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
+
+            // {//模拟没搜索到 关键词 相关的 商家 数据后,发 商家列表的 Nodata action
+            //     dispatch(SearchResultPageActions.nodataAction(/*BaseListCompProps.route.value,*/this.ApiName, opt));
+            // }
+
+            //调 搜索结果页的 搜索关键词 接口,拿2个列表的数据
+            dispatch(SearchResultPageSearchKeyWordAPI.searchKeyWord(opt, this.tabLabelnums, this.ApiName, this.tabLabel)) ;
         }
     },
 }
@@ -192,15 +200,18 @@ export const SearchResultPageMerchantListAPI = {
 export const SearchResultPageCouponListAPI = {
     ApiName: 'SearchResultPageCouponListAPI',
     tabLabel: '优惠',
+    tabLabelnums: 0,//用于 优惠 列表 tab的 数据源
 
     fetchData(opt, BaseListCompProps){
         return (dispatch) => {
 
             // Log.log('SearchResultPageMerchantListAPI fetchData updateTabLabelsAction=' );
-            // dispatch(SearchResultPageActions.updateTabLabelsAction(this.tabLabel, 10));
 
-            {//模拟没搜索到 关键词 相关的 优惠 数据后,发 优惠 列表的 Nodata action
-                dispatch(SearchResultPageActions.nodataAction(/*BaseListCompProps.route.value,*/this.ApiName, opt));
+            dispatch(SearchResultPageActions.updateTabLabelsAction(this.tabLabel, this.tabLabelnums));
+
+            if(this.tabLabelnums==0){//模拟没搜索到 关键词 相关的 优惠 数据后,发 优惠 列表的 Nodata action
+                // Log.log('SearchResultPageCouponListAPI fetchData nodataAction ');
+                dispatch(SearchResultPageActions.nodataAction(this.ApiName, opt));
             }
         }
     },

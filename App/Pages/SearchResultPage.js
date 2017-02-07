@@ -46,8 +46,18 @@ export class SearchResultPage extends Component {
     }
 
     onSubmit(value) {
-        this.props.dispatch(SearchResultPageActions.updateTabLabelsAction(BizApi.SearchResultPageMerchantListAPI.tabLabel, 111110));
+        // this.props.dispatch(SearchResultPageActions.updateTabLabelsAction(BizApi.SearchResultPageMerchantListAPI.tabLabel, 111110));
 
+    }
+
+    /**
+     * 为了让正在 滚动的 ScrollableTabView 关联的 BizSearchResultPagScrollableTabBar 的 底部 横线 在 判断到 滚到 其他 页面时, 及时 用其页面 对应的 tabbar的 Text 控件的 宽 计算 最新的 横线的 宽,避免 2个 tabbar.Text 控件 的 宽不一样时, 左右滚动 导致 横线位置不对
+     * */
+    onScroll=( i )=>{
+        // Log.log('SearchResultPage onScroll i=='+i);
+        if (this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex!=i){
+            this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex=i;
+        }
     }
 
     render() {
@@ -57,7 +67,7 @@ export class SearchResultPage extends Component {
                                        onSubmit={(value)=>this.onSubmit(value)
                                        }
                                        customContainerStyle={{paddingLeft: 10}}
-                                       customInputStyle={{color: 'rgba(64, 64, 64, 1)', fontSize:15}}
+                                       customInputStyle={{color: 'rgba(64, 64, 64, 1)', fontSize: 15}}
                                        customSearchStyle={{left: 16}}
                                        defaultPaddingRight={50}
                                        onFocusPaddingRight={37}
@@ -77,12 +87,14 @@ export class SearchResultPage extends Component {
                 ref="scrollableTabView"
                 renderTabBar={() =>
                     <BizSearchResultPagScrollableTabBar
+                        ref="BizSearchResultPagScrollableTabBar"
                         style={{height: 45, borderWidth: 0, elevation: 0.1}}
                         tabStyle={{height: 45}}
                         activeTextColor='rgba(54, 166, 66, 1)'
                         tabBarBackgroundColor={Colors.white}
                         tabBarUnderlineColor={Colors.appUnifiedBackColor}
                         inactiveTextColor={Colors.BizCommonBlack}
+                        customRefs={['merchent', 'coupon']}
                         textStyle={{
                             fontSize: 14,
                             //backgroundColor: Colors.getRandomColor()
@@ -90,12 +102,31 @@ export class SearchResultPage extends Component {
                         underlineColor='rgba(67, 187, 78, 1)'
                         underLineBottom={10}
                         underlineHeight={2}/>}
+                onScroll={(value)=>{
+                    //暂时只有2个tab, 先写死,以后超过2个 再说
+                    if (value>=0.5){
+                        this.onScroll(1);
+                    }else{
+                        this.onScroll(0);
+                    }
+                }
+                }
+                onChangeTab={({/*可惜只在 自动滚动 停止 后 回调*/
+                    i,
+                    ref,
+                    from,
+                })=> {
+                    {/*Log.log('SearchResultPage onChangeTab i=='+i);*/}
+                    {/*this.refs.BizSearchResultPagScrollableTabBar.curTabIndex=i;*/}
+
+                    {/*this.onChangeTab(i,ref,from);*/}
+                }}
             >
                 <SearchResultPageMerchantListContanier {...this.props}
                                                        tabLabel={this.props.baseReducer.merchantListTabLable }
                 />
                 <SearchResultPageCouponListContanier {...this.props}
-                                                       tabLabel={this.props.baseReducer.couponListTabLable }
+                                                     tabLabel={this.props.baseReducer.couponListTabLable }
                 />
             </ScrollableTabView>
 

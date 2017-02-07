@@ -26,14 +26,19 @@ export default function SearchResultPageReducer(state = initialState, action) {
         }
             break;
         case SearchResultPageActions.updateTabLabels: {
-            let value = action.value;
+            let {tabLabelTag, nums } = action.value;
             let newMerchantListTabLable=state.merchantListTabLable;
-            if (value.tabLabelTag==BizApi.SearchResultPageMerchantListAPI.tabLabel){//更新 商家 列表的 tabLabel
-                newMerchantListTabLable=BizApi.SearchResultPageMerchantListAPI.tabLabel+'('+value.nums+')';
+            let newCouponListTabLable=state.couponListTabLable;
+
+            if (tabLabelTag==BizApi.SearchResultPageMerchantListAPI.tabLabel){//更新 商家 列表的 tabLabel
+                newMerchantListTabLable=BizApi.SearchResultPageMerchantListAPI.tabLabel+'('+nums+')';
+            }else if(tabLabelTag==BizApi.SearchResultPageCouponListAPI.tabLabel){//更新 优惠 列表的 tabLabel
+                newCouponListTabLable=BizApi.SearchResultPageCouponListAPI.tabLabel+'('+nums+')';
             }
             return {
                 ...state,
                 merchantListTabLable:newMerchantListTabLable,
+                couponListTabLable:newCouponListTabLable
             };
         }
             break;
