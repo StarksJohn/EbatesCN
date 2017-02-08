@@ -17,3 +17,13 @@ export function randomNums(min, max) {
     // showToast('产生新随机数===' + b);
     return b;
 }
+
+/**
+ * 丢弃小数部分,保留整数部分 http://www.ablanxue.com/shtml/201407/23258_1.shtml
+ * @param n
+ * @returns {Number}
+ * @constructor
+ */
+export function Math_parseInt(n) {
+    return parseInt(n);
+}

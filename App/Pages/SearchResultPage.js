@@ -18,6 +18,7 @@ import SearchResultPageMerchantListContanier from '../Redux/Container/SearchResu
 import SearchResultPageCouponListContanier from '../Redux/Container/SearchResultPageCouponListContanier'
 import *as BizApi from '../NetWork/API/BizApi'
 import *as SearchResultPageActions from '../Redux/Actions/SearchResultPageActions'
+import *as Math from '../Utils/Math'
 
 /**
  *
@@ -51,12 +52,36 @@ export class SearchResultPage extends Component {
     }
 
     /**
-     * 为了让正在 滚动的 ScrollableTabView 关联的 BizSearchResultPagScrollableTabBar 的 底部 横线 在 判断到 滚到 其他 页面时, 及时 用其页面 对应的 tabbar的 Text 控件的 宽 计算 最新的 横线的 宽,避免 2个 tabbar.Text 控件 的 宽不一样时, 左右滚动 导致 横线位置不对
+     * 为了让正在 滚动的 ScrollableTabView 关联的 BizSearchResultPagScrollableTabBar 的 底部 横线 在 判断到 滚到 其他 页面时, 及时 用其页面 对应的 tabbar的 Text 控件的 宽 计算 最新的 横线的 宽,避免 多 个 BizSearchResultPagScrollableTabBar.tabbar.Text 控件 的 宽不一样时, 左右滚动 导致 横线位置不对
      * */
-    onScroll=( i )=>{
+    onScroll=( value )=>{
+        // Log.log('SearchResultPage onScroll value =='+value);
+
+        let i=Math.Math_parseInt((value+0.5)%this.props.baseReducer.customRefs.length) ;// 根据哪个 BizSearchResultPagScrollableTabBar.tabbar.Text 控件的宽 计算 横线的 宽, 比下边的 if else 快捷
+        // if (value<0.5){
+        //     i=0;
+        // }else if(value>0.5&&value<1.5){
+        //     i=1;
+        // } else if(value>1.5 && value<2.5){
+        //     i=2
+        // } else if( value>2.5){
+        //     i=3
+        // }
         // Log.log('SearchResultPage onScroll i=='+i);
+
         if (this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex!=i){
             this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex=i;
+            this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.updateTabUnderlineWidth();
+            // Log.log('SearchResultPage onScroll curTabIndex =='+this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex);
+
+        }
+    }
+
+    onChangeTab=( i,ref,from )=>{
+        if (this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex!=i){
+            this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex=i;
+            this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.updateTabUnderlineWidth();
+            Log.log('SearchResultPage onChangeTab curTabIndex =='+this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex);
         }
     }
 
@@ -94,7 +119,7 @@ export class SearchResultPage extends Component {
                         tabBarBackgroundColor={Colors.white}
                         tabBarUnderlineColor={Colors.appUnifiedBackColor}
                         inactiveTextColor={Colors.BizCommonBlack}
-                        customRefs={['merchent', 'coupon']}
+                        customRefs={this.props.baseReducer.customRefs}
                         textStyle={{
                             fontSize: 14,
                             //backgroundColor: Colors.getRandomColor()
@@ -104,14 +129,10 @@ export class SearchResultPage extends Component {
                         underlineHeight={2}/>}
                 onScroll={(value)=>{
                     //暂时只有2个tab, 先写死,以后超过2个 再说
-                    if (value>=0.5){
-                        this.onScroll(1);
-                    }else{
-                        this.onScroll(0);
-                    }
+                    this.onScroll(value);
                 }
                 }
-                onChangeTab={({/*可惜只在 自动滚动 停止 后 回调*/
+                onChangeTab={({/*可惜只在 自动滚动 停止 后 回调,且 此时改 横线的坐标和宽时, 横线在滚动过程中 抖*/
                     i,
                     ref,
                     from,

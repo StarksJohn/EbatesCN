@@ -13,6 +13,7 @@ import *as BizApi from '../../NetWork/API/BizApi'
 const initialState = {
     merchantListTabLable: BizApi.SearchResultPageMerchantListAPI.tabLabel + '(0)',//商家 列表的 tabLabel
     couponListTabLable: BizApi.SearchResultPageCouponListAPI.tabLabel+'(0)',
+    customRefs:['merchent', 'coupon'],//BizSearchResultPagScrollableTabBar的 不同 tabbar里的 Text 控件的 ref
 };
 
 export default function SearchResultPageReducer(state = initialState, action) {
@@ -35,6 +36,8 @@ export default function SearchResultPageReducer(state = initialState, action) {
             }else if(tabLabelTag==BizApi.SearchResultPageCouponListAPI.tabLabel){//更新 优惠 列表的 tabLabel
                 newCouponListTabLable=BizApi.SearchResultPageCouponListAPI.tabLabel+'('+nums+')';
             }
+
+            Log.log('SearchResultPageReducer SearchResultPageActions.updateTabLabels  return ');
             return {
                 ...state,
                 merchantListTabLable:newMerchantListTabLable,

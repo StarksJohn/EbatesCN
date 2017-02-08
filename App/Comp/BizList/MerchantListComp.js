@@ -30,7 +30,7 @@ export default class MerchantListComp extends Component {
      */
     renderRow = (rowData, sectionID, rowID, highlightRow)=> {
 
-        Log.log('MerchantListComp rowID==' + rowID);
+        // Log.log('MerchantListComp rowID==' + rowID);
 
         return (
             <View style={{flex: 1, height: 100,

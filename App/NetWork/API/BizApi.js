@@ -8,6 +8,8 @@ import *as HistorySearchDB from '../../DB/BizDB/HistorySearchDB'
 const {fromJS} = require('immutable'); //导入  Immutable.js 的 Record API
 import *as SearchResultPageActions from '../../Redux/Actions/SearchResultPageActions'
 import SMSTimer from '../../Utils/SMSTimer'
+import BizSearchResultPagScrollableTabBar,{UpdateTabUnderlineWidthEventName} from '../../Comp/BizCommonComp/BizSearchResultPagScrollableTabBar'
+// import *as EventListener from '../../Utils/EventListener/EventListener'
 
 /**
  * 搜索页 列表的 API
@@ -153,7 +155,8 @@ export const SearchResultPageSearchKeyWordAPI = {
                                 couldLoadMore: true,
                                 newContentArray: arr
                             }));
-
+                            // Log.log('BizApi searchKeyWord toBe EventListener.sendEvent()')
+                            // EventListener.sendEvent(UpdateTabUnderlineWidthEventName);
                         }
                     }
                 }
