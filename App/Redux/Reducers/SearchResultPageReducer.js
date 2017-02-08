@@ -37,7 +37,7 @@ export default function SearchResultPageReducer(state = initialState, action) {
                 newCouponListTabLable=BizApi.SearchResultPageCouponListAPI.tabLabel+'('+nums+')';
             }
 
-            Log.log('SearchResultPageReducer SearchResultPageActions.updateTabLabels  return ');
+            // Log.log('SearchResultPageReducer SearchResultPageActions.updateTabLabels  return ');
             return {
                 ...state,
                 merchantListTabLable:newMerchantListTabLable,

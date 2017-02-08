@@ -18,7 +18,6 @@ import SearchResultPageMerchantListContanier from '../Redux/Container/SearchResu
 import SearchResultPageCouponListContanier from '../Redux/Container/SearchResultPageCouponListContanier'
 import *as BizApi from '../NetWork/API/BizApi'
 import *as SearchResultPageActions from '../Redux/Actions/SearchResultPageActions'
-import *as Math from '../Utils/Math'
 
 /**
  *
@@ -33,6 +32,8 @@ export class SearchResultPage extends Component {
                 hardwareBackPressListenerName: gRouteName.SearchResultPage
             });
         }
+
+        // this.preValue = 0;
     }
 
     componentWillMount() {
@@ -54,34 +55,19 @@ export class SearchResultPage extends Component {
     /**
      * 为了让正在 滚动的 ScrollableTabView 关联的 BizSearchResultPagScrollableTabBar 的 底部 横线 在 判断到 滚到 其他 页面时, 及时 用其页面 对应的 tabbar的 Text 控件的 宽 计算 最新的 横线的 宽,避免 多 个 BizSearchResultPagScrollableTabBar.tabbar.Text 控件 的 宽不一样时, 左右滚动 导致 横线位置不对
      * */
-    onScroll=( value )=>{
-        // Log.log('SearchResultPage onScroll value =='+value);
-
-        let i=Math.Math_parseInt((value+0.5)%this.props.baseReducer.customRefs.length) ;// 根据哪个 BizSearchResultPagScrollableTabBar.tabbar.Text 控件的宽 计算 横线的 宽, 比下边的 if else 快捷
-        // if (value<0.5){
-        //     i=0;
-        // }else if(value>0.5&&value<1.5){
-        //     i=1;
-        // } else if(value>1.5 && value<2.5){
-        //     i=2
-        // } else if( value>2.5){
-        //     i=3
-        // }
-        // Log.log('SearchResultPage onScroll i=='+i);
-
-        if (this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex!=i){
-            this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex=i;
-            this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.updateTabUnderlineWidth();
-            // Log.log('SearchResultPage onScroll curTabIndex =='+this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex);
-
-        }
+    onScroll = (value)=> {
+        this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.updataCurTabIndex(value);
     }
 
-    onChangeTab=( i,ref,from )=>{
-        if (this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex!=i){
-            this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex=i;
+    onChangeTab = (i, ref, from)=> {
+        //避免 滚动停止时, curTabIndex 还没变化
+        this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.isNeedUpdataCurTabIndex=true;
+        Log.log('SearchResultPage onChangeTab isNeedUpdataCurTabIndex ==' + this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.isNeedUpdataCurTabIndex);
+
+        if (this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex != i) {
+            this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex = i;
             this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.updateTabUnderlineWidth();
-            Log.log('SearchResultPage onChangeTab curTabIndex =='+this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex);
+            Log.log('SearchResultPage onChangeTab curTabIndex ==' + this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex);
         }
     }
 
@@ -127,20 +113,18 @@ export class SearchResultPage extends Component {
                         underlineColor='rgba(67, 187, 78, 1)'
                         underLineBottom={10}
                         underlineHeight={2}/>}
-                onScroll={(value)=>{
+                onScroll={(value)=> {
                     //暂时只有2个tab, 先写死,以后超过2个 再说
                     this.onScroll(value);
                 }
                 }
-                onChangeTab={({/*可惜只在 自动滚动 停止 后 回调,且 此时改 横线的坐标和宽时, 横线在滚动过程中 抖*/
+                onChangeTab={({
+                    /*只在 自动滚动 停止 后 回调,*/
                     i,
                     ref,
                     from,
                 })=> {
-                    {/*Log.log('SearchResultPage onChangeTab i=='+i);*/}
-                    {/*this.refs.BizSearchResultPagScrollableTabBar.curTabIndex=i;*/}
-
-                    {/*this.onChangeTab(i,ref,from);*/}
+                    this.onChangeTab(i,ref,from);
                 }}
             >
                 <SearchResultPageMerchantListContanier {...this.props}

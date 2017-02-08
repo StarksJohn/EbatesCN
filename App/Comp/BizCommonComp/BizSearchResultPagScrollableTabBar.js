@@ -16,8 +16,7 @@ const {
 } = ReactNative;
 import Button from 'react-native-scrollable-tab-view/Button'//用 react-native-scrollable-tab-view 的 Button 组件
 import *as BizViews from './BizViews'
-// import EventListener from '../../Utils/EventListener/EventListener'
-
+import *as _Math from '../../Utils/Math'
 // export const UpdateTabUnderlineWidthEventName = 'updateTabUnderlineWidthEventName';//任何地方都可发送的 获取 当前 横线所在tabbar的 Text 控件的 宽高信息的 事件名字
 const WINDOW_WIDTH = Dimensions.get('window').width;
 
@@ -63,6 +62,8 @@ const BizSearchResultPagScrollableTabBar = React.createClass({
         this.curTabIndex = 0;//@cham 当前 选中的 下标,用于 计算 2个 tab的 text 控件 内容不一样宽时, 每次 切换 tab前,都得重新计算 下横线的 宽
         this.UnderlineW = 0; //@cham 下横线 移动到新的 tabbar 区域后, 只要 curTabIndex 改变,UnderlineW 就根据新的 Text 控件 重新计算
         this.UnderlineLeft = 0;
+        this.preValue = 0;//记录 此控件的 父控件 ScrollableTabView 的 onScroll 回调函数里返回的 上次 的 value
+        this.isNeedUpdataCurTabIndex=true;//点击 另一个 tabbar时 ,不需要再 调 updataCurTabIndex 函数 给 this.curTabIndex 赋值, 直接赋值
         return {
             _leftTabUnderline: new Animated.Value(0),
             _widthTabUnderline: new Animated.Value(0),
@@ -138,7 +139,7 @@ const BizSearchResultPagScrollableTabBar = React.createClass({
     },
 
     /**
-     * @cham 下横线 移动到新的 tabbar 区域后, 只要 curTabIndex 改变,UnderlineW 就根据新的 Text 控件 重新计算, 不能跟着 横线 的 一定一直 调 measure 方法,否则 安卓真机卡
+     * @cham 下横线 移动到新的 tabbar 区域后, 只要 curTabIndex 改变,UnderlineW 就根据新的 Text 控件 重新计算, 不能在 横线 的 移动中 一直 调 measure 方法,否则 安卓真机卡
      */
     updateTabUnderlineWidth(){
         // Log.log('BizSearchResultPagScrollableTabBar updateTabUnderlineWidth begin')
@@ -152,6 +153,43 @@ const BizSearchResultPagScrollableTabBar = React.createClass({
             this.state._widthTabUnderline.setValue(/*newLineRight - newLineLeft*/ width);
 
         })
+    },
+
+    /**
+     * 更新 curTabIndex
+     * @param value
+     */
+    updataCurTabIndex(value){
+        if (!this.isNeedUpdataCurTabIndex){
+            Log.log('BizSearchResultPagScrollableTabBar updataCurTabIndex return ')
+            return ;
+        }
+
+        if (Math.abs(value - this.preValue) > 0.1  ) {//暂时定 0.1, 越小月卡, 越大可能出现左右滚动或 快速 点击切换 tabbar时, 横线位置不对
+
+            // Log.log('SearchResultPage onScroll value ==' + value+ '  preValue='+this.preValue);
+
+            let i = _Math.Math_parseInt((value + 0.5) % this.props.customRefs.length);// 根据哪个 BizSearchResultPagScrollableTabBar.tabbar.Text 控件的宽 计算 横线的 宽, 比下边的 if else 快捷
+            // if (value<0.5){
+            //     i=0;
+            // }else if(value>0.5&&value<1.5){
+            //     i=1;
+            // } else if(value>1.5 && value<2.5){
+            //     i=2
+            // } else if( value>2.5){
+            //     i=3
+            // }
+            // Log.log('SearchResultPage onScroll i=='+i);
+
+            if (this.curTabIndex != i) {
+                this.curTabIndex = i;
+                this.updateTabUnderlineWidth();
+                Log.log('BizSearchResultPagScrollableTabBar updataCurTabIndex curTabIndex =='+i);
+
+            }
+        }
+
+        this.preValue=value;
     },
 
     /**
@@ -236,7 +274,12 @@ const BizSearchResultPagScrollableTabBar = React.createClass({
             accessibilityLabel={name}
             accessibilityTraits='button'
             onPress={() => /*this.props.goToPage(page)*/ {
-                {/*this.curTabIndex = page;//@cham*/
+                //@cham
+                if (this.curTabIndex != page) {
+                    this.curTabIndex = page;
+                    this.isNeedUpdataCurTabIndex=false;
+                    this.updateTabUnderlineWidth();
+
                 }
                 {/*Log.log('BizSearchResultPagScrollableTabBar renderTabOption onPress page=='+page);*/
                 }
