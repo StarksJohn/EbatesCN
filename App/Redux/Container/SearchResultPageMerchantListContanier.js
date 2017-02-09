@@ -11,6 +11,9 @@ import {
 import {connect} from 'react-redux';
 import MerchantListComp from '../../Comp/BizList/MerchantListComp'
 import *as BizViews from '../../Comp/BizCommonComp/BizViews'
+import *as SearchResultPageActions from '../Actions/SearchResultPageActions'
+import *as BizApi from '../../NetWork/API/BizApi'
+import *as BaseListActions from '../Actions/BaseListActions'
 
 class SearchResultPageMerchantListContanier extends React.Component {
 
@@ -20,15 +23,10 @@ class SearchResultPageMerchantListContanier extends React.Component {
      * @returns {XML}
      */
     renderNoDataView(props) {
-        Log.log('MerchantListComp renderNoDataView props.route.value==' + props.route.value);
-
-        // return (
-        //     <View style={{flex: 1, backgroundColor: Colors.getRandomColor()}}>
-        //
-        //     </View>
-        // );
 
         return BizViews.renderSearchResultPageNoDataView(props.route.value,0,()=>{
+            this.props.dispatch(BaseListActions.Loadinglist(BaseListActions.BaseListFetchDataType.REFRESH, BizApi.SearchResultPageMerchantListAPI.ApiName));
+            this.props.dispatch(BizApi.SearchResultPageSearchKeyWordAPI.searchKeyWordAPI(BaseListActions.BaseListFetchDataType.REFRESH, null,0 ));//刷新 列表
 
         });
     }

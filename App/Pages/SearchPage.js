@@ -35,7 +35,7 @@ export class SearchPage extends Component {
      * 由于点击 热门搜索按钮, 产生的 搜索控件 失去焦点,然后 搜索控件的 value变为 关键词, 并 页面跳转
      */
     onBlur() {
-        Log.log('SearchPage onBlur');
+        // Log.log('SearchPage onBlur');
 
         // this.refs.searchList.onPress
     }

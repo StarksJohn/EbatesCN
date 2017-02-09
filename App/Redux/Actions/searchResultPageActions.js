@@ -42,3 +42,10 @@ export function nodataAction(/*keyWord,*/ApiName,opt) {
         opt:opt
     }
 }
+
+/**
+ * 搜索结果页,商家列表 无数据状态时, 点击 '查看全部商家' 按钮
+ */
+export function searchAllMerchantAction() {
+    
+}

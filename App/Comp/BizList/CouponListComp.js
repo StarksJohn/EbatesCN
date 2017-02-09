@@ -35,7 +35,7 @@ export default class CouponListComp extends Component {
 
         return (
             <View style={{flex: 1, height: 150, justifyContent:'center' , alignItems: 'center',
-                //backgroundColor: Colors.getRandomColor()
+                backgroundColor: Colors.getRandomColor()
             }}>
                 <Text style={{
                     backgroundColor: Colors.getRandomColor()

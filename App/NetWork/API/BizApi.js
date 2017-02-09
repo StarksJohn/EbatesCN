@@ -118,8 +118,14 @@ export const SearchPageListApi = {
 export const SearchResultPageSearchKeyWordAPI = {
     ApiName: 'SearchResultPageSearchKeyWordAPI',
 
-    //模拟 搜索结果页 搜素关键词后 拿到的 商家列表 和 优惠列表 的 所有 数据,此方法第一次由 一进入 搜索结果页 ,商家列表 挂载 后 触发,暂时不考虑 这2个列表 还翻页的情况, 因 数据不会很大
-    searchKeyWordAPI(opt){
+    /**
+     * 模拟 搜索结果页 搜素关键词|搜索全部商家或优化 接口,  拿到的 商家列表 和 优惠列表 的 所有 数据,此方法第一次由 一进入 搜索结果页 ,商家列表 挂载 后 触发,此时暂时不考虑 这2个列表 还翻页的情况, 因 数据不会很大; 但是 点击 查看全部商家或 优惠 按钮后, 就得 翻页了
+     * @param opt
+     * @param keyword
+     * @param searchType : 0 商家 1 优惠
+     * @returns {function(*)}
+     */
+    searchKeyWordAPI(opt,keyword,searchType){
 
         return (dispatch) => {
 
@@ -129,25 +135,48 @@ export const SearchResultPageSearchKeyWordAPI = {
                     Log.log('time===' + time);
                     if (time == -1) {
 
-                        {//模拟拿到 优惠 列表的 第一页 网络数据, 先 刷新 优惠列表的 tabLabel是因为, 商家列表 的 tabLabl 在 第一次进入页面后 先显示,所以 得 最后 发送 商家列表的 updateTabLabelsAction, 让 tabLable底部的 横线 的 长度 适配 商家列表 的 tabLabel
-                            let arr = [];
-                            let all=Math.randomNums(8,50);
-                            for (let i = 0; i < all; i++) {
-                                arr.push({index: SearchResultPageCouponListAPI.tabLabel + i});
+                        if (keyword){//模拟 有 关键词时, 调用的搜索API
+                            {//模拟拿到 优惠 列表的 第一页 网络数据, 先 刷新 优惠列表的 tabLabel是因为, 商家列表 的 tabLabl 在 第一次进入页面后 先显示,所以 得 最后 发送 商家列表的 updateTabLabelsAction, 让 tabLable底部的 横线 的 长度 适配 商家列表 的 tabLabel
+                                let arr = [];
+                                let all=Math.randomNums(0,10);
+                                for (let i = 0; i < all; i++) {
+                                    arr.push({index: SearchResultPageCouponListAPI.tabLabel + i});
+                                }
+
+                                dispatch(SearchResultPageCouponListAPI.handleNetWorkData(opt, arr, all,true));
                             }
 
-                            dispatch(SearchResultPageCouponListAPI.handleNetWorkData(opt, arr, all,true));
-                        }
+                            {//模拟拿到 商家列表的 所有 网络数据
+                                let arr = [];
+                                let all=Math.randomNums(0,0);
+                                for (let i = 0; i < all; i++) {
+                                    arr.push({index: SearchResultPageMerchantListAPI.tabLabel + i});
+                                }
 
-                        {//模拟拿到 商家列表的 所有 网络数据
-                            let arr = [];
-                            let all=Math.randomNums(8,50);
-                            for (let i = 0; i < all; i++) {
-                                arr.push({index: SearchResultPageMerchantListAPI.tabLabel + i});
+                                dispatch(SearchResultPageMerchantListAPI.handleNetWorkData(opt, arr, all));
                             }
+                        }else{// 模拟 无关键词时 ,搜索 的结果
+                            if (searchType==0){//模拟 搜索 全部商家 拿到了数据
+                                let arr = [];
+                                let all=Math.randomNums(10,30);//模拟服务器发来的 商家列表的 数据总数 字段
+                                //模拟 服务器发来的 第一页 数据
+                                for (let i = 0; i < SearchResultPageMerchantListAPI.perPageOfNums; i++) {
+                                    arr.push({index: SearchResultPageMerchantListAPI.tabLabel + i});
+                                }
 
-                            dispatch(SearchResultPageMerchantListAPI.handleNetWorkData(opt, arr, all));
+                                dispatch(SearchResultPageMerchantListAPI.handleNetWorkData(opt, arr, all));
+                            }else if (searchType==1){// 模拟 搜索 全部 优惠 拿到了 数据
+                                let arr = [];
+                                let all=Math.randomNums(10,30);//模拟服务器发来的 优惠 列表的 数据总数 字段
+                                //模拟 服务器发来的 第一页 数据
+                                for (let i = 0; i < SearchResultPageMerchantListAPI.perPageOfNums; i++) {
+                                    arr.push({index: SearchResultPageMerchantListAPI.tabLabel + i});
+                                }
+
+                                dispatch(SearchResultPageCouponListAPI.handleNetWorkData(opt, arr, all, true));
+                            }
                         }
+
 
                     }
                 }
@@ -180,7 +209,7 @@ export const SearchResultPageMerchantListAPI = {
                 dispatch(SearchResultPageActions.updateTabLabelsAction(SearchResultPageCouponListAPI.tabLabel, 0));//优惠 列表的 tabLabel 清零
 
                 //调 搜索结果页的 搜索关键词 接口,拿2个列表的数据
-                dispatch(SearchResultPageSearchKeyWordAPI.searchKeyWordAPI(opt));
+                dispatch(SearchResultPageSearchKeyWordAPI.searchKeyWordAPI(opt,BaseListCompProps.route.value,-1));
             }else if(opt==BaseListActions.BaseListFetchDataType.MORE){//请求 列表 下页数据
                 this.timer = new SMSTimer({
                     timerNums: 3,
@@ -188,12 +217,12 @@ export const SearchResultPageMerchantListAPI = {
                         Log.log('time===' + time);
                         if (time == -1) {
 
-                            {//模拟拿到 商家列表的 一页 网络数据
+                            {//模拟拿到 商家列表的 下一页 网络数据
                                 let arr = [];
-                                for (let i = 0; i < 10; i++) {
+                                let newPageDataNums=this.tabLabelTotalNums-this.tabLabelCurNums>=this.perPageOfNums?this.perPageOfNums:this.tabLabelTotalNums-this.tabLabelCurNums;//模拟服务器发来的 下页数据
+                                for (let i = 0; i < newPageDataNums; i++) {
                                     arr.push({index: SearchResultPageMerchantListAPI.tabLabel + i});
                                 }
-
                                 dispatch(SearchResultPageMerchantListAPI.handleNetWorkData(opt, arr, this.tabLabelTotalNums));
                             }
 
@@ -219,13 +248,18 @@ export const SearchResultPageMerchantListAPI = {
 
             this.tabLabelTotalNums = tabLabelTotalNums;
 
-            if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE) {
+            if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE || opt == BaseListActions.BaseListFetchDataType.REFRESH) {
                 this.tabLabelCurNums=0;
                 dispatch(SearchResultPageActions.updateTabLabelsAction(this.tabLabel, this.tabLabelTotalNums));
 
                 if (tabLabelTotalNums == 0 ){//模拟没搜索到 关键词 相关的 商家 数据后,发 商家列表的 Nodata action
                     dispatch(SearchResultPageActions.nodataAction(/*BaseListCompProps.route.value,*/this.ApiName, opt));
                     return;
+                }
+
+                //点击 '查看全部商家' 按钮 拿到数据后,触发 刷新
+                if (opt == BaseListActions.BaseListFetchDataType.REFRESH){
+                    dispatch(BaseListActions.InitListDataSource(this.ApiName));// 商家 列表的 $dataArray 清0
                 }
             }
 
@@ -267,8 +301,33 @@ export const SearchResultPageCouponListAPI = {
                 if (this.tabLabelTotalNums>0){// 之前通过 searchKeyWordAPI 接口拿到了 数据
                     this.tabLabelCurNums=0;
                     dispatch(this.handleNetWorkData(opt,this.$dataArray.toJS(),this.tabLabelTotalNums,false));
-
+                }else {
+                    dispatch(SearchResultPageActions.nodataAction(this.ApiName, opt));
                 }
+            }else if(opt==BaseListActions.BaseListFetchDataType.MORE){//请求 列表的 下页数据
+                dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
+
+                this.timer = new SMSTimer({
+                    timerNums: 3,
+                    callBack: (time)=> {
+                        Log.log('time===' + time);
+                        if (time == -1) {
+
+                            {//模拟拿到 优惠 列表的 下一页 网络数据
+                                let arr = [];
+                                let newPageDataNums=this.tabLabelTotalNums-this.tabLabelCurNums>=this.perPageOfNums?this.perPageOfNums:this.tabLabelTotalNums-this.tabLabelCurNums
+                                for (let i = 0; i < newPageDataNums; i++) {
+                                    arr.push({index: SearchResultPageMerchantListAPI.tabLabel + i});
+                                }
+
+                                dispatch(this.handleNetWorkData(opt, arr, this.tabLabelTotalNums,false));
+                            }
+
+                        }
+                    }
+                });
+
+                this.timer.start();
             }
         }
     },
@@ -279,7 +338,7 @@ export const SearchResultPageCouponListAPI = {
      * @param newArr :一次请求拿到的 数据
      * @param tabLabelTotalNums  列表 数据总数
      * @param isDataFromSearchKeyWordAPI:
-     *      要处理的数据 是否来自 searchKeyWordAPI
+     *      要处理的数据 是否来自  searchKeyWordAPI && 有 搜索的 关键词
      *          true: 此时 此控件还没挂载, 不发 SuccessFetchinglist
      *          false:此时 此控件 刚 挂载 或 请求好了 下页数据
      * @returns {function(*)}
@@ -296,6 +355,7 @@ export const SearchResultPageCouponListAPI = {
 
                 if (tabLabelTotalNums == 0 ){//模拟没搜索到 关键词 相关的 优惠 数据后,发 优惠 列表的 Nodata action
                     dispatch(SearchResultPageActions.nodataAction(/*BaseListCompProps.route.value,*/this.ApiName, opt));
+                    Log.log('BizApi SearchResultPageCouponListAPI handleNetWorkData nodataAction')
                     return;
                 }
 
@@ -310,6 +370,15 @@ export const SearchResultPageCouponListAPI = {
 
             if (!isDataFromSearchKeyWordAPI){
                 // Log.log('SearchResultPageCouponListAPI handleNetWorkData SuccessFetchinglist() newArr=='+newArr);
+                dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
+                    couldLoadMore: this.tabLabelCurNums<this.tabLabelTotalNums,
+                    newContentArray: newArr
+                }));
+            }
+
+            //点击 '查看全部优惠' 按钮 拿到数据后,触发 刷新
+            if (opt == BaseListActions.BaseListFetchDataType.REFRESH){
+                dispatch(BaseListActions.InitListDataSource(this.ApiName));// 优惠 列表的 $dataArray 清0
                 dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
                     couldLoadMore: this.tabLabelCurNums<this.tabLabelTotalNums,
                     newContentArray: newArr

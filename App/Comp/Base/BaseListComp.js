@@ -173,6 +173,7 @@ export default class BaseListComp extends Component {
 
             // showToast('_onLoadMore 出错 !!!  this.isLoadingMore==' + this.isLoadingMore + 'this.props.couldLoadMore==' + this.props.couldLoadMore);
 
+            Log.log('BaseListComp onLoadMore this.props.baseReducer.isRenderFooterView=='+this.props.baseReducer.isRenderFooterView)
             return;
         }
 

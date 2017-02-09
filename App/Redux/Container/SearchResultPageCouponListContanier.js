@@ -11,6 +11,8 @@ import {
 import {connect} from 'react-redux';
 import CouponListComp from '../../Comp/BizList/CouponListComp'
 import *as BizViews from '../../Comp/BizCommonComp/BizViews'
+import *as BaseListActions from '../Actions/BaseListActions'
+import *as BizApi from '../../NetWork/API/BizApi'
 
 class SearchResultPageCouponListContanier extends React.Component {
 
@@ -22,7 +24,8 @@ class SearchResultPageCouponListContanier extends React.Component {
     renderNoDataView(props) {
 
         return BizViews.renderSearchResultPageNoDataView(props.route.value,1,()=>{
-
+            this.props.dispatch(BaseListActions.Loadinglist(BaseListActions.BaseListFetchDataType.REFRESH, BizApi.SearchResultPageCouponListAPI.ApiName));
+            this.props.dispatch(BizApi.SearchResultPageSearchKeyWordAPI.searchKeyWordAPI(BaseListActions.BaseListFetchDataType.REFRESH, null,1 ));//刷新 列表
         });
     }
 
