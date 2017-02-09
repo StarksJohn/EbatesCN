@@ -15,7 +15,7 @@ const {List, fromJS} = require('immutable') //导入  Immutable.js 的 Record AP
 const initialState = new InitialState()/*通用列表的初始UI状态*/
 /*搜索结果页 商家 列表的 特殊状态*/
     .setIn(['ApiName'], BizApi.SearchResultPageMerchantListAPI.ApiName)
-    .setIn(['isRenderRefreshControl'], true)
+    .setIn(['isRenderRefreshControl'], false)
     .setIn(['tabLabel'], BizApi.SearchResultPageMerchantListAPI.tabLabel);
 
 export default function SearchResultPageMerchantListReducer(state = initialState, action) {

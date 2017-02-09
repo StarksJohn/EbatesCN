@@ -5,7 +5,7 @@
  */
 
 /**
- * 生成0到任意值的随机数 http://www.cnblogs.com/javaScriptYang/p/5684797.html
+ * 生成 [min,max] 的随机数 http://www.cnblogs.com/javaScriptYang/p/5684797.html
  * @param min
  * @param max
  */

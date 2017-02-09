@@ -8,6 +8,7 @@ import {
     View, Text
 } from 'react-native';
 import BaseListComp from '../Base/BaseListComp';
+import Colors from '../../Utils/Colors'
 
 
 export default class CouponListComp extends Component {
@@ -29,13 +30,20 @@ export default class CouponListComp extends Component {
      * @returns {XML}
      */
     renderRow = (rowData, sectionID, rowID, highlightRow)=> {
-
         Log.log('CouponListComp rowID==' + rowID);
+        let str='rowID  '+rowID;
 
-        if (rowID=='0'){
-            Log.log(rowData);
-        }
-        return (null);
+        return (
+            <View style={{flex: 1, height: 150, justifyContent:'center' , alignItems: 'center',
+                //backgroundColor: Colors.getRandomColor()
+            }}>
+                <Text style={{
+                    backgroundColor: Colors.getRandomColor()
+                }}>
+                    {str}
+                </Text>
+            </View>
+        );
 
     }
 
@@ -46,6 +54,8 @@ export default class CouponListComp extends Component {
             <View style={{flex: 1}}>
                 <BaseListComp
                     {...this.props }
+                    initialListSize={5}
+                    scrollRenderAheadDistance={300}
                     renderRow={
                         this.renderRow
                     }

@@ -6,7 +6,7 @@
 import {
     ListView,
 } from 'react-native';
-import InitialState from '../InitialState/ListInitialState'
+import InitialState,{InitListState,ListToLoadingState,ListSuccesState} from '../InitialState/ListInitialState'
 import *as BaseListActions from '../Actions/BaseListActions'
 import *as BizApi from '../../NetWork/API/BizApi'
 const {List,fromJS} = require('immutable') //导入  Immutable.js 的 Record API
@@ -28,17 +28,28 @@ export default function SearchResultPageCouponListReducer(state = initialState, 
     }
 
     switch (action.type) {
+        case BaseListActions.BaseListStatus.INITIALIZE: {//此控件第一次 componentDidMount 挂载时 回调
+
+            return InitListState(state,action);
+        }
+            break;
+        case BaseListActions.BaseListStatus.Loading: {//正在 加载网络 状态
+            return ListToLoadingState(state,action);
+        }
+            break;
         case BaseListActions.BaseListStatus.SUCCESS: {
 
-            let allContent =
-                // action.opt === BaseListActions.BaseListFetchDataType.MORE ? loadMore(state.dataArray, action.newData) :
-                    action.newData;
+            let {newContentArray, couldLoadMore}= action.newData;
+
+            let temp$dataArray=ListSuccesState(state,action,newContentArray);
 
             let nextState = state
-                .setIn(['dataArray'], allContent)
-                .setIn(['dataSource'], state.dataSource.cloneWithRows(allContent))
+                .setIn(['$dataArray'], temp$dataArray)
+                .setIn(['dataSource'], state.dataSource.cloneWithRows(temp$dataArray.toJS()))
                 .setIn(['status'], BaseListActions.BaseListStatus.SUCCESS)
-                .setIn(['opt'], action.opt);
+                .setIn(['couldLoadMore'], couldLoadMore)
+                .setIn(['opt'], action.opt)
+                .setIn(['isRefreshing'], false);
 
             return nextState;
         }
