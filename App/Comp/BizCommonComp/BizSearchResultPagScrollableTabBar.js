@@ -141,16 +141,21 @@ const BizSearchResultPagScrollableTabBar = React.createClass({
     /**
      * @cham 下横线 移动到新的 tabbar 区域后, 只要 curTabIndex 改变,UnderlineW 就根据新的 Text 控件 重新计算, 不能在 横线 的 移动中 一直 调 measure 方法,否则 安卓真机卡
      */
-    updateTabUnderlineWidth(){
+    updateTabUnderlineWidth(callBack){
         // Log.log('BizSearchResultPagScrollableTabBar updateTabUnderlineWidth begin')
 
         this.refs[this.props.customRefs[this.curTabIndex]]/*@cham 根据 curTabIndex 拿到 refs 里的 text 控件,计算 其 宽度*/.measure((fx, fy, width, height, px, py)=> {
             this.UnderlineW = width;//@cham
             this.UnderlineLeft = px;
-            // Log.log('BizSearchResultPagScrollableTabBar updateTabUnderlineWidth done width='+width)
+            // Log.log('BizSearchResultPagScrollableTabBar updateTabUnderlineWidth done width='+width + 'this.UnderlineLeft='+this.UnderlineLeft)
 
             // this.state._leftTabUnderline.setValue(/*lineLeft*/ px);
             this.state._widthTabUnderline.setValue(/*newLineRight - newLineLeft*/ width);
+
+            //避免 measureTab 函数 里
+            if (callBack){
+                callBack();
+            }
 
         })
     },
@@ -227,42 +232,6 @@ const BizSearchResultPagScrollableTabBar = React.createClass({
             // Log.log('BizSearchResultPagScrollableTabBar updateTabUnderline  curTabIndex==' + this.curTabIndex + '  UnderlineLeft==' + UnderlineLeft + '   UnderlineW==' + UnderlineW);
 
         }
-
-        {
-            /*this.refs.merchent*/
-            /*@cham 根据 curTabIndex 拿到 refs 里的 text 控件,计算 其 宽度*/
-            {/*this.refs[this.props.customRefs[this.curTabIndex]].measure((fx, fy, width, height, px, py)=> {*/
-            }
-            {/*UnderlineW = width;//@cham*/
-            }
-
-            {/*// Log.log('BizSearchResultPagScrollableTabBar updateTabUnderline curTabIndex=='+this.curTabIndex)*/
-            }
-
-            {/*if (position < tabCount - 1) {*/
-            }
-
-            //         const nextTabLeft = this._tabsMeasurements[position + 1].left;//下次要移动到的 按钮的 left
-            //         // const nextTabRight = this._tabsMeasurements[position + 1].right;
-            //
-            //         const newLineLeft = (pageOffset * nextTabLeft + (1 - pageOffset) * lineLeft);
-            //         // const newLineRight = (pageOffset * nextTabRight + (1 - pageOffset) * lineRight);
-            //
-            //         this.state._leftTabUnderline.setValue(newLineLeft + 20 /*@cham 按钮的 宽总比 其 里边的Text 宽 40 */);
-            //         this.state._widthTabUnderline.setValue(/*newLineRight - newLineLeft*/ UnderlineW);
-            //
-            //         Log.log('BizSearchResultPagScrollableTabBar updateTabUnderline  (position < tabCount - 1) curTabIndex==' + this.curTabIndex + '   newLineLeft==' + newLineLeft + '  UnderlineW=' + UnderlineW);
-            //
-            //     } else {
-            //         UnderlineLeft = px;
-            //
-            //         this.state._leftTabUnderline.setValue(/*lineLeft*/ UnderlineLeft);
-            //         this.state._widthTabUnderline.setValue(/*lineRight - lineLeft*/ UnderlineW /*@cham 按钮的 宽总比 其 里边的Text 宽 40 */);
-            //         Log.log('BizSearchResultPagScrollableTabBar updateTabUnderline  curTabIndex==' + this.curTabIndex + '  UnderlineLeft==' + UnderlineLeft + '   UnderlineW==' + UnderlineW);
-            //
-            //     }
-            // })
-        }
     },
 
     renderTabOption(name, page) {
@@ -314,8 +283,10 @@ const BizSearchResultPagScrollableTabBar = React.createClass({
 
         // Log.log('BizSearchResultPagScrollableTabBar measureTab updateView  很少执行')
 
-        this.updateTabUnderlineWidth();
-        this.updateView({value: this.props.scrollValue._value,});
+        this.updateTabUnderlineWidth(()=>{//拿到 正确的 数据后再 更新View,异步 回调
+            this.updateView({value: this.props.scrollValue._value,});
+        });
+
     },
 
     render() {

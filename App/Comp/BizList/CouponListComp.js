@@ -30,7 +30,7 @@ export default class CouponListComp extends Component {
      * @returns {XML}
      */
     renderRow = (rowData, sectionID, rowID, highlightRow)=> {
-        Log.log('CouponListComp rowID==' + rowID);
+        // Log.log('CouponListComp rowID==' + rowID);
         let str='rowID  '+rowID;
 
         return (

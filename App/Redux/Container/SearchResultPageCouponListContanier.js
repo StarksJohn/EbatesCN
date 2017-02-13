@@ -24,8 +24,12 @@ class SearchResultPageCouponListContanier extends React.Component {
     renderNoDataView(props) {
 
         return BizViews.renderSearchResultPageNoDataView(props.route.value,1,()=>{
-            this.props.dispatch(BaseListActions.Loadinglist(BaseListActions.BaseListFetchDataType.REFRESH, BizApi.SearchResultPageCouponListAPI.ApiName));
-            this.props.dispatch(BizApi.SearchResultPageSearchKeyWordAPI.searchKeyWordAPI(BaseListActions.BaseListFetchDataType.REFRESH, null,1 ));//刷新 列表
+            // this.props.dispatch(BaseListActions.Loadinglist(BaseListActions.BaseListFetchDataType.REFRESH, BizApi.SearchResultPageCouponListAPI.ApiName));
+            // this.props.dispatch(BizApi.SearchResultPageSearchKeyWordAPI.searchKeyWordAPI(BaseListActions.BaseListFetchDataType.REFRESH, null,1 ));//刷新 列表
+            // this.props.onResetSearchBar();
+
+            //跳转到 全部优惠 页面
+
         });
     }
 

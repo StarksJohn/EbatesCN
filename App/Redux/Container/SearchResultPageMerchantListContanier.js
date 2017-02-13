@@ -25,9 +25,12 @@ class SearchResultPageMerchantListContanier extends React.Component {
     renderNoDataView(props) {
 
         return BizViews.renderSearchResultPageNoDataView(props.route.value,0,()=>{
-            this.props.dispatch(BaseListActions.Loadinglist(BaseListActions.BaseListFetchDataType.REFRESH, BizApi.SearchResultPageMerchantListAPI.ApiName));
-            this.props.dispatch(BizApi.SearchResultPageSearchKeyWordAPI.searchKeyWordAPI(BaseListActions.BaseListFetchDataType.REFRESH, null,0 ));//刷新 列表
+            // this.props.dispatch(BaseListActions.Loadinglist(BaseListActions.BaseListFetchDataType.REFRESH, BizApi.SearchResultPageMerchantListAPI.ApiName));
+            // this.props.dispatch(BizApi.SearchResultPageSearchKeyWordAPI.searchKeyWordAPI(BaseListActions.BaseListFetchDataType.REFRESH, null,0 ));//刷新 列表
 
+            // this.props.onResetSearchBar();
+
+            //跳转到 全部商家 页面
         });
     }
 

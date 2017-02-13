@@ -13,6 +13,7 @@ import *as BaseListActions from '../Actions/BaseListActions'
 
 var InitialState = Record({
     status: BaseListActions.BaseListStatus.INITIALIZE,
+    componentDidMount:false, //控件是否被 挂载
     dataArray: [], //已经拿到的数据,慢慢被 $dataArray 代替
     $dataArray: fromJS([]), //已经拿到的数据,immutable.Array 结构 , 里边放 model
     dataSource: new ListView.DataSource({
@@ -45,6 +46,7 @@ export function InitListState(state,action) {
         .setIn(['status'], action.type)
         .setIn(['couldLoadMore'], false)
         .setIn(['opt'], action.opt)
+        .setIn(['componentDidMount'], true)
         .setIn(['isRefreshing'], false);
 
     return _nextState;
@@ -87,4 +89,18 @@ export function ListSuccesState(state,action,newContentArray) {
     }
 
     return temp$dataArray;
+}
+
+/**
+ * 列表即将被 从 DOM 移除
+ * @param state
+ * @param action
+ * @returns {Map<K, V>|List<T>|Cursor|*}
+ * @constructor
+ */
+export function ListWillUnmount(state) {
+    let _nextState = state
+            .setIn(['componentDidMount'], false)
+        ;
+    return _nextState;
 }

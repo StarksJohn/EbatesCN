@@ -19,6 +19,7 @@ export const BaseListStatus = {
     ADD: 'fetch_list_data_status_addOneData',//列表添加一条数据
     REMOVE:'fetch_list_data_status_removeOneData',//列表删除一条数据
     CHANGEITEMSTATE:'fetch_list_data_status_changeItemState',//列表一条数据改变状态
+    WillUnmount:'WillUnmount'//列表将要被 从 DOM移除
 };
 
 /**
@@ -59,4 +60,14 @@ export function Loadinglist(opt, ApiName) {
  */
 export function SuccessFetchinglist(opt, ApiName, newData) {
     return { type: BaseListStatus.SUCCESS, opt, ApiName,  newData };
+}
+
+/**
+ * 列表将要被 从 DOM移除
+ * @param ApiName
+ * @returns {{type: string, ApiName: *}}
+ * @constructor
+ */
+export function WillUnmount( ApiName) {
+    return { type: BaseListStatus.WillUnmount, ApiName };
 }

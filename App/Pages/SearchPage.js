@@ -58,7 +58,7 @@ export class SearchPage extends Component {
             component: SearchResultPage,
             name: gRouteName.SearchResultPage,
             value: value,
-
+            // SearchPageProps:this.props,
         });
     }
 

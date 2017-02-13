@@ -74,8 +74,6 @@ export default class BaseSearchBar extends React.Component {
         this.setState({isShowCancelButton: false, paddingRight: this.props.defaultPaddingRight, });
 
         // this.closeAnimated();
-
-
     };
 
     /**

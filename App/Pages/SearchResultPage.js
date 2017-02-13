@@ -18,6 +18,9 @@ import SearchResultPageMerchantListContanier from '../Redux/Container/SearchResu
 import SearchResultPageCouponListContanier from '../Redux/Container/SearchResultPageCouponListContanier'
 import *as BizApi from '../NetWork/API/BizApi'
 import *as SearchResultPageActions from '../Redux/Actions/SearchResultPageActions'
+import *as BaseListActions from '../Redux/Actions/BaseListActions'
+import *as StringOauth from '../Utils/StringUtils/StringOauth'
+import *as HistorySearchDB from '../DB/BizDB/HistorySearchDB'
 
 /**
  *
@@ -34,6 +37,7 @@ export class SearchResultPage extends Component {
         }
 
         // this.preValue = 0;
+        this.BaseSearchBarValue = this.props.route.value;
     }
 
     componentWillMount() {
@@ -47,10 +51,44 @@ export class SearchResultPage extends Component {
         Log.log('SearchResultPage componentWillUnmount')
     }
 
+    /**
+     * 调 搜索关键词 接口, 商家列表 肯定 已经挂载了, 如果 没有 右划, 即 优惠列表 没挂载,跟 刚进此页面 调的 接口过程一样; 如果 当前 显示的是 优惠列表 ,则 调 关键词 搜索 接口 2个 列表都刷新,当前显示的 列表 先进loading 状态, 未显示的列表 直接 刷新数据
+     * @param value
+     */
     onSubmit(value) {
-        // this.props.dispatch(SearchResultPageActions.updateTabLabelsAction(BizApi.SearchResultPageMerchantListAPI.tabLabel, 111110));
+        if (StringOauth.isNull(value)) {
+            Log.log('onSubmit 了一个 空字符串')
+            return;
+        }
+
+        HistorySearchDB.saveHistoryDB(value).then(()=> {
+            // Log.log('成功 缓存一个新的 历史搜索 关键字  '+ value);
+            this.props.dispatch(BizApi.SearchPageListApi.fetchData(BaseListActions.BaseListFetchDataType.INITIALIZE));
+
+        }).catch((e)=> {
+
+        });
+
+        this.BaseSearchBarValue=value;
+
+        if (this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex==0){
+            this.props.dispatch(BizApi.SearchResultPageMerchantListAPI.fetchData(BaseListActions.BaseListFetchDataType.REFRESH, value));//刷新 列表
+        }else if(this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex==1){
+            this.props.dispatch(BizApi.SearchResultPageCouponListAPI.fetchData(BaseListActions.BaseListFetchDataType.REFRESH, value));//刷新 列表
+
+        }
+
+        // Log.log('SearchResultPage onSubmit this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex='+this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex);
 
     }
+
+    /**
+     * 点击 '查看全部商家'或 '查看全部列表' 按钮 后 重置 搜索控件
+     */
+    // onResetSearchBar=()=>{
+    //     this.refs.refBaseSearchBar.onCancel(true);
+    //     this.BaseSearchBarValue='';
+    // }
 
     /**
      * 为了让正在 滚动的 ScrollableTabView 关联的 BizSearchResultPagScrollableTabBar 的 底部 横线 在 判断到 滚到 其他 页面时, 及时 用其页面 对应的 tabbar的 Text 控件的 宽 计算 最新的 横线的 宽,避免 多 个 BizSearchResultPagScrollableTabBar.tabbar.Text 控件 的 宽不一样时, 左右滚动 导致 横线位置不对
@@ -61,7 +99,7 @@ export class SearchResultPage extends Component {
 
     onChangeTab = (i, ref, from)=> {
         //避免 滚动停止时, curTabIndex 还没变化
-        this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.isNeedUpdataCurTabIndex=true;
+        this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.isNeedUpdataCurTabIndex = true;
         Log.log('SearchResultPage onChangeTab isNeedUpdataCurTabIndex ==' + this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.isNeedUpdataCurTabIndex);
 
         if (this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex != i) {
@@ -74,14 +112,15 @@ export class SearchResultPage extends Component {
     render() {
         const {navigator} = this.props;
 
-        let searchBar = <BaseSearchBar value={this.props.route.value}
-                                       onSubmit={(value)=>this.onSubmit(value)
-                                       }
-                                       customContainerStyle={{paddingLeft: 10}}
-                                       customInputStyle={{color: 'rgba(64, 64, 64, 1)', fontSize: 15}}
-                                       customSearchStyle={{left: 16}}
-                                       defaultPaddingRight={50}
-                                       onFocusPaddingRight={37}
+        let searchBar = <BaseSearchBar
+            ref="refBaseSearchBar" value={this.BaseSearchBarValue}
+            onSubmit={(value)=>this.onSubmit(value)
+            }
+            customContainerStyle={{paddingLeft: 10}}
+            customInputStyle={{color: 'rgba(64, 64, 64, 1)', fontSize: 15}}
+            customSearchStyle={{left: 16}}
+            defaultPaddingRight={50}
+            onFocusPaddingRight={37}
         />;
         //
         let navigationBar =
@@ -124,7 +163,7 @@ export class SearchResultPage extends Component {
                     ref,
                     from,
                 })=> {
-                    this.onChangeTab(i,ref,from);
+                    this.onChangeTab(i, ref, from);
                 }}
             >
                 <SearchResultPageMerchantListContanier {...this.props}

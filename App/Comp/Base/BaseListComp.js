@@ -57,6 +57,10 @@ export default class BaseListComp extends Component {
 
     }
 
+    componentWillUnmount(){
+        this.props.dispatch(BaseListActions.WillUnmount(this.props.baseReducer.ApiName));
+    }
+
     /**
      * 加载 某个列表借口的 数据
      * opt: BaseListFetchDataType 类型

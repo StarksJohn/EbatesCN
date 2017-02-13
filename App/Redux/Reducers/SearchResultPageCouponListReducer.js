@@ -6,10 +6,15 @@
 import {
     ListView,
 } from 'react-native';
-import InitialState,{InitListState,ListToLoadingState,ListSuccesState} from '../InitialState/ListInitialState'
+import InitialState, {
+    InitListState,
+    ListToLoadingState,
+    ListSuccesState,
+    ListWillUnmount
+} from '../InitialState/ListInitialState'
 import *as BaseListActions from '../Actions/BaseListActions'
 import *as BizApi from '../../NetWork/API/BizApi'
-const {List,fromJS} = require('immutable') //导入  Immutable.js 的 Record API
+const {List, fromJS} = require('immutable') //导入  Immutable.js 的 Record API
 
 
 const initialState = new InitialState()/*通用列表的初始UI状态*/
@@ -30,18 +35,18 @@ export default function SearchResultPageCouponListReducer(state = initialState, 
     switch (action.type) {
         case BaseListActions.BaseListStatus.INITIALIZE: {//此控件第一次 componentDidMount 挂载时 回调
 
-            return InitListState(state,action);
+            return InitListState(state, action);
         }
             break;
         case BaseListActions.BaseListStatus.Loading: {//正在 加载网络 状态
-            return ListToLoadingState(state,action);
+            return ListToLoadingState(state, action);
         }
             break;
         case BaseListActions.BaseListStatus.SUCCESS: {
 
             let {newContentArray, couldLoadMore}= action.newData;
 
-            let temp$dataArray=ListSuccesState(state,action,newContentArray);
+            let temp$dataArray = ListSuccesState(state, action, newContentArray);
 
             let nextState = state
                 .setIn(['$dataArray'], temp$dataArray)
@@ -57,11 +62,17 @@ export default function SearchResultPageCouponListReducer(state = initialState, 
 
         case BaseListActions.BaseListStatus.NODATA: {
 
-            let _nextState=state
+            let _nextState = state
                 .setIn(['status'], action.type)
                 .setIn(['opt'], action.opt);
 
             return _nextState;
+        }
+            break;
+        case BaseListActions.BaseListStatus.WillUnmount: {
+
+            BizApi.SearchResultPageCouponListAPI.componentDidMount = false;
+            return ListWillUnmount(state);
         }
             break;
     }
