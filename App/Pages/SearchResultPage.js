@@ -63,7 +63,7 @@ export class SearchResultPage extends Component {
 
         HistorySearchDB.saveHistoryDB(value).then(()=> {
             // Log.log('成功 缓存一个新的 历史搜索 关键字  '+ value);
-            this.props.dispatch(BizApi.SearchPageListApi.fetchData(BaseListActions.BaseListFetchDataType.INITIALIZE));
+            this.props.dispatch(BizApi.SearchPageListApi.fetchData(BaseListActions.BaseListFetchDataType.REFRESH));
 
         }).catch((e)=> {
 

@@ -54,6 +54,8 @@ export class SearchPage extends Component {
 
         });
 
+        this.onCancel(true);
+
         this.props.navigator.push({
             component: SearchResultPage,
             name: gRouteName.SearchResultPage,

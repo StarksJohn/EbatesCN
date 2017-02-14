@@ -26,14 +26,14 @@ export default class SearchPageListComp extends Component {
     }
 
     /**
-     * 点击 热门搜索的 按钮
+     * 点击 热门搜索|历史搜索 的 按钮
      * @param model
      */
     onPress(title) {
         // BizShowToast(title);
         this.props.onSubmit(title);
-        this.props.onChangeBaseSearchBarText(title);
-        // this.props.onCancel(false);
+        // this.props.onChangeBaseSearchBarText(title);
+        this.props.onCancel(true);
     }
 
     /**
