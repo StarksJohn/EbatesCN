@@ -79,8 +79,8 @@ export default class SearchPageListComp extends Component {
                 let arr = rowData.toJSArray();
                 return (
                     <View style={{
-                        height: 208,
-                        //    backgroundColor: Colors.getRandomColor()
+                        //height: 208,//按钮数量不确定,故高度不能写死
+                        //backgroundColor: Colors.getRandomColor()
                     }}>
                         <Text style={{
                             color: 'rgba(64, 64, 64, 1)',
@@ -101,7 +101,8 @@ export default class SearchPageListComp extends Component {
                                     <BaseTitleBt
                                         key={model.get('title')}
                                         btStyle={[{
-                                            width: (GlobalStyles.window.width - 30 - 20) / 3,
+                                            width: (GlobalStyles.window.width - 30 - 20) / 3-0.1/*减0.1是因为大屏上,/3后的值可能
+                                             比 实际的值大, 避免 一行大屏 里 一行显示不下3个按钮*/,
                                             borderRadius: 4, margin: 5, height: 45,
                                             alignItems: 'center',
                                             justifyContent: 'center',
@@ -129,7 +130,7 @@ export default class SearchPageListComp extends Component {
                 return (
                     <View style={{
                         height: 40, justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row',
-                        marginTop: 10,
+                        marginTop: 0,
                         //backgroundColor: Colors.getRandomColor()
                     }}>
                         <Text style={{
@@ -169,14 +170,14 @@ export default class SearchPageListComp extends Component {
                         <BaseTitleBt
                             key={rowData}
                             btStyle={[{
-                                height: 45,flexDirection: 'row',justifyContent: 'space-between',
+                                height: 45, flexDirection: 'row', justifyContent: 'space-between',
                                 alignItems: 'center',
                                 //backgroundColor: Colors.getRandomColor(),
                             }]}
                             onPress={() => this.onPress(rowData)}
                             textStyle={{
                                 fontSize: 15,
-                                color: 'rgba(85, 85, 85, 1)',marginLeft: 15,
+                                color: 'rgba(85, 85, 85, 1)', marginLeft: 15,
                                 //backgroundColor: Colors.getRandomColor()
                             }}
                             title={rowData}
@@ -186,7 +187,7 @@ export default class SearchPageListComp extends Component {
                                 this.deleteOneKeyWord(rowData);
                             })}
                         </BaseTitleBt>
-                        {BizViews.baseSpeLine({marginLeft: 15, marginTop: -0.5 })}
+                        {BizViews.baseSpeLine({marginLeft: 15, marginTop: -0.5})}
                     </View>
                 );
             }

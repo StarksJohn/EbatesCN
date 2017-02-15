@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     container:{//最大的容器 默认
         flexDirection: 'row',
         flexWrap: 'wrap',
-        justifyContent: 'space-between'
+        justifyContent: 'flex-start'
     }
 });
 

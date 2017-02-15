@@ -55,12 +55,7 @@ export default class BaseTitleBt extends Component {
                 disabled={this.props.disabled}
                 onPress={ this.props.onPress }
             >
-                <Text style={/*{
-                    backgroundColor: Colors.red
-                    fontSize: 18,
-                    fontFamily: 'Gill Sans',
-                    color: Colors.white,
-                }*/ this.props.textStyle}>
+                <Text style={ this.props.textStyle} numberOfLines={1}>
                     {this.props.title}
                 </Text>
                 {this.props.children}
