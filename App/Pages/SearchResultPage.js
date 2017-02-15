@@ -77,9 +77,6 @@ export class SearchResultPage extends Component {
             this.props.dispatch(BizApi.SearchResultPageCouponListAPI.fetchData(BaseListActions.BaseListFetchDataType.REFRESH, value));//刷新 列表
 
         }
-
-        // Log.log('SearchResultPage onSubmit this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex='+this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex);
-
     }
 
     /**
