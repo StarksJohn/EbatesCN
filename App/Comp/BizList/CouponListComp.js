@@ -32,7 +32,9 @@ export default class CouponListComp extends Component {
      */
     renderRow = (rowData, sectionID, rowID, highlightRow)=> {
 
-       return BizCouponListCell.RenderBizMerchantListCell(rowData,sectionID,rowID,highlightRow);
+       return BizCouponListCell.RenderBizMerchantListCell(rowData,sectionID,rowID,highlightRow,(rowData)=>{
+           Log.log('CouponListComp renderRow callback rowData=='+rowData);
+       });
 
     }
 

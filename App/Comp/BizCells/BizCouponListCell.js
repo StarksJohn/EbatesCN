@@ -11,8 +11,9 @@ import Colors from '../../Utils/Colors'
 import *as BizViews from '../BizCommonComp/BizViews'
 import *as Math from '../../Utils/Math'
 import GlobalStyles from '../../Global/GlobalStyles'
+import BaseBt from '../Base/BaseBt'
 
-export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRow) {
+export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRow,callback) {
 
     Log.log('RenderBizMerchantListCell rowID==' + rowID);
     // let str='rowID  '+rowID;
@@ -32,10 +33,15 @@ export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRo
 
     return (
         // 最大的白view
-        <View style={{
-            paddingTop: paddingTop, paddingBottom: 5,
-           // backgroundColor: Colors.white
-        }}>
+        <BaseBt
+            style={ {flex: 1, paddingTop: paddingTop, paddingBottom: 5,}}
+            //underlayColor={/*Colors.blackTranslucent*/ this.props.selectColor}
+            activeOpacity={0.6}
+            disabled={false}
+            onPress={ () => {
+                callback(rowData);
+            } }
+        >
             {/*logo和右边view的背景*/}
             <View style={{
                 flexDirection: 'row',
@@ -45,7 +51,7 @@ export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRo
                 <Image source={ {uri: 'https://www.ebates.com/merchant_images/large/icon_ashford.gif'}} style={{
                     marginLeft: 15, marginTop: 20, marginBottom: 20, width: 75, height: 75,
                     borderColor: Colors.getRandomColor(), borderWidth:0.5
-                    ,backgroundColor: Colors.getRandomColor()
+                    ,//backgroundColor: Colors.getRandomColor()
                 }}/>
                 {/*右边所有文字的背景view*/}
                 <View style={{
@@ -131,7 +137,7 @@ export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRo
                 </View>
             </View>
 
-        </ View >
+        </ BaseBt >
     );
 
 }
