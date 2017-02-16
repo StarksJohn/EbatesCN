@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import BaseListComp from '../Base/BaseListComp';
 import Colors from '../../Utils/Colors'
+import *as BizCouponListCell from '../BizCells/BizCouponListCell'
 
 
 export default class CouponListComp extends Component {
@@ -30,20 +31,8 @@ export default class CouponListComp extends Component {
      * @returns {XML}
      */
     renderRow = (rowData, sectionID, rowID, highlightRow)=> {
-        // Log.log('CouponListComp rowID==' + rowID);
-        let str='rowID  '+rowID;
 
-        return (
-            <View style={{flex: 1, height: 150, justifyContent:'center' , alignItems: 'center',
-                backgroundColor: Colors.getRandomColor()
-            }}>
-                <Text style={{
-                    backgroundColor: Colors.getRandomColor()
-                }}>
-                    {str}
-                </Text>
-            </View>
-        );
+       return BizCouponListCell.RenderBizMerchantListCell(rowData,sectionID,rowID,highlightRow);
 
     }
 
