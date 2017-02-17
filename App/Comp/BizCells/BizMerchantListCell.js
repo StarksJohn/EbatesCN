@@ -13,7 +13,7 @@ import *as Math from '../../Utils/Math'
 import GlobalStyles from '../../Global/GlobalStyles'
 import BaseBt from '../Base/BaseBt'
 
-export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRow,callback) {
+export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRow, callback) {
 
     Log.log('renderBizMerchantListCell rowID==' + rowID);
     // let str='rowID  '+rowID;
@@ -40,9 +40,9 @@ export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRo
             }}>
                 {/*右边 的title等View*/}
                 <View style={{
-                    marginLeft: 0, marginRight: 15,marginBottom: 10,
+                    marginLeft: 0, marginRight: 15, marginBottom: 10,
                     /*marginRight: 250*/ width: GlobalStyles.window.width - 15 - 140 - 15,
-                    overflow:'hidden',
+                    overflow: 'hidden',
                     //height: Math.randomNums(60, 100),
                     //backgroundColor: Colors.getRandomColor()
                 }}>
@@ -68,15 +68,16 @@ export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRo
                     {renderMark()}
                 </View>
                 {/*logo的背景*/}
-                <View style={{ marginLeft:0, marginRight:-1/*盖住 每行标签的第一个竖线*/, width:140, justifyContent:'center' ,
-                    backgroundColor:Colors.white
+                <View style={{
+                    marginLeft: 0, marginRight: -1/*盖住 每行标签的第一个竖线*/, width: 140, justifyContent: 'center',
+                    backgroundColor: Colors.white
                 }}>
                     {/*logo 用 www.ebates.com 里的logo,如 https://www.ebates.com/merchant_images/large/icon_ashford.gif
                      ,宽高和美工约定好了, 在 顶部到 分割线 之间 上下居中*/}
                     <Image source={ {uri: 'https://www.ebates.com/merchant_images/large/icon_ashford.gif'}} style={{
-                        marginLeft: 0, marginRight:0, width: 140, height: 30, alignSelf: 'center',
+                        marginLeft: 0, marginRight: 0, width: 140, height: 30, alignSelf: 'center',
                         //borderColor: Colors.getRandomColor(), borderWidth:0.5,
-                       //backgroundColor: Colors.getRandomColor()
+                        //backgroundColor: Colors.getRandomColor()
                     }}/>
                 </View>
             </View>
@@ -166,24 +167,30 @@ function renderCouponMsgView() {
  * @returns {XML}
  */
 function renderMark() {
-    let arr = ['支持直邮', '接受国卡', '支持','接受支付宝', '联名卡推荐商家' , '接受', '接支', '联名卡'];
+    let arr = ['支持直邮', '接受国卡', '支持', '接受支付宝', '联名卡推荐商家', '接受', '接支', '联名卡'];
     // let arr = ['近两周66300人拿到返利'];
-    let nums=Math.randomNums(1,arr.length);
-    let newArr=[];
-    for (let i=0;i<nums;i++){
+    let nums = Math.randomNums(1, arr.length);
+    let newArr = [];
+    for (let i = 0; i < nums; i++) {
         newArr.push(arr[i]);
     }
 
     let content = newArr.map((v, i) => {
         return (
-            <View style={{flexDirection:'row', height: 12,marginTop: 5, marginBottom: 5,overflow:'hidden'
-                //backgroundColor:Colors.getRandomColor()
+            <View style={{
+                flexDirection: 'row',
+                height: 13,
+                marginTop: 5,
+                marginBottom: 5,// padding: 0,//overflow: 'hidden',
+                alignItems: 'center',
+                backgroundColor: Colors.getRandomColor()
             }} removeClippedSubviews={true}>
-                {i!=-1?BizViews.renderVerticalLine({marginLeft: -1/*左移0.1,这样 每行的第一个竖线能被 左边的logo的白色背景盖住*/}):null}
-                <Text key={v} style={{flex:0, marginLeft: 10, marginRight: 10, fontSize: 12, color: 'rgba(136,' +
+                {i != -1 ? BizViews.renderVerticalLine({marginLeft: -1/*左移0.1,这样 每行的第一个竖线能被 左边的logo的白色背景盖住*/}) : null}
+                <Text key={v} style={{
+                    marginLeft: 10, marginRight: 10, fontSize: 12, color: 'rgba(136,' +
                     ' 136,' +
-                    ' 136, 1)',/*lineHeight: 12,*/ height: 12,
-                    //backgroundColor: Colors.getRandomColor()
+                    ' 136, 1)', lineHeight: 12, height: 13, padding: 0,textAlign:'center',
+                    backgroundColor: Colors.getRandomColor()
                 }} numberOfLines={1}
                 >{v}</Text>
             </View>
@@ -193,8 +200,8 @@ function renderMark() {
     return (
         <View style={{
             flexDirection: 'row',
-            flexWrap: 'wrap',overflow:'hidden',
-            marginTop: 5,marginBottom: 0,
+            flexWrap: 'wrap', overflow: 'hidden',
+            marginTop: 5, marginBottom: 0,
             //backgroundColor: Colors.getRandomColor()
         }} removeClippedSubviews={true}>
             {content}
