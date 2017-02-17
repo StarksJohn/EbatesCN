@@ -38,7 +38,7 @@ const BaseGridView = ({
             return i;
         });
         return (
-            //画每个cell
+            //画容器
             <View style={[styles.container,containerStyle]}>
                 {itemViews}
             </View>

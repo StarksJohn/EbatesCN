@@ -84,8 +84,6 @@ export class SearchPage extends Component {
     }
 
     render() {
-        // const { navigator} = this.props;
-
         let searchBar = <BaseSearchBar ref="refBaseSearchBar"
                                        placeholder="输入商家,  优惠名称"
                                        onSubmit={(value)=>this.onSubmit(value)

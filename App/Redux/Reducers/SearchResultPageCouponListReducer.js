@@ -44,19 +44,21 @@ export default function SearchResultPageCouponListReducer(state = initialState, 
             break;
         case BaseListActions.BaseListStatus.SUCCESS: {
 
-            let {newContentArray, couldLoadMore}= action.newData;
+            // let {newContentArray, couldLoadMore}= action.newData;
+            //
+            // let temp$dataArray = ListSuccesState(state, action, newContentArray);
+            //
+            // let nextState = state
+            //     .setIn(['$dataArray'], temp$dataArray)
+            //     .setIn(['dataSource'], state.dataSource.cloneWithRows(temp$dataArray.toJS()))
+            //     .setIn(['status'], BaseListActions.BaseListStatus.SUCCESS)
+            //     .setIn(['couldLoadMore'], couldLoadMore)
+            //     .setIn(['opt'], action.opt)
+            //     .setIn(['isRefreshing'], false);
+            //
+            // return nextState;
 
-            let temp$dataArray = ListSuccesState(state, action, newContentArray);
-
-            let nextState = state
-                .setIn(['$dataArray'], temp$dataArray)
-                .setIn(['dataSource'], state.dataSource.cloneWithRows(temp$dataArray.toJS()))
-                .setIn(['status'], BaseListActions.BaseListStatus.SUCCESS)
-                .setIn(['couldLoadMore'], couldLoadMore)
-                .setIn(['opt'], action.opt)
-                .setIn(['isRefreshing'], false);
-
-            return nextState;
+            return ListSuccesState(state,action);
         }
             break;
 

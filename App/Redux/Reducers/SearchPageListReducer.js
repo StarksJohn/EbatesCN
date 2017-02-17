@@ -6,7 +6,7 @@
 import {
     ListView,
 } from 'react-native';
-import InitialState, {loadMore} from '../InitialState/ListInitialState'
+import InitialState from '../InitialState/ListInitialState'
 import *as BaseListActions from '../Actions/BaseListActions'
 import *as BizApi from '../../NetWork/API/BizApi'
 const {List,fromJS} = require('immutable') //导入  Immutable.js 的 Record API

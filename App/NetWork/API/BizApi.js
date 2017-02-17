@@ -30,7 +30,7 @@ export const SearchPageListApi = {
         return (dispatch) => {
 
             //rawData:  缓存的 关键词
-            HistorySearchDB.loadHistoryDB().then((rawData)=> {
+            HistorySearchDB.loadHistoryDB().then((rawData) => {
                 if (rawData.length > 0) {//有缓存
                     this.packageCachedDataToListDataSource(rawData);
                     dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, this.$dataArray.toJSArray()));
@@ -59,7 +59,7 @@ export const SearchPageListApi = {
         }
 
         rawData.map(
-            (v, i)=> {
+            (v, i) => {
                 this.$dataArray = this.$dataArray.insert(-1, v);//数组倒数第二个下标 循环 插入一个 关键字
             }
         );
@@ -96,7 +96,7 @@ export const SearchPageListApi = {
     deleteOneKeyWord(word, opt){
         return (dispatch) => {
 
-            HistorySearchDB.deleteOneKeyWordFromHistoryDB(word).then((rawData)=> {
+            HistorySearchDB.deleteOneKeyWordFromHistoryDB(word).then((rawData) => {
                 if (rawData.length > 0) {//有缓存
                     this.packageCachedDataToListDataSource(rawData);
                 } else {
@@ -130,7 +130,7 @@ export const SearchResultPageSearchKeyWordAPI = {
 
             this.timer = new SMSTimer({
                 timerNums: 3,
-                callBack: (time)=> {
+                callBack: (time) => {
                     Log.log('time===' + time);
                     if (time == -1) {
 
@@ -196,7 +196,7 @@ export const SearchResultPageMerchantListAPI = {
             } else if (opt == BaseListActions.BaseListFetchDataType.MORE) {//请求 列表 下页数据
                 this.timer = new SMSTimer({
                     timerNums: 3,
-                    callBack: (time)=> {
+                    callBack: (time) => {
                         Log.log('time===' + time);
                         if (time == -1) {
 
@@ -282,7 +282,7 @@ export const SearchResultPageCouponListAPI = {
             if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE || opt == BaseListActions.BaseListFetchDataType.REFRESH) {// 第一次挂载
                 dispatch(BaseListActions.InitListDataSource(this.ApiName));// 优惠 列表的 $dataArray 清0
 
-                if (!this.componentDidMount && opt == BaseListActions.BaseListFetchDataType.INITIALIZE){//第一次挂载
+                if (!this.componentDidMount && opt == BaseListActions.BaseListFetchDataType.INITIALIZE) {//第一次挂载
                     this.componentDidMount = true;
 
                     if (this.tabLabelTotalNums > 0) {// 之前通过 searchKeyWordAPI 接口拿到了 数据
@@ -293,7 +293,7 @@ export const SearchResultPageCouponListAPI = {
                         dispatch(SearchResultPageActions.nodataAction(this.ApiName, opt));
                     }
 
-                }else if (opt == BaseListActions.BaseListFetchDataType.REFRESH && this.componentDidMount){//搜索结果页, 优惠列表已挂载后, 再次搜索,触发 此接口
+                } else if (opt == BaseListActions.BaseListFetchDataType.REFRESH && this.componentDidMount) {//搜索结果页, 优惠列表已挂载后, 再次搜索,触发 此接口
                     dispatch(BaseListActions.Loadinglist(opt, this.ApiName));//优惠列表 变loading 状态
                     dispatch(SearchResultPageActions.updateTabLabelsAction(SearchResultPageMerchantListAPI.tabLabel, 0));//商家列表的 tabLabel 清零
                     // dispatch(BaseListActions.InitListDataSource(SearchResultPageMerchantListAPI.ApiName));// 商家 列表的 $dataArray 清0
@@ -307,7 +307,7 @@ export const SearchResultPageCouponListAPI = {
 
                 this.timer = new SMSTimer({
                     timerNums: 3,
-                    callBack: (time)=> {
+                    callBack: (time) => {
                         Log.log('time===' + time);
                         if (time == -1) {
 
@@ -352,10 +352,10 @@ export const SearchResultPageCouponListAPI = {
                     return;
                 }
 
-                if (!this.componentDidMount){
+                if (!this.componentDidMount) {
                     this.$dataArray = this.$dataArray.clear();
                     newArr.map(
-                        (v, i)=> {
+                        (v, i) => {
                             this.$dataArray = this.$dataArray.push(v);
                         }
                     );
@@ -380,6 +380,61 @@ export const SearchResultPageCouponListAPI = {
     }
 }
 
+/**
+ * 商家页面API
+ * @type {{}}
+ */
+export const MerchantPageApi = {
+    ApiName: 'MerchantPageApi',
+
+    /**
+     * 初始化 商家页 列表 的 默认数据源, 也就是 0号cell的数据源
+     * @param opt
+     * @returns {function(*)}
+     */
+    fetchData(opt){
+        return (dispatch) => {
+            if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE) {//一开始 挂载
+                dispatch(BaseListActions.InitListDataSource(this.ApiName));// 当前 列表的 $dataArray 清0
+
+                let arr = [{
+                    img: require('../../Img/store_icon_baby.png'),
+                    title: '母婴'
+                }, {
+                    img: require('../../Img/store_icon_fashion.png'),
+                    title: '时尚'
+                }, {img: require('../../Img/store_icon_beauty.png'), title: '美妆'}, {
+                    img: require('../../Img/store_icon_health.png'),
+                    title: '健康美护'
+                }, {
+                    img: require('../../Img/store_icon_supplements.png'),
+                    title: '保健'
+                }, {
+                    img: require('../../Img/store_icon_sport.png'),
+                    title: '运动'
+                }, {
+                    img: require('../../Img/store_icon_outdoor.png'),
+                    title: '户外'
+                }, {img: require('../../Img/store_icon_all.png'), title: '全部'}];
+
+                dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
+                    couldLoadMore: true,
+                    newContentArray: [arr]
+                }));
+
+                dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
+
+            }
+        }
+    },
+
+    /**
+     * 获取top10商家数据
+     */
+    fetchTopTen(){
+
+    }
+}
 
 /**
  * 初步分解 各种API
@@ -400,6 +455,10 @@ export function fetchApi(opt, pageNo, BaseListCompProps) {
             break;
         case SearchResultPageCouponListAPI.ApiName: {
             return SearchResultPageCouponListAPI.fetchData(opt, BaseListCompProps.route.value);
+        }
+            break;
+        case MerchantPageApi.ApiName: {
+            return MerchantPageApi.fetchData(opt);
         }
             break;
     }

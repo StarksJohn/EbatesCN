@@ -101,7 +101,7 @@ export default class SearchPageListComp extends Component {
                                     <BaseTitleBt
                                         key={model.get('title')}
                                         btStyle={[{
-                                            width: (GlobalStyles.window.width - 30 - 20) / 3-0.1/*减0.1是因为大屏上,/3后的值可能
+                                            width: (GlobalStyles.window.width - 30 - 20) / 3-0.1 /*减0.1是因为大屏上,/3后的值可能
                                              比 实际的值大, 避免 一行大屏 里 一行显示不下3个按钮*/,
                                             borderRadius: 4, margin: 5, height: 45,
                                             alignItems: 'center',

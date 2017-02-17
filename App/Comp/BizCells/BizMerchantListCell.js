@@ -40,7 +40,7 @@ export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRo
             }}>
                 {/*右边 的title等View*/}
                 <View style={{
-                    marginLeft: 0, marginRight: 15,marginBottom: 5,
+                    marginLeft: 0, marginRight: 15,marginBottom: 10,
                     /*marginRight: 250*/ width: GlobalStyles.window.width - 15 - 140 - 15,
                     overflow:'hidden',
                     //height: Math.randomNums(60, 100),
@@ -49,7 +49,7 @@ export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRo
                     {/*标题*/}
                     <Text style={{
                         marginLeft: 10,
-                        marginTop: 20, fontSize: 15, color: 'rgba(64, 64,' +
+                        marginTop: 15, fontSize: 15, color: 'rgba(64, 64,' +
                         ' 64, 1)',
                         //backgroundColor: Colors.getRandomColor()
                     }} numberOfLines={1} textAlign="center" textDecorationLine="underline"
@@ -144,7 +144,7 @@ function renderCouponMsgView() {
     return (
         // 底部最大的view
         <View style={{
-            backgroundColor: Colors.white
+            //backgroundColor: Colors.getRandomColor()
         }}>
             {/*分割线*/}
             {BizViews.baseSpeLine({
