@@ -31,6 +31,13 @@ export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRo
     let name = arrMerchaintName[Math.randomNums(0, arrMerchaintName.length - 1)];
     let time = arrTime[Math.randomNums(0, arrTime.length - 1)];
 
+
+    let msg='用户信息'
+    let nums=Math.randomNums(1,5);
+    for (let i=0;i<nums;i++){
+        msg=msg+msg;
+    }
+
     return (
         // 最大的白view
         <BaseBt
@@ -50,8 +57,8 @@ export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRo
                 {/*左logo*/}
                 <Image source={ {uri: 'https://www.ebates.com/merchant_images/large/icon_ashford.gif'}} style={{
                     marginLeft: 15, marginTop: 20, marginBottom: 20, width: 75, height: 75,
-                    borderColor: Colors.getRandomColor(), borderWidth:0.5
-                    ,//backgroundColor: Colors.getRandomColor()
+                    //borderColor: Colors.getRandomColor(), borderWidth:0.5
+                    //backgroundColor: Colors.getRandomColor()
                 }}/>
                 {/*右边所有文字的背景view*/}
                 <View style={{
@@ -76,7 +83,7 @@ export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRo
                         ' 85, 1)', lineHeight: 14,
                         //backgroundColor: Colors.getRandomColor()
                     }} numberOfLines={0} textAlign="center"
-                    >优惠信息优惠信息优惠信息优惠信息</Text>
+                    >{msg}</Text>
                     {/*最后一行,剩余时间等最大背景view*/}
                     <View style={{
                         marginTop: 10, flexDirection: 'row', justifyContent: 'flex-start', marginRight: 0, height: 14,

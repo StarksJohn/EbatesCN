@@ -4,7 +4,7 @@
  * 业务逻辑层可共用的view
  */
 import React from 'react';
-import {View,Image ,Text} from 'react-native';
+import {View, Image, Text} from 'react-native';
 import Colors from '../../Utils/Colors'
 import FontAwesomeIconBts from '../Base/BaseFontAwesomeIconBts'
 import GlobalStyles from '../../Global/GlobalStyles'
@@ -48,11 +48,11 @@ export function baseSpeLine(props) {
  * @returns {XML}
  */
 export function checkBox(callBack) {
-    return<FontAwesomeIconBts
+    return <FontAwesomeIconBts
         btStyle={{
             width: 30,
             height: 30,
-            /*justifyContent: 'center', alignItems: 'center', marginTop: 15,  */ marginLeft: 15 ,
+            /*justifyContent: 'center', alignItems: 'center', marginTop: 15,  */ marginLeft: 15,
             //backgroundColor:Colors.green
         }}
         //btSelectColor={Colors.blackTranslucent}
@@ -71,11 +71,11 @@ export function checkBox(callBack) {
  * @returns {XML}
  */
 export function deleteBox(callBack) {
-    return<FontAwesomeIconBts
+    return <FontAwesomeIconBts
         btStyle={{
             width: 30,
             height: 30,
-            /*justifyContent: 'center', alignItems: 'center', marginTop: 15,  */ marginRight: 5 ,
+            /*justifyContent: 'center', alignItems: 'center', marginTop: 15,  */ marginRight: 5,
             //backgroundColor:Colors.getRandomColor()
         }}
         normalName='close'
@@ -91,7 +91,8 @@ export function deleteBox(callBack) {
  * 列表最底部 用于 tabbar 的 占位view, 为了 footerview 能显示在 底部tabbar上边
  */
 export function renderBottomTabbarBackView() {
-    return<View style={{height: GlobalStyles.bottomTabBarHeight ,
+    return <View style={{
+        height: GlobalStyles.bottomTabBarHeight,
         //backgroundColor: Colors.getRandomColor()
     }}>
     </View>;
@@ -103,14 +104,14 @@ export function renderBottomTabbarBackView() {
  */
 export function renderShadowLine(props) {
     return <View style={[{
-        height: 0.5, borderWidth:0.5, //backgroundColor: 'rgba(228, 228, 228, 1)',
+        height: 0.5, borderWidth: 0.5, //backgroundColor: 'rgba(228, 228, 228, 1)',
         borderColor: 'rgba(228, 228, 228, 1)', //Colors.getRandomColor(),//,//'#dddddd',
         borderStyle: null,
         borderRadius: 4,
         shadowColor: 'gray',
         shadowOffset: {width: 0.5, height: 0.5},
         shadowOpacity: 0.4,
-    },props]}>
+    }, props]}>
     </View>
 }
 
@@ -121,29 +122,31 @@ export function renderShadowLine(props) {
  * @param callback 点击按钮回调
  * @returns {XML}
  */
-export function renderSearchResultPageNoDataView(keyWord,type,callback) {
-    let merchantOrCouponKeyWord=(type==0?'商家':'优惠');
-    let bigText='抱歉! 目前没有搜索到和'+keyWord+'相关的'+merchantOrCouponKeyWord+'!';
-    let smallText='您可以重新搜索,  发现感兴趣的'+merchantOrCouponKeyWord+'.';
-    let btTitle='查看全部'+merchantOrCouponKeyWord;
+export function renderSearchResultPageNoDataView(keyWord, type, callback) {
+    let merchantOrCouponKeyWord = (type == 0 ? '商家' : '优惠');
+    let bigText = '抱歉! 目前没有搜索到和' + keyWord + '相关的' + merchantOrCouponKeyWord + '!';
+    let smallText = '您可以重新搜索,  发现感兴趣的' + merchantOrCouponKeyWord + '.';
+    let btTitle = '查看全部' + merchantOrCouponKeyWord;
     return (
-        <View style={{flex: 1,alignItems: 'center',
+        <View style={{
+            flex: 1, alignItems: 'center',
             //backgroundColor: Colors.getRandomColor()
         }}>
             <Image source={require('../../Img/common_icon_noresult.png')} style={{marginTop: 60}}/>
             <Text style={{
                 marginTop: 30, fontSize: 15, color: 'rgba(64, 64,' +
                 ' 64, 1)',
-               // backgroundColor:Colors.getRandomColor()
+                // backgroundColor:Colors.getRandomColor()
             }}>{bigText}</Text>
-            <Text style={{marginTop: 15, fontSize: 12, color: 'rgba(136, 136, 136, 1)',
+            <Text style={{
+                marginTop: 15, fontSize: 12, color: 'rgba(136, 136, 136, 1)',
                 //backgroundColor:Colors.getRandomColor()
             }}>{smallText}</Text>
             <BaseTitleBt
                 key={merchantOrCouponKeyWord}
                 btStyle={[{
-                    width: 170,height: 44,
-                    borderRadius: 4,borderColor:'rgba(54, 166, 66, 1)', borderWidth:0.5, marginTop: 20 ,
+                    width: 170, height: 44,
+                    borderRadius: 4, borderColor: 'rgba(54, 166, 66, 1)', borderWidth: 0.5, marginTop: 20,
                     alignItems: 'center',
                     justifyContent: 'center',
                     backgroundColor: Colors.transparent,
@@ -159,4 +162,19 @@ export function renderSearchResultPageNoDataView(keyWord,type,callback) {
             </BaseTitleBt>
         </View>
     );
+}
+
+/**
+ * 竖线
+ * @returns {XML}
+ * @constructor
+ */
+export function renderVerticalLine(styles) {
+    return <Text style={[{
+        marginLeft: 0, marginTop: 0, fontSize: 10, color: 'rgba(228, 228,' +
+        ' 228, 1)', textAlign: "center", alignSelf: 'center',
+        //backgroundColor: Colors.getRandomColor()
+    },styles]} numberOfLines={1}>
+        |
+    </Text>;
 }

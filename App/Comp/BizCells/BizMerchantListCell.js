@@ -35,25 +35,23 @@ export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRo
         >
             {/*横线上边的view*/}
             <View style={{
-                flexDirection: 'row', backgroundColor: Colors.white
+                flexDirection: 'row-reverse',//先画右边的 ,能让左边的 logo背景 盖住 右边标签的 竖线
+                backgroundColor: Colors.white
             }}>
-                {/*用 www.ebates.com 里的logo,如 https://www.ebates.com/merchant_images/large/icon_ashford.gif ,宽高和美工约定好了*/}
-                <Image source={ {uri: 'https://www.ebates.com/merchant_images/large/icon_ashford.gif'}} style={{
-                    marginLeft: 15, width: 140, height: 30, alignSelf: 'center'/*logo 在 顶部到 分割线 之间 上下居中*/,
-                    //backgroundColor: Colors.getRandomColor()
-                }}/>
                 {/*右边 的title等View*/}
                 <View style={{
-                    marginLeft: 0, marginBottom: 10,
+                    marginLeft: 0, marginRight: 15,marginBottom: 5,
                     /*marginRight: 250*/ width: GlobalStyles.window.width - 15 - 140 - 15,
+                    overflow:'hidden',
                     //height: Math.randomNums(60, 100),
-                    backgroundColor: Colors.getRandomColor()
+                    //backgroundColor: Colors.getRandomColor()
                 }}>
+                    {/*标题*/}
                     <Text style={{
                         marginLeft: 10,
                         marginTop: 20, fontSize: 15, color: 'rgba(64, 64,' +
                         ' 64, 1)',
-                        backgroundColor: Colors.getRandomColor()
+                        //backgroundColor: Colors.getRandomColor()
                     }} numberOfLines={1} textAlign="center" textDecorationLine="underline"
                           textDecorationStyle="dashed" textDecorationColor={Colors
                         .getRandomColor()}
@@ -62,15 +60,27 @@ export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRo
                         marginLeft: 10,
                         marginTop: 10, fontSize: 15, color: 'rgba(255, 155,' +
                         ' 12, 1)',
-                        backgroundColor: Colors.getRandomColor()
+                        //backgroundColor: Colors.getRandomColor()
                     }} numberOfLines={1} textAlign="center" textDecorationLine="underline"
                           textDecorationStyle="dashed" textDecorationColor={Colors
                         .getRandomColor()}
                     >返利5.5%</Text>
                     {renderMark()}
                 </View>
-
+                {/*logo的背景*/}
+                <View style={{ marginLeft:0, marginRight:-1/*盖住 每行标签的第一个竖线*/, width:140, justifyContent:'center' ,
+                    backgroundColor:Colors.white
+                }}>
+                    {/*logo 用 www.ebates.com 里的logo,如 https://www.ebates.com/merchant_images/large/icon_ashford.gif
+                     ,宽高和美工约定好了, 在 顶部到 分割线 之间 上下居中*/}
+                    <Image source={ {uri: 'https://www.ebates.com/merchant_images/large/icon_ashford.gif'}} style={{
+                        marginLeft: 0, marginRight:0, width: 140, height: 30, alignSelf: 'center',
+                        //borderColor: Colors.getRandomColor(), borderWidth:0.5,
+                       //backgroundColor: Colors.getRandomColor()
+                    }}/>
+                </View>
             </View>
+
             {/*横线下边的view*/}
             {renderCouponMsgView()}
         </BaseBt>
@@ -156,25 +166,37 @@ function renderCouponMsgView() {
  * @returns {XML}
  */
 function renderMark() {
-    let arr = ['支持直邮', '接受国卡', '接受支付宝', '联名卡推荐商家', '支持直邮1', '接受国卡1', '接受支付宝1', '联名卡推荐商家1'];
+    let arr = ['支持直邮', '接受国卡', '支持','接受支付宝', '联名卡推荐商家' , '接受', '接支', '联名卡'];
     // let arr = ['近两周66300人拿到返利'];
+    let nums=Math.randomNums(1,arr.length);
+    let newArr=[];
+    for (let i=0;i<nums;i++){
+        newArr.push(arr[i]);
+    }
 
-    let content = arr.map((v, i) => {
+    let content = newArr.map((v, i) => {
+        return (
+            <View style={{flexDirection:'row', height: 12,marginTop: 5, marginBottom: 5,overflow:'hidden'
+                //backgroundColor:Colors.getRandomColor()
+            }} removeClippedSubviews={true}>
+                {i!=-1?BizViews.renderVerticalLine({marginLeft: -1/*左移0.1,这样 每行的第一个竖线能被 左边的logo的白色背景盖住*/}):null}
+                <Text key={v} style={{flex:0, marginLeft: 10, marginRight: 10, fontSize: 12, color: 'rgba(136,' +
+                    ' 136,' +
+                    ' 136, 1)',/*lineHeight: 12,*/ height: 12,
+                    //backgroundColor: Colors.getRandomColor()
+                }} numberOfLines={1}
+                >{v}</Text>
+            </View>
+        );
 
-        return <Text key={v} style={{
-            marginTop: 5, marginBottom: 5, marginLeft: 10, marginRight: 0, fontSize: 12, color: 'rgba(136, 136,' +
-            ' 136, 1)', lineHeight: 12, height: 12,
-            backgroundColor: Colors.getRandomColor()
-        }} numberOfLines={1}
-        >{v}</Text>
     });
     return (
         <View style={{
             flexDirection: 'row',
-            flexWrap: 'wrap',
-            marginTop: 5, /*width:GlobalStyles.window.width - 15 - 140 - 10 - 15,*/
-            backgroundColor: Colors.getRandomColor()
-        }}>
+            flexWrap: 'wrap',overflow:'hidden',
+            marginTop: 5,marginBottom: 0,
+            //backgroundColor: Colors.getRandomColor()
+        }} removeClippedSubviews={true}>
             {content}
         </View>
     );
