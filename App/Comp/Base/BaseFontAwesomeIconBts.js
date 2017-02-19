@@ -121,7 +121,6 @@ export default class FontAwesomeIconBts extends Component {
                 } }
                 style={   [{justifyContent: 'center', alignItems: 'center'}, btStyle] }
                 activeOpacity={this.props.activeOpacity}
-
             >
                 <FontAwesomeIcon name={this.state.name} size={iconSize} color={iconColor}/>
 

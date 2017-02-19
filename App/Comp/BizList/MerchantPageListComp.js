@@ -14,6 +14,7 @@ import BaseGridView from '../Base/BaseGridView'
 import *as BizViews from '../BizCommonComp/BizViews'
 import *as BizMerchantListCell from '../BizCells/BizMerchantListCell'
 import BaseTitleBt from '../Base/BaseTitleBt'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
 export default class MerchantPageListComp extends Component {
     constructor(props) {
@@ -92,19 +93,59 @@ export default class MerchantPageListComp extends Component {
                 break;
             case '1': {//Top10商家cell
                 return <View style={{
-                    height: 50,
-                    backgroundColor: Colors.getRandomColor()
+                    height: 50, flexDirection: 'row', justifyContent: 'space-between',
+                    //backgroundColor: Colors.getRandomColor()
                 }}>
+                    <Text style={{
+                        marginLeft: 15,
+                        marginTop: 20,
+                        fontSize: 15,
+                        color: Colors.black,
+                        fontWeight:'bold',
+                        //backgroundColor: Colors.getRandomColor()
+                    }} numberOfLines={1} textAlign="center"
+                    >Top10商家
+                    </Text>
+                    <View style={{
+                        flexDirection: 'row',
+                        //backgroundColor: Colors.getRandomColor()
+                    }}>
+                        <BaseTitleBt
+                            btStyle={[{
+                                height: 30, marginTop: 17,
+                                alignItems: 'center', justifyContent: 'center',
+                                marginRight: 5,
+                                backgroundColor: Colors.transparent ,
+                            }]}
+                            onPress={() => this.onCheckAllMerchant()}
+                            textStyle={{
+                                fontSize: 12, fontWeight:'bold' ,color: 'rgba(136, 136, 136, 1)',
+                            }}
+                            title='查看全部'
+                            disabled={false}
+                        >
+                        </BaseTitleBt>
+                        <FontAwesomeIcon style={{
+                            marginTop: 24, marginRight: 15,
+                            //backgroundColor: Colors.getRandomColor()
+                        }} name='angle-right' size={16} color='rgba(136, 136, 136, 1)'/>
+                    </View>
+
                 </View>
             }
                 break;
             default://商家cell
             {
-                return BizMerchantListCell.RenderBizMerchantListCell(rowData,sectionID,rowID,highlightRow,(rowData)=>{
-                    Log.log('MerchantListComp renderRow callback rowData=='+rowData);
-                });
+                let paddingTop = 0;
+                if (rowID != '2') {
+                    paddingTop = 5;
+                }
+
+                return BizMerchantListCell.RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRow, (rowData) => {
+                    Log.log('MerchantListComp renderRow callback rowData==' + rowData);
+                },paddingTop);
             }
-            break;
+                break;
         }
 
     }

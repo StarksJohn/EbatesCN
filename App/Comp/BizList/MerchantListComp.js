@@ -44,9 +44,14 @@ export default class MerchantListComp extends Component {
 
         Log.log('MerchantListComp rowID==' + rowID);
 
+        let paddingTop = 0;
+        if (rowID != '0') {
+            paddingTop = 5;
+        }
+
         return BizMerchantListCell.RenderBizMerchantListCell(rowData,sectionID,rowID,highlightRow,(rowData)=>{
             Log.log('MerchantListComp renderRow callback rowData=='+rowData);
-        });
+        },paddingTop);
     }
 
     render() {
