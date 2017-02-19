@@ -197,12 +197,12 @@ export class RegisterPage extends Component {
                     {BizInputViews.emailInputView({},
                         (event) => this.updateEmail(event.nativeEvent.text)
                     )}
-                    {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
+                    {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -0.5})}
                     {/*密码*/}
                     {BizInputViews.passInputView({},
                         (event) => this.updatePassword(event.nativeEvent.text)
                     )}
-                    {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
+                    {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -0.5})}
                     {/*验证码*/}
                     {BizInputViews.imgOauthCodeInputView(
                         {},
@@ -211,12 +211,12 @@ export class RegisterPage extends Component {
                         ()=>this.getOauthCodeImg()
                     )
                     }
-                    {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
+                    {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -0.5})}
                     {/*邀请码*/}
                     {BizInputViews.InviteCodeInputView({},
                         (event) => this.updateInviteCode(event.nativeEvent.text)
                     )}
-                    {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
+                    {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -0.5})}
                     {/*服务条款容器view*/}
                     <View style={{
                         height: 65,

@@ -424,6 +424,9 @@ export const MerchantPageApi = {
 
                 dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
 
+                // this.fetchTopTen();
+                dispatch(MerchantPageApi.fetchTopTen());
+
             }
         }
     },
@@ -432,6 +435,29 @@ export const MerchantPageApi = {
      * 获取top10商家数据
      */
     fetchTopTen(){
+        return (dispatch) => {
+            this.timer = new SMSTimer({
+                timerNums: 3,
+                callBack: (time) => {
+                    Log.log('time===' + time);
+                    if (time == -1) {
+
+                        {//模拟拿到 top10商家数据 网络数据
+                            let arr = [];
+                            for (let i = 0; i < 13; i++) {
+                                arr.push({index: i});
+                            }
+                            dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.MORE, this.ApiName, {
+                                couldLoadMore: false,
+                                newContentArray: arr
+                            }));
+                        }
+
+                    }
+                }
+            });
+            this.timer.start();
+        }
 
     }
 }

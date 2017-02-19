@@ -11,7 +11,7 @@ import GlobalStyles from '../../Global/GlobalStyles'
 export function baseSpeLine(props) {
     return (
         <View
-            style={[{height:0.5,backgroundColor: Colors.borderColor, paddingLeft: 15, width:GlobalStyles.window.width - 30},props]}
+            style={[{height:0.5,backgroundColor: Colors.borderColor, marginLeft: 15, width:GlobalStyles.window.width - 30},props]}
         >
         </View>
     );

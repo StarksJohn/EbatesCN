@@ -7,10 +7,6 @@ import {
     View, Text, Image
 } from 'react-native';
 import BaseListComp from '../Base/BaseListComp';
-import Colors from '../../Utils/Colors'
-import *as BizViews from '../BizCommonComp/BizViews'
-import *as Math from '../../Utils/Math'
-import GlobalStyles from '../../Global/GlobalStyles'
 import *as BizMerchantListCell from '../BizCells/BizMerchantListCell'
 
 

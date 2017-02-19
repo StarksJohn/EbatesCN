@@ -221,7 +221,7 @@ class phoneQuickLogPage extends Component {
                 {navigationBar}
                 {bindingPhoneTextView}
                 {this.phoneInputView()}
-                {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
+                {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -0.5})}
                 {this.oauthCodeInputView()}
                 <View style={{flex: 1, backgroundColor: 'rgba(239, 239, 239, 1)'}}>
                     {BizLogBt(()=>this.onLoginPress(), {

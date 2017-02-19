@@ -15,7 +15,7 @@ var InitialState = Record({
     status: BaseListActions.BaseListStatus.INITIALIZE,
     componentDidMount: false, //控件是否被 挂载
     dataArray: [], //已经拿到的数据,慢慢被 $dataArray 代替
-    $dataArray: fromJS([]), //已经拿到的数据,immutable.Array 结构 , 里边放 model
+    $dataArray: fromJS([]), //已经拿到的数据,immutable.Array 结构 , 里边放 model, toJS()可转成JS 数组
     dataSource: new ListView.DataSource({
         rowHasChanged: (row1, row2) => row1 !== row2,
     }),

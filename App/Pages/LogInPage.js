@@ -169,12 +169,12 @@ export class LogInPage extends Component {
                     (event) => this.updateEmail(event.nativeEvent.text),
                     () => this.onSubmit(),
                 )}
-                {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
+                {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -0.5})}
                 {/*密码*/}
                 {BizInputViews.passInputView({},
                     (event) => this.updatePassword(event.nativeEvent.text)
                 )}
-                {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1})}
+                {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -0.5})}
                 {/*验证码*/}
                 {this.props.LogInReducer.isShowImgOauthInput ?
                     BizInputViews.imgOauthCodeInputView(

@@ -15,7 +15,7 @@ import BaseBt from '../Base/BaseBt'
 
 export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRow, callback) {
 
-    Log.log('renderBizMerchantListCell rowID==' + rowID);
+    // Log.log('renderBizMerchantListCell rowID==' + rowID);
     // let str='rowID  '+rowID;
 
     let paddingTop = 0;
@@ -25,7 +25,9 @@ export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRo
 
     return (
         <BaseBt
-            style={ {flex: 1, paddingTop: paddingTop, paddingBottom: 5,}}
+            style={ {flex: 1, paddingTop: paddingTop, paddingBottom: 5,
+               // backgroundColor:Colors.white
+            }}
             //underlayColor={/*Colors.blackTranslucent*/ this.props.selectColor}
             activeOpacity={0.6}
             disabled={false}
@@ -134,7 +136,7 @@ function renderCouponMsgView() {
                     ' 136,' +
                     ' 136, 1)',
                     //lineHeight: 13, height: 12,
-                    backgroundColor: Colors.white
+                    //backgroundColor: Colors.white
                 }} numberOfLines={1} textAlign="center"
                 >{v}</Text>
             </View>
@@ -149,9 +151,18 @@ function renderCouponMsgView() {
         }}>
             {/*分割线*/}
             {BizViews.baseSpeLine({
-                left: 15,
-                width: GlobalStyles.window.width - 30
+                marginTop: -0.5
+                //left: 15,
+                //width: GlobalStyles.window.width - 30
             })}
+            {/*<View*/}
+                {/*style={[{backgroundColor: Colors.white,}]}*/}
+            {/*>*/}
+                {/*<View*/}
+                    {/*style={[{flex:1,height:0.5,backgroundColor: Colors.borderColor, left: 15, width:GlobalStyles.window.width - 30}]}*/}
+                {/*>*/}
+                {/*</View>*/}
+            {/*</View>*/}
             <View style={{
                 paddingTop: 10, paddingBottom: 10,
                 backgroundColor: Colors.white
@@ -177,20 +188,21 @@ function renderMark() {
 
     let content = newArr.map((v, i) => {
         return (
-            <View style={{
+            <View key={i}
+                style={{
                 flexDirection: 'row',
                 height: 13,
                 marginTop: 5,
                 marginBottom: 5,// padding: 0,//overflow: 'hidden',
                 alignItems: 'center',
-                backgroundColor: Colors.getRandomColor()
+               // backgroundColor: Colors.getRandomColor()
             }} removeClippedSubviews={true}>
                 {i != -1 ? BizViews.renderVerticalLine({marginLeft: -1/*左移0.1,这样 每行的第一个竖线能被 左边的logo的白色背景盖住*/}) : null}
                 <Text key={v} style={{
                     marginLeft: 10, marginRight: 10, fontSize: 12, color: 'rgba(136,' +
                     ' 136,' +
                     ' 136, 1)', lineHeight: 12, height: 13, padding: 0,textAlign:'center',
-                    backgroundColor: Colors.getRandomColor()
+                   // backgroundColor: Colors.getRandomColor()
                 }} numberOfLines={1}
                 >{v}</Text>
             </View>
