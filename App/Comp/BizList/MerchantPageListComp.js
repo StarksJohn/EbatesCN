@@ -32,7 +32,7 @@ export default class MerchantPageListComp extends Component {
         } else if (rowID == this.props.baseReducer.$dataArray.toJS().length - 2) {//查看全部cell
             return <BaseTitleBt
                 btStyle={[{
-                    height: 45, justifyContent: 'center',
+                    marginTop: 5,height: 45, justifyContent: 'center',
                     alignItems: 'center',
                     //backgroundColor: Colors.getRandomColor(),
                 }]}
@@ -53,18 +53,18 @@ export default class MerchantPageListComp extends Component {
                     <BaseGridView
                         items={Array.from(rowData)}//数组元素是 {img:'',title:''}
                         containerStyle={{
-                            paddingLeft: 25,
-                            paddingRight: 25, paddingTop: 15, paddingBottom: 15,
+                            paddingLeft: 10,
+                            paddingRight: 10, paddingTop: 10, paddingBottom: 10,
                             backgroundColor: Colors.white
                         }}
                         renderItem={(model/*此处的model是 {img:'',title:''} 结构*/) => {
                             return (
                                 <BaseBt
                                     key={model.title}
-                                    style={ {
-                                        paddingTop: 0,
+                                    style={ {flex:0,
+                                        marginTop:5, marginBottom: 0,marginLeft: 0, marginRight: 0,paddingTop: 0,
                                         paddingBottom: 0,
-                                        width: (GlobalStyles.window.width - 50 ) / 4,
+                                        width: (GlobalStyles.window.width - 20 ) / 4,
                                         height: (200 - 30 ) / 2,
                                         //backgroundColor: Colors.getRandomColor()
                                     }}
@@ -74,10 +74,10 @@ export default class MerchantPageListComp extends Component {
                                         //callback(rowData);
                                     } }
                                 >
-                                    <Image source={model.img} style={{width: 55, height: 55, alignSelf: 'center'}}/>
+                                    <Image source={model.img} style={{width: 55, height: 55, alignSelf: 'center',marginTop: 0,}}/>
                                     <Text style={{
                                         marginLeft: 0,
-                                        marginTop: 10,
+                                        marginTop: 7,
                                         fontSize: 13,
                                         color: '#404040',
                                         alignSelf: 'center',
@@ -100,7 +100,7 @@ export default class MerchantPageListComp extends Component {
                         marginLeft: 15,
                         marginTop: 20,
                         fontSize: 15,
-                        color: Colors.black,
+                        color: Colors.BizCommonBlack,
                         fontWeight:'bold',
                         //backgroundColor: Colors.getRandomColor()
                     }} numberOfLines={1} textAlign="center"

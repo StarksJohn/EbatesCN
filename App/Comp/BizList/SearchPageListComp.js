@@ -125,7 +125,7 @@ export default class SearchPageListComp extends Component {
                 )
             }
                 break;
-            case '1'://历史搜索
+            case '1'://历史搜索cell
             {
                 return (
                     <View style={{

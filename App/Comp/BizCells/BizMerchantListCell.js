@@ -159,12 +159,13 @@ function renderCouponMsgView() {
  */
 function renderMark() {
     let arr = ['支持直邮', '接受国卡', '支持', '接受支付宝', '联名卡推荐商家', '接受', '接支', '联名卡'];
-    // let arr = ['近两周66300人拿到返利'];
     let nums = Math.randomNums(1, arr.length);
     let newArr = [];
     for (let i = 0; i < nums; i++) {
         newArr.push(arr[i]);
     }
+
+    // let newArr = ['近两周66300人拿到返利'];
 
     let content = newArr.map((v, i) => {
         return (
