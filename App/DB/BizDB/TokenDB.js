@@ -1,6 +1,6 @@
 /**
  * Created by Ebates on 17/1/3.
- *
+ * TokenDB
  * 处理 token的 数据库 操作
  */
 
@@ -21,6 +21,9 @@ export const tokenSchema = {
  * @param tokenSchema
  */
 export function saveUnLoginStateToken(tokenSchema) {
+   Log.log('TokenDB  saveUnLoginStateToken tokenSchema ='+ Log.writeObjToJson(tokenSchema));
+    BizShowToast('TokenDB  saveUnLoginStateToken tokenSchema ='+ Log.writeObjToJson(tokenSchema));
+
     gBizStorage.saveStorage(UnLoginStateToken, '', tokenSchema, tokenSchema.expires_in/*服务器发来的是 秒,故得换算成 毫秒再缓存*/ *1000 /*10 *
      1000*/);
 }

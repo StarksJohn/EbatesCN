@@ -101,7 +101,7 @@ export default class MerchantPageListComp extends Component {
                         marginTop: 20,
                         fontSize: 15,
                         color: Colors.BizCommonBlack,
-                        fontWeight:'bold',
+                        //fontWeight:'bold',
                         //backgroundColor: Colors.getRandomColor()
                     }} numberOfLines={1} textAlign="center"
                     >Top10商家
