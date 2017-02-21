@@ -2,7 +2,7 @@
  搜索页的 列表
  */
 
-import React, {Component} from 'react';
+import React, {Component,PropTypes} from 'react';
 import {
     View, Text
 } from 'react-native';
@@ -20,6 +20,15 @@ import *as HistorySearchDB from '../../DB/BizDB/HistorySearchDB'
 
 
 export default class SearchPageListComp extends Component {
+
+    static propTypes = {
+
+        isInTwoLevelPage:PropTypes.bool,//是否在二级页面
+    };
+
+    static defaultProps = {
+        isInTwoLevelPage:false,
+    };
 
     constructor(props) {
         super(props);
@@ -69,9 +78,9 @@ export default class SearchPageListComp extends Component {
         // console.log('SearchPageListComp rowID==' + rowID);
 
         //最底部画 占位view
-        if (rowID == this.props.baseReducer.dataArray.length - 1) {
+        if (rowID == this.props.baseReducer.dataArray.length - 1 /*&& this.props.isInTwoLevelPage*/ ) {
             // Log.log('this.props.baseReducer.dataArray.length=='+this.props.baseReducer.dataArray.length);
-            return BizViews.renderBottomTabbarBackView();
+            return BizViews.renderBottomTabbarBackView(this.props.isInTwoLevelPage);
         }
 
         switch (rowID) {

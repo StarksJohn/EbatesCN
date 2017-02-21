@@ -10,6 +10,8 @@ import FontAwesomeIconBts from '../Base/BaseFontAwesomeIconBts'
 import GlobalStyles from '../../Global/GlobalStyles'
 import *as BaseSpeLine from '../Base/BaseSpeLine'
 import BaseTitleBt from '../Base/BaseTitleBt'
+import BaseSearchBar from '../Base/BaseSearchBar/BaseSearchBar'
+import BaseNavigationBar , {NavBarButton, baseOnBackPress} from '../Base/BaseNavigationBar'
 
 /**
  * 登录注册页共用
@@ -89,11 +91,12 @@ export function deleteBox(callBack) {
 
 /**
  * 列表最底部 用于 tabbar 的 占位view, 为了 footerview 能显示在 底部tabbar上边
+ * isInTwoLevelPage: 二级页面底部不显示
  */
-export function renderBottomTabbarBackView() {
+export function renderBottomTabbarBackView(isInTwoLevelPage) {
     return <View style={{
-        height: GlobalStyles.bottomTabBarHeight,
-        //backgroundColor: Colors.getRandomColor()
+        height: isInTwoLevelPage?0:GlobalStyles.bottomTabBarHeight,
+        backgroundColor: Colors.getRandomColor()
     }}>
     </View>;
 }
@@ -174,7 +177,61 @@ export function renderVerticalLine(styles) {
         marginLeft: 0, marginTop: 0, fontSize: 10, color: 'rgba(228, 228,' +
         ' 228, 1)', textAlign: "center", alignSelf: 'center',
         //backgroundColor: Colors.getRandomColor()
-    },styles]} numberOfLines={1}>
+    }, styles]} numberOfLines={1}>
         |
     </Text>;
+}
+
+/**
+ * 画一级页面的 搜索控件
+ * @param placeholder
+ * @param value
+ * @param onSubmitCallback
+ * @returns {XML}
+ */
+export function renderFirstLevelPageSearchBar(placeholder, onSubmitCallback) {
+    return <BaseSearchBar ref="refBaseSearchBar"
+                          placeholder={placeholder}
+                          onSubmit={(value)=>onSubmitCallback(value)
+                          }
+                          customInputStyle={{color: 'rgba(64, 64, 64, 1)', fontSize:15}}
+    />;
+}
+
+/**
+ * 画二级页面的 搜索控件
+ * @param placeholder
+ * @param value
+ * @param onSubmitCallback
+ * @returns {XML}
+ */
+export function renderTwoLevelPageSearchBar(placeholder, value, onSubmitCallback) {
+    return <BaseSearchBar
+        ref="refBaseSearchBar" placeholder={placeholder} value={value}
+        onSubmit={(value) => onSubmitCallback(value)
+        }
+        customContainerStyle={{paddingLeft: 10}}
+        customInputStyle={{color: 'rgba(64, 64, 64, 1)', fontSize: 15}}
+        customSearchStyle={{left: 16}}
+        defaultPaddingRight={50}
+        onFocusPaddingRight={37}
+    />;
+}
+
+/**
+ * 画 导航栏
+ * @returns {XML}
+ */
+export function renderBaseNavigationBar(titleTextView,leftButton,rightButton,searchBar,title,titleTextStyle) {
+    return  <BaseNavigationBar
+        style={ {backgroundColor: Colors.white} }
+        statusBarCustomStyle={GlobalStyles.statusBarDefaultProps}
+        titleTextView={titleTextView}
+        leftButton={leftButton}
+        rightButton={rightButton}
+        searchBar={searchBar}
+        hide={false}
+        title={title}
+        titleTextStyle={titleTextStyle}
+    />;
 }

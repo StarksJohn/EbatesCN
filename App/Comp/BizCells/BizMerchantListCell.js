@@ -18,6 +18,9 @@ export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRo
     // Log.log('renderBizMerchantListCell rowID==' + rowID);
     // let str='rowID  '+rowID;
 
+    //美工约定的左图的尺寸
+    let logoW=112;
+    let logoH=24;
     return (
         <BaseBt
             style={ {
@@ -39,7 +42,7 @@ export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRo
                 {/*右边 的title等View*/}
                 <View style={{
                     marginLeft: 0, marginRight: 15, marginBottom: 10,
-                    /*marginRight: 250*/ width: GlobalStyles.window.width - 15 - 140 - 15,
+                    /*marginRight: 250*/ width: GlobalStyles.window.width - 15 - logoW - 15,
                     overflow: 'hidden',
                     //height: Math.randomNums(60, 100),
                     //backgroundColor: Colors.getRandomColor()
@@ -67,13 +70,13 @@ export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRo
                 </View>
                 {/*logo的背景*/}
                 <View style={{
-                    marginLeft: 0, marginRight: -1/*盖住 每行标签的第一个竖线*/, width: 140, justifyContent: 'center',
-                    backgroundColor: Colors.white
+                    marginLeft: 0, marginRight: -1/*盖住 每行标签的第一个竖线*/, width: logoW, justifyContent: 'center',
+                    //backgroundColor: Colors.getRandomColor()
                 }}>
                     {/*logo 用 www.ebates.com 里的logo,如 https://www.ebates.com/merchant_images/large/icon_ashford.gif
                      ,宽高和美工约定好了, 在 顶部到 分割线 之间 上下居中*/}
                     <Image source={ {uri: 'https://www.ebates.com/merchant_images/large/icon_ashford.gif'}} style={{
-                        marginLeft: 0, marginRight: 0, width: 140, height: 30, alignSelf: 'center',
+                        marginLeft: 0, marginRight: 0, width: logoW, height: logoH, alignSelf: 'center',
                         //borderColor: Colors.getRandomColor(), borderWidth:0.5,
                         //backgroundColor: Colors.getRandomColor()
                     }}/>
@@ -158,7 +161,7 @@ function renderCouponMsgView() {
  * @returns {XML}
  */
 function renderMark() {
-    let arr = ['支持直邮', '接受国卡', '支持', '接受支付宝', '联名卡推荐商家', '接受', '接支', '联名卡'];
+    let arr = ['支持直邮', '接受国卡', '接受支付宝', '联名卡推荐商家', '接受', '接支', '联名卡'];
     let nums = Math.randomNums(1, arr.length);
     let newArr = [];
     for (let i = 0; i < nums; i++) {
@@ -176,7 +179,7 @@ function renderMark() {
                       marginTop: 5,
                       marginBottom: 5,// padding: 0,//overflow: 'hidden',
                       alignItems: 'center',
-                      // backgroundColor: Colors.getRandomColor()
+                      //backgroundColor: Colors.getRandomColor()
                   }} removeClippedSubviews={true}>
                 {i != -1 ? BizViews.renderVerticalLine({marginLeft: -1/*左移0.1,这样 每行的第一个竖线能被 左边的logo的白色背景盖住*/}) : null}
                 <Text key={v} style={{

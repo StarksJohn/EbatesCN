@@ -10,6 +10,7 @@ import GlobalStyles from '../Global/GlobalStyles'
 import *as BizViews from '../Comp/BizCommonComp/BizViews'
 import BaseNavigationBar from '../Comp/Base/BaseNavigationBar'
 import MerchantPageListComp from '../Comp/BizList/MerchantPageListComp'
+import SearchPage from './SearchPage'
 
 /**
  *  展示组件
@@ -25,16 +26,29 @@ export class MerchantPage extends Component {
 
     }
 
-    onSubmit(value) {
-
+    onFocus() {
+        this.props.navigator.push({
+            component: SearchPage,
+            name: gRouteName.SearchPage,
+            isInTwoLevelPage:true,
+        });
     }
 
     render() {
         let searchBar = <BaseSearchBar ref="refBaseSearchBar"
                                        placeholder="搜索"
+                                       //disabled={true}
                                        onSubmit={(value) => this.onSubmit(value)
                                        }
-                                       customInputStyle={{color: 'rgba(64, 64, 64, 1)', fontSize: 15}}
+                                       onFocus={() => this.onFocus()
+                                       }
+                                       customInputStyle={{color: 'rgba(64, 64, 64, 1)', fontSize: 15,
+                                           //backgroundColor:Colors.getRandomColor()
+                                       }}
+                                       customSearchStyle={{
+                                           //backgroundColor:Colors.getRandomColor()
+                                       }}
+                                       isPopKeyBoardOnFocus={false}
         />;
         let navigationBar =
             <BaseNavigationBar

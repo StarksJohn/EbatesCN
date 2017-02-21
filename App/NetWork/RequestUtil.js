@@ -1,5 +1,6 @@
 /**
  * 通用请求函数
+ * RequestUtil
  */
 // const HOST = 'http://apis.baidu.com/';
 
@@ -13,7 +14,7 @@
  */
 export const request = (url, method, headersAppendCallBack, body) => {
     let header = new Headers();
-    header.append('Content-Type', 'application/x-www-form-urlencoded');//headers里固定要传的参数,因body传xxx&xxx 格式的字符串
+     header.append('Content-Type', 'application/x-www-form-urlencoded');//headers里固定要传的参数,因body传 key=value&key=value 格式的字符串
     // headersArray.map( 此方式拿不到 外部的header,只能用 callBack形式外部 添加 header
     //     (v,i)=>{
     //         header.append(JSON.stringify(v.key),JSON.stringify(v.value));
@@ -22,7 +23,7 @@ export const request = (url, method, headersAppendCallBack, body) => {
     headersAppendCallBack(header);
 
     let request = new Request(url, {
-        method: method, headers: header, body: body
+        method: method, headers: header, body: encodeBody(body)
     });
     let isOk;
 
@@ -60,13 +61,12 @@ export const GET = (url, params, headersAppendCallBack) => {
 /**
  *
  * @param url
- * @param params
  * @param headersAppendCallBack
- * @param body 传 key=value&key=value  类型
+ * @param body 传 key=value&key=value  类型,因 header.append('Content-Type', 'application/x-www-form-urlencoded')
  * @returns {Promise}
  * @constructor
  */
-export const POST = (url, params, headersAppendCallBack,body) => {
+export const POST = (url, headersAppendCallBack,body) => {
     return request(url,'POST',headersAppendCallBack,body);
 }
 
@@ -88,4 +88,15 @@ const encodeURL=(url,params)=>{
         }
     }
     return url;
+}
+
+/**
+ * 因header.append('Content-Type', 'application/x-www-form-urlencoded');//headers里和服务器约定好了加了个body数据类型的参数,故得把 body 对象 转化成 key=value&key=value 格式的字符串
+ * @param body
+ * @returns {string}
+ */
+const encodeBody=(body)=>{
+    let paramsArray = [];
+    Object.keys(body).forEach(key => paramsArray.push(key + '=' + body[key]))
+    return paramsArray.join('&');
 }

@@ -11,30 +11,28 @@ import {defaultProps} from './PropsType';
 import styles from './style/index';
 import Colors from '../../../Utils/Colors'
 import BaseTitleBt from '../BaseTitleBt'
+import BaseBt from '../BaseBt'
+import GlobalStyles from '../../../Global/GlobalStyles'
 
 
 export default class BaseSearchBar extends React.Component {
     static propTypes = {
         customContainerStyle: View.propTypes.style,//外部可自定义BaseSearchBar 的style
         customSearchStyle: View.propTypes.style,//外部可自定义 search 图片 的style
-        customInputStyle:View.propTypes.style,//外部自定义 TextInput的 style
+        customInputStyle: View.propTypes.style,//外部自定义 TextInput的 style
         defaultPaddingRight: React.PropTypes.number,
         onFocusPaddingRight: React.PropTypes.number,//选中时 的 paddingRight
+        isPopKeyBoardOnFocus: React.PropTypes.bool,//onFocus 时 是否弹起键盘,业务上用于 页面跳转
     };
-    static defaultProps = {
-        //在 PropsType.js里 defaultPaddingRight
-    };
+    /**
+     * defaultProps的值统一在 PropsType.js 里 写
+     */
+    static defaultProps = {};
 
     constructor(props) {
         super(props);
 
-        this.isOnBlurByonCancel=false;//onBlur 失去焦点的 回调是否是 因为 点击 cancel 按钮 触发的,也可能 是 如 外部的 搜索页面点击 热门搜索按钮 触发
-
-        this.onFocus = () => {
-            this.setState({isShowCancelButton: true, paddingRight: /* 40*/ this.props.onFocusPaddingRight});
-
-            // this.beginAnimated();
-        };
+        this.isOnBlurByonCancel = false;//onBlur 失去焦点的 回调是否是 因为 点击 cancel 按钮 触发的,也可能 是 如 外部的 搜索页面点击 热门搜索按钮 触发
 
         let value;
         if ('value' in props) {
@@ -52,6 +50,7 @@ export default class BaseSearchBar extends React.Component {
             isShowCancelButton: false,
             paddingRight: this.props.defaultPaddingRight /*new Animated.Value(15)*/, /*一开始默认 容器view的 右 补白距离*/
             // cancleBtopacity: new Animated.Value(0),
+            isPopKeyBoardOnFocus: false,
         };
     }
 
@@ -59,45 +58,67 @@ export default class BaseSearchBar extends React.Component {
         Log.log('BaseSearchBar componentWillUnmount')
     }
 
-    onCancel (isClearValue){
+    onCancel(isClearValue) {
         if (this.props.onCancel) {
             this.props.onCancel(this.state.value);
         }
-        this.isOnBlurByonCancel=true;
+        this.isOnBlurByonCancel = true;
 
         this.refs.searchInput.blur();//主动失去光标焦点和 隐藏键盘
-        if (isClearValue){
+        if (isClearValue) {
             this.refs.searchInput.clear();//清除 text
             this.setState({isShowCancelButton: false, paddingRight: this.props.defaultPaddingRight, value: ''});
         }
 
-        this.setState({isShowCancelButton: false, paddingRight: this.props.defaultPaddingRight, });
+        this.setState({isShowCancelButton: false, paddingRight: this.props.defaultPaddingRight,});
 
         // this.closeAnimated();
-    };
+    }
+
+    onFocus() {
+        if (this.props.isPopKeyBoardOnFocus) {
+            this
+                .setState({
+                        isShowCancelButton: true, paddingRight: /* 40*/ this
+
+                            .props
+                            .onFocusPaddingRight
+                    }
+                )
+            ;
+        }
+
+        if (this.props.onFocus) {
+            this.props.onFocus();
+
+            // this.onCancel(true);
+        }
+// this.beginAnimated();
+    }
 
     /**
      *
      */
-    onBlur () {
+    onBlur() {
         this.setState({isShowCancelButton: false});
 
-        if (!this.isOnBlurByonCancel){
+        if (!this.isOnBlurByonCancel) {
             if (this.props.onBlur) {
                 this.props.onBlur();
             }
         }
         // this.closeAnimated();
 
-    };
+    }
+
 
     /**
      * 非键盘改变 TextInput 和  BaseSearchBar 值, 如 点击 搜索页的 热门搜索 按钮
      * @param value
      * @constructor
      */
-    NonkeyboardChangeText(value){
-        this.refs.searchInput.value=value;
+    NonkeyboardChangeText(value) {
+        this.refs.searchInput.value = value;
         // this.refs.searchInput.blur();//主动失去光标焦点和 隐藏键盘
 
 
@@ -118,7 +139,7 @@ export default class BaseSearchBar extends React.Component {
         if (this.props.onChange) {
             this.props.onChange(value);
         }
-    };
+    }
 
     onSubmit() {
         if (!this.state.isShowCancelButton) {
@@ -191,7 +212,7 @@ export default class BaseSearchBar extends React.Component {
                 width: 65, height: 32, alignItems: 'center', justifyContent: 'center',
                 backgroundColor: Colors.white
             }}
-            onPress={()=>this.onCancel(true)}
+            onPress={() => this.onCancel(true)}
             textStyle={{
                 fontSize: 16,
                 //fontFamily: 'Gill Sans',
@@ -210,20 +231,38 @@ export default class BaseSearchBar extends React.Component {
                     ref="searchInput"
                     value={value}
                     onChangeText={(value) => this.onChangeText(value)}
-                    style={[styles.input,this.props.customInputStyle]}
+                    style={[styles.input, this.props.customInputStyle]}
                     editable={!disabled}
                     onSubmitEditing={() => this.onSubmit()}
                     clearButtonMode="always"
                     underlineColorAndroid="transparent"
                     selectionColor={Colors.appUnifiedBackColor}
                     //blurOnSubmit={true}
-                    onFocus={this.onFocus}
-                    onBlur={()=>this.onBlur()}
+                    onFocus={() =>
+                        this.onFocus()
+                    }
+                    onBlur={() => this.onBlur()}
                     {...restProps}
                 />
                 <Image source={require('./Img/search.png')} style={[styles.search, customSearchStyle]}
                        resizeMode="stretch"
                 />
+                {/*为了点击TextInput后不弹出键盘,直接跳转页面*/}
+                { this.props.isPopKeyBoardOnFocus ?
+                    null : (
+                        <BaseBt
+                            style={ [{
+                                position: 'absolute', flex: 1, alignSelf: 'stretch', left: 15,
+                                top: 0,
+                                width: GlobalStyles.window.width - 30,
+                                height: 32,
+                                //backgroundColor: Colors.getRandomColor()
+                            }]}
+                            onPress={ () => this.onFocus() }
+                        >
+                        </BaseBt>
+                    )
+                }
                 { this.state.isShowCancelButton ?
                     (
                         <View style={[styles.cancelTextContainer, /*{opacity: this.state.cancleBtopacity}*/]}>

@@ -1,11 +1,11 @@
 /**
  搜索页
  */
-import React, {Component} from 'react';
-import {StyleSheet, View, Text, ListView} from 'react-native';
+import React, {Component,PropTypes} from 'react';
+import {StyleSheet, View, Text, ListView, Platform } from 'react-native';
 import {connect} from 'react-redux';
 import Colors from '../Utils/Colors';
-import BaseNavigationBar from '../Comp/Base/BaseNavigationBar'
+import BaseNavigationBar ,{NavBarButton, baseOnBackPress} from '../Comp/Base/BaseNavigationBar'
 import GlobalStyles from '../Global/GlobalStyles'
 import BaseSearchBar from '../Comp/Base/BaseSearchBar/BaseSearchBar'
 import SearchPageListComp from '../Comp/BizList/SearchPageListComp'
@@ -15,16 +15,32 @@ import *as BaseListActions from '../Redux/Actions/BaseListActions'
 import *as StringOauth from '../Utils/StringUtils/StringOauth'
 import SearchResultPage from './SearchResultPage'
 import *as BizViews from '../Comp/BizCommonComp/BizViews'
+import BackAndroidEventListener from '../Utils/EventListener/BackAndroidEventListener'
 
 /**
  *  展示组件
  */
 export class SearchPage extends Component {
 
+    static propTypes = {
+
+        isInTwoLevelPage:PropTypes.bool,//是否在二级页面
+    };
+
+    static defaultProps = {
+        isInTwoLevelPage:false,
+    };
+
     constructor(props) {
         super(props);
 
-        // this.onViewPageScroll = this._onViewPageScroll.bind(this);
+        if (Platform.OS === 'android') {
+            this.backAndroidEventListener = new BackAndroidEventListener({
+                ...props,
+                backPress: (e) => baseOnBackPress(this.props.navigator),
+                hardwareBackPressListenerName: gRouteName.SearchResultPage
+            });
+        }
     }
 
     componentDidMount() {
@@ -34,11 +50,11 @@ export class SearchPage extends Component {
     /**
      * 由于点击 热门搜索按钮, 产生的 搜索控件 失去焦点,然后 搜索控件的 value变为 关键词, 并 页面跳转
      */
-    onBlur() {
-        // Log.log('SearchPage onBlur');
-
-        // this.refs.searchList.onPress
-    }
+    // onBlur() {
+    //     // Log.log('SearchPage onBlur');
+    //
+    //     // this.refs.searchList.onPress
+    // }
 
     onSubmit(value) {
         if (StringOauth.isNull(value)) {
@@ -84,24 +100,19 @@ export class SearchPage extends Component {
     }
 
     render() {
-        let searchBar = <BaseSearchBar ref="refBaseSearchBar"
-                                       placeholder="输入商家,  优惠名称"
-                                       onSubmit={(value)=>this.onSubmit(value)
-                                       }
-                                       customInputStyle={{color: 'rgba(64, 64, 64, 1)', fontSize:15}}
-                                       onBlur={()=> {
-                                           this.onBlur();
-                                       }
-                                       }
-        />;
+        let isInTwoLevelPage=this.props.route&&this.props.route.isInTwoLevelPage;
+        const {navigator} = this.props;
 
-        let navigationBar =
-            <BaseNavigationBar
-                style={ {backgroundColor: Colors.white} }
-                statusBarCustomStyle={GlobalStyles.statusBarDefaultProps}
-                titleTextView={null}
-                searchBar={searchBar}
-                hide={false}/>;
+        let searchBar =!isInTwoLevelPage?BizViews.renderFirstLevelPageSearchBar('输入商家,  优惠名称',(value)=>this.onSubmit(value)):BizViews.renderTwoLevelPageSearchBar('输入商家,  优惠名称', '', (value) => this.onSubmit(value),);
+
+        let navigationBar =BizViews.renderBaseNavigationBar(null,(isInTwoLevelPage?NavBarButton.getBackButton(() => baseOnBackPress(navigator, this.backAndroidEventListener)):null),null,searchBar,null,null);
+            // <BaseNavigationBar
+            //     style={ {backgroundColor: Colors.white} }
+            //     statusBarCustomStyle={GlobalStyles.statusBarDefaultProps}
+            //     titleTextView={null}
+            //     searchBar={searchBar}
+            //     hide={false}/>;
+
         let searchList = <SearchPageListComp ref="searchList" {...this.props }
                                              onSubmit={(value)=> {
                                                  this.onSubmit(value)
@@ -116,6 +127,7 @@ export class SearchPage extends Component {
                                                  this.onCancel(isClearValue);
                                              }
                                              }
+                                             isInTwoLevelPage={isInTwoLevelPage}
         />;
 
         return (

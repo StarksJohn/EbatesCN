@@ -13,7 +13,8 @@ export const routeName={
     LogInPage:'LogInPage',
     RegisterPage:'RegisterPage',
     phoneQuickLogPage:'phoneQuickLogPage',
-    SearchResultPage:'SearchResultPage'
+    SearchResultPage:'SearchResultPage',
+    SearchPage:'SearchPage',
 }
 
 

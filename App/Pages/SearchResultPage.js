@@ -31,7 +31,7 @@ export class SearchResultPage extends Component {
         if (Platform.OS === 'android') {
             this.backAndroidEventListener = new BackAndroidEventListener({
                 ...props,
-                backPress: (e)=> baseOnBackPress(this.props.navigator),
+                backPress: (e) => baseOnBackPress(this.props.navigator),
                 hardwareBackPressListenerName: gRouteName.SearchResultPage
             });
         }
@@ -61,19 +61,19 @@ export class SearchResultPage extends Component {
             return;
         }
 
-        HistorySearchDB.saveHistoryDB(value).then(()=> {
+        HistorySearchDB.saveHistoryDB(value).then(() => {
             // Log.log('成功 缓存一个新的 历史搜索 关键字  '+ value);
             this.props.dispatch(BizApi.SearchPageListApi.fetchData(BaseListActions.BaseListFetchDataType.REFRESH));
 
-        }).catch((e)=> {
+        }).catch((e) => {
 
         });
 
-        this.BaseSearchBarValue=value;
+        this.BaseSearchBarValue = value;
 
-        if (this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex==0){
+        if (this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex == 0) {
             this.props.dispatch(BizApi.SearchResultPageMerchantListAPI.fetchData(BaseListActions.BaseListFetchDataType.REFRESH, value));//刷新 列表
-        }else if(this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex==1){
+        } else if (this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex == 1) {
             this.props.dispatch(BizApi.SearchResultPageCouponListAPI.fetchData(BaseListActions.BaseListFetchDataType.REFRESH, value));//刷新 列表
 
         }
@@ -90,11 +90,11 @@ export class SearchResultPage extends Component {
     /**
      * 为了让正在 滚动的 ScrollableTabView 关联的 BizSearchResultPagScrollableTabBar 的 底部 横线 在 判断到 滚到 其他 页面时, 及时 用其页面 对应的 tabbar的 Text 控件的 宽 计算 最新的 横线的 宽,避免 多 个 BizSearchResultPagScrollableTabBar.tabbar.Text 控件 的 宽不一样时, 左右滚动 导致 横线位置不对
      * */
-    onScroll = (value)=> {
+    onScroll = (value) => {
         this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.updataCurTabIndex(value);
     }
 
-    onChangeTab = (i, ref, from)=> {
+    onChangeTab = (i, ref, from) => {
         //避免 滚动停止时, curTabIndex 还没变化
         this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.isNeedUpdataCurTabIndex = true;
         Log.log('SearchResultPage onChangeTab isNeedUpdataCurTabIndex ==' + this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.isNeedUpdataCurTabIndex);
@@ -109,23 +109,14 @@ export class SearchResultPage extends Component {
     render() {
         const {navigator} = this.props;
 
-        let searchBar = <BaseSearchBar
-            ref="refBaseSearchBar" value={this.BaseSearchBarValue}
-            onSubmit={(value)=>this.onSubmit(value)
-            }
-            customContainerStyle={{paddingLeft: 10}}
-            customInputStyle={{color: 'rgba(64, 64, 64, 1)', fontSize: 15}}
-            customSearchStyle={{left: 16}}
-            defaultPaddingRight={50}
-            onFocusPaddingRight={37}
-        />;
-        //
+        let searchBar = BizViews.renderTwoLevelPageSearchBar('输入商家,  优惠名称', this.BaseSearchBarValue, (value) => this.onSubmit(value),);
+
         let navigationBar =
             <BaseNavigationBar
                 style={ {backgroundColor: Colors.white} }
                 statusBarCustomStyle={GlobalStyles.statusBarDefaultProps}
                 titleTextView={null}
-                leftButton={NavBarButton.getBackButton(()=>baseOnBackPress(navigator, this.backAndroidEventListener))}
+                leftButton={NavBarButton.getBackButton(() => baseOnBackPress(navigator, this.backAndroidEventListener))}
                 searchBar={searchBar}
                 hide={false}/>;
 
@@ -149,7 +140,7 @@ export class SearchResultPage extends Component {
                         underlineColor='rgba(67, 187, 78, 1)'
                         underLineBottom={10}
                         underlineHeight={2}/>}
-                onScroll={(value)=> {
+                onScroll={(value) => {
                     //暂时只有2个tab, 先写死,以后超过2个 再说
                     this.onScroll(value);
                 }
@@ -159,7 +150,7 @@ export class SearchResultPage extends Component {
                     i,
                     ref,
                     from,
-                })=> {
+                }) => {
                     this.onChangeTab(i, ref, from);
                 }}
             >

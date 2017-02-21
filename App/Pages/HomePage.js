@@ -54,15 +54,15 @@ class HomePage extends Component {
         // });
         // global.gPopBackToRouteAfteRegisterSuceess=gRouteName.RootPagesContainer;
 
-        if (!gUserDB.isLogin()) {
-            TokenDB.loadUnLoginStateToken().then((token)=>{
-                Log.log('token==='+token);
-            }).catch((e)=>{
-                if (e.name=='NotFoundError'){//未登录状态的token 过期
-                    storage.sync.unLoginStateToken();
-                }
-            });
-        }
+        // if (!gUserDB.isLogin()) {
+        //     TokenDB.loadUnLoginStateToken().then((token)=>{
+        //         Log.log('token==='+token);
+        //     }).catch((e)=>{
+        //         if (e.name=='NotFoundError'){//未登录状态的token 过期
+        //             storage.sync.unLoginStateToken();
+        //         }
+        //     });
+        // }
 
         EventListener.sendEvent(LeftDrawerComponent.openDrawerEventName)
     }

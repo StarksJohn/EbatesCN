@@ -22,11 +22,17 @@ export function getUnLoginTokenAPI() {
             //     reject(error);
             // });
 
-            RequestUtil.POST('https://api-staging-test.ebates.cn/oauth/token','',
+
+            let body = {
+                grant_type: 'client_credentials',
+                client_id: '1',
+                client_secret: 'bZRiVM1KmHFFmdpjJDcbh78gyHRwoqAvlIarXOb1'
+            }
+            RequestUtil.POST('https://api-staging-test.ebates.cn/oauth/token',
                 (header) => {
                     // header.append('Authorization','Bearer '+'xxx');//xxx是获取到的token,拿到token后的其他所有接口都传此header参数
-                },
-                'grant_type=client_credentials&client_id=1&client_secret=bZRiVM1KmHFFmdpjJDcbh78gyHRwoqAvlIarXOb1'
+                }, body
+                //'grant_type=client_credentials&client_id=1&client_secret=bZRiVM1KmHFFmdpjJDcbh78gyHRwoqAvlIarXOb1'
             ).then((responseData) => {
                 resolve(responseData);
             }).catch((error) => {

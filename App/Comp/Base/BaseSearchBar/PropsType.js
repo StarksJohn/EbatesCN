@@ -1,6 +1,7 @@
-import React from 'react';
-
+// import React, {Component} from 'react';
+// import {StyleSheet, View, Text, ListView, Platform} from 'react-native';
 "use strict";
+
 function noop() { }
 exports.defaultProps = {
     prefixCls: 'am-search',
@@ -18,4 +19,6 @@ exports.defaultProps = {
     customSearchStyle: {},
     defaultPaddingRight:15,
     onFocusPaddingRight:0,
+    isPopKeyBoardOnFocus: true,
+
 };

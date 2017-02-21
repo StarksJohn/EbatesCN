@@ -124,14 +124,15 @@ export default class BaseNavigationBar extends Component {
 
     getButtonElement(data = {}, style) {
         return (
-            (!!data.props) ? data : (
-                <View style={styles.navBarButton}>
-                    <NavBarButton
-                        title={data.title}
-                        style={[data.style, style,]}
-                        tintColor={data.tintColor}
-                        handler={data.handler}/>
-                </View>
+            (data&&!!data.props) ? data : (
+                // <View style={styles.navBarButton}>
+                //     <NavBarButton
+                //         title={data.title}
+                //         style={[data.style, style,]}
+                //         tintColor={data.tintColor}
+                //         handler={data.handler}/>
+                // </View>
+                    null
             )
 
             // <View style={styles.navBarButton}>
