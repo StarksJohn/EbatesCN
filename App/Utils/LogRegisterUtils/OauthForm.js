@@ -21,12 +21,12 @@ export function oauthPass(pass){
 }
 
 /**
- * 验证 图片验证码 字数
+ * 验证 图片验证码 字数, 包含 数字和字母,不包含 汉字
  * @param pass
  * @returns {boolean}
  */
 export function oauthImgCodePass(pass){
-    return StringOauth.getStrLen(pass)==4 &&  !StringOauth.isContainChinese(pass) ;
+    return StringOauth.getStrLen(pass)>0 &&  !StringOauth.isContainChinese(pass) ;
 
 }
 
@@ -35,7 +35,7 @@ export function oauthPhone(text){
 }
 
 /**
- * 检测验证码
+ * 检测手机验证码,只能是 数字
  * @param text
  * @returns {boolean}
  */

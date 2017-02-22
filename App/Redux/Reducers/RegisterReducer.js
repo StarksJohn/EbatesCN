@@ -3,9 +3,19 @@
  */
 import InitialState from '../InitialState/RegisterInitialState'
 import *as RegisterRelevantActions from '../Actions/RegisterRelevantActions'
-const initialState = new InitialState();
+import *as BizApi from '../../NetWork/API/BizApi'
+import *as ImgOauthCodeActions from '../Actions/ImgOauthCodeActions'
+
+
+const initialState = new InitialState()
+    .setIn(['ApiName'], BizApi.RegisterPageApi.ApiName);
+
 
 export default function RegisterReducer (state = initialState, action){
+    if (state.ApiName && state.ApiName != action.ApiName) {
+        return state;
+    }
+
     if (!(state instanceof InitialState)) {
         return initialState.mergeDeep(state)
     }
@@ -30,7 +40,7 @@ export default function RegisterReducer (state = initialState, action){
             return nextState
         }
             break;
-        case RegisterRelevantActions.changeRegisterOauthCodeImg:
+        case ImgOauthCodeActions.changeOauthCodeImg:
         {
             let nextState = state
                 .setIn(['oauthCodeImgUri'], action.uri);

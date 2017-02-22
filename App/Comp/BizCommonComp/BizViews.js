@@ -220,6 +220,12 @@ export function renderTwoLevelPageSearchBar(placeholder, value, onSubmitCallback
 
 /**
  * 画 导航栏
+ * @param titleTextView 外部自定义的 titleView
+ * @param leftButton
+ * @param rightButton
+ * @param searchBar
+ * @param title
+ * @param titleTextStyle
  * @returns {XML}
  */
 export function renderBaseNavigationBar(titleTextView,leftButton,rightButton,searchBar,title,titleTextStyle) {

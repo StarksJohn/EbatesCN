@@ -40,15 +40,3 @@ export function showRegisterSucessbtAction() {
         type:showRegisterSucessbt,
     }
 }
-
-/**
- * 改变图片验证码
- * @type {string}
- */
-export const changeRegisterOauthCodeImg='changeRegisterOauthCodeImg';
-export function changeOauthCodeImgAction(uri) {
-    return {
-        type:changeRegisterOauthCodeImg,
-        uri:uri
-    }
-}

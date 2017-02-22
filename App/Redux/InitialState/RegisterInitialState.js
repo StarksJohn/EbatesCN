@@ -11,6 +11,7 @@ var InitialState = Record({
     registerBtState: RegisterRelevantActions.registerBtStates.enable,
     isShowRegisterSucessbt:false,
     oauthCodeImgUri:'',//图片验证码的默认uri
+    ApiName: '', //
 
 })
 export default InitialState

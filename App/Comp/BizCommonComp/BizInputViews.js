@@ -12,7 +12,7 @@ import BaseImgBt from '../Base/BaseImgBt'
 /*邮箱输入框的容器view*/
 export function emailInputView(styles, updateEmailCallBack , onSubmitEditingCallback) {
     return (
-        <View style={[GlobalStyles.InputItemContainer, {marginTop: 40}]}>
+        <View style={[GlobalStyles.InputItemContainer, {marginTop: 40},styles]}>
             <View style={GlobalStyles.IpputItemLeftView}>
                 <Text style={{}}>邮箱</Text>
             </View>
@@ -65,7 +65,7 @@ export function passInputView(styles,updatePasswordCallBack) {
 /*图片验证码 输入框的容器view*/
 export function imgOauthCodeInputView(styles,updateImgOauthCodeCallBack,uri,updateImgCallBack) {
     return (
-        <View style={[GlobalStyles.InputItemContainer]}>
+        <View style={[GlobalStyles.InputItemContainer,styles]}>
             <View style={[GlobalStyles.IpputItemLeftView, {paddingRight: 16}]}>
                 <Text style={{}}>验证码</Text>
             </View>

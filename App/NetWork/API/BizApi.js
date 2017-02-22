@@ -12,6 +12,24 @@ import BizSearchResultPagScrollableTabBar, {UpdateTabUnderlineWidthEventName} fr
 import *as Math from '../../Utils/Math'
 
 /**
+ * 注册页面的API
+ * @type {{ApiName: string}}
+ */
+export const RegisterPageApi={
+    ApiName: 'RegisterPageApi',
+
+}
+
+/**
+ * 忘记密码 页面的API
+ * @type {{ApiName: string}}
+ */
+export const ForgetPassPageApi={
+    ApiName: 'ForgetPassPageApi',
+
+}
+
+/**
  * 搜索页 列表的 API
  * @type {{ApiName: string}}
  */

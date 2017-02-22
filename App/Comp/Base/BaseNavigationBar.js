@@ -20,6 +20,7 @@ import FontAwesomeIconBts from './BaseFontAwesomeIconBts';
 // import Log from '../../utils/Log'
 // import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import BaseTitleBt from './BaseTitleBt'
+import *as RootNavigator from '../../Root/RootNavigator'
 
 const NAV_BAR_HEIGHT_IOS = GlobalStyles.nav_bar_height_ios;
 const NAV_BAR_HEIGHT_ANDROID = GlobalStyles.nav_bar_height_android;
@@ -41,9 +42,15 @@ const StatusBarShape = {
 
 /*
  通用默认的左上角点击
+ routeName: 返回到指定页面
  */
-export function baseOnBackPress(navigator, backAndroidEventListener) {
-    navigator.pop();//app 页面回退
+export function baseOnBackPress(navigator, backAndroidEventListener,routeName) {
+
+    if (routeName){
+        RootNavigator.popToDesignatedPage(navigator, routeName);
+    }else{
+        navigator.pop();//app 页面回退
+    }
 
     if (Platform.OS === 'android' && backAndroidEventListener) {//二级安卓页面,点击左上角pop前,先把
         // this.backAndroidEventListener 释放
@@ -159,7 +166,7 @@ export default class BaseNavigationBar extends Component {
             </View> : null;
 
         let titleTextView=null;
-        if (!this.props.searchBar){//有 searchBar,就无 titleTextView
+        if (!this.props.searchBar){//没有有 searchBar,就画 titleTextView,如果外部有自定义titleTextView,就画外部自定义的
             titleTextView= this.props.titleTextView ? this.props.titleTextView :
                 <Text style={[styles.defaultTitleStyle, this.props.titleTextStyle]}
                       numberOfLines={this.props.titleTextNumberOfLines}

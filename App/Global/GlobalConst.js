@@ -15,6 +15,8 @@ export const routeName={
     phoneQuickLogPage:'phoneQuickLogPage',
     SearchResultPage:'SearchResultPage',
     SearchPage:'SearchPage',
+    ForgetPassPage:'ForgetPassPage',
+    ForgetPassEmailOkPage:'ForgetPassEmailOkPage',
 }
 
 

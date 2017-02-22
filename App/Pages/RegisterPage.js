@@ -3,6 +3,7 @@
  */
 import React, {Component} from 'react';
 import {StyleSheet, View, Text, TextInput, Image, Platform} from 'react-native';
+import {connect} from 'react-redux'
 import Colors from '../Utils/Colors';
 import  BaseNavigationBar, {NavBarButton, baseOnBackPress} from '../Comp/Base/BaseNavigationBar'
 import BackAndroidEventListener from '../Utils/EventListener/BackAndroidEventListener'
@@ -16,7 +17,6 @@ import BizLogBt from '../Comp/BizCommonComp/BizLogBt'
 import *as BizViews from '../Comp/BizCommonComp/BizViews'
 import LogInPage from './LogInPage'
 import *as RegisterRelevantActions from '../Redux/Actions/RegisterRelevantActions'
-import {connect} from 'react-redux'
 import WebViewPage from './WebViewPage'
 import BaseBlackTranslucentCoverView from '../Comp/Base/BaseBlackTranslucentCoverView'
 import BizRegigsterSucessBt from '../Comp/BizCommonComp/BizRegigsterSucessBt'
@@ -24,6 +24,8 @@ import SMSTimer from '../Utils/SMSTimer'
 import *as RootNavigator from '../Root/RootNavigator'
 import *as BizInputViews from '../Comp/BizCommonComp/BizInputViews'
 import *as ImgOauthCodeAPI from '../NetWork/API/ImgOauthCodeAPI'
+import *as BizApi from '../NetWork/API/BizApi'
+import *as ImgOauthCodeActions from '../Redux/Actions/ImgOauthCodeActions'
 
 /**
  *  展示组件
@@ -139,7 +141,7 @@ export class RegisterPage extends Component {
 
     //获取验证码图片 接口
     getOauthCodeImg() {
-        this.props.dispatch(RegisterRelevantActions.changeOauthCodeImgAction(ImgOauthCodeAPI.imgOauthCodeAPI()));
+        this.props.dispatch(ImgOauthCodeActions.changeOauthCodeImgAction(ImgOauthCodeAPI.imgOauthCodeAPI(),BizApi.RegisterPageApi.ApiName));
 
     }
 

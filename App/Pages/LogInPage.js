@@ -20,6 +20,7 @@ import *as LogInActions from '../Redux/Actions/LogInActions'
 import *as RootNavigator from '../Root/RootNavigator'
 import *as BizInputViews from '../Comp/BizCommonComp/BizInputViews'
 import *as ImgOauthCodeAPI from '../NetWork/API/ImgOauthCodeAPI'
+import ForgetPassPage from './ForgetPassPage'
 
 /**
  *  展示组件
@@ -135,6 +136,11 @@ export class LogInPage extends Component {
     //忘记密码
     onForgetPassPress() {
         // showToast('onForgetPassPress');
+        this.props.navigator.push({
+            component: ForgetPassPage,
+            name: gRouteName.ForgetPassPage//'
+
+        });
     }
 
     //获取验证码图片 接口
@@ -205,7 +211,6 @@ export class LogInPage extends Component {
                         backgroundColor: Colors.white,
                         marginTop: 15
                     }}
-                    selectColor={Colors.blackTranslucent}
                     onPress={()=>this.onQuickLoginPress()}
                     textStyle={{
                         fontSize: 15,
@@ -216,16 +221,38 @@ export class LogInPage extends Component {
                 >
                 </BaseTitleBt>
                 {/*右下角Text的容器view*/}
-                <View style={{
-                    marginTop: 20, flexDirection: 'row', justifyContent: 'flex-end', marginRight: 15,
-                    //backgroundColor:Colors.getRandomColor()
-                }}>
-                    <Text style={{color: 'rgba(54, 166, 66, 1)', fontSize: 12}}
-                          onPress={()=> {
-                              this.onForgetPassPress()
-                          }}
-                    >忘记密码</Text>
-                </View>
+                <BaseTitleBt
+                    btStyle={{
+                        //borderRadius: 4,
+                        //borderWidth: 0.5,
+                        //borderColor: 'rgba(214, 214, 214, 1)',
+                        height: 40,
+                        width:50,
+                        alignItems: 'center',
+                        marginTop: 15,
+                        marginRight: 15, marginLeft: GlobalStyles.window.width-15-50,justifyContent: 'center',
+                        //backgroundColor: Colors.getRandomColor(),
+                    }}
+                    onPress={()=>this.onForgetPassPress()}
+                    textStyle={{
+                        fontSize: 12,
+                        //fontFamily: 'Gill Sans',
+                        color: 'rgba(54, 166, 66, 1)',
+                        fontWeight:'bold',
+                    }}
+                    title='忘记密码'
+                >
+                </BaseTitleBt>
+                {/*<View style={{*/}
+                    {/*marginTop: 20, flexDirection: 'row', justifyContent: 'flex-end', marginRight: 15,*/}
+                    {/*backgroundColor:Colors.getRandomColor()*/}
+                {/*}}>*/}
+                    {/*<Text style={{color: 'rgba(54, 166, 66, 1)', fontSize: 12}}*/}
+                          {/*onPress={()=> {*/}
+                              {/*this.onForgetPassPress()*/}
+                          {/*}}*/}
+                    {/*>忘记密码</Text>*/}
+                {/*</View>*/}
             </View>
         );
     }

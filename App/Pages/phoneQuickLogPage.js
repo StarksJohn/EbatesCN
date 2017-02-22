@@ -50,12 +50,10 @@ class phoneQuickLogPage extends Component {
 
     componentDidMount() {
 
-        // this.backAndroidEventListener.addEventListener();
 
     }
 
     componentWillUnmount() {
-        // this.backAndroidEventListener.removeEventListener();
     }
 
     updatePhone(text) {
@@ -186,10 +184,6 @@ class phoneQuickLogPage extends Component {
             <BaseNavigationBar
                 navigator={navigator}
                 leftButton={NavBarButton.getBackButton(()=>{
-                    {/*if (Platform.OS === 'android' && this.backAndroidEventListener) {//二级安卓页面,点击左上角pop前,先把*/}
-                        {/*// this.backAndroidEventListener 释放*/}
-                        {/*this.backAndroidEventListener.removeEventListener();//*/}
-                    {/*}*/}
                     return baseOnBackPress(navigator,this.backAndroidEventListener);
                 })}
                 //rightButton={NavBarButton.newUserRegister(()=>this.gotoRegisterPage())}
