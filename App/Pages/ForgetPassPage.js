@@ -20,6 +20,7 @@ import *as BizApi from '../NetWork/API/BizApi'
 import BizLogBt from '../Comp/BizCommonComp/BizLogBt'
 import *as OauthForm from '../Utils/LogRegisterUtils/OauthForm'
 import ForgetPassEmailOkPage from './ForgetPassEmailOkPage'
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
 
 export class ForgetPassPage extends Component {
     constructor(props) {
@@ -36,7 +37,7 @@ export class ForgetPassPage extends Component {
         this.email = '';
         this.imgOauthCode = '';
         this.props.dispatch(ForgetPassPageActions.ForgetPassPageInitStateActions(BizApi.ForgetPassPageApi.ApiName));
-        this.props.dispatch(ForgetPassPageActions.changeGoOnBtStatesActions(false,BizApi.ForgetPassPageApi.ApiName));
+        this.props.dispatch(ForgetPassPageActions.changeGoOnBtStatesActions(false, BizApi.ForgetPassPageApi.ApiName));
 
         this.getOauthCodeImg();
 
@@ -57,9 +58,9 @@ export class ForgetPassPage extends Component {
 
         //emial格式和验证码字数验证成功
         if (OauthForm.oauthEmail(this.email) && OauthForm.oauthImgCodePass(this.imgOauthCode)) {
-            dispatch(ForgetPassPageActions.changeGoOnBtStatesActions(true,BizApi.ForgetPassPageApi.ApiName));
+            dispatch(ForgetPassPageActions.changeGoOnBtStatesActions(true, BizApi.ForgetPassPageApi.ApiName));
         } else {
-            dispatch(ForgetPassPageActions.changeGoOnBtStatesActions(false,BizApi.ForgetPassPageApi.ApiName));
+            dispatch(ForgetPassPageActions.changeGoOnBtStatesActions(false, BizApi.ForgetPassPageApi.ApiName));
         }
     }
 
@@ -71,9 +72,9 @@ export class ForgetPassPage extends Component {
 
         //emial格式和验证码字数验证成功
         if (OauthForm.oauthEmail(this.email) && OauthForm.oauthImgCodePass(this.imgOauthCode)) {
-            dispatch(ForgetPassPageActions.changeGoOnBtStatesActions(true,BizApi.ForgetPassPageApi.ApiName));
+            dispatch(ForgetPassPageActions.changeGoOnBtStatesActions(true, BizApi.ForgetPassPageApi.ApiName));
         } else {
-            dispatch(ForgetPassPageActions.changeGoOnBtStatesActions(false,BizApi.ForgetPassPageApi.ApiName));
+            dispatch(ForgetPassPageActions.changeGoOnBtStatesActions(false, BizApi.ForgetPassPageApi.ApiName));
         }
     }
 
@@ -87,7 +88,7 @@ export class ForgetPassPage extends Component {
         this.props.navigator.push({
             component: ForgetPassEmailOkPage,
             name: gRouteName.ForgetPassEmailOkPage,
-            email:this.email
+            email: this.email
         });
     }
 
@@ -99,35 +100,62 @@ export class ForgetPassPage extends Component {
             fontSize: 17
         });
 
+        let keyboardAwareScrollView = <KeyboardAwareScrollView
+            ref={(r) => {
+                this.keyboardAwareScrollViewRef = r;
+            }} keyboardDismissMode="interactive"
+            scrollEnabled={false}
+            keyboardShouldPersistTaps={true}
+            getTextInputRefs={() => {
+                return [this.emailInputViewRef, this.imgOauthCodeInputViewRef];
+            }}
+            style={{
+                //backgroundColor: Colors.getRandomColor()
+            }}
+        >
+            <Text style={{
+                color: 'rgba(85, 85, 85, 1)', fontSize: 12, marginLeft: 15, marginTop: 23,
+                //backgroundColor: Colors.getRandomColor()
+            }}>
+                请输入你需要找回登录密码的账号邮箱
+            </Text>
+            {/*邮箱输入框的容器view*/}
+            {BizInputViews.emailInputView({marginTop: 10},
+                (event) => this.updateEmail(event.nativeEvent.text),
+                () => {
+                    //主动让光标下移
+                    this.imgOauthCodeInputViewRef.focus();
+                    this.keyboardAwareScrollViewRef._scrollToFocusedTextInput();
+                },
+                (r) => {
+                    this.emailInputViewRef = r;
+                }
+            )}
+            {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -0.5})}
+            {/*验证码*/}
+            {BizInputViews.imgOauthCodeInputView(
+                {height: 55},
+                (event) => this.updateImgOauthCode(event.nativeEvent.text),
+                this.props.ForgetPassPageReducer.oauthCodeImgUri,
+                () => this.getOauthCodeImg(),
+                (r) => {
+                    this.imgOauthCodeInputViewRef = r;
+                }
+            )
+            }
+            {BizLogBt(() => this.goOnPress(), {
+                backgroundColor: this.props.ForgetPassPageReducer.goOnBtState.backColor,
+                disabled: this.props.ForgetPassPageReducer.goOnBtState.disabled,
+                title: '继续',
+                //btStyle: {marginTop: 0}
+            })}
+        </KeyboardAwareScrollView>;
+
         return (
             <View style={{flex: 1, backgroundColor: Colors.BizCommonGrayBack}}>
                 {navigationBar}
                 {BizViews.renderShadowLine()}
-                <Text style={{
-                    color: 'rgba(85, 85, 85, 1)', fontSize: 12, marginLeft: 15, marginTop: 23,
-                    //backgroundColor: Colors.getRandomColor()
-                }}>
-                    请输入你需要找回登录密码的账号邮箱
-                </Text>
-                {/*邮箱输入框的容器view*/}
-                {BizInputViews.emailInputView({marginTop: 10},
-                    (event) => this.updateEmail(event.nativeEvent.text)
-                )}
-                {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -0.5})}
-                {/*验证码*/}
-                {BizInputViews.imgOauthCodeInputView(
-                    {height: 55},
-                    (event) => this.updateImgOauthCode(event.nativeEvent.text),
-                    this.props.ForgetPassPageReducer.oauthCodeImgUri,
-                    () => this.getOauthCodeImg()
-                )
-                }
-                {BizLogBt(() => this.goOnPress(), {
-                    backgroundColor: this.props.ForgetPassPageReducer.goOnBtState.backColor,
-                    disabled: this.props.ForgetPassPageReducer.goOnBtState.disabled,
-                    title: '继续',
-                    //btStyle: {marginTop: 0}
-                })}
+                {keyboardAwareScrollView}
             </View>
         );
     }

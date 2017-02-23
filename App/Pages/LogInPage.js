@@ -21,6 +21,7 @@ import *as RootNavigator from '../Root/RootNavigator'
 import *as BizInputViews from '../Comp/BizCommonComp/BizInputViews'
 import *as ImgOauthCodeAPI from '../NetWork/API/ImgOauthCodeAPI'
 import ForgetPassPage from './ForgetPassPage'
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
 
 /**
  *  展示组件
@@ -32,7 +33,7 @@ export class LogInPage extends Component {
         if (Platform.OS === 'android') {
             this.backAndroidEventListener = new BackAndroidEventListener({
                 ...props,
-                backPress: (e)=> baseOnBackPress(this.props.navigator),
+                backPress: (e) => baseOnBackPress(this.props.navigator),
                 hardwareBackPressListenerName: 'LogPage'
             });
         }
@@ -81,7 +82,7 @@ export class LogInPage extends Component {
     }
 
     onSubmit() {
-        Log.log('LogInPage onSubmit' );
+        Log.log('LogInPage onSubmit');
     }
 
     updatePassword(text) {
@@ -156,103 +157,119 @@ export class LogInPage extends Component {
         let navigationBar =
             <BaseNavigationBar
                 navigator={navigator}
-                leftButton={NavBarButton.getBackButton(()=> {
+                leftButton={NavBarButton.getBackButton(() => {
                     return baseOnBackPress(navigator, this.backAndroidEventListener);
                 })}
-                rightButton={NavBarButton.newUserRegister(()=>this.gotoRegisterPage(), {title: '新用户注册'})}
+                rightButton={NavBarButton.newUserRegister(() => this.gotoRegisterPage(), {title: '新用户注册'})}
                 title='登录'
                 style={{backgroundColor: Colors.white}}
                 titleTextStyle={{color: Colors.black, fontSize: 17}}
                 statusBarCustomStyle={statusBar}
                 hide={false}/>;
 
+        let keyboardAwareScrollView = <KeyboardAwareScrollView ref={(r) => {
+            this.keyboardAwareScrollViewRef = r;
+        }}
+                                                               keyboardDismissMode="interactive"
+                                                               keyboardShouldPersistTaps={true}
+                                                               getTextInputRefs={() => {
+                                                                   return [this.emailInputViewRef, this.passInputViewRef];
+                                                               }}
+                                                               style={{
+                                                                   //backgroundColor: Colors.getRandomColor()
+                                                               }}
+        >
+            {BizViews.ebatesViews()}
+            {/*邮箱输入框的容器view*/}
+            {BizInputViews.emailInputView({},
+                (event) => this.updateEmail(event.nativeEvent.text),
+                () => {
+                    //主动让光标下移
+                    this.passInputViewRef.focus();
+                    this.keyboardAwareScrollViewRef._scrollToFocusedTextInput();
+                    this.onSubmit();
+                },
+                (r) => {
+                    this.emailInputViewRef = r;
+                }
+            )}
+            {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -0.5})}
+            {/*密码*/}
+            {BizInputViews.passInputView({},
+                (event) => this.updatePassword(event.nativeEvent.text),
+                (r) => {
+                    this.passInputViewRef = r;
+                }
+            )}
+            {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -0.5})}
+            {/*验证码*/}
+            {this.props.LogInReducer.isShowImgOauthInput ?
+                BizInputViews.imgOauthCodeInputView(
+                    {},
+                    (event) => this.updateImgOauthCode(event.nativeEvent.text),
+                    this.props.LogInReducer.oauthCodeImgUri,
+                    () => this.getOauthCodeImg()
+                ) : null
+            }
+            {this.props.LogInReducer.isShowImgOauthInput ?
+                baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1}) : null}
+            {BizLogBt(() => this.onLoginPress(), {
+                backgroundColor: Colors.appUnifiedBackColor,
+                disabled: false,
+                title: '登录'
+            })}
+            {/*手机快捷登录*/}
+            <BaseTitleBt
+                btStyle={{
+                    borderRadius: 4,
+                    borderWidth: 0.5,
+                    borderColor: 'rgba(214, 214, 214, 1)',
+                    height: 44,
+                    alignItems: 'center',
+                    marginLeft: 15,
+                    marginRight: 15,
+                    justifyContent: 'center',
+                    backgroundColor: Colors.white,
+                    marginTop: 15
+                }}
+                onPress={() => this.onQuickLoginPress()}
+                textStyle={{
+                    fontSize: 15,
+                    //fontFamily: 'Gill Sans',
+                    color: 'rgba(64, 64, 64, 1)',
+                }}
+                title='手机快捷登录'
+            >
+            </BaseTitleBt>
+            {/*右下角Text的容器view*/}
+            <BaseTitleBt
+                btStyle={{
+                    //borderRadius: 4,
+                    //borderWidth: 0.5,
+                    //borderColor: 'rgba(214, 214, 214, 1)',
+                    height: 40,
+                    width: 50,
+                    alignItems: 'center',
+                    marginTop: 15,
+                    marginRight: 15, marginLeft: GlobalStyles.window.width - 15 - 50, justifyContent: 'center',
+                    //backgroundColor: Colors.getRandomColor(),
+                }}
+                onPress={() => this.onForgetPassPress()}
+                textStyle={{
+                    fontSize: 12,
+                    //fontFamily: 'Gill Sans',
+                    color: 'rgba(54, 166, 66, 1)',
+                    fontWeight: 'bold',
+                }}
+                title='忘记密码'
+            >
+            </BaseTitleBt>
+        </KeyboardAwareScrollView>;
+
         return (
             <View style={styles.container}>
                 {navigationBar}
-                {BizViews.ebatesViews()}
-                {/*邮箱输入框的容器view*/}
-                {BizInputViews.emailInputView({},
-                    (event) => this.updateEmail(event.nativeEvent.text),
-                    () => this.onSubmit(),
-                )}
-                {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -0.5})}
-                {/*密码*/}
-                {BizInputViews.passInputView({},
-                    (event) => this.updatePassword(event.nativeEvent.text)
-                )}
-                {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -0.5})}
-                {/*验证码*/}
-                {this.props.LogInReducer.isShowImgOauthInput ?
-                    BizInputViews.imgOauthCodeInputView(
-                        {},
-                        (event) => this.updateImgOauthCode(event.nativeEvent.text),
-                        this.props.LogInReducer.oauthCodeImgUri,
-                        ()=>this.getOauthCodeImg()
-                    ) : null
-                }
-                {this.props.LogInReducer.isShowImgOauthInput ?
-                    baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -1}) : null}
-                {BizLogBt(()=>this.onLoginPress(), {
-                    backgroundColor: Colors.appUnifiedBackColor,
-                    disabled: false,
-                    title: '登录'
-                })}
-                {/*手机快捷登录*/}
-                <BaseTitleBt
-                    btStyle={{
-                        borderRadius: 4,
-                        borderWidth: 0.5,
-                        borderColor: 'rgba(214, 214, 214, 1)',
-                        height: 44,
-                        alignItems: 'center',
-                        marginLeft: 15,
-                        marginRight: 15,
-                        justifyContent: 'center',
-                        backgroundColor: Colors.white,
-                        marginTop: 15
-                    }}
-                    onPress={()=>this.onQuickLoginPress()}
-                    textStyle={{
-                        fontSize: 15,
-                        //fontFamily: 'Gill Sans',
-                        color: 'rgba(64, 64, 64, 1)',
-                    }}
-                    title='手机快捷登录'
-                >
-                </BaseTitleBt>
-                {/*右下角Text的容器view*/}
-                <BaseTitleBt
-                    btStyle={{
-                        //borderRadius: 4,
-                        //borderWidth: 0.5,
-                        //borderColor: 'rgba(214, 214, 214, 1)',
-                        height: 40,
-                        width:50,
-                        alignItems: 'center',
-                        marginTop: 15,
-                        marginRight: 15, marginLeft: GlobalStyles.window.width-15-50,justifyContent: 'center',
-                        //backgroundColor: Colors.getRandomColor(),
-                    }}
-                    onPress={()=>this.onForgetPassPress()}
-                    textStyle={{
-                        fontSize: 12,
-                        //fontFamily: 'Gill Sans',
-                        color: 'rgba(54, 166, 66, 1)',
-                        fontWeight:'bold',
-                    }}
-                    title='忘记密码'
-                >
-                </BaseTitleBt>
-                {/*<View style={{*/}
-                    {/*marginTop: 20, flexDirection: 'row', justifyContent: 'flex-end', marginRight: 15,*/}
-                    {/*backgroundColor:Colors.getRandomColor()*/}
-                {/*}}>*/}
-                    {/*<Text style={{color: 'rgba(54, 166, 66, 1)', fontSize: 12}}*/}
-                          {/*onPress={()=> {*/}
-                              {/*this.onForgetPassPress()*/}
-                          {/*}}*/}
-                    {/*>忘记密码</Text>*/}
-                {/*</View>*/}
+                {keyboardAwareScrollView}
             </View>
         );
     }

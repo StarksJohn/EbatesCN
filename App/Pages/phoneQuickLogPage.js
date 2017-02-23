@@ -5,7 +5,7 @@
  * 验证逻辑:一开始 , 手机号未输入 11位 前,2个按钮都不可点; 手机号输入正确位数后, 获取验证码 可点; 点击后, 按钮变灰并倒计时, 60秒内, 用户输入 正确位数的验证码,登陆按钮可点; 点击登录按钮时,检验 验证码是否过期,或者输错,满足其一, 提示 '请重新获取验证码'
  */
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, TextInput,Platform} from 'react-native';
+import {StyleSheet, View, Text, TextInput, Platform} from 'react-native';
 import Colors from '../Utils/Colors';
 import  BaseNavigationBar, {NavBarButton, baseOnBackPress} from '../Comp/Base/BaseNavigationBar'
 import BackAndroidEventListener from '../Utils/EventListener/BackAndroidEventListener'
@@ -19,6 +19,8 @@ import *as OauthForm from '../Utils/LogRegisterUtils/OauthForm'
 import *as QuickLogAction from '../Redux/Actions/QuickLogAction'
 import SMSTimer from '../Utils/SMSTimer'
 import registerPage from './RegisterPage'
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
+
 
 class phoneQuickLogPage extends Component {
     constructor(props) {
@@ -29,17 +31,17 @@ class phoneQuickLogPage extends Component {
         if (Platform.OS === 'android') {
             this.backAndroidEventListener = new BackAndroidEventListener({
                 ...props,
-                backPress: (e)=> baseOnBackPress(this.props.navigator),
+                backPress: (e) => baseOnBackPress(this.props.navigator),
                 hardwareBackPressListenerName: 'phoneQuickLogPage'
             });
         }
-        this.timer=new SMSTimer({
-            timerNums:5,
-            callBack:(time)=>{
-                Log.log('time==='+time);
-                if (time>=0){
+        this.timer = new SMSTimer({
+            timerNums: 5,
+            callBack: (time) => {
+                Log.log('time===' + time);
+                if (time >= 0) {
                     dispatch(QuickLogAction.onAuthCodeBtCountDownAction(time));
-                }else if(time==-1){
+                } else if (time == -1) {
                     dispatch(QuickLogAction.onAuthCodeBtResendAction());
                 }
             }
@@ -63,7 +65,7 @@ class phoneQuickLogPage extends Component {
         if (OauthForm.oauthPhone(this.phone)) {
             BizShowToast('oauthPhone ok')
             dispatch(QuickLogAction.onAuthCodeBtEnableAction());
-        }else if(this.props.quickLogReducer.oauthCodeBtState.id === QuickLogAction.oauthCodeBtState.enable.id){//当前从 enable 状态 ==> unable 状态
+        } else if (this.props.quickLogReducer.oauthCodeBtState.id === QuickLogAction.oauthCodeBtState.enable.id) {//当前从 enable 状态 ==> unable 状态
             BizShowToast('onAuthCodeBtUnableAction()')
             // this.props.dispatchActions.onAuthCodeBtUnableAction();
             dispatch(QuickLogAction.onAuthCodeBtUnableAction());
@@ -76,9 +78,9 @@ class phoneQuickLogPage extends Component {
         this.oauthCode = text;
         Log.log('this.oauthCode==' + this.oauthCode);
 
-        if (OauthForm.oauthCode(this.oauthCode) && this.props.quickLogReducer.oauthCodeBtState.id==='2'){
+        if (OauthForm.oauthCode(this.oauthCode) && this.props.quickLogReducer.oauthCodeBtState.id === '2') {
             dispatch(QuickLogAction.loginBtStateChangeAction(QuickLogAction.loginBtBtState.enable));
-        }else{
+        } else {
             dispatch(QuickLogAction.loginBtStateChangeAction(QuickLogAction.loginBtBtState.unable));
         }
     }
@@ -96,8 +98,10 @@ class phoneQuickLogPage extends Component {
         BizShowToast('该手机未在网站上绑定过, 若您已有账号,请前往ebates.cn,登录并绑定您的手机号,若您还没有账号,请先注册')
     }
 
-    /*手机号 输入框的容器view*/
-    phoneInputView() {
+    /*手机号 输入框的容器view
+     * r就是 指向 TextInput 控件的 指针对象
+     * */
+    phoneInputView(refCallback, onSubmitEditingCallback) {
         return (
             <View style={GlobalStyles.InputItemContainer}>
                 <View style={GlobalStyles.IpputItemLeftView}>
@@ -105,8 +109,13 @@ class phoneQuickLogPage extends Component {
                 </View>
                 <View style={GlobalStyles.InputItemRightView}>
                     <TextInput
+                        ref={(r) => {
+                            refCallback(r);
+                        }}
                         style={GlobalStyles.textInput}
                         autoFocus={false}
+                        returnKeyType={'next'}
+                        onSubmitEditing={onSubmitEditingCallback}
                         placeholder='输入手机号码'
                         onChange={(event) => this.updatePhone(
                             event.nativeEvent.text
@@ -129,8 +138,10 @@ class phoneQuickLogPage extends Component {
         });
     }
 
-    /*验证码 输入框的容器view*/
-    oauthCodeInputView() {
+    /*验证码 输入框的容器view
+     * r就是 指向 TextInput 控件的 指针对象
+     * */
+    oauthCodeInputView(refCallback) {
         return (
             <View style={GlobalStyles.InputItemContainer}>
                 <View style={GlobalStyles.IpputItemLeftView}>
@@ -138,6 +149,9 @@ class phoneQuickLogPage extends Component {
                 </View>
                 <View style={GlobalStyles.InputItemRightView}>
                     <TextInput
+                        ref={(r) => {
+                            refCallback(r);
+                        }}
                         style={GlobalStyles.textInput}
                         autoFocus={false}
                         placeholder='输入验证码'
@@ -163,7 +177,7 @@ class phoneQuickLogPage extends Component {
                         disabled={this.props.quickLogReducer.oauthCodeBtState.disabled}//参考
                         // snowflake的LoginRender的
                         // ItemCheckbox的 disabled的判断
-                        onPress={()=>this.onSendOauthCode()}
+                        onPress={() => this.onSendOauthCode()}
                         textStyle={{
                             fontSize: 12,
                             //fontFamily: 'Gill Sans',
@@ -183,8 +197,8 @@ class phoneQuickLogPage extends Component {
         let navigationBar =
             <BaseNavigationBar
                 navigator={navigator}
-                leftButton={NavBarButton.getBackButton(()=>{
-                    return baseOnBackPress(navigator,this.backAndroidEventListener);
+                leftButton={NavBarButton.getBackButton(() => {
+                    return baseOnBackPress(navigator, this.backAndroidEventListener);
                 })}
                 //rightButton={NavBarButton.newUserRegister(()=>this.gotoRegisterPage())}
                 title='手机快捷登录'
@@ -210,30 +224,56 @@ class phoneQuickLogPage extends Component {
                 </Text>
             </View>;
 
+        let keyboardAwareScrollView = <KeyboardAwareScrollView ref={(r) => {
+            this.keyboardAwareScrollViewRef = r;
+        }}
+                                                               keyboardDismissMode="interactive"
+                                                               keyboardShouldPersistTaps={true}
+                                                               getTextInputRefs={() => {
+                                                                   return [this.phoneInputViewRef, this.oauthCodeInputViewRef];
+                                                               }}
+                                                               style={{
+                                                                   backgroundColor: 'rgba(239, 239, 239, 1)'
+                                                               }}
+        >
+            {bindingPhoneTextView}
+            {this.phoneInputView((r) => {
+                    this.phoneInputViewRef = r;
+                }, () => {
+                    //主动让光标下移
+                    this.oauthCodeInputViewRef.focus();
+                    this.keyboardAwareScrollViewRef._scrollToFocusedTextInput();
+                },
+            )}
+            {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -0.5})}
+            {this.oauthCodeInputView(
+                (r) => {
+                    this.oauthCodeInputViewRef = r;
+                }
+            )}
+            <View style={{flex: 1, backgroundColor: 'rgba(239, 239, 239, 1)'}}>
+                {BizLogBt(() => this.onLoginPress(), {
+                    backgroundColor: this.props.quickLogReducer.loginBtBtState.backColor,//Colors.halfOpacityAppUnifiedBackColor,
+                    disabled: this.props.quickLogReducer.loginBtBtState.disabled, title: '登录'
+                })}
+                {/*右下角Text的容器view*/}
+                <View style={{
+                    marginTop: 20, flexDirection: 'row', justifyContent: 'flex-end', marginRight: 15,
+                    //backgroundColor:Colors.getRandomColor()
+                }}>
+                    <Text style={{color: 'rgba(54, 166, 66, 1)', fontSize: 12}}
+                          onPress={() => {
+                              this.onRegister()
+                          }}
+                    >还没有账号, 去注册</Text>
+                </View>
+            </View>
+        </KeyboardAwareScrollView>;
+
         return (
             <View style={{flex: 1,}}>
                 {navigationBar}
-                {bindingPhoneTextView}
-                {this.phoneInputView()}
-                {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -0.5})}
-                {this.oauthCodeInputView()}
-                <View style={{flex: 1, backgroundColor: 'rgba(239, 239, 239, 1)'}}>
-                    {BizLogBt(()=>this.onLoginPress(), {
-                        backgroundColor: this.props.quickLogReducer.loginBtBtState.backColor,//Colors.halfOpacityAppUnifiedBackColor,
-                        disabled: this.props.quickLogReducer.loginBtBtState.disabled,title:'登录'
-                    })}
-                    {/*右下角Text的容器view*/}
-                    <View style={{
-                        marginTop: 20, flexDirection: 'row', justifyContent: 'flex-end', marginRight: 15,
-                        //backgroundColor:Colors.getRandomColor()
-                    }}>
-                        <Text style={{color: 'rgba(54, 166, 66, 1)', fontSize: 12}}
-                              onPress={()=> {
-                                  this.onRegister()
-                              }}
-                        >还没有账号, 去注册</Text>
-                    </View>
-                </View>
+                {keyboardAwareScrollView}
             </View>
         );
     }
