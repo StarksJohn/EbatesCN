@@ -6,7 +6,7 @@
 const {Record} = require('immutable') //导入  Immutable.js 的 Record API
 
 
-var InitialState = Record({
+let InitialState = Record({
     isShowImgOauthInput: false,
     oauthCodeImgUri:'',//图片验证码的默认uri
 })

@@ -11,14 +11,6 @@ import  BaseNavigationBar, {NavBarButton, baseOnBackPress} from '../Comp/Base/Ba
 import *as BizViews from '../Comp/BizCommonComp/BizViews'
 import Colors from '../Utils/Colors';
 import GlobalStyles from '../Global/GlobalStyles'
-import *as BizInputViews from '../Comp/BizCommonComp/BizInputViews'
-import {baseSpeLine} from '../Comp/Base/BaseSpeLine'
-import *as ForgetPassPageActions from '../Redux/Actions/ForgetPassPageActions'
-import *as ImgOauthCodeActions from '../Redux/Actions/ImgOauthCodeActions'
-import *as ImgOauthCodeAPI from '../NetWork/API/ImgOauthCodeAPI'
-import *as BizApi from '../NetWork/API/BizApi'
-import BizLogBt from '../Comp/BizCommonComp/BizLogBt'
-import *as OauthForm from '../Utils/LogRegisterUtils/OauthForm'
 import RegisterPage from './RegisterPage'
 
 export default class ForgetPassEmailOkPage extends Component {

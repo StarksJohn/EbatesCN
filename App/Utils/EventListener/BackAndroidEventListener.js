@@ -23,7 +23,7 @@ export default class BackAndroidEventListener {
         this.addEventListener();
 
         this.listener = DeviceEventEmitter.addListener(removeBackAndroidEventListener, (text) => {
-            if (text===this.props.hardwareBackPressListenerName){
+            if (text===this.props.hardwareBackPressListenerName){//当前对象和哪个 控件绑定
 
                 this.removeEventListener();
                 // showToast('DeviceEventEmitter remove =='+text)

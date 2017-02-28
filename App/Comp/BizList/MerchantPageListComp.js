@@ -15,13 +15,19 @@ import *as BizViews from '../BizCommonComp/BizViews'
 import *as BizMerchantListCell from '../BizCells/BizMerchantListCell'
 import BaseTitleBt from '../Base/BaseTitleBt'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import AllMerchantPage from '../../Pages/AllMerchantPage'
+
 
 export default class MerchantPageListComp extends Component {
     constructor(props) {
         super(props);
     }
 
-    onCheckAllMerchant(title) {
+    onCheckAllMerchant() {
+        this.props.navigator.push({
+            component: AllMerchantPage,
+            name: gRouteName.AllMerchantPage,
+        });
     }
 
     renderRow = (rowData, sectionID, rowID, highlightRow) => {

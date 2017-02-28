@@ -17,6 +17,7 @@ export const routeName={
     SearchPage:'SearchPage',
     ForgetPassPage:'ForgetPassPage',
     ForgetPassEmailOkPage:'ForgetPassEmailOkPage',
+    AllMerchantPage:'AllMerchantPage',
 }
 
 

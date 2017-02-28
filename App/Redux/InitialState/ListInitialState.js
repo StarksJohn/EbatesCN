@@ -11,7 +11,7 @@ import {
 import *as BaseListActions from '../Actions/BaseListActions'
 
 
-var InitialState = Record({
+let InitialState = Record({
     status: BaseListActions.BaseListStatus.INITIALIZE,
     componentDidMount: false, //控件是否被 挂载
     dataArray: [], //已经拿到的数据,慢慢被 $dataArray 代替

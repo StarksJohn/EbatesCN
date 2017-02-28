@@ -16,7 +16,7 @@ export const rootNavs={
     RootRecommendFriendNavContainer:RooRecommendFriendNavContainer,
 }
 
-var InitialState = Record({
+let InitialState = Record({
 
     curNav:rootNavs.RootHomeNavigatorContainer,//跟页面 默认的 nav
 

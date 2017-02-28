@@ -7,7 +7,7 @@ const {Record} = require('immutable') //导入  Immutable.js 的 Record API
 import *as quickLogAction from '../Actions/QuickLogAction'
 
 
-var InitialState = Record({
+let InitialState = Record({
     oauthCodeBtState: new (Record(
         {
             // quickLogAction.oauthCodeBtState.unable

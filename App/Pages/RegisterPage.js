@@ -39,7 +39,7 @@ export class RegisterPage extends Component {
             this.backAndroidEventListener = new BackAndroidEventListener({
                 ...props,
                 backPress: (e) => baseOnBackPress(this.props.navigator),
-                hardwareBackPressListenerName: 'RegisterPage'
+                hardwareBackPressListenerName: gRouteName.RegisterPage
             });
         }
         this.email = '';

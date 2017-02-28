@@ -34,7 +34,7 @@ export class LogInPage extends Component {
             this.backAndroidEventListener = new BackAndroidEventListener({
                 ...props,
                 backPress: (e) => baseOnBackPress(this.props.navigator),
-                hardwareBackPressListenerName: 'LogPage'
+                hardwareBackPressListenerName: gRouteName.LogInPage
             });
         }
 

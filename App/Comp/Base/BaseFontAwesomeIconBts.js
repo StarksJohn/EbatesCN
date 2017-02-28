@@ -1,5 +1,6 @@
 /**
  * Created by Ebates on 16/10/2.
+ * BaseFontAwesomeIconBts
  * 显示 react-native-vector-icons和 ionicons | FontAwesome 图标 的按钮
  *  * 因 点击此按钮后每个cell上的此按钮实例都变了状态,估计 自己 redux 玩的 还不6, 故此控件先不用redux
  http://fontawesome.io/icons/ 可搜素想要的 FontAwesome 的字体

@@ -455,7 +455,7 @@ export const MerchantPageApi = {
     fetchTopTen(){
         return (dispatch) => {
             this.timer = new SMSTimer({
-                timerNums: 3,
+                timerNums: 1.5,
                 callBack: (time) => {
                     Log.log('time===' + time);
                     if (time == -1) {

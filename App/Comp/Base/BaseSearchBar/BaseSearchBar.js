@@ -244,7 +244,7 @@ export default class BaseSearchBar extends React.Component {
                     onBlur={() => this.onBlur()}
                     {...restProps}
                 />
-                <Image source={require('./Img/search.png')} style={[styles.search, customSearchStyle]}
+                <Image source={require('../../../Img/search.png')} style={[styles.search, customSearchStyle]}
                        resizeMode="stretch"
                 />
                 {/*为了点击TextInput后不弹出键盘,直接跳转页面*/}

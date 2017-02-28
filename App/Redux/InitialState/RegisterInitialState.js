@@ -7,7 +7,7 @@ const {Record} = require('immutable') //导入  Immutable.js 的 Record API
 import *as RegisterRelevantActions from '../Actions/RegisterRelevantActions'
 
 
-var InitialState = Record({
+let InitialState = Record({
     registerBtState: RegisterRelevantActions.registerBtStates.enable,
     isShowRegisterSucessbt:false,
     oauthCodeImgUri:'',//图片验证码的默认uri

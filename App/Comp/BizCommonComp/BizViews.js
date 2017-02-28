@@ -96,13 +96,13 @@ export function deleteBox(callBack) {
 export function renderBottomTabbarBackView(isInTwoLevelPage) {
     return <View style={{
         height: isInTwoLevelPage?0:GlobalStyles.bottomTabBarHeight,
-        backgroundColor: Colors.getRandomColor()
+        //backgroundColor: Colors.getRandomColor()
     }}>
     </View>;
 }
 
 /**
- * 画 带阴影的 线
+ * 画 带阴影的 横线
  * @returns {XML}
  */
 export function renderShadowLine(props) {

@@ -1,4 +1,5 @@
 /**
+ * BaseImgBt
  带 Img   的 按钮
  */
 
@@ -26,7 +27,9 @@ export default class BaseImgBt extends Component {
         // selectColor: PropTypes.string //按钮按下的颜色
         activeOpacity: PropTypes.number,
         disabled: PropTypes.bool,
-        uri:PropTypes.string,
+        uri: PropTypes.string,//网络图片的地址
+        localPath: PropTypes.object,//本地图片的地址, 外部用 localPath={require('../Img/search.png')} 格式传
+
     };
 
     static defaultProps = {
@@ -46,30 +49,41 @@ export default class BaseImgBt extends Component {
     }
 
     render() {
+        const {btStyle, activeOpacity, disabled, onPress, uri, imgStyle, localPath} = this.props;
+        let content = null;
+        if (uri) {
+            content = <ImageProgress
+                key={uri}
+                source={{uri: uri}}
+                //indicator={Progress.Bar} 不选此属性,默认用 系统菊花,因 此第三方库估计没适配最新的rn 版本
+                style={
+                    imgStyle
+                    /*{width: 110, height: 35, backgroundColor:Colors.getRandomColor()}*/
+                }
+                onLoaded={() => {
+                    //showToast('ImageProgress onLoaded')
+                }}
+            />
+        } else if (localPath) {
+            content = <Image source={localPath} style={imgStyle}/>
+
+        }
 
         return (
             <BaseBt
-                style={/*{
-                 backgroundColor: this.props.backgroundColor, flex: 1, borderRadius: 6,
-                 alignItems: 'center',
-                 justifyContent: 'center',
-                 }*/ [{backgroundColor: this.props.backgroundColor}, this.props.btStyle]}
-                activeOpacity={this.props.activeOpacity}
-                disabled={this.props.disabled}
-                onPress={ this.props.onPress }
+                style={
+                    /*{
+                     backgroundColor: this.props.backgroundColor, flex: 1, borderRadius: 6,
+                     alignItems: 'center',
+                     justifyContent: 'center',
+                     }*/
+                    [btStyle]}
+                activeOpacity={activeOpacity}
+                disabled={disabled}
+                onPress={ onPress }
             >
-                <ImageProgress
-                    key={this.props.uri}
-                    source={{uri: this.props.uri}}
-                    //indicator={Progress.Bar} 不选此属性,默认用 系统菊花,因 此第三方库估计没适配最新的rn 版本
-                    style={
-                        this.props.imgStyle
-                        /*{width: 110, height: 35, backgroundColor:Colors.getRandomColor()}*/
-                    }
-                    onLoaded={() => {
-                        //showToast('ImageProgress onLoaded')
-                    }}
-                />
+                {content}
+
             </BaseBt>
         );
     }

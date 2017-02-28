@@ -8,7 +8,7 @@ import RootPagesContainer from '../Container/RootPagesContainer'
 // import LogInPage from '../../Pages/LogInPage'
 
 
-var InitialState = Record({
+let InitialState = Record({
 
     initialRoute: {
         component: RootPagesContainer,

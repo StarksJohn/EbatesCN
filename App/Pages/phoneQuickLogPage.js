@@ -32,7 +32,7 @@ class phoneQuickLogPage extends Component {
             this.backAndroidEventListener = new BackAndroidEventListener({
                 ...props,
                 backPress: (e) => baseOnBackPress(this.props.navigator),
-                hardwareBackPressListenerName: 'phoneQuickLogPage'
+                hardwareBackPressListenerName: gRouteName.phoneQuickLogPage
             });
         }
         this.timer = new SMSTimer({

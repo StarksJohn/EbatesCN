@@ -13,7 +13,8 @@ import SearchResultPageReducer from './SearchResultPageReducer'
 import SearchResultPageCouponListReducer from './SearchResultPageCouponListReducer'
 import MerchantPageReducer from './MerchantPageReducer'
 import ForgetPassPageReducer from './ForgetPassPageReducer'
+import FilterMenuReducer from './FilterMenuReducer'
 
 export default combineReducers({
-    RootPageReducer,HomePageReducer,quickLogReducer,RegisterReducer,LogInReducer,RootComponentReducer,RootHomeNavReducer,RootRecommendFriendNavReducer,SearchPageListReducer,SearchResultPageMerchantListReducer,SearchResultPageReducer,SearchResultPageCouponListReducer,MerchantPageReducer,ForgetPassPageReducer
+    RootPageReducer,HomePageReducer,quickLogReducer,RegisterReducer,LogInReducer,RootComponentReducer,RootHomeNavReducer,RootRecommendFriendNavReducer,SearchPageListReducer,SearchResultPageMerchantListReducer,SearchResultPageReducer,SearchResultPageCouponListReducer,MerchantPageReducer,ForgetPassPageReducer,FilterMenuReducer
 });
