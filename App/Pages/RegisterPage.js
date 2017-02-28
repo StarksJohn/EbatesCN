@@ -213,7 +213,7 @@ export class RegisterPage extends Component {
                 },
                 (r) => {
                     this.emailInputViewRef = r;
-                }
+                },'邮箱','输入邮箱地址'
             )}
             {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -0.5})}
             {/*密码*/}

@@ -75,7 +75,7 @@ module.exports =
         paddingRight: 30,
         justifyContent: 'center', alignItems: 'flex-start',
         height: 44,
-        // backgroundColor: Colors.getRandomColor()
+        //backgroundColor: Colors.getRandomColor()
     },
     //输入框容器里的右图
     InputItemRightView: {
@@ -88,7 +88,7 @@ module.exports =
         fontSize: 15,
         // alignItems: 'center',
         color: Colors.black,
-        // backgroundColor: Colors.white
+        //backgroundColor: Colors.getRandomColor()
     },
     bottomTabBarHeight:Layout.tabBarHeight,//一级页面底部tabbar的整体高度
     window:{

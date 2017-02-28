@@ -17,11 +17,11 @@ import BaseImgBt from '../Base/BaseImgBt'
  * @param refCallback : r就是 指向 TextInput 控件的 指针对象
  * @returns {XML}
  */
-export function emailInputView(styles, updateEmailCallBack, onSubmitEditingCallback, refCallback) {
+export function emailInputView(styles, updateEmailCallBack, onSubmitEditingCallback, refCallback,leftText,placeholder) {
     return (
         <View style={[GlobalStyles.InputItemContainer, {marginTop: 40}, styles]}>
             <View style={GlobalStyles.IpputItemLeftView}>
-                <Text style={{}}>邮箱</Text>
+                <Text style={{}}>{leftText}</Text>
             </View>
             <View style={GlobalStyles.InputItemRightView}>
                 <TextInput
@@ -32,7 +32,7 @@ export function emailInputView(styles, updateEmailCallBack, onSubmitEditingCallb
                     returnKeyType={'next'}
                     style={GlobalStyles.textInput}
                     autoFocus={false}
-                    placeholder='输入邮箱地址'
+                    placeholder={placeholder}//'输入邮箱地址'
                     onFocus={() => {
                     }}
                     onSubmitEditing={onSubmitEditingCallback}
@@ -57,17 +57,17 @@ export function emailInputView(styles, updateEmailCallBack, onSubmitEditingCallb
  * @param refCallback r就是 指向 TextInput 控件的 指针对象
  * @returns {XML}
  */
-export function passInputView(styles, updatePasswordCallBack, refCallback, onSubmitEditingCallback) {
+export function passInputView(InputItemLeftViewStyles, updatePasswordCallBack, refCallback, onSubmitEditingCallback) {
     return (
-        <View style={[GlobalStyles.InputItemContainer, styles]}>
-            <View style={GlobalStyles.IpputItemLeftView}>
+        <View style={[GlobalStyles.InputItemContainer]}>
+            <View style={[GlobalStyles.IpputItemLeftView,InputItemLeftViewStyles]}>
                 <Text style={{}}>密码</Text>
             </View>
             <View style={GlobalStyles.InputItemRightView}>
                 <TextInput
                     ref={(r) => {
                         refCallback(r);
-                    }}
+                    }}passInputView
                     returnKeyType={'next'}
                     style={GlobalStyles.textInput}
                     placeholder='输入至少6位字符或数字'

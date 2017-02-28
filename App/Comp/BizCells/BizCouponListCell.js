@@ -32,7 +32,7 @@ export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRo
     let time = arrTime[Math.randomNums(0, arrTime.length - 1)];
 
 
-    let msg='用户信息'
+    let msg='用户信息';
     let nums=Math.randomNums(1,5 );
     for (let i=0;i<nums;i++){
         msg=msg+msg;

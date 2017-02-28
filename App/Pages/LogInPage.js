@@ -191,7 +191,7 @@ export class LogInPage extends Component {
                 },
                 (r) => {
                     this.emailInputViewRef = r;
-                }
+                },'账号','输入邮箱地址或手机号'
             )}
             {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -0.5})}
             {/*密码*/}
