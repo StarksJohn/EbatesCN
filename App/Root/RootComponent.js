@@ -1,14 +1,23 @@
 /**
  * Created by Ebates on 17/1/4.
  *
- * 跟组件
+ * 跟组件,用于 左图 切换 不同的 navs
  */
 import React, {Component} from 'react';
 import {} from 'react-native';
 import {connect} from 'react-redux'
 import LeftDrawerComponent from './LeftDrawerComponent/LeftDrawerComponent'
+import *as TokenAPI from '../NetWork/API/TokenAPI'
 
 export  class RootComponent extends Component {
+    componentDidMount() {
+
+        // TokenAPI.getTokenWhenAppOpen();
+    }
+
+    componentWillUnmount() {
+        // Log.log('componentWillUnmount');
+    }
 
     render() {
         let Component = this.props.RootComponentReducer.curNav;

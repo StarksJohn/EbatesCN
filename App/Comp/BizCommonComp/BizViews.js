@@ -29,7 +29,7 @@ export function ebatesViews() {
                 marginTop: 10, fontSize: 18, fontWeight: 'bold', color: 'rgba(255, 115,' +
                 ' 12, 1)',
                 //backgroundColor:Colors.getRandomColor()
-            }}>最好的海淘返利网站</Text>
+            }}>全球领先的返利网站</Text>
             <Text style={{marginTop: 3, fontSize: 12, color: 'rgba(136, 136, 136, 1)'}}>{str}</Text>
         </View>
     );

@@ -2,7 +2,7 @@
  * 通用请求函数
  * RequestUtil
  */
-// const HOST = 'http://apis.baidu.com/';
+export const Staging_Host = 'https://api-staging-current.ebates.cn/';//测试环境的url的 host
 
 /**
  * 通用请求
@@ -14,7 +14,7 @@
  */
 export const request = (url, method, headersAppendCallBack, body) => {
     let header = new Headers();
-     header.append('Content-Type', 'application/x-www-form-urlencoded');//headers里固定要传的参数,因body传 key=value&key=value 格式的字符串
+    header.append('Content-Type', 'application/x-www-form-urlencoded');//headers里固定要传的参数,因body传 key=value&key=value 格式的字符串
     // headersArray.map( 此方式拿不到 外部的header,只能用 callBack形式外部 添加 header
     //     (v,i)=>{
     //         header.append(JSON.stringify(v.key),JSON.stringify(v.value));
@@ -34,7 +34,7 @@ export const request = (url, method, headersAppendCallBack, body) => {
                     isOk = true;
                 } else {
                     isOk = false;
-                    reject({status:response.status})
+                    reject({status: response.status})
                 }
                 return response.json();
             })
@@ -53,9 +53,9 @@ export const request = (url, method, headersAppendCallBack, body) => {
 
 export const GET = (url, params, headersAppendCallBack) => {
 
-    url=encodeURL(url,params);
+    url = encodeURL(url, params);
 
-   return request(url,'GET',headersAppendCallBack,null);
+    return request(url, 'GET', headersAppendCallBack, null);
 }
 
 /**
@@ -66,8 +66,8 @@ export const GET = (url, params, headersAppendCallBack) => {
  * @returns {Promise}
  * @constructor
  */
-export const POST = (url, headersAppendCallBack,body) => {
-    return request(url,'POST',headersAppendCallBack,body);
+export const POST = (url, headersAppendCallBack, body) => {
+    return request(url, 'POST', headersAppendCallBack, body);
 }
 
 /**
@@ -76,7 +76,7 @@ export const POST = (url, headersAppendCallBack,body) => {
  * @param params
  * @returns {*}
  */
-const encodeURL=(url,params)=>{
+const encodeURL = (url, params) => {
     if (params) {
         let paramsArray = [];
         //encodeURIComponent 拼接参数
@@ -95,7 +95,7 @@ const encodeURL=(url,params)=>{
  * @param body
  * @returns {string}
  */
-const encodeBody=(body)=>{
+const encodeBody = (body) => {
     let paramsArray = [];
     Object.keys(body).forEach(key => paramsArray.push(key + '=' + body[key]))
     return paramsArray.join('&');

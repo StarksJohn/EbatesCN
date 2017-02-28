@@ -1,5 +1,6 @@
 /**
  * Created by Ebates on 17/1/3.
+ * sync里方法的名字必须和所存数据的key完全相同
  */
 
 import *as TokenAPI from '../../NetWork/API/TokenAPI'
@@ -13,7 +14,7 @@ export default sync={
     unLoginStateToken(){
         return new Promise(
             (resolve, reject)=>{
-                TokenAPI.getUnLoginTokenAPI().then((responseData) => {
+                TokenAPI.getClientTokenApi().then((responseData) => {
                     TokenDB.saveUnLoginStateToken(responseData);
                     resolve(responseData);
                 });
