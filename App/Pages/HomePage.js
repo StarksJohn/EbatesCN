@@ -53,7 +53,7 @@ class HomePage extends Component {
         // });
         // global.gPopBackToRouteAfteRegisterSuceess=gRouteName.RootPagesContainer;
 
-        TokenAPI.getTokenWhenAppOpen();
+        // TokenAPI.getTokenWhenAppOpen();
 
         EventListener.sendEvent(LeftDrawerComponent.openDrawerEventName)
     }

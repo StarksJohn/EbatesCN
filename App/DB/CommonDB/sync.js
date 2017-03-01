@@ -14,9 +14,10 @@ export default sync={
     unLoginStateToken(){
         return new Promise(
             (resolve, reject)=>{
+                Log.log('sync unLoginStateToken 未登录token 在 缓存里判断过期,需要重新 调 接口拿 新的未登录token')
                 TokenAPI.getClientTokenApi().then((responseData) => {
                     TokenDB.saveUnLoginStateToken(responseData);
-                    resolve(responseData);
+                    resolve(TokenDB.unLoginTokenSchema.data);
                 });
             }
         );

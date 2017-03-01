@@ -10,12 +10,14 @@ import *as SearchResultPageActions from '../../Redux/Actions/SearchResultPageAct
 import SMSTimer from '../../Utils/SMSTimer'
 import BizSearchResultPagScrollableTabBar, {UpdateTabUnderlineWidthEventName} from '../../Comp/BizCommonComp/BizSearchResultPagScrollableTabBar'
 import *as Math from '../../Utils/Math'
+import *as TokenAPI from './TokenAPI'
+
 
 /**
  * 注册页面的API
  * @type {{ApiName: string}}
  */
-export const RegisterPageApi={
+export const RegisterPageApi = {
     ApiName: 'RegisterPageApi',
 
 }
@@ -24,7 +26,7 @@ export const RegisterPageApi={
  * 忘记密码 页面的API
  * @type {{ApiName: string}}
  */
-export const ForgetPassPageApi={
+export const ForgetPassPageApi = {
     ApiName: 'ForgetPassPageApi',
 
 }
@@ -443,7 +445,11 @@ export const MerchantPageApi = {
                 dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
 
                 // this.fetchTopTen();
-                dispatch(MerchantPageApi.fetchTopTen());
+                TokenAPI.checkUnLoginTokenExpires().then(
+                    () => {
+                        dispatch(MerchantPageApi.fetchTopTen());
+                    }
+                );
 
             }
         }
@@ -454,6 +460,7 @@ export const MerchantPageApi = {
      */
     fetchTopTen(){
         return (dispatch) => {
+
             this.timer = new SMSTimer({
                 timerNums: 1.5,
                 callBack: (time) => {

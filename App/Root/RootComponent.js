@@ -12,7 +12,7 @@ import *as TokenAPI from '../NetWork/API/TokenAPI'
 export  class RootComponent extends Component {
     componentDidMount() {
 
-        // TokenAPI.getTokenWhenAppOpen();
+        TokenAPI.getTokenWhenAppOpen();
     }
 
     componentWillUnmount() {

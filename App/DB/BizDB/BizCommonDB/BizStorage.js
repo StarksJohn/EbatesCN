@@ -35,7 +35,7 @@ export const loadStorage = (key, id, autoSync, syncInBackground) => {
                 // 也没有办法“变成”同步返回
                 // 你也可以使用“看似”同步的async/await语法
 
-                Log.log('load  '+key+' OK ===' + ret);
+                // Log.log('load  '+key+' OK ===' + ret);
                 // dispatch(LogInAction(ret));
                 resolve(ret);
             }).catch(err => {
@@ -64,16 +64,17 @@ export const loadStorage = (key, id, autoSync, syncInBackground) => {
  * @param expires  毫秒
  */
 export const saveStorage = (key, id, rawData, expires) => {
-    // Log.log('saveStorage  '+key+' begin rawData ===' + rawData);
 
+    //save后在缓存里是个  {rawData: rawData, expires: expires} 对象,loadStorage 返回的是 rawData,而不是 这整个对象,可在 storage.js里 的
+    // save(params) 和 _loadMapItem(params)方法里查看
     storage.save({
         key: key, //global.UserSchema  表名
         id: id,
         rawData: rawData,// result:一行数据,不能改名
 
-        // 如果不指定过期时间，则会使用 defaultExpires 参数
+        // 如果不指定过期时间，则会使用 defaultExpires 参数,单位毫秒
         // 如果设为 null，则永不过期
-        expires: expires //null //1000 * 3600
+        expires: expires
     });
 };
 
