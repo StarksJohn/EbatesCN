@@ -27,6 +27,7 @@ import *as ImgOauthCodeAPI from '../NetWork/API/ImgOauthCodeAPI'
 import *as BizApi from '../NetWork/API/BizApi'
 import *as ImgOauthCodeActions from '../Redux/Actions/ImgOauthCodeActions'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
+import *as Math from '../Utils/Math'
 
 /**
  *  展示组件
@@ -116,17 +117,31 @@ export class RegisterPage extends Component {
             return;
         }
 
-        this.props.dispatch(RegisterRelevantActions.showRegisterSucessbtAction());
-
-        this.timer = new SMSTimer({
-            timerNums: 5,
-            callBack: (time) => {
-                Log.log('time===' + time);
-                if (time == -1) {
-                    this.pageGotoAfterRegisterSucess();
-                }
+        BizApi.RegisterPageApi.registerUser({
+            email: this.email,
+            password: this.password,
+            referee_email: this.inviteCode,
+            captcha: this.imgOauthCode,
+            captchaUuid: BizApi.ImgOauthCodeAPI.data.captchaUuid
+        }).then(
+            (responseData) => {
+                Log.log('RegisterPage onRegisterPress responseData=' + responseData);
             }
-        }).start();
+        ).catch((error) => {
+            Log.log('RegisterPage onRegisterPress error=' + error);
+        })
+
+        // this.props.dispatch(RegisterRelevantActions.showRegisterSucessbtAction());
+        //
+        // this.timer = new SMSTimer({
+        //     timerNums: 5,
+        //     callBack: (time) => {
+        //         Log.log('time===' + time);
+        //         if (time == -1) {
+        //             this.pageGotoAfterRegisterSucess();
+        //         }
+        //     }
+        // }).start();
     }
 
     // 点服务条款
@@ -142,8 +157,11 @@ export class RegisterPage extends Component {
 
     //获取验证码图片 接口
     getOauthCodeImg() {
-        this.props.dispatch(ImgOauthCodeActions.changeOauthCodeImgAction(ImgOauthCodeAPI.imgOauthCodeAPI(), BizApi.RegisterPageApi.ApiName));
-
+        BizApi.ImgOauthCodeAPI.requestCaptcha().then(
+            (url) => {
+                this.props.dispatch(ImgOauthCodeActions.changeOauthCodeImgAction(url, BizApi.RegisterPageApi.ApiName));
+            }
+        );
     }
 
     stopTimer() {
@@ -190,109 +208,110 @@ export class RegisterPage extends Component {
                 statusBarCustomStyle={statusBar}
                 hide={false}/>;
         let str = '注册即同意  ';
-        let keyboardAwareScrollView = <KeyboardAwareScrollView ref={(r) => {
-            this.keyboardAwareScrollViewRef=r;
-        }}
-                                                               keyboardDismissMode="interactive"
-                                                               keyboardShouldPersistTaps={true}
-                                                               getTextInputRefs={() => {
-                                                                   return [this.emailInputViewRef, this.passInputViewRef, this.imgOauthCodeInputViewRef, this.InviteCodeInputViewRef];
-                                                               }}
-                                                               style={{
-                                                                   //backgroundColor: Colors.getRandomColor()
-                                                               }}
-        >
-            {BizViews.ebatesViews()}
-            {/*邮箱输入框的容器view*/}
-            {BizInputViews.emailInputView({},
-                (event) => this.updateEmail(event.nativeEvent.text),
-                () => {
-                //主动让光标下移
-                    this.passInputViewRef.focus();
-                    this.keyboardAwareScrollViewRef._scrollToFocusedTextInput();
-                },
-                (r) => {
-                    this.emailInputViewRef = r;
-                },'邮箱','输入邮箱地址'
-            )}
-            {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -0.5})}
-            {/*密码*/}
-            {BizInputViews.passInputView({},
-                (event) => this.updatePassword(event.nativeEvent.text),
-                (r) => {
-                    this.passInputViewRef = r;
-                },
-                () => {
-                    //主动让光标下移
-                    this.imgOauthCodeInputViewRef.focus();
-                    this.keyboardAwareScrollViewRef._scrollToFocusedTextInput();
+        let keyboardAwareScrollView =
+            <KeyboardAwareScrollView ref={(r) => {
+                this.keyboardAwareScrollViewRef = r;
+            }}
+                                     keyboardDismissMode="interactive"
+                                     keyboardShouldPersistTaps={true}
+                                     getTextInputRefs={() => {
+                                         return [this.emailInputViewRef, this.passInputViewRef, this.imgOauthCodeInputViewRef, this.InviteCodeInputViewRef];
+                                     }}
+                                     style={{
+                                         //backgroundColor: Colors.getRandomColor()
+                                     }}
+            >
+                {BizViews.ebatesViews()}
+                {/*邮箱输入框的容器view*/}
+                {BizInputViews.emailInputView({},
+                    (event) => this.updateEmail(event.nativeEvent.text),
+                    () => {
+                        //主动让光标下移
+                        this.passInputViewRef.focus();
+                        this.keyboardAwareScrollViewRef._scrollToFocusedTextInput();
+                    },
+                    (r) => {
+                        this.emailInputViewRef = r;
+                    }, '邮箱', '输入邮箱地址'
+                )}
+                {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -0.5})}
+                {/*密码*/}
+                {BizInputViews.passInputView({},
+                    (event) => this.updatePassword(event.nativeEvent.text),
+                    (r) => {
+                        this.passInputViewRef = r;
+                    },
+                    () => {
+                        //主动让光标下移
+                        this.imgOauthCodeInputViewRef.focus();
+                        this.keyboardAwareScrollViewRef._scrollToFocusedTextInput();
+                    }
+                )}
+                {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -0.5})}
+                {/*验证码*/}
+                {BizInputViews.imgOauthCodeInputView(
+                    {},
+                    (event) => this.updateImgOauthCode(event.nativeEvent.text),
+                    this.props.RegisterReducer.oauthCodeImgUri,
+                    () => this.getOauthCodeImg(),
+                    (r) => {
+                        this.imgOauthCodeInputViewRef = r;
+                    },
+                    () => {
+                        //主动让光标下移
+                        this.InviteCodeInputViewRef.focus();
+                        this.keyboardAwareScrollViewRef._scrollToFocusedTextInput();
+                    }
+                )
                 }
-            )}
-            {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -0.5})}
-            {/*验证码*/}
-            {BizInputViews.imgOauthCodeInputView(
-                {},
-                (event) => this.updateImgOauthCode(event.nativeEvent.text),
-                this.props.RegisterReducer.oauthCodeImgUri,
-                () => this.getOauthCodeImg(),
-                (r) => {
-                    this.imgOauthCodeInputViewRef = r;
-                },
-                () => {
-                    //主动让光标下移
-                    this.InviteCodeInputViewRef.focus();
-                    this.keyboardAwareScrollViewRef._scrollToFocusedTextInput();
-                }
-            )
-            }
-            {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -0.5})}
-            {/*邀请码*/}
-            {BizInputViews.InviteCodeInputView({},
-                (event) => this.updateInviteCode(event.nativeEvent.text),
-                (r) => {
-                    this.InviteCodeInputViewRef = r;
-                }
-            )}
-            {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -0.5})}
-            {/*服务条款容器view*/}
-            <View style={{
-                height: 65,
-                //paddingLeft: 55,
-                flexDirection: 'row',
-                //justifyContent: 'flex-start',
-                alignItems: 'center',
-                //backgroundColor: Colors.getRandomColor()
-            }}>
-                {BizViews.checkBox((isSelect) => {
-                    Log.log('isSelect===' + isSelect);
-                    this.props.dispatch(RegisterRelevantActions.changeRegisterBtStatesActions(isSelect))
-                })}
-                <Text style={{
-                    color: 'rgba(85, 85, 85, 1)',
-                    fontSize: 12, marginLeft: 10
+                {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -0.5})}
+                {/*邀请码*/}
+                {BizInputViews.InviteCodeInputView({},
+                    (event) => this.updateInviteCode(event.nativeEvent.text),
+                    (r) => {
+                        this.InviteCodeInputViewRef = r;
+                    }
+                )}
+                {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -0.5})}
+                {/*服务条款容器view*/}
+                <View style={{
+                    height: 65,
+                    //paddingLeft: 55,
+                    flexDirection: 'row',
+                    //justifyContent: 'flex-start',
+                    alignItems: 'center',
                     //backgroundColor: Colors.getRandomColor()
                 }}>
-                    {str}
-                </Text>
-                <Text style={{
-                    color: 'rgba(54, 166, 66, 1)',
-                    fontSize: 12,
-                    //backgroundColor: Colors.getRandomColor()
-                }}
-                      onPress={
-                          () => this.onPressServiceProvision()
-                      }
-                >
-                    Ebates.cn服务条款
-                </Text>
-            </View>
-            {BizLogBt(() => this.onRegisterPress(), {
-                backgroundColor: this.props.RegisterReducer.registerBtState.backColor,
-                disabled: this.props.RegisterReducer.registerBtState.disabled,
-                title: '免费注册赠$5',
-                btStyle: {marginTop: 0, marginBottom: 20}
-            })}
-        </KeyboardAwareScrollView>;
+                    {BizViews.checkBox((isSelect) => {
+                        Log.log('isSelect===' + isSelect);
+                        this.props.dispatch(RegisterRelevantActions.changeRegisterBtStatesActions(isSelect))
+                    })}
+                    <Text style={{
+                        color: 'rgba(85, 85, 85, 1)',
+                        fontSize: 12, marginLeft: 10
+                        //backgroundColor: Colors.getRandomColor()
+                    }}>
+                        {str}
+                    </Text>
+                    <Text style={{
+                        color: 'rgba(54, 166, 66, 1)',
+                        fontSize: 12,
+                        //backgroundColor: Colors.getRandomColor()
+                    }}
+                          onPress={
+                              () => this.onPressServiceProvision()
+                          }
+                    >
+                        Ebates.cn服务条款
+                    </Text>
+                </View>
+                {BizLogBt(() => this.onRegisterPress(), {
+                    backgroundColor: this.props.RegisterReducer.registerBtState.backColor,
+                    disabled: this.props.RegisterReducer.registerBtState.disabled,
+                    title: '免费注册赠$5',
+                    btStyle: {marginTop: 0, marginBottom: 20}
+                })}
+            </KeyboardAwareScrollView>;
 
         return (
             <View style={styles.container}>
@@ -301,8 +320,6 @@ export class RegisterPage extends Component {
                     {keyboardAwareScrollView}
                 </View>
                 {this.renderRegisterSucessbt()}
-
-
             </View>
         );
     }

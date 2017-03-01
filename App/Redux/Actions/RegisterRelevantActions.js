@@ -3,6 +3,8 @@
  * 注册相关的actions
  */
 import Colors from '../../Utils/Colors'
+import *as BizApi from '../../NetWork/API/BizApi'
+
 
 export const registerBtStates={
     unable:{
@@ -30,6 +32,7 @@ export const  changeRegisterBtStates='changeRegisterBtStates';
 export function changeRegisterBtStatesActions(b) {
     return {
         type:changeRegisterBtStates,
+        ApiName:BizApi.RegisterPageApi.ApiName,
         newState:b?registerBtStates.enable:registerBtStates.unable
     }
 }

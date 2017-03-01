@@ -27,6 +27,7 @@ export const unLoginTokenSchema = {
         Log.log('TokenDB isExpires() 正在判断 未登录token 是否过期  this.data.expires_in='+this.data.expires_in+ '   new Date().getTime()='+new Date().getTime())
         return this.data.expires_in < new Date().getTime()/*获取当前时间*/;
     }
+
 }
 
 /**
@@ -39,8 +40,6 @@ export const loginTokenSchema = {
         expires_in: 0,
         access_token: '',
         refresh_token: '',
-        // client_id:'2',//获取登录token接口需要上传的数据
-        // client_secret:'R1T4xnle224xNLUm0Oq6joS7EhcK28wdUeodzj0u'//获取登录token接口需要上传的数据
     },
 
     /**
@@ -49,7 +48,20 @@ export const loginTokenSchema = {
      */
     isExpires(){
         return this.expires_in < new Date().getTime()/*获取当前时间*/;
+    },
+
+    //登录后token能否使用
+    available(){
+       return this.data.expires_in!=0;
     }
+}
+
+/**
+ * 判断当前可用的是哪个token对象
+ * @returns {{token_type: string, expires_in: number, access_token: string, refresh_token: string}}
+ */
+export function getAvailableToken() {
+    return loginTokenSchema.available()?loginTokenSchema:unLoginTokenSchema;
 }
 
 /**

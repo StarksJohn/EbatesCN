@@ -11,7 +11,8 @@ import SMSTimer from '../../Utils/SMSTimer'
 import BizSearchResultPagScrollableTabBar, {UpdateTabUnderlineWidthEventName} from '../../Comp/BizCommonComp/BizSearchResultPagScrollableTabBar'
 import *as Math from '../../Utils/Math'
 import *as TokenAPI from './TokenAPI'
-
+import *as RequestUtil from '../RequestUtil'
+import *as TokenDB from '../../DB/BizDB/TokenDB'
 
 /**
  * 注册页面的API
@@ -20,6 +21,68 @@ import *as TokenAPI from './TokenAPI'
 export const RegisterPageApi = {
     ApiName: 'RegisterPageApi',
 
+    /**
+     * 注册接口
+     */
+    registerUser (body) {
+        return new Promise(
+            (resolve, reject) => {
+
+                let url = RequestUtil.getStagingOrProductionHost() + 'users';
+                RequestUtil.POST(url,
+                    (header) => {
+                        commonApiHeaderAppend(header)
+                    }, body
+                ).then((responseData) => {
+                    resolve(responseData);
+                }).catch((error) => {
+                    reject(error);
+                });
+            }
+        );
+    }
+
+}
+
+/**
+ * 除了 获取非登录token接口, 其他接口的header里 都 需要加 ('Authorization', 'Bearer ' + 'xxx')
+ */
+export function commonApiHeaderAppend(header) {
+    let token = TokenDB.getAvailableToken();
+
+    header.append('Authorization', token.data.token_type + ' ' + token.data.access_token);//xxx是获取到的token,拿到token后的其他所有接口都传此header参数
+}
+
+/**
+ * Captcha 图片验证码接口
+ * @type {{ApiName: string, data: {captchaUrl: string, captchaUuid: string}}}
+ */
+export const ImgOauthCodeAPI = {
+    ApiName: 'ImgOauthCodeAPI',
+    data: {
+        captchaUrl: '',
+        captchaUuid: '',//注册接口里传给服务器
+    },
+    requestCaptcha() {
+        return new Promise(
+            (resolve, reject) => {
+
+                let url = RequestUtil.getStagingOrProductionHost() + 'captchaInfo';
+                RequestUtil.GET(url, null,
+                    (header) => {
+                        // header.append('Authorization', 'Bearer ' + 'xxx');//xxx是获取到的token,拿到token后的其他所有接口都传此header参数
+                        commonApiHeaderAppend(header)
+                    },
+                ).then((responseData) => {
+                    // Log.log('TokenAPI getClientTokenApi resolve ');
+                    this.data = responseData;
+                    resolve(this.data.captchaUrl);
+                }).catch((error) => {
+                    reject(error);
+                });
+            }
+        );
+    }
 }
 
 /**

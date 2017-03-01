@@ -55,7 +55,7 @@ export function getClientTokenApi() {
     return new Promise(
         (resolve, reject) => {
 
-            let url=RequestUtil.Staging_Host+'oauth/client_token';
+            let url=RequestUtil.getStagingOrProductionHost()+'oauth/client_token';
             let body = {
                 grant_type: 'client_credentials',
                 client_id: TokenDB.UnLoginTokenclient_id,

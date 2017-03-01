@@ -88,6 +88,7 @@ export function passInputView(InputItemLeftViewStyles, updatePasswordCallBack, r
  * refCallback r就是 指向 TextInput 控件的 指针对象
  * */
 export function imgOauthCodeInputView(styles, updateImgOauthCodeCallBack, uri, updateImgCallBack, refCallback, onSubmitEditingCallback) {
+    Log.log('BizInputViews imgOauthCodeInputView 开始重绘')
     return (
         <View style={[GlobalStyles.InputItemContainer, styles]}>
             <View style={[GlobalStyles.IpputItemLeftView, {paddingRight: 16}]}>

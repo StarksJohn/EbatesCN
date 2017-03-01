@@ -43,7 +43,8 @@ export default function RegisterReducer (state = initialState, action){
         case ImgOauthCodeActions.changeOauthCodeImg:
         {
             let nextState = state
-                .setIn(['oauthCodeImgUri'], action.uri);
+                .setIn(['oauthCodeImgUri'], action.uri)
+                // .setIn(['randomParaForRerenderImgOauthCode'], action.randomParaForRerenderImgOauthCode);
             return nextState
         }
             break;

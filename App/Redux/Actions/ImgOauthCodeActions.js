@@ -17,6 +17,6 @@ export function changeOauthCodeImgAction(uri,apiName) {
     return {
         type:changeOauthCodeImg,
         uri:uri,
-        ApiName:apiName
+        ApiName:apiName,
     }
 }

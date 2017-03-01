@@ -2,7 +2,17 @@
  * 通用请求函数
  * RequestUtil
  */
+export const isProductionEnvironment = false;//是否是生产环境
 export const Staging_Host = 'https://api-staging-current.ebates.cn/';//测试环境的url的 host
+export const Production_Host = 'https://api-staging-current.ebates.cn/';//生产环境的url的 host
+
+/**
+ * 如果打了生产包, 把 isProductionEnvironment=true,host就统一变成 Production_Host了
+ * @returns {string}
+ */
+export function getStagingOrProductionHost() {
+    return isProductionEnvironment ? Production_Host : Staging_Host;
+}
 
 /**
  * 通用请求
@@ -15,11 +25,6 @@ export const Staging_Host = 'https://api-staging-current.ebates.cn/';//测试环
 export const request = (url, method, headersAppendCallBack, body) => {
     let header = new Headers();
     header.append('Content-Type', 'application/x-www-form-urlencoded');//headers里固定要传的参数,因body传 key=value&key=value 格式的字符串
-    // headersArray.map( 此方式拿不到 外部的header,只能用 callBack形式外部 添加 header
-    //     (v,i)=>{
-    //         header.append(JSON.stringify(v.key),JSON.stringify(v.value));
-    //     }
-    // );
     headersAppendCallBack(header);
 
     let request = new Request(url, {
@@ -29,7 +34,8 @@ export const request = (url, method, headersAppendCallBack, body) => {
 
     return new Promise((resolve, reject) => {
         fetch(request)
-            .then((response) => {
+            .then((response) => {//通用的所有接口都会返回的response通用数据 结构,目前 注册接口返回的 response 对象不是 json格式,导致 response.json()
+                // 失败;后期服务器会在 response 里加个 message 字段,来 描述接口返回 的信息
                 if (response.ok) {
                     isOk = true;
                 } else {
@@ -96,7 +102,10 @@ const encodeURL = (url, params) => {
  * @returns {string}
  */
 const encodeBody = (body) => {
-    let paramsArray = [];
-    Object.keys(body).forEach(key => paramsArray.push(key + '=' + body[key]))
-    return paramsArray.join('&');
+    if (body) {
+        let paramsArray = [];
+        Object.keys(body).forEach(key => paramsArray.push(key + '=' + body[key]))
+        return paramsArray.join('&');
+    }
+    return null;
 }
