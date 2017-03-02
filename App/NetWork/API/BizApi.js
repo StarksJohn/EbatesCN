@@ -73,7 +73,8 @@ export const LogInApi = {
                     TokenDB.saveLoginStateToken(responseData);
                     resolve(TokenDB.loginTokenSchema.data);
                 }).catch((error) => {
-                    BizShowToast(error.error.message);
+                    // BizShowToast(error.error.message);
+                    Log.log('BizApi LogInApi getAccessToken 登录接口失败 error='+Log.writeObjToJson(error));
                     reject(error);
                 });
             }
@@ -545,7 +546,7 @@ export const MerchantPageApi = {
 
                 dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
 
-                TokenAPI.checkAvailableTokenExpires().then(
+                TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
                     () => {
                         dispatch(MerchantPageApi.fetchTopTen());
                     }

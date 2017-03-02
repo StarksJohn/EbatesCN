@@ -121,6 +121,7 @@ export class LogInPage extends Component {
         BizApi.LogInApi.getAccessToken({identity:this.email,code:this.password}).then(
             (responseData) => {
                 // Log.log('LogInPage onLoginPress responseData='+responseData);
+                gUserDB.login({userID:this.email,password:this.password});
             }
         );
 

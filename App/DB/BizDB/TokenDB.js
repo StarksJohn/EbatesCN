@@ -40,6 +40,7 @@ export const unLoginTokenSchema = {
         return new Promise(
             (resolve, reject) => {
                 storage.sync.unLoginStateToken().then((tokenObj) => {
+                    Log.log('TokenDB unLoginTokenSchema refreshToken 未登录token 刷新成功')
                     resolve();
                 });
             }
@@ -98,7 +99,7 @@ export function getAvailableToken() {
 }
 
 /**
- * 缓存一个 未登录状态token 数据结构
+ * 缓存一个 未登录状态token 数据结构,并更新 内存里的 非登录token
  * @param tokenSchema
  */
 export function saveUnLoginStateToken(tokenSchema) {
@@ -122,7 +123,7 @@ export function saveUnLoginStateToken(tokenSchema) {
 }
 
 /**
- * 缓存一个 登录后状态token 数据结构
+ * 缓存一个 登录后状态token 数据结构,并更新 内存里的 登录token
  * @param tokenSchema
  */
 export function saveLoginStateToken(tokenSchema) {
@@ -151,8 +152,26 @@ export function loadUnLoginStateToken() {
         (resolve, reject) => {
             gBizStorage.loadStorage(UnLoginStateToken, '', true, false).then((result) => {
                 //noinspection JSAnnotator,JSAnnotator
-                unLoginTokenSchema.data = {...result};
+                unLoginTokenSchema.data = result;
                 resolve(unLoginTokenSchema.data);
+            }).catch(err => {
+                reject(err);
+            })
+        }
+    );
+}
+
+/**
+ * 读取 登录token 的缓存,过期会自动 调 sync 的 LoginStateToken()
+ * @returns {Promise}, 外部调 loadUnLoginStateToken 时 也得 加 then()
+ */
+export function loadLoginStateToken() {
+    return new Promise(
+        (resolve, reject) => {
+            gBizStorage.loadStorage(LoginStateToken, '', true, false).then((result) => {
+                //noinspection JSAnnotator,JSAnnotator
+                loginTokenSchema.data = result;
+                resolve(loginTokenSchema.data);
             }).catch(err => {
                 reject(err);
             })
