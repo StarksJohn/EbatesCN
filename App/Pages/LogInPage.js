@@ -22,6 +22,7 @@ import *as BizInputViews from '../Comp/BizCommonComp/BizInputViews'
 import *as ImgOauthCodeAPI from '../NetWork/API/ImgOauthCodeAPI'
 import ForgetPassPage from './ForgetPassPage'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
+import *as BizApi from '../NetWork/API/BizApi'
 
 /**
  *  展示组件
@@ -38,7 +39,7 @@ export class LogInPage extends Component {
             });
         }
 
-        this.email = '';
+        this.email = '';//也可输入 手机号
         this.password = '';
         this.imgOauthCode = '';//图片验证码
         this.props.dispatch(LogInActions.hideImgOauthInputAction());
@@ -103,10 +104,10 @@ export class LogInPage extends Component {
     // }
 
     onLoginPress() {
-        if (!OauthForm.oauthEmail(this.email)) {
-            BizShowToast('邮箱地址不正确');
-            return;
-        }
+        // if (!OauthForm.oauthEmail(this.email)) {
+        //     BizShowToast('邮箱地址不正确');
+        //     return;
+        // }
         if (!OauthForm.oauthPass(this.password)) {
             BizShowToast('密码至少6位字符或数字');
             return;
@@ -116,6 +117,12 @@ export class LogInPage extends Component {
             BizShowToast('请输入正确的验证码');
             return;
         }
+
+        BizApi.LogInApi.getAccessToken({identity:this.email,code:this.password}).then(
+            (responseData) => {
+                // Log.log('LogInPage onLoginPress responseData='+responseData);
+            }
+        );
 
         // showToast('onLoginPress ok ');
         this.passErrorCount++;

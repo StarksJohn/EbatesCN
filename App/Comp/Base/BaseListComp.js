@@ -37,17 +37,17 @@ export default class BaseListComp extends Component {
         renderNoDataView: PropTypes.any,//外部可自定义如何绘制 列表无数据 状态的 view
         scrollRenderAheadDistance: PropTypes.number,//下一个 屏幕外的 cell(一般cell都是 从 屏幕底部 入屏) 距离屏幕多少像素时 就开始 画出来,避免 cell
         // 入屏后还没画完;如果cell 比较高,此值可设置小点,默认 1000 像素
-        initialListSize:PropTypes.number,//初始状态下，要加载的数据条数等于 （默认为 10 条）；
+        initialListSize: PropTypes.number,//初始状态下，要加载的数据条数等于 （默认为 10 条）；
     };
 
     static defaultProps = {
         onEndReachedThreshold: GlobalStyles.bottomTabBarHeight, //10,
         automaticallyAdjustContentInsets: false,
-        scrollRenderAheadDistance:1000,
-        initialListSize:10,
-        onScroll: ()=> {
+        scrollRenderAheadDistance: 1000,
+        initialListSize: 10,
+        onScroll: () => {
         },
-        renderScrollComponent: ()=> {
+        renderScrollComponent: () => {
         },
 
     };
@@ -57,7 +57,7 @@ export default class BaseListComp extends Component {
 
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.props.dispatch(BaseListActions.WillUnmount(this.props.baseReducer.ApiName));
     }
 
@@ -177,7 +177,7 @@ export default class BaseListComp extends Component {
 
             // showToast('_onLoadMore 出错 !!!  this.isLoadingMore==' + this.isLoadingMore + 'this.props.couldLoadMore==' + this.props.couldLoadMore);
 
-            Log.log('BaseListComp onLoadMore this.props.baseReducer.isRenderFooterView=='+this.props.baseReducer.isRenderFooterView)
+            Log.log('BaseListComp onLoadMore this.props.baseReducer.isRenderFooterView==' + this.props.baseReducer.isRenderFooterView)
             return;
         }
 

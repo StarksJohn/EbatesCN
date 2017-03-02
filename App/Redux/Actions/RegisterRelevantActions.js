@@ -25,6 +25,7 @@ export const  registerPageInitState='registerPageInitState';
 export function registerPageInitStateActions() {
     return {
         type:registerPageInitState,
+        ApiName:BizApi.RegisterPageApi.ApiName,
     }
 }
 
@@ -41,5 +42,6 @@ export const  showRegisterSucessbt='showRegisterSucessbt';
 export function showRegisterSucessbtAction() {
     return {
         type:showRegisterSucessbt,
+        ApiName:BizApi.RegisterPageApi.ApiName,
     }
 }

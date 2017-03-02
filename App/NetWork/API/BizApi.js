@@ -36,6 +36,44 @@ export const RegisterPageApi = {
                 ).then((responseData) => {
                     resolve(responseData);
                 }).catch((error) => {
+                    BizShowToast(error.error.message);
+                    reject(error);
+                });
+            }
+        );
+    }
+
+}
+
+/**
+ * 登录的API
+ * @type {{ApiName: string}}
+ */
+export const LogInApi = {
+    ApiName: 'LogInApi',
+
+    /**
+     * 登录接口
+     */
+    getAccessToken (body) {
+        return new Promise(
+            (resolve, reject) => {
+
+                body = {
+                    ...body, grant_type: 'password',
+                    client_id: TokenDB.LoginTokenclient_id,
+                    client_secret: TokenDB.LoginTokenclient_secret
+                }
+                let url = RequestUtil.getStagingOrProductionHost() + 'oauth/access_token';
+                RequestUtil.POST(url,
+                    (header) => {
+                        commonApiHeaderAppend(header)
+                    }, body
+                ).then((responseData) => {
+                    TokenDB.saveLoginStateToken(responseData);
+                    resolve(TokenDB.loginTokenSchema.data);
+                }).catch((error) => {
+                    BizShowToast(error.error.message);
                     reject(error);
                 });
             }
@@ -48,7 +86,7 @@ export const RegisterPageApi = {
  * 除了 获取非登录token接口, 其他接口的header里 都 需要加 ('Authorization', 'Bearer ' + 'xxx')
  */
 export function commonApiHeaderAppend(header) {
-    let token = TokenDB.getAvailableToken();
+    let token = TokenDB.getAvailableToken();//此token必须是未过期的
 
     header.append('Authorization', token.data.token_type + ' ' + token.data.access_token);//xxx是获取到的token,拿到token后的其他所有接口都传此header参数
 }
@@ -507,8 +545,7 @@ export const MerchantPageApi = {
 
                 dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
 
-                // this.fetchTopTen();
-                TokenAPI.checkUnLoginTokenExpires().then(
+                TokenAPI.checkAvailableTokenExpires().then(
                     () => {
                         dispatch(MerchantPageApi.fetchTopTen());
                     }

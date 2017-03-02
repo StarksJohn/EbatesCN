@@ -5,15 +5,20 @@
  */
 
 const UnLoginStateToken = 'unLoginStateToken';// 未登录状态下 的token 的key
-export const UnLoginTokenclient_id='1';//
-export const UnLoginTokenclient_secret='bZRiVM1KmHFFmdpjJDcbh78gyHRwoqAvlIarXOb1';//获取未登录token接口需要上传的数据
+const LoginStateToken = 'LoginStateToken';// 登录状态下 的token 的key
+export const UnLoginTokenclient_id = '1';//
+export const UnLoginTokenclient_secret = 'bZRiVM1KmHFFmdpjJDcbh78gyHRwoqAvlIarXOb1';//获取未登录token接口需要上传的数据
+
+export const LoginTokenclient_id = '2';//
+export const LoginTokenclient_secret = 'R1T4xnle224xNLUm0Oq6joS7EhcK28wdUeodzj0u';//获取登录token接口需要上传的数据
 
 /**
  * 内存里的 未登陆的 token的 统一数据结构
  * @type {{token_type: string, expires_in: number, access_token: string, refresh_token: string}}
  */
 export const unLoginTokenSchema = {
-    data:{
+    name:'未登录token',
+    data: {
         token_type: '',
         expires_in: 0,
         access_token: '',
@@ -24,10 +29,22 @@ export const unLoginTokenSchema = {
      * @returns {boolean}
      */
     isExpires(){
-        Log.log('TokenDB isExpires() 正在判断 未登录token 是否过期  this.data.expires_in='+this.data.expires_in+ '   new Date().getTime()='+new Date().getTime())
+        Log.log('TokenDB unLoginTokenSchema isExpires() 正在判断 未登录token 是否过期  this.data.expires_in=' + this.data.expires_in + '   new Date().getTime()=' + new Date().getTime())
         return this.data.expires_in < new Date().getTime()/*获取当前时间*/;
-    }
+    },
 
+    /**
+     * 过期后刷新token
+     */
+    refreshToken(){
+        return new Promise(
+            (resolve, reject) => {
+                storage.sync.unLoginStateToken().then((tokenObj) => {
+                    resolve();
+                });
+            }
+        );
+    }
 }
 
 /**
@@ -35,7 +52,9 @@ export const unLoginTokenSchema = {
  * @type {{token_type: string, expires_in: number, access_token: string, refresh_token: string}}
  */
 export const loginTokenSchema = {
-    data:{
+    name:'已登录token',
+
+    data: {
         token_type: '',
         expires_in: 0,
         access_token: '',
@@ -47,21 +66,35 @@ export const loginTokenSchema = {
      * @returns {boolean}
      */
     isExpires(){
+        Log.log('TokenDB loginTokenSchema isExpires() 正在判断 登录token 是否过期  this.data.expires_in=' + this.data.expires_in + '   new Date().getTime()=' + new Date().getTime())
+
         return this.expires_in < new Date().getTime()/*获取当前时间*/;
     },
 
     //登录后token能否使用
     available(){
-       return this.data.expires_in!=0;
+        return this.data.expires_in != 0;
+    },
+    /**
+     * 过期后刷新token
+     */
+    refreshToken(){
+        return new Promise(
+            (resolve, reject) => {
+                // storage.sync.unLoginStateToken().then((tokenObj) => {
+                //     resolve();
+                // });
+            }
+        );
     }
 }
 
 /**
- * 判断当前可用的是哪个token对象
+ * 判断当前可用的是哪个token对象,登录token有数据,就优先用登录token
  * @returns {{token_type: string, expires_in: number, access_token: string, refresh_token: string}}
  */
 export function getAvailableToken() {
-    return loginTokenSchema.available()?loginTokenSchema:unLoginTokenSchema;
+    return loginTokenSchema.available() ? loginTokenSchema : unLoginTokenSchema;
 }
 
 /**
@@ -74,18 +107,39 @@ export function saveUnLoginStateToken(tokenSchema) {
     //因以后调 gBizStorage.loadStorage 拿到只是 tokenSchema,而自己 想判断  是否过期,必须 和  storage.js里 的 save(params)方法一样, 修改 tokenSchema.expires_in为 当前毫秒时间+服务器发来的多少毫秒后过期,如 let now = new Date().getTime(); data.expires = now + expires; 以后 从 缓存 拿到 tokenSchema 后, tokenSchema.expires_in 就是 真正我能用 毫秒判断的 过期时间
     let now = new Date().getTime();
     //模拟过期的时间为5秒后过期
-    // tokenSchema.expires_in=5;
+    tokenSchema.expires_in=5;
 
     // let newTokenSchema
-    unLoginTokenSchema.data={...tokenSchema,expires_in:now + tokenSchema.expires_in * 1000};
+    unLoginTokenSchema.data = {...tokenSchema, expires_in: now + tokenSchema.expires_in * 1000};
 
     // Log.log('TokenDB saveUnLoginStateToken 准备缓存最新的非登录token ='+ Log.writeObjToJson(newTokenSchema));
 
-    gBizStorage.saveStorage(UnLoginStateToken, '', unLoginTokenSchema.data, tokenSchema.expires_in/*服务器发来的是 秒,故得换算成 毫秒再缓存*/ * 1000 );
+    gBizStorage.saveStorage(UnLoginStateToken, '', unLoginTokenSchema.data, tokenSchema.expires_in/*服务器发来的是 秒,故得换算成 毫秒再缓存*/ * 1000);
 
     // unLoginTokenSchema.data=newTokenSchema;
-    Log.log('TokenDB saveUnLoginStateToken unLoginTokenSchema.data='+ Log.writeObjToJson(unLoginTokenSchema.data));
-    BizShowToast('TokenDB saveUnLoginStateToken 缓存未登录token成功, unLoginTokenSchema.data= '+Log.writeObjToJson(unLoginTokenSchema.data));
+    Log.log('TokenDB saveUnLoginStateToken unLoginTokenSchema.data=' + Log.writeObjToJson(unLoginTokenSchema.data));
+    BizShowToast('TokenDB saveUnLoginStateToken 缓存未登录token成功, unLoginTokenSchema.data= ' + Log.writeObjToJson(unLoginTokenSchema.data));
+}
+
+/**
+ * 缓存一个 登录后状态token 数据结构
+ * @param tokenSchema
+ */
+export function saveLoginStateToken(tokenSchema) {
+    // Log.log('TokenDB  saveUnLoginStateToken tokenSchema =' + Log.writeObjToJson(tokenSchema));
+
+    //因以后调 gBizStorage.loadStorage 拿到只是 tokenSchema,而自己 想判断  是否过期,必须 和  storage.js里 的 save(params)方法一样, 修改 tokenSchema.expires_in为 当前毫秒时间+服务器发来的多少毫秒后过期,如 let now = new Date().getTime(); data.expires = now + expires; 以后 从 缓存 拿到 tokenSchema 后, tokenSchema.expires_in 就是 真正我能用 毫秒判断的 过期时间
+    let now = new Date().getTime();
+    //模拟过期的时间为5秒后过期
+    // tokenSchema.expires_in=5;
+
+    loginTokenSchema.data = {...tokenSchema, expires_in: now + tokenSchema.expires_in * 1000};
+
+    gBizStorage.saveStorage(LoginStateToken, '', loginTokenSchema.data, tokenSchema.expires_in/*服务器发来的是 秒,故得换算成 毫秒再缓存*/ * 1000);
+
+    // unLoginTokenSchema.data=newTokenSchema;
+    Log.log('TokenDB saveLoginStateToken LoginStateToken.data=' + Log.writeObjToJson(loginTokenSchema.data));
+    // BizShowToast('TokenDB saveUnLoginStateToken 缓存未登录token成功, unLoginTokenSchema.data= '+Log.writeObjToJson(unLoginTokenSchema.data));
 }
 
 /**
@@ -97,7 +151,7 @@ export function loadUnLoginStateToken() {
         (resolve, reject) => {
             gBizStorage.loadStorage(UnLoginStateToken, '', true, false).then((result) => {
                 //noinspection JSAnnotator,JSAnnotator
-                unLoginTokenSchema.data={...result};
+                unLoginTokenSchema.data = {...result};
                 resolve(unLoginTokenSchema.data);
             }).catch(err => {
                 reject(err);
