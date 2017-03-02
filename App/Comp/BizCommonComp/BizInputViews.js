@@ -30,6 +30,7 @@ export function emailInputView(styles, updateEmailCallBack, onSubmitEditingCallb
                         refCallback(r);
                     }}
                     returnKeyType={'next'}
+                    blurOnSubmit={true}
                     style={GlobalStyles.textInput}
                     autoFocus={false}
                     placeholder={placeholder}//'输入邮箱地址'

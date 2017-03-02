@@ -130,3 +130,12 @@ const encodeBody = (body) => {
     }
     return null;
 }
+
+/**
+ * 所有接口通用的 返回错误信息的 提示
+ * @param e
+ */
+export function showErrorMsg(error) {
+    BizShowToast(error.error.message);
+
+}

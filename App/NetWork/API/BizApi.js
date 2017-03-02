@@ -13,6 +13,7 @@ import *as Math from '../../Utils/Math'
 import *as TokenAPI from './TokenAPI'
 import *as RequestUtil from '../RequestUtil'
 import *as TokenDB from '../../DB/BizDB/TokenDB'
+import *as BizLoadingView from '../../Comp/BizCommonComp/BizLoadingView'
 
 /**
  * 注册页面的API
@@ -27,6 +28,7 @@ export const RegisterPageApi = {
     registerUser (body) {
         return new Promise(
             (resolve, reject) => {
+                BizLoadingView.showBizLoadingView('加载中....');
 
                 let url = RequestUtil.getStagingOrProductionHost() + 'users';
                 RequestUtil.POST(url,
@@ -35,8 +37,12 @@ export const RegisterPageApi = {
                     }, body
                 ).then((responseData) => {
                     resolve(responseData);
+                    BizLoadingView.closeBizLoadingView();
+
                 }).catch((error) => {
-                    BizShowToast(error.error.message);
+                    RequestUtil.showErrorMsg(error);
+                    BizLoadingView.closeBizLoadingView();
+
                     reject(error);
                 });
             }
@@ -58,6 +64,7 @@ export const LogInApi = {
     getAccessToken (body) {
         return new Promise(
             (resolve, reject) => {
+                BizLoadingView.showBizLoadingView('加载中....');
 
                 body = {
                     ...body, grant_type: 'password',
@@ -70,11 +77,14 @@ export const LogInApi = {
                         commonApiHeaderAppend(header)
                     }, body
                 ).then((responseData) => {
+                    BizLoadingView.closeBizLoadingView();
+
                     TokenDB.saveLoginStateToken(responseData);
                     resolve(TokenDB.loginTokenSchema.data);
                 }).catch((error) => {
-                    // BizShowToast(error.error.message);
-                    Log.log('BizApi LogInApi getAccessToken 登录接口失败 error='+Log.writeObjToJson(error));
+                    RequestUtil.showErrorMsg(error);
+                    BizLoadingView.closeBizLoadingView();
+
                     reject(error);
                 });
             }

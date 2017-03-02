@@ -6,17 +6,16 @@
 import React, {Component} from 'react';
 import {Navigator, StatusBar, StyleSheet, View, Platform, DeviceEventEmitter} from 'react-native';
 // import RootPagesContainer from '../Redux/Container/RootPagesContainer'
-import BizToast from '../Comp/BizCommonComp/BizToast'
 
 /**
  * 返回到指定页面
  * @param navigator this.props.navigator
  * @param pageName :eg RootPagesContainer
  */
-export function popToDesignatedPage(navigator,routeName) {
+export function popToDesignatedPage(navigator, routeName) {
 
-    for (let i=0; i<navigator.getCurrentRoutes().length ;i++ ) {
-        let route=navigator.getCurrentRoutes()[i];
+    for (let i = 0; i < navigator.getCurrentRoutes().length; i++) {
+        let route = navigator.getCurrentRoutes()[i];
         if (route.name === routeName) {
             navigator.popToRoute(route);
             return true;
@@ -30,11 +29,11 @@ export function popToDesignatedPage(navigator,routeName) {
  * @param navigator
  * @param routeName
  */
-export function routeNumsFromCurrentRoutes(navigator,routeName) {
+export function routeNumsFromCurrentRoutes(navigator, routeName) {
 
-    let count=0;//routeName和当前场景的route 距离几个 route
-    for (let i=navigator.getCurrentRoutes().length-1; i>=0 ;i-- ) {
-        let route=navigator.getCurrentRoutes()[i];
+    let count = 0;//routeName和当前场景的route 距离几个 route
+    for (let i = navigator.getCurrentRoutes().length - 1; i >= 0; i--) {
+        let route = navigator.getCurrentRoutes()[i];
         if (route.name === routeName) {
             return count;
         }
@@ -62,7 +61,7 @@ export default class RootNavigator extends Component {
     }
 
     handlerConfigureScene = (route, routeStack) => {
-        if (route.name===gRouteName.LogInPage || route.name===gRouteName.RegisterPage || route.name===gRouteName.phoneQuickLogPage) {
+        if (route.name === gRouteName.LogInPage || route.name === gRouteName.RegisterPage || route.name === gRouteName.phoneQuickLogPage) {
             return Navigator.SceneConfigs.FloatFromBottom;
         } else {
             return Navigator.SceneConfigs.PushFromRight;
@@ -93,8 +92,6 @@ export default class RootNavigator extends Component {
                      RootHomeNavigatorContainer和 RooRecommendFriendNavContainer */}
                     configureScene={this.handlerConfigureScene}
                     renderScene={this.renderScene}
-                />
-                <BizToast
                 />
             </View>
         );

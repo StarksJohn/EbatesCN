@@ -4,10 +4,7 @@ import GlobalVar from '../Global/GlobalVar'
 import configureStore from '../Redux/Store';
 import SplashPage from '../Pages/SplashPage';
 import RootComponent from './RootComponent'
-// import MainPageContainer from '../containers/MainPageContainer';//根据平台自动加载 MainPageContainer.ios.js 或
-// MainPageContainer.android.js
-// import {DEBUG, RDEBUG} from '../constants/GlobalConst';
-// import Storage from '../db/CommonDB/Storage'
+
 
 const store = configureStore();//唯一的State树
 
@@ -33,6 +30,7 @@ class RootProvider extends Component {
                 //Provider: 把store和视图绑定在了一起,包装根组件
                 <Provider store={store}>
                     <RootComponent />
+
                 </Provider>
             );
         }

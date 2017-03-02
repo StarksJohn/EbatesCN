@@ -82,9 +82,9 @@ export class LogInPage extends Component {
         Log.log('this.email==' + this.email);
     }
 
-    onSubmit() {
-        Log.log('LogInPage onSubmit');
-    }
+    // onSubmit() {
+    //     Log.log('LogInPage onSubmit');
+    // }
 
     updatePassword(text) {
         this.password = text;
@@ -108,6 +108,10 @@ export class LogInPage extends Component {
         //     BizShowToast('邮箱地址不正确');
         //     return;
         // }
+
+        // BizLoadingView.showBizLoadingView('加载中....');
+        // BizLoadingView.closeBizLoadingView();
+
         if (!OauthForm.oauthPass(this.password)) {
             BizShowToast('密码至少6位字符或数字');
             return;
@@ -118,19 +122,28 @@ export class LogInPage extends Component {
             return;
         }
 
+        //主动隐藏键盘,避免 菊花被键盘盖住
+        if (this.emailInputViewRef.isFocused()){
+            this.emailInputViewRef.blur();
+        }else if (this.passInputViewRef.isFocused()){
+            this.passInputViewRef.blur();
+        }
+
         BizApi.LogInApi.getAccessToken({identity:this.email,code:this.password}).then(
             (responseData) => {
                 // Log.log('LogInPage onLoginPress responseData='+responseData);
                 gUserDB.login({userID:this.email,password:this.password});
             }
-        );
+        ).catch((error) => {
+             // BizShowToast(error.error.message);
+        });
 
         // showToast('onLoginPress ok ');
-        this.passErrorCount++;
-        if (this.passErrorCount == 3) {
-            this.props.dispatch(LogInActions.showImgOauthInputAction());
-            this.getOauthCodeImg();
-        }
+        // this.passErrorCount++;
+        // if (this.passErrorCount == 3) {
+        //     this.props.dispatch(LogInActions.showImgOauthInputAction());
+        //     this.getOauthCodeImg();
+        // }
     }
 
     //快捷登录
@@ -195,7 +208,7 @@ export class LogInPage extends Component {
                     //主动让光标下移
                     this.passInputViewRef.focus();
                     this.keyboardAwareScrollViewRef._scrollToFocusedTextInput();
-                    this.onSubmit();
+                    {/*this.onSubmit();*/}
                 },
                 (r) => {
                     this.emailInputViewRef = r;

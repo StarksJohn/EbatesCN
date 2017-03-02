@@ -117,6 +117,17 @@ export class RegisterPage extends Component {
             return;
         }
 
+        //主动隐藏键盘,避免 菊花被键盘盖住
+        if (this.emailInputViewRef.isFocused()){
+            this.emailInputViewRef.blur();
+        }else if (this.passInputViewRef.isFocused()){
+            this.passInputViewRef.blur();
+        }else if (this.imgOauthCodeInputViewRef.isFocused()){
+            this.imgOauthCodeInputViewRef.blur();
+        }else if (this.InviteCodeInputViewRef.isFocused()){
+            this.InviteCodeInputViewRef.blur();
+        }
+
         BizApi.RegisterPageApi.registerUser({
             email: this.email,
             password: this.password,
