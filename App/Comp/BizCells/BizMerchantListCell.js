@@ -71,7 +71,7 @@ export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRo
                 {/*logo的背景*/}
                 <View style={{
                     marginLeft: 0, marginRight: -1/*盖住 每行标签的第一个竖线*/, width: logoW, justifyContent: 'center',
-                    //backgroundColor: Colors.getRandomColor()
+                    backgroundColor: Colors.white//白色为了盖住右边的竖线
                 }}>
                     {/*logo 用 www.ebates.com 里的logo,如 https://www.ebates.com/merchant_images/large/icon_ashford.gif
                      ,宽高和美工约定好了, 在 顶部到 分割线 之间 上下居中*/}

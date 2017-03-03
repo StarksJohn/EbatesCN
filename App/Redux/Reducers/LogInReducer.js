@@ -3,9 +3,18 @@
  */
 import InitialState from '../InitialState/LogInInitialState'
 import *as LogInActions from '../Actions/LogInActions'
-const initialState = new InitialState();
+import *as BizApi from '../../NetWork/API/BizApi'
+import *as ImgOauthCodeActions from '../Actions/ImgOauthCodeActions'
+
+const initialState = new InitialState()
+    .setIn(['ApiName'], BizApi.LogInApi.ApiName);
+
 
 export default function LogInReducer (state = initialState, action){
+    if (state.ApiName && state.ApiName != action.ApiName) {
+        return state;
+    }
+
     if (!(state instanceof InitialState)) {
         return initialState.mergeDeep(state)
     }
@@ -25,7 +34,7 @@ export default function LogInReducer (state = initialState, action){
             return nextState
         }
             break;
-        case LogInActions.changeLogInOauthCodeImg:
+        case ImgOauthCodeActions.changeOauthCodeImg:
         {
             let nextState = state
                 .setIn(['oauthCodeImgUri'], action.uri);

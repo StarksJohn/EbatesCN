@@ -34,7 +34,7 @@ export function getTokenWhenAppOpen() {
 }
 
 /**
- * 检查 内存里的 可用的 (如果登录token可用,优先用登录token) token 是否过期;若 非登录token过期就重新调 getClientTokenApi ()接口拿新的未登录token并缓存;若 登录后token过期就调xxx接口刷新登录token; 然后 在调 所有 外部或内部 接口
+ * 检查 内存里的 可用的 (如果登录token可用,优先用登录token) token 是否过期;若 非登录token过期就重新调 getClientTokenApi ()接口拿新的未登录token并缓存;若 登录后token过期就调 getRefreshToken 接口刷新登录token; 然后 在调 所有 外部或内部 接口
  */
 export function checkAvailableMemoryTokenExpiresWhenUseApi() {
     return new Promise(
@@ -84,4 +84,31 @@ export function getClientTokenApi() {
     );
 }
 
+/**
+ * 刷新 登录状态的 token
+ */
+export function getRefreshToken() {
+    return new Promise(
+        (resolve, reject) => {
 
+            let url = RequestUtil.getStagingOrProductionHost() + 'oauth/refresh_token';
+            let body = {
+                grant_type: 'refresh_token',
+                client_id: TokenDB.LoginTokenclient_id,
+                client_secret: TokenDB.LoginTokenclient_secret,
+                refresh_token:TokenDB.loginTokenSchema.data.refresh_token,
+            }
+            RequestUtil.POST(url,
+                (header) => {
+                    // header.append('Authorization','Bearer '+'xxx');//xxx是获取到的token,拿到token后的其他所有接口都传此header参数
+                }, body
+            ).then((responseData) => {
+                // Log.log('TokenAPI getClientTokenApi resolve ');
+                resolve(responseData);
+            }).catch((error) => {
+                BizShowToast(error.error.message);
+                reject(error);
+            });
+        }
+    );
+}

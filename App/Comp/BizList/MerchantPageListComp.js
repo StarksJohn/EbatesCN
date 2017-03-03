@@ -16,6 +16,7 @@ import *as BizMerchantListCell from '../BizCells/BizMerchantListCell'
 import BaseTitleBt from '../Base/BaseTitleBt'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import AllMerchantPage from '../../Pages/AllMerchantPage'
+import LogInPage from '../../Pages/LogInPage'
 
 
 export default class MerchantPageListComp extends Component {
@@ -38,7 +39,7 @@ export default class MerchantPageListComp extends Component {
         } else if (rowID == this.props.baseReducer.$dataArray.toJS().length - 2) {//查看全部cell
             return <BaseTitleBt
                 btStyle={[{
-                    marginTop: 5,height: 45, justifyContent: 'center',
+                    marginTop: 5, height: 45, justifyContent: 'center',
                     alignItems: 'center',
                     //backgroundColor: Colors.getRandomColor(),
                 }]}
@@ -67,8 +68,9 @@ export default class MerchantPageListComp extends Component {
                             return (
                                 <BaseBt
                                     key={model.title}
-                                    style={ {flex:0,
-                                        marginTop:5, marginBottom: 0,marginLeft: 0, marginRight: 0,paddingTop: 0,
+                                    style={ {
+                                        flex: 0,
+                                        marginTop: 5, marginBottom: 0, marginLeft: 0, marginRight: 0, paddingTop: 0,
                                         paddingBottom: 0,
                                         width: (GlobalStyles.window.width - 20 ) / 4,
                                         height: (200 - 30 ) / 2,
@@ -78,9 +80,17 @@ export default class MerchantPageListComp extends Component {
                                     disabled={false}
                                     onPress={ () => {
                                         //callback(rowData);
+                                        global.gPopBackToRouteAfteRegisterSuceess = gRouteName.RootPagesContainer;
+
+                                        this.props.navigator.push({
+                                            component: LogInPage,
+                                            name: gRouteName.LogInPage//'
+
+                                        });
                                     } }
                                 >
-                                    <Image source={model.img} style={{width: 55, height: 55, alignSelf: 'center',marginTop: 0,}}/>
+                                    <Image source={model.img}
+                                           style={{width: 55, height: 55, alignSelf: 'center', marginTop: 0,}}/>
                                     <Text style={{
                                         marginLeft: 0,
                                         marginTop: 7,
@@ -121,11 +131,11 @@ export default class MerchantPageListComp extends Component {
                                 height: 30, marginTop: 17,
                                 alignItems: 'center', justifyContent: 'center',
                                 marginRight: 5,
-                                backgroundColor: Colors.transparent ,
+                                backgroundColor: Colors.transparent,
                             }]}
                             onPress={() => this.onCheckAllMerchant()}
                             textStyle={{
-                                fontSize: 12, fontWeight:'bold' ,color: 'rgba(136, 136, 136, 1)',
+                                fontSize: 12, fontWeight: 'bold', color: 'rgba(136, 136, 136, 1)',
                             }}
                             title='查看全部'
                             disabled={false}
@@ -149,7 +159,7 @@ export default class MerchantPageListComp extends Component {
 
                 return BizMerchantListCell.RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRow, (rowData) => {
                     Log.log('MerchantListComp renderRow callback rowData==' + rowData);
-                },paddingTop);
+                }, paddingTop);
             }
                 break;
         }

@@ -8,7 +8,7 @@ import *as ImgOauthCodeActions from '../Actions/ImgOauthCodeActions'
 
 
 const initialState = new InitialState()
-    .setIn(['ApiName'], BizApi.RegisterPageApi.ApiName);
+.setIn(['ApiName'], BizApi.RegisterPageApi.ApiName);
 
 
 export default function RegisterReducer (state = initialState, action){

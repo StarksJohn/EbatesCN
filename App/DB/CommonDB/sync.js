@@ -38,18 +38,20 @@ export default sync = {
                 // });
 
                 //暂时重新调 登录接口,因refreshtoken 接口没写
-                BizApi.LogInApi.getAccessToken({
-                    identity: gUserDB.properties.userID,
-                    code: gUserDB.properties.password
-                }).then(
-                    (responseData) => {
-                        resolve(responseData);
-                    }
-                ).catch((error) => {
-                    // BizShowToast(error.error.message);
+                // BizApi.LogInApi.getAccessToken({
+                //     identity: gUserDB.properties.userID,
+                //     code: gUserDB.properties.password
+                // }).then(
+                //     (responseData) => {
+                //         resolve(responseData);
+                //     }
+                // ).catch((error) => {
+                //     // BizShowToast(error.error.message);
+                //
+                //     reject(error);
+                // });
 
-                    reject(error);
-                });
+
             }
         );
 

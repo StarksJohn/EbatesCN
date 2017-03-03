@@ -1,5 +1,6 @@
 /**
  登录 页
+ LogInPage
  */
 import React, {Component} from 'react';
 import {StyleSheet, View, Text, TextInput, Image, Platform} from 'react-native';
@@ -23,6 +24,7 @@ import *as ImgOauthCodeAPI from '../NetWork/API/ImgOauthCodeAPI'
 import ForgetPassPage from './ForgetPassPage'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
 import *as BizApi from '../NetWork/API/BizApi'
+import *as ImgOauthCodeActions from '../Redux/Actions/ImgOauthCodeActions'
 
 /**
  *  展示组件
@@ -136,14 +138,20 @@ export class LogInPage extends Component {
             }
         ).catch((error) => {
              // BizShowToast(error.error.message);
+            Log.log('LogInPage onLoginPress  error.error='+Log.writeObjToJson(error.error))
+
+            if (error.error.opt===1){//服务器返回 3次密码输入 的字段
+                this.props.dispatch(LogInActions.showImgOauthInputAction());
+                this.getOauthCodeImg();
+            }
         });
 
         // showToast('onLoginPress ok ');
-        // this.passErrorCount++;
-        // if (this.passErrorCount == 3) {
-        //     this.props.dispatch(LogInActions.showImgOauthInputAction());
-        //     this.getOauthCodeImg();
-        // }
+        this.passErrorCount++;
+        if (this.passErrorCount == 3) {
+            this.props.dispatch(LogInActions.showImgOauthInputAction());
+            this.getOauthCodeImg();
+        }
     }
 
     //快捷登录
@@ -167,7 +175,11 @@ export class LogInPage extends Component {
 
     //获取验证码图片 接口
     getOauthCodeImg() {
-        this.props.dispatch(LogInActions.changeOauthCodeImgAction(ImgOauthCodeAPI.imgOauthCodeAPI()));
+        BizApi.ImgOauthCodeAPI.requestCaptcha().then(
+            (url) => {
+                this.props.dispatch(ImgOauthCodeActions.changeOauthCodeImgAction(url, BizApi.LogInApi.ApiName));
+            }
+        );
     }
 
     render() {
@@ -229,7 +241,9 @@ export class LogInPage extends Component {
                     {},
                     (event) => this.updateImgOauthCode(event.nativeEvent.text),
                     this.props.LogInReducer.oauthCodeImgUri,
-                    () => this.getOauthCodeImg()
+                    () => this.getOauthCodeImg(),
+                    ()=>{},
+
                 ) : null
             }
             {this.props.LogInReducer.isShowImgOauthInput ?

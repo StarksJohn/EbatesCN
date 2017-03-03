@@ -68,8 +68,9 @@ export const request = (url, method, headersAppendCallBack, body) => {
                 (e) => {
                     // Log.log("Fetch failed!", e);
                     if (e.message) {
-                        BizShowToast(e.message);
+                        // BizShowToast(e.message);
                     }
+                    reject(e);
                 }
             )
             .catch((error) => {

@@ -83,8 +83,8 @@ export const LogInApi = {
                     resolve(TokenDB.loginTokenSchema.data);
                 }).catch((error) => {
                     RequestUtil.showErrorMsg(error);
+                    Log.log('BizApi LogInApi getAccessToken error.error='+Log.writeObjToJson(error.error))
                     BizLoadingView.closeBizLoadingView();
-
                     reject(error);
                 });
             }

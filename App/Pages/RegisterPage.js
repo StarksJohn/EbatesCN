@@ -1,5 +1,5 @@
 /**
- 注册 页
+ 注册 页 RegisterPage
  */
 import React, {Component} from 'react';
 import {StyleSheet, View, Text, TextInput, Image, Platform} from 'react-native';
@@ -15,7 +15,6 @@ import GlobalStyles from '../Global/GlobalStyles'
 import phoneQuickLogPage from './phoneQuickLogPage'
 import BizLogBt from '../Comp/BizCommonComp/BizLogBt'
 import *as BizViews from '../Comp/BizCommonComp/BizViews'
-import LogInPage from './LogInPage'
 import *as RegisterRelevantActions from '../Redux/Actions/RegisterRelevantActions'
 import WebViewPage from './WebViewPage'
 import BaseBlackTranslucentCoverView from '../Comp/Base/BaseBlackTranslucentCoverView'
@@ -28,6 +27,7 @@ import *as BizApi from '../NetWork/API/BizApi'
 import *as ImgOauthCodeActions from '../Redux/Actions/ImgOauthCodeActions'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
 import *as Math from '../Utils/Math'
+import *as BizLoadingView from '../Comp/BizCommonComp/BizLoadingView'
 
 /**
  *  展示组件
@@ -99,6 +99,8 @@ export class RegisterPage extends Component {
      * 自动页面跳转回 注册登录页面之前的 页面
      */
     pageGotoAfterRegisterSucess() {
+        BizLoadingView.closeBizLoadingView();
+
         RootNavigator.popToDesignatedPage(this.props.navigator, global.gPopBackToRouteAfteRegisterSuceess);
     }
 
@@ -136,23 +138,38 @@ export class RegisterPage extends Component {
             captchaUuid: BizApi.ImgOauthCodeAPI.data.captchaUuid
         }).then(
             (responseData) => {
-                Log.log('RegisterPage onRegisterPress responseData=' + responseData);
+                Log.log('RegisterPage onRegisterPress 注册成功,开始 调登陆接口  responseData=' + Log.writeObjToJson(responseData));
+
+                //注册成功,调登陆接口
+                this.logIn();
             }
         ).catch((error) => {
-            Log.log('RegisterPage onRegisterPress error=' + error);
+            Log.log('RegisterPage onRegisterPress error=' + Log.writeObjToJson(error));
         })
+    }
 
-        // this.props.dispatch(RegisterRelevantActions.showRegisterSucessbtAction());
-        //
-        // this.timer = new SMSTimer({
-        //     timerNums: 5,
-        //     callBack: (time) => {
-        //         Log.log('time===' + time);
-        //         if (time == -1) {
-        //             this.pageGotoAfterRegisterSucess();
-        //         }
-        //     }
-        // }).start();
+    logIn(){
+        BizApi.LogInApi.getAccessToken({identity:this.email,code:this.password}).then(
+            (responseData) => {
+                Log.log('RegisterPage logIn 登录成功 responseData='+Log.writeObjToJson(responseData));
+                gUserDB.login({userID:this.email,password:this.password});
+
+                this.props.dispatch(RegisterRelevantActions.showRegisterSucessbtAction());
+
+                this.timer = new SMSTimer({
+                    timerNums: 10,
+                    callBack: (time) => {
+                        Log.log('time===' + time);
+                        if (time == -1) {
+                            this.pageGotoAfterRegisterSucess();
+                        }
+                    }
+                }).start();
+            }
+        ).catch((error) => {
+            // BizShowToast(error.error.message);
+            Log.log('RegisterPage logIn  error.error='+Log.writeObjToJson(error.error))
+        });
     }
 
     // 点服务条款
