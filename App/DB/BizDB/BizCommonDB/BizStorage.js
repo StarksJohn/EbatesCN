@@ -50,6 +50,7 @@ export const loadStorage = (key, id, autoSync, syncInBackground) => {
                         break;
                     case 'ExpiredError':
                         Log.log('loadCachedata.ExpiredError');
+                        reject(err);
                         break;
                 }
             });

@@ -105,6 +105,11 @@ export class RegisterPage extends Component {
     }
 
     onRegisterPress() {
+        this.email=this.email.trim();
+        this.password=this.password.trim();
+        this.imgOauthCode=this.imgOauthCode.trim();
+        this.inviteCode=this.inviteCode.trim();
+
         if (!OauthForm.oauthEmail(this.email)) {
             BizShowToast('邮箱地址不正确');
             return;

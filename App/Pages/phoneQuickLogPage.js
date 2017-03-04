@@ -95,7 +95,9 @@ class phoneQuickLogPage extends Component {
      * 点击登陆按钮, 验证 验证码是否过期 和是否 输错,满足其一,就提示 '请重新获取验证码'
      */
     onLoginPress() {
-        BizShowToast('该手机未在网站上绑定过, 若您已有账号,请前往ebates.cn,登录并绑定您的手机号,若您还没有账号,请先注册')
+        this.email=this.email.trim();
+        this.oauthCode=this.oauthCode.trim();
+        // BizShowToast('该手机未在网站上绑定过, 若您已有账号,请前往ebates.cn,登录并绑定您的手机号,若您还没有账号,请先注册')
     }
 
     /*手机号 输入框的容器view

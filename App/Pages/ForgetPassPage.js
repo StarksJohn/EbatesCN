@@ -80,16 +80,45 @@ export class ForgetPassPage extends Component {
 
     //获取验证码图片 接口
     getOauthCodeImg() {
-        this.props.dispatch(ImgOauthCodeActions.changeOauthCodeImgAction(ImgOauthCodeAPI.imgOauthCodeAPI(), BizApi.ForgetPassPageApi.ApiName));
-
+        // this.props.dispatch(ImgOauthCodeActions.changeOauthCodeImgAction(ImgOauthCodeAPI.imgOauthCodeAPI(), BizApi.ForgetPassPageApi.ApiName));
+        BizApi.ImgOauthCodeAPI.requestCaptcha().then(
+            (url) => {
+                this.props.dispatch(ImgOauthCodeActions.changeOauthCodeImgAction(url, BizApi.ForgetPassPageApi.ApiName));
+            }
+        );
     }
 
     goOnPress() {
-        this.props.navigator.push({
-            component: ForgetPassEmailOkPage,
-            name: gRouteName.ForgetPassEmailOkPage,
-            email: this.email
-        });
+        this.email=this.email.trim();
+        this.imgOauthCode=this.imgOauthCode.trim();
+
+        if (!OauthForm.oauthEmail(this.email)) {
+            BizShowToast('邮箱地址不正确');
+            return;
+        }
+        if (!OauthForm.oauthImgCodePass(this.imgOauthCode)) {
+            BizShowToast('请输入正确的验证码');
+            return;
+        }
+
+        BizApi.ForgetPassPageApi.forgetPassword(
+            {
+                email: this.email,
+                captcha: this.imgOauthCode,
+                captchaUuid: BizApi.ImgOauthCodeAPI.data.captchaUuid
+            }
+        ).then(
+            (responseData) => {
+                this.props.navigator.push({
+                    component: ForgetPassEmailOkPage,
+                    name: gRouteName.ForgetPassEmailOkPage,
+                    email: this.email
+                });
+            }
+        ).catch((error) => {
+        })
+
+
     }
 
     render() {

@@ -64,7 +64,7 @@ export default class BizLoadingView extends Component {
         position: 'center',
         textStyle: styles.text,
         positionValue: 120,
-        fadeInDuration: 1000,
+        fadeInDuration: 500,
         fadeOutDuration: 0,
         opacity: 1,
         style: {}

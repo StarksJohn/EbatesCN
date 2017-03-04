@@ -114,6 +114,10 @@ export class LogInPage extends Component {
         // BizLoadingView.showBizLoadingView('加载中....');
         // BizLoadingView.closeBizLoadingView();
 
+        this.email=this.email.trim();
+        this.password=this.password.trim();
+        this.imgOauthCode=this.imgOauthCode.trim();
+
         if (!OauthForm.oauthPass(this.password)) {
             BizShowToast('密码至少6位字符或数字');
             return;

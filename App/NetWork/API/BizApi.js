@@ -59,7 +59,7 @@ export const LogInApi = {
     ApiName: 'LogInApi',
 
     /**
-     * 登录接口
+     * 登录接口,返回登陆后token并 缓存+内存赋值
      */
     getAccessToken (body) {
         return new Promise(
@@ -83,8 +83,42 @@ export const LogInApi = {
                     resolve(TokenDB.loginTokenSchema.data);
                 }).catch((error) => {
                     RequestUtil.showErrorMsg(error);
-                    Log.log('BizApi LogInApi getAccessToken error.error='+Log.writeObjToJson(error.error))
+                    Log.log('BizApi LogInApi getAccessToken error.error=' + Log.writeObjToJson(error.error))
                     BizLoadingView.closeBizLoadingView();
+                    reject(error);
+                });
+            }
+        );
+    },
+
+    /**
+     * 刷新 登录 token
+     */
+    getRefreshToken(){
+        return new Promise(
+            (resolve, reject) => {
+                body = {
+                    grant_type: 'refresh_token',
+                    client_id: TokenDB.LoginTokenclient_id,
+                    client_secret: TokenDB.LoginTokenclient_secret,
+                    refresh_token: TokenDB.loginTokenSchema.data.refresh_token,
+                }
+                let url = RequestUtil.getStagingOrProductionHost() + 'oauth/refresh_token';
+                Log.log('BizApi getRefreshToken body=' + Log.writeObjToJson(body));
+
+                RequestUtil.POST(url,
+                    (header) => {
+                        //此时传 未登录token
+                        Log.log('BizApi  LogInApi getRefreshToken TokenDB.unLoginTokenSchema.data=' + TokenDB.unLoginTokenSchema.data);
+                        header.append('Authorization', TokenDB.unLoginTokenSchema.data.token_type + ' ' + TokenDB.unLoginTokenSchema.data.access_token);//xxx是获取到的token,拿到token后的其他所有接口都传此header参数
+                        // Log.log('BizApi LogInApi getRefreshToken header='+Log.writeObjToJson(header.toJSONString()));
+                    }, body
+                ).then((responseData) => {
+                    TokenDB.saveLoginStateToken(responseData);
+                    resolve(TokenDB.loginTokenSchema.data);
+                }).catch((error) => {
+                    RequestUtil.showErrorMsg(error);
+                    Log.log('BizApi LogInApi getRefreshToken 刷新登录token失败 error.error=' + Log.writeObjToJson(error.error))
                     reject(error);
                 });
             }
@@ -115,7 +149,9 @@ export const ImgOauthCodeAPI = {
     requestCaptcha() {
         return new Promise(
             (resolve, reject) => {
+                BizLoadingView.showBizLoadingView('加载中....');
 
+                Log.log('BizApi ImgOauthCodeAPI requestCaptcha 开始请求 图片验证码接口')
                 let url = RequestUtil.getStagingOrProductionHost() + 'captchaInfo';
                 RequestUtil.GET(url, null,
                     (header) => {
@@ -124,9 +160,15 @@ export const ImgOauthCodeAPI = {
                     },
                 ).then((responseData) => {
                     // Log.log('TokenAPI getClientTokenApi resolve ');
+                    Log.log('BizApi ImgOauthCodeAPI requestCaptcha 图片验证码接口 请求成功')
+                    BizLoadingView.closeBizLoadingView();
+
                     this.data = responseData;
                     resolve(this.data.captchaUrl);
                 }).catch((error) => {
+                    Log.log('BizApi ImgOauthCodeAPI requestCaptcha 图片验证码接口 请求失败')
+                    BizLoadingView.closeBizLoadingView();
+
                     reject(error);
                 });
             }
@@ -141,6 +183,32 @@ export const ImgOauthCodeAPI = {
 export const ForgetPassPageApi = {
     ApiName: 'ForgetPassPageApi',
 
+    forgetPassword(body) {
+        return new Promise(
+            (resolve, reject) => {
+                BizLoadingView.showBizLoadingView('加载中....');
+
+                let url = RequestUtil.getStagingOrProductionHost() + 'users/forget-password';
+
+                RequestUtil.POST(url, (header) => {
+                        Log.log('BizApi ForgetPassPageApi forgetPassword TokenDB.unLoginTokenSchema.data=' + Log.writeObjToJson(TokenDB.unLoginTokenSchema.data))
+                        header.append('Authorization', TokenDB.unLoginTokenSchema.data.token_type + ' ' + TokenDB.unLoginTokenSchema.data.access_token);//xxx是获取到的token,拿到token后的其他所有接口都传此header参数
+                    },
+                    body
+                ).then((responseData) => {
+                    Log.log('BizApi ForgetPassPageApi forgetPassword  忘记密码接口返回成功 responseData=' + Log.writeObjToJson(responseData));
+                    resolve(responseData);
+                    BizLoadingView.closeBizLoadingView();
+
+                }).catch((error) => {
+                    Log.log('BizApi ForgetPassPageApi forgetPassword 忘记密码接口返回失败 error=' + Log.writeObjToJson(error));
+                    reject(error);
+                    BizLoadingView.closeBizLoadingView();
+
+                });
+            }
+        );
+    }
 }
 
 /**

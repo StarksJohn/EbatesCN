@@ -18,6 +18,8 @@ import BaseImgBt from '../Base/BaseImgBt'
  * @returns {XML}
  */
 export function emailInputView(styles, updateEmailCallBack, onSubmitEditingCallback, refCallback,leftText,placeholder) {
+    Log.log('BizInputViews emailInputView 开始重绘')
+
     return (
         <View style={[GlobalStyles.InputItemContainer, {marginTop: 40}, styles]}>
             <View style={GlobalStyles.IpputItemLeftView}>
