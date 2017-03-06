@@ -75,7 +75,7 @@ export const loginTokenSchema = {
     isExpires(){
         Log.log('TokenDB loginTokenSchema isExpires() 正在判断 内存里的登录token 是否过期  this.data.expires_in=' + this.data.expires_in + '   new Date().getTime()=' + new Date().getTime()+'   '+this.expires_in < new Date().getTime());
 
-        return this.expires_in < new Date().getTime()/*获取当前时间*/;
+        return this.data.expires_in < new Date().getTime()/*获取当前时间*/;
     },
 
     //内存里登录后token能否使用
@@ -83,7 +83,7 @@ export const loginTokenSchema = {
         return this.data.expires_in != 0;
     },
     /**
-     * 过期后刷新token
+     * 内存里判断 过期后刷新token
      */
     refreshToken(){
         return new Promise(
@@ -93,6 +93,17 @@ export const loginTokenSchema = {
                 // });
             }
         );
+    },
+
+    removeToken(){
+        this.data={
+            token_type: '',
+            expires_in: 0,
+            access_token: '',
+            refresh_token: '',
+        };
+        gBizStorage.removeStorage(LoginStateToken,'');
+        Log.log('TokenDB loginTokenSchema removeToken 已清除 登录 token的内存和缓存')
     }
 }
 
@@ -138,7 +149,7 @@ export function saveLoginStateToken(tokenSchema) {
     //因以后调 gBizStorage.loadStorage 拿到只是 tokenSchema,而自己 想判断  是否过期,必须 和  storage.js里 的 save(params)方法一样, 修改 tokenSchema.expires_in为 当前毫秒时间+服务器发来的多少毫秒后过期,如 let now = new Date().getTime(); data.expires = now + expires; 以后 从 缓存 拿到 tokenSchema 后, tokenSchema.expires_in 就是 真正我能用 毫秒判断的 过期时间
     let now = new Date().getTime();
     //模拟过期的时间为5秒后过期
-    tokenSchema.expires_in=5;
+    // tokenSchema.expires_in=5;
 
     loginTokenSchema.data = {...tokenSchema, expires_in: now + tokenSchema.expires_in * 1000};
 
@@ -177,10 +188,11 @@ export function loadLoginStateToken() {
             gBizStorage.loadStorage(LoginStateToken, '', true, true).then((result) => {
                 //noinspection JSAnnotator,JSAnnotator
                 Log.log('TokenDB loadLoginStateToken result 可能过期='+Log.writeObjToJson(result));
+                Log.log('TokenDB loadLoginStateToken  new Date().getTime() ='+new Date().getTime());
+                Log.log('TokenDB loadLoginStateToken  判断缓存里的LoginStateToken是否过期  '+new Date().getTime()>result.expires_in);
+
                 loginTokenSchema.data = result;//因 loadStorage函数最后一参数是true,故即使 result 过期, 也会 先把缓存里的数据拿出来用,如果过期,会在
-                // sync里自动回调LoginStateToken() 刷新登录token
             }).catch(err => {
-                // let aaa=JSON.parse(err.message);
                 reject(err);
             })
         }

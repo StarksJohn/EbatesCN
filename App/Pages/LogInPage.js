@@ -139,6 +139,8 @@ export class LogInPage extends Component {
             (responseData) => {
                 // Log.log('LogInPage onLoginPress responseData='+responseData);
                 gUserDB.login({userID:this.email,password:this.password});
+                RootNavigator.popToDesignatedPage(this.props.navigator, gPopBackToRouteAfteRegisterOrLoginSuceess);
+
             }
         ).catch((error) => {
              // BizShowToast(error.error.message);

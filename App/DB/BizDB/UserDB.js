@@ -64,6 +64,8 @@ export default UserSchema =
             this.properties = null;
             Log.log('logOut this.properties===' + Log.writeObjToJson(this.properties));
             gBizStorage.removeStorage(this.tableName,'');
+            Log.log('UserDB UserSchema logOut 已清除 内存和缓存里的用户数据')
+
         }
 
     }

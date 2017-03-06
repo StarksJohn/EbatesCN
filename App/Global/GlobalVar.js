@@ -16,7 +16,9 @@ import {routeName} from './GlobalConst'
 global.gRouteName = routeName;
 
 //注册|登录 成功后,pop到 进入注册| 登录页面 之前的最后一个 页面
-global.gPopBackToRouteAfteRegisterSuceess='';
+global.gPopBackToRouteAfteRegisterOrLoginSuceess='';
+//注册|登录 成功后,pop到 进入注册| 登录页面 之前的最后一个 页面后,如果还需要自动push到指定页面
+global.gAutoPushToRouteAfteRegisterOrLoginSuceess='';
 
 import  UserDB from '../DB/BizDB/UserDB'
 global.gUserDB=UserDB;//用户数据库

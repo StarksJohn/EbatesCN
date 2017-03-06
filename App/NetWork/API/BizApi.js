@@ -78,12 +78,13 @@ export const LogInApi = {
                     }, body
                 ).then((responseData) => {
                     BizLoadingView.closeBizLoadingView();
+                    Log.log('BizApi LogInApi getAccessToken 登录接口成功')
 
                     TokenDB.saveLoginStateToken(responseData);
                     resolve(TokenDB.loginTokenSchema.data);
                 }).catch((error) => {
                     RequestUtil.showErrorMsg(error);
-                    Log.log('BizApi LogInApi getAccessToken error.error=' + Log.writeObjToJson(error.error))
+                    Log.log('BizApi LogInApi getAccessToken 登录接口失败 error.error=' + Log.writeObjToJson(error.error))
                     BizLoadingView.closeBizLoadingView();
                     reject(error);
                 });
@@ -97,19 +98,21 @@ export const LogInApi = {
     getRefreshToken(){
         return new Promise(
             (resolve, reject) => {
-                body = {
+               let body = {
                     grant_type: 'refresh_token',
                     client_id: TokenDB.LoginTokenclient_id,
                     client_secret: TokenDB.LoginTokenclient_secret,
-                    refresh_token: TokenDB.loginTokenSchema.data.refresh_token,
+                    refresh_token: TokenDB.loginTokenSchema.data.refresh_token
+
                 }
                 let url = RequestUtil.getStagingOrProductionHost() + 'oauth/refresh_token';
+                Log.log('BizApi getRefreshToken url=' + url);
                 Log.log('BizApi getRefreshToken body=' + Log.writeObjToJson(body));
 
                 RequestUtil.POST(url,
                     (header) => {
                         //此时传 未登录token
-                        Log.log('BizApi  LogInApi getRefreshToken TokenDB.unLoginTokenSchema.data=' + TokenDB.unLoginTokenSchema.data);
+                        Log.log('BizApi  LogInApi getRefreshToken TokenDB.unLoginTokenSchema.data=' + Log.writeObjToJson(TokenDB.unLoginTokenSchema.data));
                         header.append('Authorization', TokenDB.unLoginTokenSchema.data.token_type + ' ' + TokenDB.unLoginTokenSchema.data.access_token);//xxx是获取到的token,拿到token后的其他所有接口都传此header参数
                         // Log.log('BizApi LogInApi getRefreshToken header='+Log.writeObjToJson(header.toJSONString()));
                     }, body

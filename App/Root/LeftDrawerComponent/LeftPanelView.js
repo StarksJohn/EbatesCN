@@ -13,7 +13,7 @@ import *as RootComponentActions from '../../Redux/Actions/RootComponentActions'
 import *as LeftDrawerComponent from './LeftDrawerComponent'
 import *as EventListener from '../../Utils/EventListener/EventListener'
 import *as RootComponentInitialState from '../../Redux/InitialState/RootComponentInitialState'
-
+import *as UserDB from '../../DB/BizDB/UserDB'
 
 //左图
 export  class LeftPanelView extends Component {
@@ -30,9 +30,13 @@ export  class LeftPanelView extends Component {
             break;
             case 1:
             {
-                if (this.props.RootComponentReducer.curNav!=RootComponentInitialState.rootNavs.RootRecommendFriendNavContainer){
-                    this.props.dispatch(RootComponentActions.changeNavActions(RootComponentInitialState.rootNavs.RootRecommendFriendNavContainer));
-                }
+                // if (this.props.RootComponentReducer.curNav!=RootComponentInitialState.rootNavs.RootRecommendFriendNavContainer){
+                //     this.props.dispatch(RootComponentActions.changeNavActions(RootComponentInitialState.rootNavs.RootRecommendFriendNavContainer));
+                // }
+
+                //此处模拟注销
+                gUserDB.logOut();
+
             }
                 break;
         }
@@ -83,7 +87,7 @@ export  class LeftPanelView extends Component {
                         fontSize: 15,
                         color: Colors.white,
                     }}
-                    title='登录注册相关'
+                    title='注销'
                     disabled={false}
                 >
                 </BaseTitleBt>

@@ -16,6 +16,7 @@ import *as StringOauth from '../Utils/StringUtils/StringOauth'
 import SearchResultPage from './SearchResultPage'
 import *as BizViews from '../Comp/BizCommonComp/BizViews'
 import BackAndroidEventListener from '../Utils/EventListener/BackAndroidEventListener'
+import LogInPage from './LogInPage'
 
 /**
  *  展示组件
@@ -72,11 +73,26 @@ export class SearchPage extends Component {
 
         this.onCancel(true);
 
-        this.props.navigator.push({
-            component: SearchResultPage,
-            name: gRouteName.SearchResultPage,
-            value: value,
-            // SearchPageProps:this.props,
+        gUserDB.isLogin().then(
+            (b) => {//已登录
+                this.props.navigator.push({
+                    component: SearchResultPage,
+                    name: gRouteName.SearchResultPage,
+                    value: value,
+                    // SearchPageProps:this.props,
+                });
+            },
+            (e) => {//非登录状态
+                gPopBackToRouteAfteRegisterOrLoginSuceess = gRouteName.RootPagesContainer;
+
+                this.props.navigator.push({
+                    component: LogInPage,
+                    name: gRouteName.LogInPage//'
+
+                });
+            }
+        ).catch((error) => {
+            Log.log('TokenAPI getTokenWhenAppOpen error= '+error);
         });
     }
 

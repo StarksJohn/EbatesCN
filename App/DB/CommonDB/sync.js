@@ -44,7 +44,7 @@ export default sync = {
                             resolve(responseData);
                         }
                     ).catch((error) => {
-                        reject(error);
+                        // reject(error);
                     });
                 };
 

@@ -27,6 +27,7 @@ export const request = (url, method, headersAppendCallBack, body) => {
     header.append('Content-Type', 'application/x-www-form-urlencoded');//headers里固定要传的参数,因body传 key=value&key=value 格式的字符串
     headersAppendCallBack(header);
 
+    // Log.log('RequestUtil request() encodeBody(body)='+encodeBody(body));
     let request = new Request(url, {
         method: method, headers: header, body: encodeBody(body)
     });
@@ -42,38 +43,39 @@ export const request = (url, method, headersAppendCallBack, body) => {
                     //     isOk = true;
                     // } else {//
                     //     isOk = false;
-                    //     // response.json().then((body) => {
-                    //     //     Log.log('body=' + body);
-                    //     //     reject(body);
-                    //     // })
-                    //     // reject({status: response.status})
+                    //     reject({status: response.status})
                     // }
+
                     isOk=response.ok;
-                    return response.json();//拿 body,成功或错误的信息都在 body里
+
+                    return response.json();//拿 body,成功或错误的信息都在 body里,此时返回的body 必须是 json 格式,否则解析出错
                 },
                 //第2个参数 函数 回调,就表示 fetch 失败,可能是网络没了等原因,表示接口本身就没通
                 (e) => {
-                    if (e.message) {
-                        BizShowToast(e.message);
-                    }
+                    // if (e.message) {
+                    //     BizShowToast(e.message);
+                    // }
+                    Log.log('RequestUtil request() fetch 失败 ,e='+Log.writeObjToJson(e))
                     reject(e);
                 })
-            .then((responseData/*第一个then里的body*/) => {
+            .then((responseData/*responseData 是 第一个then里 response.json() 执行成功 后 返回的 body*/) => {
                     if (isOk) {//接口是通的,并且request时的参数没问题,故返回了正确的数据
                         resolve(responseData);
                     } else {//接口是通的,但request时可能参数不对,导致返回的数据是不对的
+                        Log.log('RequestUtil request() request时可能参数不对 ,e='+Log.writeObjToJson(responseData))
+
                         reject(responseData);
                     }
                 },
-                (e) => {
-                    // Log.log("Fetch failed!", e);
-                    if (e.message) {
-                        // BizShowToast(e.message);
-                    }
+                (e /*e 是 第一个then里 response.json() 执行失败 后 返回的 error*/) => {
+                    Log.log('RequestUtil request() 解析 body 出错 ,e='+Log.writeObjToJson(e))
+
                     reject(e);
                 }
             )
             .catch((error) => {
+                Log.log('RequestUtil request() 未知错误 ,error='+Log.writeObjToJson(error))
+
                 reject(error);
             });
     });
@@ -119,22 +121,24 @@ const encodeURL = (url, params) => {
 }
 
 /**
- * 因header.append('Content-Type', 'application/x-www-form-urlencoded');//headers里和服务器约定好了加了个body数据类型的参数,故得把 body 对象 转化成 key=value&key=value 格式的字符串
+ * 因header.append('Content-Type', 'application/x-www-form-urlencoded');//headers里和服务器约定好了加了个body数据类型的参数,故得把 body 对象 转化成 key=value&key=value 格式的字符串,并且 body得 encodeURIComponent 转码,把 body里的 特殊字符转 编码
  * @param body
  * @returns {string}
  */
 const encodeBody = (body) => {
     if (body) {
         let paramsArray = [];
-        Object.keys(body).forEach(key => paramsArray.push(key + '=' + body[key]))
+        Object.keys(body).forEach(key => paramsArray.push(encodeURIComponent(key) + '=' + encodeURIComponent(body[key])))
         return paramsArray.join('&');
+
     }
-    return null;
+
+    return '';
 }
 
 /**
  * 所有接口通用的 返回错误信息的 提示
- * @param e
+ * @param error
  */
 export function showErrorMsg(error) {
     BizShowToast(error.error.message);

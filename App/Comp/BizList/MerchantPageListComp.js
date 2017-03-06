@@ -80,13 +80,7 @@ export default class MerchantPageListComp extends Component {
                                     disabled={false}
                                     onPress={ () => {
                                         //callback(rowData);
-                                        global.gPopBackToRouteAfteRegisterSuceess = gRouteName.RootPagesContainer;
 
-                                        this.props.navigator.push({
-                                            component: LogInPage,
-                                            name: gRouteName.LogInPage//'
-
-                                        });
                                     } }
                                 >
                                     <Image source={model.img}
