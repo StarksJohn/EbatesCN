@@ -73,7 +73,7 @@ export default sync = {
 
                     }).catch((e) => {
                         if (e.name == 'NotFoundError') {//未登录状态的token没有
-                            storage.sync.unLoginStateToken().then((tokenObj) => {
+                            gStorage.sync.unLoginStateToken().then((tokenObj) => {
                                 getRefreshToken();
                             });
                         }

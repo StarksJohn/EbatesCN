@@ -22,7 +22,7 @@ export function getTokenWhenAppOpen() {
             }).catch((e) => {
                 if (e.name == 'NotFoundError') {//未登录状态的token没有
                     Log.log('TokenAPI getTokenWhenAppOpen NotFoundError')
-                    storage.sync.unLoginStateToken().then((tokenObj) => {
+                    gStorage.sync.unLoginStateToken().then((tokenObj) => {
                         // Log.log('token==='+token);
                     });
                 }

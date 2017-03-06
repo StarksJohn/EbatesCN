@@ -1,7 +1,7 @@
 /**
  * Created by Ebates on 16/12/1.
  */
-import Storage from '../../CommonDB/Storage'
+import Storage from '../../CommonDB/Storage'  //这句不能少, 否则 Storage.js 文件 没执行
 
 /**
  * 业务逻辑 层 通用的 基于 Storage 的 读取 某个 key  数据
@@ -16,7 +16,7 @@ export const loadStorage = (key, id, autoSync, syncInBackground) => {
     return new Promise(
         (resolve, reject) => {
             // 读取
-            storage.load({
+            gStorage.load({
                 key: key, //global.UserSchema,
                 id: id,
 
@@ -68,7 +68,7 @@ export const saveStorage = (key, id, rawData, expires) => {
 
     //save后在缓存里是个  {rawData: rawData, expires: expires} 对象,loadStorage 返回的是 rawData,而不是 这整个对象,可在 storage.js里 的
     // save(params) 和 _loadMapItem(params)方法里查看
-    storage.save({
+    gStorage.save({
         key: key, //global.UserSchema  表名
         id: id,
         rawData: rawData,// result:一行数据,不能改名
@@ -85,7 +85,7 @@ export const saveStorage = (key, id, rawData, expires) => {
  * @param id
  */
 export const removeStorage = (key, id)=> {
-    storage.remove({
+    gStorage.remove({
         key: key,
         id: id
     });
@@ -95,7 +95,7 @@ export const removeStorage = (key, id)=> {
 export const getIdsForKey = (key)=> {
     return new Promise(
         (resolve, reject) => {
-            storage.getIdsForKey(key)
+            gStorage.getIdsForKey(key)
                 .then(ids => {
                     resolve(ids);
 
@@ -122,7 +122,7 @@ export const getIdsForKey = (key)=> {
 export const getAllDataForKey = (key)=> {
     return new Promise(
         (resolve, reject) => {
-            storage.getAllDataForKey(key)
+            gStorage.getAllDataForKey(key)
                 .then(datas => {
                     resolve(datas);
 
