@@ -25,6 +25,8 @@ import ForgetPassPage from './ForgetPassPage'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
 import *as BizApi from '../NetWork/API/BizApi'
 import *as ImgOauthCodeActions from '../Redux/Actions/ImgOauthCodeActions'
+import *as BizLoadingView from '../Comp/BizCommonComp/BizLoadingView'
+import *as RequestUtil from '../NetWork/RequestUtil'
 
 /**
  *  展示组件
@@ -114,9 +116,9 @@ export class LogInPage extends Component {
         // BizLoadingView.showBizLoadingView('加载中....');
         // BizLoadingView.closeBizLoadingView();
 
-        this.email=this.email.trim();
-        this.password=this.password.trim();
-        this.imgOauthCode=this.imgOauthCode.trim();
+        this.email = this.email.trim();
+        this.password = this.password.trim();
+        this.imgOauthCode = this.imgOauthCode.trim();
 
         if (!OauthForm.oauthPass(this.password)) {
             BizShowToast('密码至少6位字符或数字');
@@ -129,35 +131,44 @@ export class LogInPage extends Component {
         }
 
         //主动隐藏键盘,避免 菊花被键盘盖住
-        if (this.emailInputViewRef.isFocused()){
+        if (this.emailInputViewRef.isFocused()) {
             this.emailInputViewRef.blur();
-        }else if (this.passInputViewRef.isFocused()){
+        } else if (this.passInputViewRef.isFocused()) {
             this.passInputViewRef.blur();
         }
 
-        BizApi.LogInApi.getAccessToken({identity:this.email,code:this.password}).then(
+        BizApi.LogInApi.getAccessToken({identity: this.email, code: this.password,captchaUuid:BizApi.ImgOauthCodeAPI.data.captchaUuid,captcha:this.imgOauthCode}).then(
             (responseData) => {
                 // Log.log('LogInPage onLoginPress responseData='+responseData);
-                gUserDB.login({userID:this.email,password:this.password});
+                gUserDB.login({userID: this.email, password: this.password});
                 RootNavigator.popToDesignatedPage(this.props.navigator, gPopBackToRouteAfteRegisterOrLoginSuceess);
 
             }
         ).catch((error) => {
-             // BizShowToast(error.error.message);
-            Log.log('LogInPage onLoginPress  error.error='+Log.writeObjToJson(error.error))
+            // BizShowToast(error.error.message);
+            Log.log('LogInPage onLoginPress  error.error=' + Log.writeObjToJson(error.error))
 
-            if (error.error.opt===1){//服务器返回 3次密码输入 的字段
+            //服务器返回3次密码输入错误
+            if (RequestUtil.parseErrorCode(error) === 11 || RequestUtil.parseErrorCode(error)=== 12||RequestUtil.parseErrorCode(error) === 13) {
                 this.props.dispatch(LogInActions.showImgOauthInputAction());
+
+                if (RequestUtil.parseErrorCode(error) === 11){//密码错误,请输入验证码
+                    BizShowToast('密码错误,请输入验证码');
+                }
+               else if (RequestUtil.parseErrorCode(error)=== 12) {//验证码没输入,提示输入验证码
+                    BizShowToast('请输入验证码');
+                }
+                else if (RequestUtil.parseErrorCode(error) === 13) {//验证码输入错误
+                    BizShowToast('验证码错误');
+                }
+
                 this.getOauthCodeImg();
+            } else if (RequestUtil.parseErrorCode(error) === 6) {//密码错误
+                BizShowToast('密码输入错误');
+            }else if (RequestUtil.parseErrorCode(error) === 14) {//
+                BizShowToast('该手机未在网站上绑定过, 若您已有账号,请前往ebates.cn,登录并绑定您的手机号,若您还没有账号,请先注册');
             }
         });
-
-        // showToast('onLoginPress ok ');
-        this.passErrorCount++;
-        if (this.passErrorCount == 3) {
-            this.props.dispatch(LogInActions.showImgOauthInputAction());
-            this.getOauthCodeImg();
-        }
     }
 
     //快捷登录
@@ -181,8 +192,14 @@ export class LogInPage extends Component {
 
     //获取验证码图片 接口
     getOauthCodeImg() {
+        this.props.dispatch(ImgOauthCodeActions.changeOauthCodeImgAction('www.baidu.com'/*为了
+             让点击图片验证码按钮后立即刷新菊花,随便请求一个url*/,
+            BizApi.LogInApi.ApiName));
+
         BizApi.ImgOauthCodeAPI.requestCaptcha().then(
             (url) => {
+                // BizLoadingView.closeBizLoadingView();
+
                 this.props.dispatch(ImgOauthCodeActions.changeOauthCodeImgAction(url, BizApi.LogInApi.ApiName));
             }
         );
@@ -226,11 +243,12 @@ export class LogInPage extends Component {
                     //主动让光标下移
                     this.passInputViewRef.focus();
                     this.keyboardAwareScrollViewRef._scrollToFocusedTextInput();
-                    {/*this.onSubmit();*/}
+                    {/*this.onSubmit();*/
+                    }
                 },
                 (r) => {
                     this.emailInputViewRef = r;
-                },'账号','输入邮箱地址或手机号'
+                }, '账号', '输入邮箱地址或手机号'
             )}
             {baseSpeLine({marginLeft: 15, marginRight: 15, marginTop: -0.5})}
             {/*密码*/}
@@ -248,8 +266,8 @@ export class LogInPage extends Component {
                     (event) => this.updateImgOauthCode(event.nativeEvent.text),
                     this.props.LogInReducer.oauthCodeImgUri,
                     () => this.getOauthCodeImg(),
-                    ()=>{},
-
+                    () => {
+                    },
                 ) : null
             }
             {this.props.LogInReducer.isShowImgOauthInput ?

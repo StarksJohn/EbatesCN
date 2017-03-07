@@ -68,9 +68,7 @@ export default class AllMerchantPage extends Component {
         >
         </BaseImgBt>
 
-        let navigationBar = BizViews.renderBaseNavigationBar(null, NavBarButton.getBackButton(() => baseOnBackPress(navigator, this.backAndroidEventListener)), rightBt, null, '全部商家', {
-            color: Colors.BizCommonBlack, fontWeight: 'bold', fontSize: 17
-        });
+        let navigationBar = BizViews.renderBaseNavigationBar(null, NavBarButton.getBackButton(() => baseOnBackPress(navigator, this.backAndroidEventListener)), rightBt, null, '全部商家', {} );
 
         return (
             <View style={{flex: 1, backgroundColor: Colors.BizCommonGrayBack,}}>

@@ -13,6 +13,7 @@ import BaseTitleBt from '../Base/BaseTitleBt'
 import BaseSearchBar from '../Base/BaseSearchBar/BaseSearchBar'
 import BaseNavigationBar , {NavBarButton, baseOnBackPress} from '../Base/BaseNavigationBar'
 
+
 /**
  * 登录注册页共用
  * @returns {XML}
@@ -22,15 +23,17 @@ export function ebatesViews() {
     return (
         <View style={{
             alignItems: 'center',
-            //backgroundColor: Colors.getRandomColor()
+            backgroundColor: Colors.white
         }}>
             <Image source={require('../../Img/common_icon_logo.png')} style={{marginTop: 20}}/>
             <Text style={{
-                marginTop: 10, fontSize: 18, fontWeight: 'bold', color: 'rgba(255, 115,' +
+                marginTop: 15, fontSize: 18, fontWeight: 'bold', color: 'rgba(255, 115,' +
                 ' 12, 1)',
                 //backgroundColor:Colors.getRandomColor()
             }}>全球领先的返利网站</Text>
-            <Text style={{marginTop: 3, fontSize: 12, color: 'rgba(136, 136, 136, 1)'}}>{str}</Text>
+            <Text style={{marginTop: 8, fontSize: 12, color: 'rgba(136, 136, 136, 1)',
+                //backgroundColor:Colors.getRandomColor()
+            }}>{str}</Text>
         </View>
     );
 }
@@ -225,7 +228,7 @@ export function renderTwoLevelPageSearchBar(placeholder, value, onSubmitCallback
  * @param rightButton
  * @param searchBar
  * @param title
- * @param titleTextStyle
+ * @param titleTextStyle 默认是 GlobalStyles.navBarTitleTextStyle,外部若不想改默认的,可传 {}
  * @returns {XML}
  */
 export function renderBaseNavigationBar(titleTextView,leftButton,rightButton,searchBar,title,titleTextStyle) {
@@ -238,6 +241,6 @@ export function renderBaseNavigationBar(titleTextView,leftButton,rightButton,sea
         searchBar={searchBar}
         hide={false}
         title={title}
-        titleTextStyle={titleTextStyle}
+        titleTextStyle={[GlobalStyles.navBarTitleTextStyle,titleTextStyle]}
     />;
 }

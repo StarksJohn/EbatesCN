@@ -22,6 +22,7 @@ import FontAwesomeIconBts from './BaseFontAwesomeIconBts';
 import BaseTitleBt from './BaseTitleBt'
 import *as RootNavigator from '../../Root/RootNavigator'
 
+
 const NAV_BAR_HEIGHT_IOS = GlobalStyles.nav_bar_height_ios;
 const NAV_BAR_HEIGHT_ANDROID = GlobalStyles.nav_bar_height_android;
 // const STATUS_BAR_HEIGHT = GlobalStyles.STATUS_BAR_HEIGHT;

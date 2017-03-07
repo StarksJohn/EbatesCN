@@ -1,11 +1,11 @@
 /**
  搜索页
  */
-import React, {Component,PropTypes} from 'react';
-import {StyleSheet, View, Text, ListView, Platform } from 'react-native';
+import React, {Component, PropTypes} from 'react';
+import {StyleSheet, View, Text, ListView, Platform} from 'react-native';
 import {connect} from 'react-redux';
 import Colors from '../Utils/Colors';
-import BaseNavigationBar ,{NavBarButton, baseOnBackPress} from '../Comp/Base/BaseNavigationBar'
+import BaseNavigationBar, {NavBarButton, baseOnBackPress} from '../Comp/Base/BaseNavigationBar'
 import GlobalStyles from '../Global/GlobalStyles'
 import BaseSearchBar from '../Comp/Base/BaseSearchBar/BaseSearchBar'
 import SearchPageListComp from '../Comp/BizList/SearchPageListComp'
@@ -16,7 +16,6 @@ import *as StringOauth from '../Utils/StringUtils/StringOauth'
 import SearchResultPage from './SearchResultPage'
 import *as BizViews from '../Comp/BizCommonComp/BizViews'
 import BackAndroidEventListener from '../Utils/EventListener/BackAndroidEventListener'
-import LogInPage from './LogInPage'
 
 /**
  *  展示组件
@@ -25,11 +24,11 @@ export class SearchPage extends Component {
 
     static propTypes = {
 
-        isInTwoLevelPage:PropTypes.bool,//是否在二级页面
+        isInTwoLevelPage: PropTypes.bool,//是否在二级页面
     };
 
     static defaultProps = {
-        isInTwoLevelPage:false,
+        isInTwoLevelPage: false,
     };
 
     constructor(props) {
@@ -63,36 +62,21 @@ export class SearchPage extends Component {
             return;
         }
         let self = this;
-        HistorySearchDB.saveHistoryDB(value).then(()=> {
+        HistorySearchDB.saveHistoryDB(value).then(() => {
             // Log.log('成功 缓存一个新的 历史搜索 关键字  '+ value);
             self.props.dispatch(BizApi.fetchApi(BaseListActions.BaseListFetchDataType.REFRESH, 0, self.props));
 
-        }).catch((e)=> {
+        }).catch((e) => {
 
         });
 
         this.onCancel(true);
 
-        gUserDB.isLogin().then(
-            (b) => {//已登录
-                this.props.navigator.push({
-                    component: SearchResultPage,
-                    name: gRouteName.SearchResultPage,
-                    value: value,
-                    // SearchPageProps:this.props,
-                });
-            },
-            (e) => {//非登录状态
-                gPopBackToRouteAfteRegisterOrLoginSuceess = gRouteName.RootPagesContainer;
-
-                this.props.navigator.push({
-                    component: LogInPage,
-                    name: gRouteName.LogInPage//'
-
-                });
-            }
-        ).catch((error) => {
-            Log.log('TokenAPI getTokenWhenAppOpen error= '+error);
+        this.props.navigator.push({
+            component: SearchResultPage,
+            name: gRouteName.SearchResultPage,
+            value: value,
+            // SearchPageProps:this.props,
         });
     }
 
@@ -116,30 +100,30 @@ export class SearchPage extends Component {
     }
 
     render() {
-        let isInTwoLevelPage=this.props.route&&this.props.route.isInTwoLevelPage;
+        let isInTwoLevelPage = this.props.route && this.props.route.isInTwoLevelPage;
         const {navigator} = this.props;
 
-        let searchBar =!isInTwoLevelPage?BizViews.renderFirstLevelPageSearchBar('输入商家,  优惠名称',(value)=>this.onSubmit(value)):BizViews.renderTwoLevelPageSearchBar('输入商家,  优惠名称', '', (value) => this.onSubmit(value),);
+        let searchBar = !isInTwoLevelPage ? BizViews.renderFirstLevelPageSearchBar('输入商家,  优惠名称', (value) => this.onSubmit(value)) : BizViews.renderTwoLevelPageSearchBar('输入商家,  优惠名称', '', (value) => this.onSubmit(value),);
 
-        let navigationBar =BizViews.renderBaseNavigationBar(null,(isInTwoLevelPage?NavBarButton.getBackButton(() => baseOnBackPress(navigator, this.backAndroidEventListener)):null),null,searchBar,null,null);
-            // <BaseNavigationBar
-            //     style={ {backgroundColor: Colors.white} }
-            //     statusBarCustomStyle={GlobalStyles.statusBarDefaultProps}
-            //     titleTextView={null}
-            //     searchBar={searchBar}
-            //     hide={false}/>;
+        let navigationBar = BizViews.renderBaseNavigationBar(null, (isInTwoLevelPage ? NavBarButton.getBackButton(() => baseOnBackPress(navigator, this.backAndroidEventListener)) : null), null, searchBar, null, null);
+        // <BaseNavigationBar
+        //     style={ {backgroundColor: Colors.white} }
+        //     statusBarCustomStyle={GlobalStyles.statusBarDefaultProps}
+        //     titleTextView={null}
+        //     searchBar={searchBar}
+        //     hide={false}/>;
 
         let searchList = <SearchPageListComp ref="searchList" {...this.props }
-                                             onSubmit={(value)=> {
+                                             onSubmit={(value) => {
                                                  this.onSubmit(value)
                                              }
                                              }
 
-                                             onChangeBaseSearchBarText={(value)=> {
+                                             onChangeBaseSearchBarText={(value) => {
                                                  this.onChangeBaseSearchBarText(value)
                                              }
                                              }
-                                             onCancel={(isClearValue)=> {
+                                             onCancel={(isClearValue) => {
                                                  this.onCancel(isClearValue);
                                              }
                                              }

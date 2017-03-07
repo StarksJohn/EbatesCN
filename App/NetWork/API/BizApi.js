@@ -61,16 +61,17 @@ export const LogInApi = {
     /**
      * 登录接口,返回登陆后token并 缓存+内存赋值
      */
-    getAccessToken (body) {
+    getAccessToken (_body) {
         return new Promise(
             (resolve, reject) => {
                 BizLoadingView.showBizLoadingView('加载中....');
 
-                body = {
-                    ...body, grant_type: 'password',
+                let body = {
+                    ..._body, grant_type: 'password',
                     client_id: TokenDB.LoginTokenclient_id,
                     client_secret: TokenDB.LoginTokenclient_secret
-                }
+                };
+                Log.log('BizApi LogInApi getAccessToken() body='+Log.writeObjToJson(body));
                 let url = RequestUtil.getStagingOrProductionHost() + 'oauth/access_token';
                 RequestUtil.POST(url,
                     (header) => {
@@ -83,7 +84,7 @@ export const LogInApi = {
                     TokenDB.saveLoginStateToken(responseData);
                     resolve(TokenDB.loginTokenSchema.data);
                 }).catch((error) => {
-                    RequestUtil.showErrorMsg(error);
+                    // RequestUtil.showErrorMsg(error);
                     Log.log('BizApi LogInApi getAccessToken 登录接口失败 error.error=' + Log.writeObjToJson(error.error))
                     BizLoadingView.closeBizLoadingView();
                     reject(error);
@@ -152,7 +153,7 @@ export const ImgOauthCodeAPI = {
     requestCaptcha() {
         return new Promise(
             (resolve, reject) => {
-                BizLoadingView.showBizLoadingView('加载中....');
+                // BizLoadingView.showBizLoadingView('加载中....');
 
                 Log.log('BizApi ImgOauthCodeAPI requestCaptcha 开始请求 图片验证码接口')
                 let url = RequestUtil.getStagingOrProductionHost() + 'captchaInfo';
@@ -164,13 +165,13 @@ export const ImgOauthCodeAPI = {
                 ).then((responseData) => {
                     // Log.log('TokenAPI getClientTokenApi resolve ');
                     Log.log('BizApi ImgOauthCodeAPI requestCaptcha 图片验证码接口 请求成功')
-                    BizLoadingView.closeBizLoadingView();
+                    // BizLoadingView.closeBizLoadingView();
 
                     this.data = responseData;
                     resolve(this.data.captchaUrl);
                 }).catch((error) => {
                     Log.log('BizApi ImgOauthCodeAPI requestCaptcha 图片验证码接口 请求失败')
-                    BizLoadingView.closeBizLoadingView();
+                    // BizLoadingView.closeBizLoadingView();
 
                     reject(error);
                 });

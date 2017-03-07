@@ -133,7 +133,10 @@ export default class BizLoadingView extends Component {
     close() {
         let delay = this.duration;
 
-        if (!this.isShow) return;
+        if (!this.isShow){
+            Log.log('BizLoadingView close() 不需要close')
+            return;
+        }
         this.timer && clearTimeout(this.timer);
         this.timer = setTimeout(() => {
             Animated.timing(

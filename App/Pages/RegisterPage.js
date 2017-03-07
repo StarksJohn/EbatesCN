@@ -28,6 +28,7 @@ import *as ImgOauthCodeActions from '../Redux/Actions/ImgOauthCodeActions'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
 import *as Math from '../Utils/Math'
 import *as BizLoadingView from '../Comp/BizCommonComp/BizLoadingView'
+import *as RequestUtil from '../NetWork/RequestUtil'
 
 /**
  *  展示组件
@@ -150,6 +151,13 @@ export class RegisterPage extends Component {
             }
         ).catch((error) => {
             Log.log('RegisterPage onRegisterPress error=' + Log.writeObjToJson(error));
+            if (RequestUtil.parseErrorCode(error) === 15) {//
+                BizShowToast('该邮箱地址已被注册');
+            }else if (RequestUtil.parseErrorCode(error) === 13) {//验证码输入错误
+                BizShowToast('验证码错误');
+                this.getOauthCodeImg();
+
+            }
         })
     }
 
@@ -162,7 +170,7 @@ export class RegisterPage extends Component {
                 this.props.dispatch(RegisterRelevantActions.showRegisterSucessbtAction());
 
                 this.timer = new SMSTimer({
-                    timerNums: 10,
+                    timerNums: 5,
                     callBack: (time) => {
                         Log.log('time===' + time);
                         if (time == -1) {
@@ -190,8 +198,14 @@ export class RegisterPage extends Component {
 
     //获取验证码图片 接口
     getOauthCodeImg() {
+        this.props.dispatch(ImgOauthCodeActions.changeOauthCodeImgAction('www.baidu.com'/*为了
+         让点击图片验证码按钮后立即刷新菊花,随便请求一个url*/,
+         BizApi.RegisterPageApi.ApiName));
+
         BizApi.ImgOauthCodeAPI.requestCaptcha().then(
             (url) => {
+                // BizLoadingView.closeBizLoadingView();
+
                 this.props.dispatch(ImgOauthCodeActions.changeOauthCodeImgAction(url, BizApi.RegisterPageApi.ApiName));
             }
         );

@@ -128,7 +128,7 @@ const encodeURL = (url, params) => {
 const encodeBody = (body) => {
     if (body) {
         let paramsArray = [];
-        Object.keys(body).forEach(key => paramsArray.push(encodeURIComponent(key) + '=' + encodeURIComponent(body[key])))
+        Object.keys(body).forEach(key => paramsArray.push(key + '=' + encodeURIComponent(body[key])))
         return paramsArray.join('&');
 
     }
@@ -143,4 +143,12 @@ const encodeBody = (body) => {
 export function showErrorMsg(error) {
     BizShowToast(error.error.message);
 
+}
+
+/**
+ * 解析 和 服务器约定 好的 错误提示 code,避免以后 多处用到 error.error.code 时, 服务器又改字段
+ * @param error
+ */
+export function parseErrorCode(error) {
+    return error.error.code;
 }

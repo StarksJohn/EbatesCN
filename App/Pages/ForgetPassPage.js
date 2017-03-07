@@ -21,6 +21,7 @@ import BizLogBt from '../Comp/BizCommonComp/BizLogBt'
 import *as OauthForm from '../Utils/LogRegisterUtils/OauthForm'
 import ForgetPassEmailOkPage from './ForgetPassEmailOkPage'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
+import *as BizLoadingView from '../Comp/BizCommonComp/BizLoadingView'
 
 export class ForgetPassPage extends Component {
     constructor(props) {
@@ -80,9 +81,13 @@ export class ForgetPassPage extends Component {
 
     //获取验证码图片 接口
     getOauthCodeImg() {
-        // this.props.dispatch(ImgOauthCodeActions.changeOauthCodeImgAction(ImgOauthCodeAPI.imgOauthCodeAPI(), BizApi.ForgetPassPageApi.ApiName));
+        this.props.dispatch(ImgOauthCodeActions.changeOauthCodeImgAction('www.baidu.com'/*为了
+             让点击图片验证码按钮后立即刷新菊花,随便请求一个url*/,
+            BizApi.ForgetPassPageApi.ApiName));
+
         BizApi.ImgOauthCodeAPI.requestCaptcha().then(
             (url) => {
+                // BizLoadingView.closeBizLoadingView();
                 this.props.dispatch(ImgOauthCodeActions.changeOauthCodeImgAction(url, BizApi.ForgetPassPageApi.ApiName));
             }
         );
