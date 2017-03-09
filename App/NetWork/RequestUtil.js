@@ -33,6 +33,9 @@ export const request = (url, method, headersAppendCallBack, body) => {
     });
     let isOk;
 
+    // console.log('1111   '+fetch);
+
+
     return new Promise((resolve, reject) => {
         fetch(request)
             .then(
@@ -46,8 +49,9 @@ export const request = (url, method, headersAppendCallBack, body) => {
                     //     reject({status: response.status})
                     // }
 
-                    isOk=response.ok;
+                    isOk = response.ok;
 
+                    // return response.text();//调试 时用 text()
                     return response.json();//拿 body,成功或错误的信息都在 body里,此时返回的body 必须是 json 格式,否则解析出错
                 },
                 //第2个参数 函数 回调,就表示 fetch 失败,可能是网络没了等原因,表示接口本身就没通
@@ -55,31 +59,54 @@ export const request = (url, method, headersAppendCallBack, body) => {
                     // if (e.message) {
                     //     BizShowToast(e.message);
                     // }
-                    Log.log('RequestUtil request() fetch 失败 ,e='+Log.writeObjToJson(e))
+                    Log.log('RequestUtil request() fetch 失败 ,e=' + e);
                     reject(e);
                 })
             .then((responseData/*responseData 是 第一个then里 response.json() 执行成功 后 返回的 body*/) => {
                     if (isOk) {//接口是通的,并且request时的参数没问题,故返回了正确的数据
+
+                        // Log.log('RequestUtil request() 解析 body isOk ,responseData='+Log.writeObjToJson(responseData))
+                        Log.log('RequestUtil request() 解析 body isOk ,responseData=' + responseData)
+
                         resolve(responseData);
                     } else {//接口是通的,但request时可能参数不对,导致返回的数据是不对的
-                        Log.log('RequestUtil request() request时可能参数不对 ,e='+Log.writeObjToJson(responseData))
+                        // Log.log('RequestUtil request() request时可能参数不对 ,e='+Log.writeObjToJson(responseData))
+                        Log.log('RequestUtil request() request时可能参数不对 ,responseData=' + responseData)
 
                         reject(responseData);
                     }
                 },
                 (e /*e 是 第一个then里 response.json() 执行失败 后 返回的 error*/) => {
-                    Log.log('RequestUtil request() 解析 body 出错 ,e='+Log.writeObjToJson(e))
+                    // Log.log('RequestUtil request() 解析 body 出错 ,e='+Log.writeObjToJson(e))
+                    Log.log('RequestUtil request() 解析 body 出错 ,e=' + e)
 
                     reject(e);
                 }
             )
             .catch((error) => {
-                Log.log('RequestUtil request() 未知错误 ,error='+Log.writeObjToJson(error))
+                Log.log('RequestUtil request() 未知错误 ,error=' + error)
 
                 reject(error);
             });
     });
 };
+
+
+function readAllChunks(readableStream) {
+    const reader = readableStream.getReader();
+
+    function pump() {
+        return reader.read().then(({value, done}) => {
+            var s = '';
+            for (var i = 0; i < value.length; i++) {
+                s += String.fromCharCode(value[i]);
+            }
+            console.log(s);
+        });
+    }
+
+    return pump();
+}
 
 export const GET = (url, params, headersAppendCallBack) => {
 
@@ -110,11 +137,12 @@ const encodeURL = (url, params) => {
     if (params) {
         let paramsArray = [];
         //encodeURIComponent 拼接参数
-        Object.keys(params).forEach(key => paramsArray.push(key + '=' + params[key]))
-        if (url.search(/\?/) === -1) {
-            url += '?' + paramsArray.join('&')
-        } else {
-            url += '&' + paramsArray.join('&')
+        Object.keys(params).forEach(key => paramsArray.push(key + '=' + encodeURIComponent(params[key])))//数组对象拼成是
+        // {xxx=xxx}
+        if (url.search(/\?/) === -1) {//url里 没 有 ? 号 ,如 https://www.baidu.com/s
+            url += '?' + paramsArray.join('&')//拼成 https://www.baidu.com/s?ie=utf-8&f=8&rsv_bp=1
+        } else {///url里 有 ? 号 ,如 https://www.baidu.com/s?
+            url += '&' + paramsArray.join('&')//
         }
     }
     return url;

@@ -14,7 +14,9 @@ import SearchResultPageCouponListReducer from './SearchResultPageCouponListReduc
 import MerchantPageReducer from './MerchantPageReducer'
 import ForgetPassPageReducer from './ForgetPassPageReducer'
 import FilterMenuReducer from './FilterMenuReducer'
+import MerchantPageGridViewReducer from './MerchantPageGridViewReducer'
+import SearchPageGridViewReducer from './SearchPageGridViewReducer'
 
 export default combineReducers({
-    RootPageReducer,HomePageReducer,quickLogReducer,RegisterReducer,LogInReducer,RootComponentReducer,RootHomeNavReducer,RootRecommendFriendNavReducer,SearchPageListReducer,SearchResultPageMerchantListReducer,SearchResultPageReducer,SearchResultPageCouponListReducer,MerchantPageReducer,ForgetPassPageReducer,FilterMenuReducer
+    RootPageReducer,HomePageReducer,quickLogReducer,RegisterReducer,LogInReducer,RootComponentReducer,RootHomeNavReducer,RootRecommendFriendNavReducer,SearchPageListReducer,SearchResultPageMerchantListReducer,SearchResultPageReducer,SearchResultPageCouponListReducer,MerchantPageReducer,ForgetPassPageReducer,FilterMenuReducer,MerchantPageGridViewReducer,SearchPageGridViewReducer
 });

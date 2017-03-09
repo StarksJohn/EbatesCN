@@ -8,20 +8,20 @@ import {
 } from 'react-native';
 import Colors from '../../Utils/Colors'
 import BaseListComp from '../Base/BaseListComp';
-import BaseBt from '../Base/BaseBt'
-import GlobalStyles from '../../Global/GlobalStyles'
-import BaseGridView from '../Base/BaseGridView'
+import MerchantPageGridViewContainer from '../../Redux/Container/MerchantPageGridViewContainer'
 import *as BizViews from '../BizCommonComp/BizViews'
 import *as BizMerchantListCell from '../BizCells/BizMerchantListCell'
 import BaseTitleBt from '../Base/BaseTitleBt'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import AllMerchantPage from '../../Pages/AllMerchantPage'
-import LogInPage from '../../Pages/LogInPage'
 
 
 export default class MerchantPageListComp extends Component {
     constructor(props) {
         super(props);
+    }
+
+    componentWillMount(){
     }
 
     onCheckAllMerchant() {
@@ -57,46 +57,8 @@ export default class MerchantPageListComp extends Component {
         switch (rowID) {
             case '0': {
                 return (
-                    <BaseGridView
-                        items={Array.from(rowData)}//数组元素是 {img:'',title:''}
-                        containerStyle={{
-                            paddingLeft: 10,
-                            paddingRight: 10, paddingTop: 10, paddingBottom: 10,
-                            backgroundColor: Colors.white
-                        }}
-                        renderItem={(model/*此处的model是 {img:'',title:''} 结构*/) => {
-                            return (
-                                <BaseBt
-                                    key={model.title}
-                                    style={ {
-                                        flex: 0,
-                                        marginTop: 5, marginBottom: 0, marginLeft: 0, marginRight: 0, paddingTop: 0,
-                                        paddingBottom: 0,
-                                        width: (GlobalStyles.window.width - 20 ) / 4,
-                                        height: (200 - 30 ) / 2,
-                                        //backgroundColor: Colors.getRandomColor()
-                                    }}
-                                    activeOpacity={0.6}
-                                    disabled={false}
-                                    onPress={ () => {
-                                        //callback(rowData);
+                    <MerchantPageGridViewContainer
 
-                                    } }
-                                >
-                                    <Image source={model.img}
-                                           style={{width: 55, height: 55, alignSelf: 'center', marginTop: 0,}}/>
-                                    <Text style={{
-                                        marginLeft: 0,
-                                        marginTop: 7,
-                                        fontSize: 13,
-                                        color: '#404040',
-                                        alignSelf: 'center',
-                                        //backgroundColor: Colors.getRandomColor()
-                                    }} numberOfLines={1} textAlign="center"
-                                    >{model.title}</Text>
-                                </ BaseBt >
-                            );
-                        }}
                     />
                 );
             }

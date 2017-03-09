@@ -86,8 +86,8 @@ def enableProguardInReleaseBuilds = false
 def pass = getPassword("Ebatescn","com.ebates.EbatesCN")
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    compileSdkVersion 24
+    buildToolsVersion "24"
 
     defaultConfig {
         applicationId "com.ebatescn"

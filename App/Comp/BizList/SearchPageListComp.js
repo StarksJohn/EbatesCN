@@ -2,7 +2,7 @@
  搜索页的 列表
  */
 
-import React, {Component,PropTypes} from 'react';
+import React, {Component, PropTypes} from 'react';
 import {
     View, Text
 } from 'react-native';
@@ -13,21 +13,20 @@ import BaseListComp from '../Base/BaseListComp';
 import *as BizViews from '../BizCommonComp/BizViews'
 import BaseTitleBt from '../Base/BaseTitleBt'
 import *as GlobalStyles from '../../Global/GlobalStyles'
-import BaseGridView from '../Base/BaseGridView'
+import SearchPageGridViewContainer from '../../Redux/Container/SearchPageGridViewContainer'
 import *as BizApi from '../../NetWork/API/BizApi'
 import *as BaseListActions from '../../Redux/Actions/BaseListActions'
 import *as HistorySearchDB from '../../DB/BizDB/HistorySearchDB'
-
 
 export default class SearchPageListComp extends Component {
 
     static propTypes = {
 
-        isInTwoLevelPage:PropTypes.bool,//是否在二级页面
+        isInTwoLevelPage: PropTypes.bool,//是否在二级页面
     };
 
     static defaultProps = {
-        isInTwoLevelPage:false,
+        isInTwoLevelPage: false,
     };
 
     constructor(props) {
@@ -73,19 +72,18 @@ export default class SearchPageListComp extends Component {
      * @param highlightRow
      * @returns {XML}
      */
-    renderRow = (rowData, sectionID, rowID, highlightRow)=> {
+    renderRow = (rowData, sectionID, rowID, highlightRow) => {
 
         // console.log('SearchPageListComp rowID==' + rowID);
 
         //最底部画 占位view
-        if (rowID == this.props.baseReducer.dataArray.length - 1 /*&& this.props.isInTwoLevelPage*/ ) {
+        if (rowID == this.props.baseReducer.dataArray.length - 1 /*&& this.props.isInTwoLevelPage*/) {
             // Log.log('this.props.baseReducer.dataArray.length=='+this.props.baseReducer.dataArray.length);
             return BizViews.renderBottomTabbarBackView(this.props.isInTwoLevelPage);
         }
 
         switch (rowID) {
             case '0': {
-                let arr = rowData.toJSArray();
                 return (
                     <View style={{
                         //height: 208,//按钮数量不确定,故高度不能写死
@@ -98,31 +96,25 @@ export default class SearchPageListComp extends Component {
                         }}>
                             热门搜索
                         </Text>
-                        <BaseGridView
-                            items={Array.from(arr)}//数组元素是 {id:'',name:''}
-                            containerStyle={{
-                                paddingLeft: 10,
-                                paddingRight: 10, paddingTop: 8, paddingBottom: 8,
-                                //backgroundColor: Colors.getRandomColor()
-                            }}
-                            renderItem={(model/*此处的model是 Immutable .map 结构*/)=> {
+                        <SearchPageGridViewContainer
+                            renderItem={(model/*此处的model是 Immutable .map 结构*/) => {
                                 return (
                                     <BaseTitleBt
-                                        key={model.get('title')}
+                                        key={model.title}
                                         btStyle={[{
-                                            width: (GlobalStyles.window.width - 30 - 20) / 3-0.1 /*减0.1是因为大屏上,/3后的值可能
+                                            width: (GlobalStyles.window.width - 30 - 20) / 3 - 0.1 /*减0.1是因为大屏上,/3后的值可能
                                              比 实际的值大, 避免 一行大屏 里 一行显示不下3个按钮*/,
                                             borderRadius: 4, margin: 5, height: 45,
                                             alignItems: 'center',
                                             justifyContent: 'center',
                                             backgroundColor: Colors.white,
                                         }]}
-                                        onPress={() => this.onPress(model.get('title'))}
+                                        onPress={() => this.onPress(model.title)}
                                         textStyle={{
                                             fontSize: 14,
                                             color: 'rgba(85, 85, 85, 1)',
                                         }}
-                                        title={model.get('title')}
+                                        title={model.title}
                                         disabled={false}
                                     >
                                     </BaseTitleBt>
@@ -192,7 +184,7 @@ export default class SearchPageListComp extends Component {
                             title={rowData}
                             disabled={false}
                         >
-                            {BizViews.deleteBox(()=> {
+                            {BizViews.deleteBox(() => {
                                 this.deleteOneKeyWord(rowData);
                             })}
                         </BaseTitleBt>

@@ -14,6 +14,7 @@ import *as TokenAPI from './TokenAPI'
 import *as RequestUtil from '../RequestUtil'
 import *as TokenDB from '../../DB/BizDB/TokenDB'
 import *as BizLoadingView from '../../Comp/BizCommonComp/BizLoadingView'
+import *as BaseGridViewActions from '../../Redux/Actions/BaseGridViewActions'
 
 /**
  * 注册页面的API
@@ -71,7 +72,7 @@ export const LogInApi = {
                     client_id: TokenDB.LoginTokenclient_id,
                     client_secret: TokenDB.LoginTokenclient_secret
                 };
-                Log.log('BizApi LogInApi getAccessToken() body='+Log.writeObjToJson(body));
+                Log.log('BizApi LogInApi getAccessToken() body=' + Log.writeObjToJson(body));
                 let url = RequestUtil.getStagingOrProductionHost() + 'oauth/access_token';
                 RequestUtil.POST(url,
                     (header) => {
@@ -99,7 +100,7 @@ export const LogInApi = {
     getRefreshToken(){
         return new Promise(
             (resolve, reject) => {
-               let body = {
+                let body = {
                     grant_type: 'refresh_token',
                     client_id: TokenDB.LoginTokenclient_id,
                     client_secret: TokenDB.LoginTokenclient_secret,
@@ -223,7 +224,7 @@ export const SearchPageListApi = {
     ApiName: 'SearchPageListApi',
 
     //搜索 页 最大列表  的  数据源, 9个按钮+热门搜索 text 是一个 cell, 默认是 热门搜索cell 和 底部留白cell 2个 数据源
-    $dataArray: fromJS([[{title: 'GNC'}, {title: 'Walgreens'}, {title: '普丽普莱普丽普莱普丽普莱普丽普莱普丽普莱'}, {title: '黑五'}, {title: '雅诗兰黛'}, {title: 'shoebuy'}, {title: 'Amazon'}, {title: '联名卡'}, {title: 'shoebuy2'}], '底部为了留白的cell']),
+    $dataArray: fromJS([{key: '0号cell'}, '底部为了留白的cell']),
 
     /**
      * 历史搜索 列表 第一次 挂载时| commit后 刷新列表时 获取数据源
@@ -243,6 +244,17 @@ export const SearchPageListApi = {
                 dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, this.$dataArray.toJSArray()));
 
             });
+        }
+    },
+
+    /**
+     * 热门搜索 按钮 数据源
+     */
+    fetchHotSearchBtData(){
+        return (dispatch) => {
+
+            dispatch(BaseGridViewActions.changeBaseGridViewStates(this.ApiName, BaseGridViewActions.BaseGridViewStates.fetchOk, [{title: 'GNC'}, {title: 'Walgreens'}, {title: '普丽普莱普丽普莱普丽普莱普丽普莱普丽普莱'}, {title: '黑五'}, {title: '雅诗兰黛'}, {title: 'shoebuy'}, {title: 'Amazon'}, {title: '联名卡'}, {title: 'shoebuy2'}]));
+
         }
     },
 
@@ -601,30 +613,17 @@ export const MerchantPageApi = {
             if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE) {//一开始 挂载
                 dispatch(BaseListActions.InitListDataSource(this.ApiName));// 当前 列表的 $dataArray 清0
 
-                let arr = [{
-                    img: require('../../Img/store_icon_baby.png'),
-                    title: '母婴'
-                }, {
-                    img: require('../../Img/store_icon_fashion.png'),
-                    title: '时尚'
-                }, {img: require('../../Img/store_icon_beauty.png'), title: '美妆'}, {
-                    img: require('../../Img/store_icon_health.png'),
-                    title: '健康美护'
-                }, {
-                    img: require('../../Img/store_icon_supplements.png'),
-                    title: '保健'
-                }, {
-                    img: require('../../Img/store_icon_sport.png'),
-                    title: '运动'
-                }, {
-                    img: require('../../Img/store_icon_outdoor.png'),
-                    title: '户外'
-                }, {img: require('../../Img/store_icon_all.png'), title: '全部'}];
-
+                //列表一开始画0号cell, 让 网格控件 可以 自动加载其API
                 dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
                     couldLoadMore: true,
-                    newContentArray: [arr]
+                    newContentArray: [{}]
                 }));
+
+                // TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
+                //     () => {
+                //         dispatch(MerchantPageApi.FeaturedCategoryListApi(opt));
+                //     }
+                // );
 
                 dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
 
@@ -636,6 +635,38 @@ export const MerchantPageApi = {
 
             }
         }
+    },
+
+    /**
+     * 顶部7个按钮API
+     * @constructor
+     */
+    FeaturedCategoryListApi(){
+        return (dispatch) => {
+            dispatch(BaseGridViewActions.changeBaseGridViewStates(this.ApiName, BaseGridViewActions.BaseGridViewStates.Loading, null));
+
+
+            let url = RequestUtil.getStagingOrProductionHost() + 'categories/featured';
+            RequestUtil.GET(url, null,
+                (header) => {
+                    commonApiHeaderAppend(header)
+                },
+            ).then((responseData) => {
+                // resolve(responseData);
+                // BizLoadingView.closeBizLoadingView();
+
+                Log.log('BizApi MerchantPageApi FeaturedCategoryListApi 拿到 7个按钮的数据 responseData=' + responseData)
+                dispatch(BaseGridViewActions.changeBaseGridViewStates(this.ApiName, BaseGridViewActions.BaseGridViewStates.fetchOk, responseData));
+
+
+            }).catch((error) => {
+                Log.log('BizApi MerchantPageApi FeaturedCategoryListApi 拿 7个按钮的数据 失败  error=' + Log.writeObjToJson(error))
+
+                dispatch(BaseGridViewActions.changeBaseGridViewStates(this.ApiName, BaseGridViewActions.BaseGridViewStates.fetchFail, []));
+
+            });
+        }
+
     },
 
     /**

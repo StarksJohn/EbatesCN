@@ -2,68 +2,98 @@
  * 网格view,可 外部自定义 绘制每个 格子的逻辑
  * 借鉴 曹神的 reading
  */
-import React, {PropTypes} from 'react';
+import React, {PropTypes, Component} from 'react';
 import {
     View,
     StyleSheet,
     ListView
 } from 'react-native';
 
-const propTypes = {
-    items: PropTypes.array,
-    renderItem: PropTypes.func,
-    containerStyle: View.propTypes.style,
-};
+import *as BaseGridViewActions from '../../Redux/Actions/BaseGridViewActions'
 
-/**
- *
- * @param items 原始数据源 [{},{}...]
- * @param renderItem 外部绘制 item
- * @param containerStyle 外部自定义容器的style
- * @constructor
- */
-const BaseGridView = ({
-    items,
-    renderItem,
-    containerStyle
-}) => {
 
-    /**
-     * 画所有的 格子
-     * @param groups
-     */
-    const renderGroups = (items)=> {
-        const itemViews = items.map((model) => {
-            const i = renderItem(model);//外部绘制每个cell里的 格子
-            return i;
-        });
-        return (
-            //画容器
-            <View style={[styles.container,containerStyle]}>
-                {itemViews}
-            </View>
-        );
+export  default class BaseGridView extends Component {
+    static propTypes = {
+        // items: PropTypes.array,//数据源
+        renderItem: PropTypes.func,//怎么画每个数据源
+        renderLoadingStateView:PropTypes.func,//画 加载状态的 视图
+        renderFailStateView:PropTypes.func,//画 无数据 状态
+        fetchApi:PropTypes.func,//外部 container 决定 调哪个api 获取数据
+        containerStyle: View.propTypes.style,//拿到数据后,fetchOk 状态的 容器样式
     };
 
-    return (
-        renderGroups(items)
-    );
-};
+    static defaultProps = {
+        // items: [],
+        renderItem: null,
+        containerStyle: undefined,
+        renderLoadingStateView:()=>{},
+        renderFailStateView:()=>{},
+        fetchApi:()=>{}
+    };
+
+    constructor(props) {
+        super(props);
+
+    }
+
+    componentWillMount() {
+        // this.props.dispatch(this.props.fetchApi());
+        // this.props.fetchApi();
+    }
+
+    fetchData(){
+        this.props.dispatch(this.props.fetchApi());
+    }
+
+    componentDidMount() {
+        this.fetchData();
+    }
+
+    render() {
+        const {renderItem, containerStyle,renderLoadingStateView,renderFailStateView}=this.props;
+        const {state, dataArray}=this.props.baseReducer;
+
+        let content = null;
+
+        switch (state) {
+            case BaseGridViewActions.BaseGridViewStates.Loading: {
+                content=renderLoadingStateView();
+            }
+                break;
+
+            case BaseGridViewActions.BaseGridViewStates.fetchOk: {
+                content=dataArray.map((model) => {
+                    // let i = renderItem(model);//外部绘制每个cell里的 格子
+                    return renderItem(model);
+                });
+            }
+                break;
+
+            case BaseGridViewActions.BaseGridViewStates.fetchFail: {
+                content=renderFailStateView();
+
+            }
+                break;
+        }
+
+
+        return (
+            //画容器
+            <View style={[styles.container, containerStyle]}>
+                {content}
+            </View>
+        );
+    }
+
+}
+
 
 const styles = StyleSheet.create({
-    container:{//最大的容器 默认
+    container: {//最大的容器 默认
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'flex-start'
     }
 });
 
-BaseGridView.propTypes = propTypes;
 
-BaseGridView.defaultProps = {
-    items: [],
-    renderItem: null,
-    containerStyle: undefined,
-};
-
-export default BaseGridView;

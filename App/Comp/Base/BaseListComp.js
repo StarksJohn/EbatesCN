@@ -52,7 +52,7 @@ export default class BaseListComp extends Component {
 
     };
 
-    componentDidMount() {
+    componentWillMount() {
         this._fetchData(BaseListActions.BaseListFetchDataType.INITIALIZE);
 
     }
