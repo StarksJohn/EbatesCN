@@ -11,7 +11,7 @@ import {
 import {connect} from 'react-redux';
 import MerchantListComp from '../../Comp/BizList/MerchantListComp'
 import *as BizViews from '../../Comp/BizCommonComp/BizViews'
-import *as SearchResultPageActions from '../Actions/SearchResultPageActions'
+// import *as SearchResultPageActions from '../Actions/SearchResultPageActions'
 import *as BizApi from '../../NetWork/API/BizApi'
 import *as BaseListActions from '../Actions/BaseListActions'
 
@@ -24,7 +24,7 @@ class SearchResultPageMerchantListContanier extends React.Component {
      */
     renderNoDataView(props) {
 
-        return BizViews.renderSearchResultPageNoDataView(props.route.value,0,()=>{
+        return BizViews.renderSearchResultPageNoDataView(props.route.value, 0, () => {
             // this.props.dispatch(BaseListActions.Loadinglist(BaseListActions.BaseListFetchDataType.REFRESH, BizApi.SearchResultPageMerchantListAPI.ApiName));
             // this.props.dispatch(BizApi.SearchResultPageSearchKeyWordAPI.searchKeyWordAPI(BaseListActions.BaseListFetchDataType.REFRESH, null,0 ));//刷新 列表
 
@@ -39,6 +39,17 @@ class SearchResultPageMerchantListContanier extends React.Component {
             <MerchantListComp {...this.props}
                               renderNoDataView={(props) => {
                                   return this.renderNoDataView(props);
+                              }
+                              }
+                              renderNetWorkAbnormalView={(props) => {
+                                  return BizViews.netWorkAbnormalView({}, {
+                                      marginTop: 60,
+                                      width: 90,
+                                      height: 90,
+                                  }, {marginTop: 25,}, {marginTop: 17}, () => {
+                                      this.props.dispatch(BizApi.SearchResultPageMerchantListAPI.fetchData(BaseListActions.BaseListFetchDataType.REFRESH, props.route.value));//刷新 列表
+
+                                  });
                               }
                               }
             />

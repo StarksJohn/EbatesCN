@@ -104,6 +104,21 @@ export function ListSuccesState(state, action) {
 }
 
 /**
+ * 通用列表的 网络异常 状态
+ * @returns {Cursor}
+ * @constructor
+ */
+export function ListFailureState(state, action) {
+    let _nextState = state
+        .setIn(['status'], action.type)
+        .setIn(['opt'], action.opt)
+        .setIn(['couldLoadMore'], false)
+        .setIn(['isRefreshing'], false);
+
+    return _nextState;
+}
+
+/**
  * 列表即将被 从 DOM 移除
  * @param state
  * @param action

@@ -28,6 +28,8 @@ export const request = (url, method, headersAppendCallBack, body) => {
     headersAppendCallBack(header);
 
     // Log.log('RequestUtil request() encodeBody(body)='+encodeBody(body));
+    Log.log('RequestUtil request() url='+url);
+
     let request = new Request(url, {
         method: method, headers: header, body: encodeBody(body)
     });

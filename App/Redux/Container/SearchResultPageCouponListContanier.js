@@ -40,6 +40,17 @@ class SearchResultPageCouponListContanier extends React.Component {
                                   return this.renderNoDataView(props);
                               }
                               }
+                            renderNetWorkAbnormalView={(props) => {
+                                return BizViews.netWorkAbnormalView({}, {
+                                    marginTop: 60,
+                                    width: 90,
+                                    height: 90,
+                                }, {marginTop: 25,}, {marginTop: 17}, () => {
+                                    this.props.dispatch(BizApi.SearchResultPageMerchantListAPI.fetchData(BaseListActions.BaseListFetchDataType.REFRESH, props.route.value));//刷新 列表
+
+                                });
+                            }
+                            }
             />
         );
     }

@@ -88,9 +88,9 @@ export const loginTokenSchema = {
     refreshToken(){
         return new Promise(
             (resolve, reject) => {
-                // storage.sync.unLoginStateToken().then((tokenObj) => {
-                //     resolve();
-                // });
+                gStorage.sync.LoginStateToken().then((tokenObj) => {
+                    resolve();
+                });
             }
         );
     },

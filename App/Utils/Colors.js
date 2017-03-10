@@ -5,11 +5,12 @@
 export default  Colors = {
     lightGray: "#F0F0F0",
     lineGray: '#F0F0F0',
+    white:'#FFFFFF',
     borderColor:'#dddddd',//一般用于 边框颜色|分割线 颜色
     green: '#80BD01',
     orange:'#FFA500',
     backGray: '#E5E5E5',
-    textGray: 'rgba(192, 192, 192, 1)',
+    textGray: '#C0C0C0', //'rgba(192, 192, 192, 1)',
     textBlack: '#333333',
     purple: '#9966CC',
     red: '#f61d4b',
@@ -21,7 +22,6 @@ export default  Colors = {
     BizCommonGrayBack:'rgba(239, 239, 239, 1)',//Ebates 中国 项目的 通用 灰色背景
     blackTranslucent: 'rgba(0, 0, 0, 0.1)',//黑色半透明
     blue: '#3e9ce9',
-    white: "white",
     COMMON_SELECT_COLOR: 'rgba(255, 80, 0, 0.1)', //统一按下颜色
     COMMON_BACKGROUND_COLOR: '#F5FCFF', //统一背景颜色
     transparent: 'transparent',//全 透明 色

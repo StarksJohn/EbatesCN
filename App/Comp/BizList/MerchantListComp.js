@@ -12,9 +12,10 @@ import *as BizMerchantListCell from '../BizCells/BizMerchantListCell'
 
 export default class MerchantListComp extends Component {
 
-    static propTypes = {
-        renderNoDataView: PropTypes.any,//外部可自定义如何绘制 列表无数据 状态的 view
-    };
+    // static propTypes = {
+    //     renderNoDataView: PropTypes.any,//外部可自定义如何绘制 列表无数据 状态的 view
+    //
+    // };
 
     constructor(props) {
         super(props);
@@ -48,7 +49,6 @@ export default class MerchantListComp extends Component {
         if (rowID != '0') {
             paddingTop = 5;
         }
-
         return BizMerchantListCell.RenderBizMerchantListCell(rowData,sectionID,rowID,highlightRow,(rowData)=>{
             Log.log('MerchantListComp renderRow callback rowData=='+rowData);
         },paddingTop);
@@ -67,6 +67,11 @@ export default class MerchantListComp extends Component {
                     renderNoDataView={(props) => {
                         return this.props.renderNoDataView(props);
                     }
+                    }
+                    renderNetWorkAbnormalView={
+                        (props) => {
+                            return this.props.renderNetWorkAbnormalView(props);
+                        }
                     }
                 />
             </View>

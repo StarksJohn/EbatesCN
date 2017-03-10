@@ -14,7 +14,7 @@ export const BaseListStatus = {
     Loading: 'fetch_list_data_status_Loading', //列表正在获取(第一页|下页)数据,到 收到网络数据|网络请求失败 为止
     Refreshing:'Refreshing',//正准备进入 下拉刷新的UI 状态
     SUCCESS: 'fetch_list_data_status_success', //列表成功获取到数据
-    FAILURE: 'fetch_list_data_status_failure', //列表获取数据失败
+    FAILURE: 'fetch_list_data_status_failure', //列表获取数据失败,可能是网络异常引起
     NODATA: 'fetch_list_data_status_nodata', //列表获取到无缓存数据
     ADD: 'fetch_list_data_status_addOneData',//列表添加一条数据
     REMOVE:'fetch_list_data_status_removeOneData',//列表删除一条数据
@@ -60,6 +60,17 @@ export function Loadinglist(opt, ApiName) {
  */
 export function SuccessFetchinglist(opt, ApiName, newData) {
     return { type: BaseListStatus.SUCCESS, opt, ApiName,  newData };
+}
+
+/**
+ * 读取接口失败,可能是 网络异常导致
+ * @param opt
+ * @param ApiName
+ * @returns {{type: string, opt: *, ApiName: *}}
+ * @constructor
+ */
+export function FailureFetchinglist(opt, ApiName) {
+    return { type: BaseListStatus.FAILURE, opt, ApiName };
 }
 
 /**

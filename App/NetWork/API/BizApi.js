@@ -365,6 +365,8 @@ export const SearchResultPageSearchKeyWordAPI = {
                                 dispatch(SearchResultPageCouponListAPI.handleNetWorkData(opt, arr, all));
                             }
 
+
+
                             {//模拟拿到 商家列表的 第一页 网络数据
                                 let arr = [];
                                 let all = Math.randomNums(4, 30);
@@ -376,6 +378,10 @@ export const SearchResultPageSearchKeyWordAPI = {
 
                                 dispatch(SearchResultPageMerchantListAPI.handleNetWorkData(opt, arr, all));
                             }
+
+                            // {//模拟商家列表网络异常
+                            //     dispatch(BaseListActions.FailureFetchinglist(opt, SearchResultPageMerchantListAPI.ApiName ));
+                            // }
                         }
                     }
                 }
@@ -507,6 +513,10 @@ export const SearchResultPageCouponListAPI = {
                         dispatch(this.handleNetWorkData(opt, this.$dataArray.toJS(), this.tabLabelTotalNums));
                     } else {
                         dispatch(SearchResultPageActions.nodataAction(this.ApiName, opt));
+
+                        // {//模拟商家列表网络异常
+                        //     dispatch(BaseListActions.FailureFetchinglist(opt, SearchResultPageCouponListAPI.ApiName ));
+                        // }
                     }
 
                 } else if (opt == BaseListActions.BaseListFetchDataType.REFRESH && this.componentDidMount) {//搜索结果页, 优惠列表已挂载后, 再次搜索,触发 此接口
@@ -616,19 +626,14 @@ export const MerchantPageApi = {
                 //列表一开始画0号cell, 让 网格控件 可以 自动加载其API
                 dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
                     couldLoadMore: true,
-                    newContentArray: [{}]
+                    newContentArray: [{key: '0号cell'},{key: '1号cell'}]
                 }));
-
-                // TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
-                //     () => {
-                //         dispatch(MerchantPageApi.FeaturedCategoryListApi(opt));
-                //     }
-                // );
 
                 dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
 
                 TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
                     () => {
+                        Log.log('BizApi MerchantPageApi 开始 调 top10商家接口 ')
                         dispatch(MerchantPageApi.fetchTopTen());
                     }
                 );
@@ -645,26 +650,32 @@ export const MerchantPageApi = {
         return (dispatch) => {
             dispatch(BaseGridViewActions.changeBaseGridViewStates(this.ApiName, BaseGridViewActions.BaseGridViewStates.Loading, null));
 
+            TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
+                () => {
+                    let url = RequestUtil.getStagingOrProductionHost() + 'categories/featured';
+                    RequestUtil.GET(url, null,
+                        (header) => {
+                            commonApiHeaderAppend(header)
+                        },
+                    ).then((responseData) => {
+                        // resolve(responseData);
+                        // BizLoadingView.closeBizLoadingView();
 
-            let url = RequestUtil.getStagingOrProductionHost() + 'categories/featured';
-            RequestUtil.GET(url, null,
-                (header) => {
-                    commonApiHeaderAppend(header)
-                },
-            ).then((responseData) => {
-                // resolve(responseData);
-                // BizLoadingView.closeBizLoadingView();
-
-                Log.log('BizApi MerchantPageApi FeaturedCategoryListApi 拿到 7个按钮的数据 responseData=' + responseData)
-                dispatch(BaseGridViewActions.changeBaseGridViewStates(this.ApiName, BaseGridViewActions.BaseGridViewStates.fetchOk, responseData));
+                        Log.log('BizApi MerchantPageApi FeaturedCategoryListApi 拿到 7个按钮的数据 responseData=' + responseData)
+                        dispatch(BaseGridViewActions.changeBaseGridViewStates(this.ApiName, BaseGridViewActions.BaseGridViewStates.fetchOk, responseData.data));
+                        // dispatch(BaseGridViewActions.changeBaseGridViewStates(this.ApiName, BaseGridViewActions.BaseGridViewStates.fetchFail, []));
 
 
-            }).catch((error) => {
-                Log.log('BizApi MerchantPageApi FeaturedCategoryListApi 拿 7个按钮的数据 失败  error=' + Log.writeObjToJson(error))
+                    }).catch((error) => {
+                        Log.log('BizApi MerchantPageApi FeaturedCategoryListApi 拿 7个按钮的数据 失败  error=' + Log.writeObjToJson(error))
 
-                dispatch(BaseGridViewActions.changeBaseGridViewStates(this.ApiName, BaseGridViewActions.BaseGridViewStates.fetchFail, []));
+                        dispatch(BaseGridViewActions.changeBaseGridViewStates(this.ApiName, BaseGridViewActions.BaseGridViewStates.fetchFail, []));
 
-            });
+                    });
+                }
+            );
+
+
         }
 
     },
@@ -675,27 +686,51 @@ export const MerchantPageApi = {
     fetchTopTen(){
         return (dispatch) => {
 
-            this.timer = new SMSTimer({
-                timerNums: 1.5,
-                callBack: (time) => {
-                    Log.log('time===' + time);
-                    if (time == -1) {
+            // this.timer = new SMSTimer({
+            //     timerNums: 1.5,
+            //     callBack: (time) => {
+            //         Log.log('time===' + time);
+            //         if (time == -1) {
+            //
+            //             {//模拟拿到 top10商家数据 网络数据
+            //                 let arr = [];
+            //                 for (let i = 0; i < 12; i++) {
+            //                     arr.push({index: i});
+            //                 }
+            //                 dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.MORE, this.ApiName, {
+            //                     couldLoadMore: false,
+            //                     newContentArray: arr
+            //                 }));
+            //             }
+            //
+            //             {//模拟没拿到数据
+            //
+            //             }
+            //
+            //         }
+            //     }
+            // });
+            // this.timer.start();
 
-                        {//模拟拿到 top10商家数据 网络数据
-                            let arr = [];
-                            for (let i = 0; i < 13; i++) {
-                                arr.push({index: i});
-                            }
-                            dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.MORE, this.ApiName, {
-                                couldLoadMore: false,
-                                newContentArray: arr
-                            }));
-                        }
-
-                    }
-                }
-            });
-            this.timer.start();
+            {
+                let url = RequestUtil.getStagingOrProductionHost() + 'merchants/top';
+                RequestUtil.GET(url, {
+                        page:1,perPage:10,include:'hotCoupons',
+                    },
+                    (header) => {
+                        commonApiHeaderAppend(header)
+                    },
+                ).then((responseData) => {
+                    Log.log('BizApi MerchantPageApi fetchTopTen top10商家接口OK =' + Log.writeObjToJson(responseData))
+                    dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.MORE, this.ApiName, {
+                        couldLoadMore: false,
+                        newContentArray: responseData.data
+                    }));
+                }).catch((error) => {
+                    Log.log('BizApi MerchantPageApi fetchTopTen top10商家接口 失败 =' + error)
+                    RequestUtil.showErrorMsg(error)
+                });
+            }
         }
 
     }

@@ -14,6 +14,7 @@ import Spinner from 'react-native-spinkit'
 import BaseTitleBt from '../../Comp/Base/BaseTitleBt'
 import GlobalStyles from '../../Global/GlobalStyles'
 import BaseBt from '../../Comp/Base/BaseBt'
+import *as BizViews from '../../Comp/BizCommonComp/BizViews'
 
 
  class MerchantPageGridViewContainer extends React.Component {
@@ -89,54 +90,9 @@ import BaseBt from '../../Comp/Base/BaseBt'
                           }
                           renderFailStateView={
                               () => {
-                                  return (
-                                      <View style={{
-                                          flex: 1, alignSelf: 'center', height: 180,
-                                          justifyContent: 'center', alignItems: 'center',
-                                          //backgroundColor:Colors.getRandomColor()
-                                      }}>
-                                          <Image source={require('../../Img/common_bkg_error@3x.png')}
-                                                 style={{
-                                                     width: 60, height: 60, marginTop: 0,
-                                                     //backgroundColor:Colors.getRandomColor()
-                                                 }}/>
-                                          <Text style={{
-                                              marginLeft: 0,
-                                              marginTop: 10,
-                                              fontSize: 13,
-                                              color: '#404040',
-                                              //alignSelf: 'center',
-                                              //backgroundColor: Colors.getRandomColor()
-                                          }} numberOfLines={1} textAlign="center"
-                                          >网络异常,请点击屏幕重试</Text>
-                                          <BaseTitleBt
-                                              key={1}
-                                              btStyle={[{
-                                                  width: 140,
-                                                  height: 44,
-                                                  alignItems: 'center',
-                                                  justifyContent: 'center',
-                                                  borderRadius: 4,
-                                                  borderColor: 'rgba(54, 166,' +
-                                                  ' 66, 1)',
-                                                  borderWidth: 0.5,
-                                                  marginTop: 10,
-                                                  backgroundColor: Colors.transparent,
-                                              }]}
-                                              onPress={() => {
-                                                  this.BaseGridViewRef.fetchData();
-                                              }}
-                                              textStyle={{
-                                                  fontSize: 15,
-                                                  color: 'rgba(54, 166, 66, 1)',
-                                              }}
-                                              title='重新加载'
-                                              disabled={false}
-                                          >
-                                          </BaseTitleBt>
-
-                                      </View>
-                                  );
+                                return BizViews.netWorkAbnormalView({flex:1,height: 180},{},{},{},()=>{
+                                    this.BaseGridViewRef.fetchData();
+                                });
                               }
                           }
             />

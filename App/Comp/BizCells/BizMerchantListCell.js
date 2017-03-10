@@ -15,12 +15,15 @@ import BaseBt from '../Base/BaseBt'
 
 export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRow, callback, paddingTop) {
 
-    // Log.log('renderBizMerchantListCell rowID==' + rowID);
+    Log.log('BizMerchantListCell renderBizMerchantListCell rowData==' + Log.writeObjToJson(rowData));
     // let str='rowID  '+rowID;
+    // let uri={uri:  'http://extrabux-static.b0.upaiyun.com/images/merchants/1912.jpg'}
 
     //美工约定的左图的尺寸
-    let logoW=112;
-    let logoH=24;
+    let logoW = 112;
+    let logoH = 24;
+    let nowRate = rowData.nowRate + ' ';
+    let wasRate = rowData.wasRate;
     return (
         <BaseBt
             style={ {
@@ -56,17 +59,27 @@ export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRo
                     }} numberOfLines={1} textAlign="center" textDecorationLine="underline"
                           textDecorationStyle="dashed" textDecorationColor={Colors
                         .getRandomColor()}
-                    >标题标题标题标题标题标题标题标题标题标题标题标题标题</Text>
+                    >{rowData.name}</Text>
                     <Text style={{
                         marginLeft: 10,
-                        marginTop: 10, fontSize: 15, color: 'rgba(255, 155,' +
+                        marginTop: 10,
+                        fontSize: 15,
+                        color: 'rgba(255, 155,' +
                         ' 12, 1)',
                         //backgroundColor: Colors.getRandomColor()
-                    }} numberOfLines={1} textAlign="center" textDecorationLine="underline"
-                          textDecorationStyle="dashed" textDecorationColor={Colors
-                        .getRandomColor()}
-                    >返利5.5%</Text>
-                    {renderMark()}
+                    }} numberOfLines={1} textAlign="center"
+                    >{nowRate}
+                        <Text style={{
+                            fontSize: 10, marginLeft: 10, color: Colors.textGray,
+                            textDecorationLine: 'line-through',
+                            textDecorationStyle: 'solid',
+                            textDecorationColor: Colors.textGray,
+                            //backgroundColor: Colors.getRandomColor()
+                        }} textDecorationStyle="dashed" textDecorationColor={Colors
+                            .getRandomColor()} textAlign="center"
+                        >{wasRate}</Text>
+                    </Text>
+                    {renderMark(rowData)}
                 </View>
                 {/*logo的背景*/}
                 <View style={{
@@ -75,29 +88,73 @@ export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRo
                 }}>
                     {/*logo 用 www.ebates.com 里的logo,如 https://www.ebates.com/merchant_images/large/icon_ashford.gif
                      ,宽高和美工约定好了, 在 顶部到 分割线 之间 上下居中*/}
-                    <Image source={ {uri: 'https://www.ebates.com/merchant_images/large/icon_ashford.gif'}} style={{
+                    <Image source={ {uri: rowData.image} } style={{
                         marginLeft: 0, marginRight: 0, width: logoW, height: logoH, alignSelf: 'center',
                         //borderColor: Colors.getRandomColor(), borderWidth:0.5,
                         //backgroundColor: Colors.getRandomColor()
                     }}/>
                 </View>
             </View>
-
+            {/*圆圈*/}
+            {renderBadge(rowData, rowID)}
             {/*横线下边的view*/}
-            {renderCouponMsgView()}
+            {renderCouponMsgView(rowData)}
         </BaseBt>
     );
 
 }
 
+function renderBadge(rowData, rowID) {
+    if (!rowData.isInTopTenList) {
+        let backColor = null;
+        let textColor = Colors.white;
+        let borderColor = null;
+        let borderWidth = 0;
+        switch (rowID) {
+            case '2': {
+                backColor = '#F4AC00'
+            }
+                break;
+            case '3': {
+                backColor = '#A5A5A5'
+            }
+                break;
+            case '4': {
+                backColor = '#BD9A69'
+            }
+                break;
+            default: {
+                backColor = Colors.white;
+                textColor = '#888888',
+                    borderColor = '#BDBDBD';
+                borderWidth = 0.5;
+            }
+                break;
+        }
+        return BizViews.renderBadge({
+            position: 'absolute',
+            left: 20, top: 20, width: 20, height: 20, borderRadius: 20, borderColor: borderColor,
+            borderWidth: borderWidth,
+            backgroundColor: backColor
+        }, {fontSize: 12, color: textColor}, rowID - 2);
+    } else {
+        return null;
+    }
+}
+
 /**
  * 画 优惠 view
  */
-function renderCouponMsgView() {
-    let nums = Math.randomNums(1, 2);//模拟 [1,2] 条 优惠信息
-    let arr = [];
-    for (let i = 0; i < nums; i++) {
-        arr.push('优惠信息优惠信息优惠信息优惠信息优惠信息优惠信息优惠信息优惠');
+function renderCouponMsgView(rowData) {
+    // let nums = Math.randomNums(1, 2);//模拟 [1,2] 条 优惠信息
+    let arr = rowData.hotCoupons ? rowData.hotCoupons.data : [];//
+    // for (let i = 0; i < nums; i++) {
+    //     arr.push('优惠信息优惠信息优惠信息优惠信息优惠信息优惠信息优惠信息优惠');
+    // }
+    if (arr.length == 0) {
+        return (
+            null
+        );
     }
     let content = arr.map((v, i) => {
 
@@ -131,7 +188,7 @@ function renderCouponMsgView() {
                     //lineHeight: 13, height: 12,
                     //backgroundColor: Colors.white
                 }} numberOfLines={1} textAlign="center"
-                >{v}</Text>
+                >{v.chinese_name}</Text>
             </View>
         );
 
@@ -160,17 +217,22 @@ function renderCouponMsgView() {
  * 话 所有 标签 view
  * @returns {XML}
  */
-function renderMark() {
-    let arr = ['支持直邮', '接受国卡', '接受支付宝', '联名卡推荐商家', '接受', '接支', '联名卡'];
-    let nums = Math.randomNums(1, arr.length);
-    let newArr = [];
-    for (let i = 0; i < nums; i++) {
-        newArr.push(arr[i]);
+function renderMark(rowData) {
+    let arr = [];
+    if (rowData.isInTopTenList) {//只有top10 列表才 画 近两周rowData.transfers人拿到返利
+        arr.push({name: '近两周' + rowData.transfers + '人拿到返利'});
+    } else {
+        arr = /*rowData.tags.data=*/ ['支持直邮', '接受国卡', '接受支付宝', '联名卡推荐商家', '接受', '接支', '联名卡'];
     }
+    // let nums = Math.randomNums(1, arr.length);
+    // let newArr = [];
+    // for (let i = 0; i < nums; i++) {
+    //     newArr.push(arr[i]);
+    // }
 
     // let newArr = ['近两周66300人拿到返利'];
 
-    let content = newArr.map((v, i) => {
+    let content = arr.map((v, i) => {
         return (
             <View key={i}
                   style={{
@@ -182,13 +244,13 @@ function renderMark() {
                       //backgroundColor: Colors.getRandomColor()
                   }} removeClippedSubviews={true}>
                 {i != -1 ? BizViews.renderVerticalLine({marginLeft: -1/*左移0.1,这样 每行的第一个竖线能被 左边的logo的白色背景盖住*/}) : null}
-                <Text key={v} style={{
-                    marginLeft: 10, marginRight: 10, fontSize: 12, color: 'rgba(136,' +
+                <Text key={v.name} style={{
+                    marginLeft: rowData.isInTopTenList ? 8 : 10, marginRight: 10, fontSize: 12, color: 'rgba(136,' +
                     ' 136,' +
                     ' 136, 1)', lineHeight: 12, height: 13, padding: 0, textAlign: 'center',
                     // backgroundColor: Colors.getRandomColor()
                 }} numberOfLines={1}
-                >{v}</Text>
+                >{v.name}</Text>
             </View>
         );
 

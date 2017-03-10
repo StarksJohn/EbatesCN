@@ -11,7 +11,7 @@ import GlobalStyles from '../../Global/GlobalStyles'
 import *as BaseSpeLine from '../Base/BaseSpeLine'
 import BaseTitleBt from '../Base/BaseTitleBt'
 import BaseSearchBar from '../Base/BaseSearchBar/BaseSearchBar'
-import BaseNavigationBar , {NavBarButton, baseOnBackPress} from '../Base/BaseNavigationBar'
+import BaseNavigationBar, {NavBarButton, baseOnBackPress} from '../Base/BaseNavigationBar'
 
 
 /**
@@ -31,7 +31,8 @@ export function ebatesViews() {
                 ' 12, 1)',
                 //backgroundColor:Colors.getRandomColor()
             }}>全球领先的返利网站</Text>
-            <Text style={{marginTop: 8, fontSize: 12, color: 'rgba(136, 136, 136, 1)',
+            <Text style={{
+                marginTop: 8, fontSize: 12, color: 'rgba(136, 136, 136, 1)',
                 //backgroundColor:Colors.getRandomColor()
             }}>{str}</Text>
         </View>
@@ -98,7 +99,7 @@ export function deleteBox(callBack) {
  */
 export function renderBottomTabbarBackView(isInTwoLevelPage) {
     return <View style={{
-        height: isInTwoLevelPage?0:GlobalStyles.bottomTabBarHeight,
+        height: isInTwoLevelPage ? 0 : GlobalStyles.bottomTabBarHeight,
         //backgroundColor: Colors.getRandomColor()
     }}>
     </View>;
@@ -195,9 +196,9 @@ export function renderVerticalLine(styles) {
 export function renderFirstLevelPageSearchBar(placeholder, onSubmitCallback) {
     return <BaseSearchBar ref="refBaseSearchBar"
                           placeholder={placeholder}
-                          onSubmit={(value)=>onSubmitCallback(value)
+                          onSubmit={(value) => onSubmitCallback(value)
                           }
-                          customInputStyle={{color: 'rgba(64, 64, 64, 1)', fontSize:15}}
+                          customInputStyle={{color: 'rgba(64, 64, 64, 1)', fontSize: 15}}
     />;
 }
 
@@ -231,8 +232,8 @@ export function renderTwoLevelPageSearchBar(placeholder, value, onSubmitCallback
  * @param titleTextStyle 默认是 GlobalStyles.navBarTitleTextStyle,外部若不想改默认的,可传 {}
  * @returns {XML}
  */
-export function renderBaseNavigationBar(titleTextView,leftButton,rightButton,searchBar,title,titleTextStyle) {
-    return  <BaseNavigationBar
+export function renderBaseNavigationBar(titleTextView, leftButton, rightButton, searchBar, title, titleTextStyle) {
+    return <BaseNavigationBar
         style={ {backgroundColor: Colors.white} }
         statusBarCustomStyle={GlobalStyles.statusBarDefaultProps}
         titleTextView={titleTextView}
@@ -241,6 +242,77 @@ export function renderBaseNavigationBar(titleTextView,leftButton,rightButton,sea
         searchBar={searchBar}
         hide={false}
         title={title}
-        titleTextStyle={[GlobalStyles.navBarTitleTextStyle,titleTextStyle]}
+        titleTextStyle={[GlobalStyles.navBarTitleTextStyle, titleTextStyle]}
     />;
+}
+
+/**
+ * 网络异常view
+ * @param contanierStyle
+ * @param ImageStyle
+ * @param TextStyle
+ * @param BaseTitleBtStyle
+ * @returns {XML}
+ */
+export function netWorkAbnormalView(contanierStyle, ImageStyle, TextStyle, BaseTitleBtStyle, onPress) {
+    return <View style={[{
+        alignSelf: 'center', //height: 180,flex: 1,
+        justifyContent: 'center', alignItems: 'center',
+        //backgroundColor:Colors.getRandomColor()
+    }, contanierStyle]}>
+        <Image source={require('../../Img/common_bkg_error@3x.png')}
+               style={[{
+                   width: 60, height: 60, marginTop: 0,
+                   //backgroundColor:Colors.getRandomColor()
+               }, ImageStyle]}/>
+        <Text style={[{
+            marginLeft: 0,
+            marginTop: 10,
+            fontSize: 14,
+            color: '#404040',
+            //alignSelf: 'center',
+            //backgroundColor: Colors.getRandomColor()
+        }, TextStyle]} numberOfLines={1} textAlign="center"
+        >网络异常,请点击屏幕重试</Text>
+        <BaseTitleBt
+            key={1}
+            btStyle={[{
+                width: 140,
+                height: 44,
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 4,
+                borderColor: 'rgba(54, 166,' +
+                ' 66, 1)',
+                borderWidth: 0.5,
+                marginTop: 10,
+                backgroundColor: Colors.transparent,
+            }, BaseTitleBtStyle]}
+            onPress={() => {
+                //this.BaseGridViewRef.fetchData();
+                onPress();
+            }}
+            textStyle={{
+                fontSize: 15,
+                color: 'rgba(54, 166, 66, 1)',
+            }}
+            title='重新加载'
+            disabled={false}
+        >
+        </BaseTitleBt>
+
+    </View>
+}
+
+/**
+ * 画 徽章
+ * @param containerStyle
+ * @param text
+ */
+export function renderBadge(containerStyle, textStyle, text) {
+    return <View style={[{alignItems: 'center', justifyContent: 'center'}, containerStyle]}>
+        <Text style={textStyle}>
+            {text}
+        </Text>
+    </View>;
 }

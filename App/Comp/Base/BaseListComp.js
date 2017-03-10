@@ -35,6 +35,7 @@ export default class BaseListComp extends Component {
         // listApiTag: PropTypes.object.isRequired  // 当前列表加载的接口对应的tag,区分其它列表的接口
 
         renderNoDataView: PropTypes.any,//外部可自定义如何绘制 列表无数据 状态的 view
+        renderNetWorkAbnormalView:PropTypes.any,//外部可自定义如何绘制 列表无数据 状态的 view
         scrollRenderAheadDistance: PropTypes.number,//下一个 屏幕外的 cell(一般cell都是 从 屏幕底部 入屏) 距离屏幕多少像素时 就开始 画出来,避免 cell
         // 入屏后还没画完;如果cell 比较高,此值可设置小点,默认 1000 像素
         initialListSize: PropTypes.number,//初始状态下，要加载的数据条数等于 （默认为 10 条）；
@@ -76,6 +77,14 @@ export default class BaseListComp extends Component {
         } else if (this.props.renderNoDataView) {
             return React.cloneElement(this.props.renderNoDataView(this.props), this.props);
         } else {
+            return null;
+        }
+    }
+
+    renderNetWorkAbnormalView(){
+        if (this.props.renderNetWorkAbnormalView) {
+            return React.cloneElement(this.props.renderNetWorkAbnormalView(this.props), this.props);
+        }  else {
             return null;
         }
     }
@@ -301,6 +310,7 @@ export default class BaseListComp extends Component {
         // } else
         if (this.props.baseReducer.status === BaseListActions.BaseListStatus.FAILURE && this.props.baseReducer.dataArray.length == 0) {//一开始加载数据失败&&列表无数据
             // contentView = <CommonLoadView loadState={LOAD_STATE.LOAD_STATE_ERROR} onRetry={() => this._onRetry()}/>
+            contentView=this.renderNetWorkAbnormalView();
         } else if (this.props.baseReducer.status === BaseListActions.BaseListStatus.NODATA) {//列表无缓存数据
             contentView = this.renderNoDataViews(); //<CommonLoadView loadState={LOAD_STATE.LOAD_STATE_NOCACHEDATA}/>
 

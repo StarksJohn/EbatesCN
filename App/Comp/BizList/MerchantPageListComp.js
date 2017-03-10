@@ -14,6 +14,7 @@ import *as BizMerchantListCell from '../BizCells/BizMerchantListCell'
 import BaseTitleBt from '../Base/BaseTitleBt'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import AllMerchantPage from '../../Pages/AllMerchantPage'
+import *as BizApi from '../../NetWork/API/BizApi'
 
 
 export default class MerchantPageListComp extends Component {
@@ -25,18 +26,18 @@ export default class MerchantPageListComp extends Component {
     }
 
     onCheckAllMerchant() {
-        this.props.navigator.push({
-            component: AllMerchantPage,
-            name: gRouteName.AllMerchantPage,
-        });
+        // this.props.navigator.push({
+        //     component: AllMerchantPage,
+        //     name: gRouteName.AllMerchantPage,
+        // });
     }
 
     renderRow = (rowData, sectionID, rowID, highlightRow) => {
         Log.log('MerchantPageListComp renderRow rowID==' + rowID);
 
-        if (rowID != '0' && rowID == this.props.baseReducer.$dataArray.toJS().length - 1) {//最底部画 占位view
+        if (rowID != '0' && this.props.baseReducer.$dataArray.toJS().length>10&&rowID == this.props.baseReducer.$dataArray.toJS().length - 1) {//最底部画 占位view
             return BizViews.renderBottomTabbarBackView();
-        } else if (rowID == this.props.baseReducer.$dataArray.toJS().length - 2) {//查看全部cell
+        } else if (this.props.baseReducer.$dataArray.toJS().length>10&&rowID == this.props.baseReducer.$dataArray.toJS().length - 2) {//查看全部cell
             return <BaseTitleBt
                 btStyle={[{
                     marginTop: 5, height: 45, justifyContent: 'center',
@@ -111,6 +112,10 @@ export default class MerchantPageListComp extends Component {
                 let paddingTop = 0;
                 if (rowID != '2') {
                     paddingTop = 5;
+                }
+
+                if (this.props.baseReducer.ApiName==BizApi.MerchantPageApi.ApiName){
+                    rowData.isInTopTenList=true;
                 }
 
                 return BizMerchantListCell.RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRow, (rowData) => {

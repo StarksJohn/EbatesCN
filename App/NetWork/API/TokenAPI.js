@@ -41,7 +41,8 @@ export function checkAvailableMemoryTokenExpiresWhenUseApi() {
         (resolve, reject) => {
             let tokenSchema = TokenDB.getAvailableToken();
             if (tokenSchema.isExpires()) {//判断 可用的token是否 过期
-                Log.log('TokenAPI checkAvailableMemoryTokenExpiresWhenUseApi 未登录token 在 内存里判断 已过期,开始 重新获取 未登录token');
+                Log.log('TokenAPI checkAvailableMemoryTokenExpiresWhenUseApi 当前可用的 token 在 内存里判断 已过期,开始 重新获取' +
+                    ' 当前可用的token');
                 return tokenSchema.refreshToken().then(
                     () => {
                         resolve();

@@ -6,7 +6,7 @@
 import {
     ListView,
 } from 'react-native';
-import InitialState,{InitListState,ListToLoadingState,ListSuccesState} from '../InitialState/ListInitialState'
+import InitialState,{InitListState,ListToLoadingState,ListSuccesState,ListFailureState} from '../InitialState/ListInitialState'
 import *as BaseListActions from '../Actions/BaseListActions'
 import *as BizApi from '../../NetWork/API/BizApi'
 const {List, fromJS} = require('immutable') //导入  Immutable.js 的 Record API
@@ -64,6 +64,12 @@ export default function SearchResultPageMerchantListReducer(state = initialState
                 .setIn(['opt'], action.opt);
 
             return _nextState;
+        }
+            break;
+
+        case BaseListActions.BaseListStatus.FAILURE: {
+
+            return ListFailureState(state,action);
         }
             break;
     }
