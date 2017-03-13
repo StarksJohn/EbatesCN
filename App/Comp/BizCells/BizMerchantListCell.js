@@ -86,11 +86,12 @@ export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRo
                     marginLeft: 0, marginRight: -1/*盖住 每行标签的第一个竖线*/, width: logoW, justifyContent: 'center',
                     backgroundColor: Colors.white//白色为了盖住右边的竖线
                 }}>
-                    {/*logo 用 www.ebates.com 里的logo,如 https://www.ebates.com/merchant_images/large/icon_ashford.gif
-                     ,宽高和美工约定好了, 在 顶部到 分割线 之间 上下居中*/}
+                    {/*logo 用 www.ebates.com 里的logo,,宽高和美工约定好了,服务器发的是280x80 左右 的,如 https://www.ebates.com/image/store/icon/8333/icon-280x80.gif   , 在 顶部到 分割线 之间 上下居中*/}
                     <Image source={ {uri: rowData.image} } style={{
-                        marginLeft: 0, marginRight: 0, width: logoW, height: logoH, alignSelf: 'center',
-                        //borderColor: Colors.getRandomColor(), borderWidth:0.5,
+                        marginLeft: 0, marginRight: 0,
+                        width: logoW, height: logoH,
+                        alignSelf: 'center', resizeMode: 'contain',
+                        borderColor: Colors.getRandomColor(), borderWidth: 0.5,
                         //backgroundColor: Colors.getRandomColor()
                     }}/>
                 </View>
@@ -105,7 +106,7 @@ export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRo
 }
 
 function renderBadge(rowData, rowID) {
-    if (!rowData.isInTopTenList) {
+    if (rowData.isInTopTenList) {
         let backColor = null;
         let textColor = Colors.white;
         let borderColor = null;
@@ -133,10 +134,10 @@ function renderBadge(rowData, rowID) {
         }
         return BizViews.renderBadge({
             position: 'absolute',
-            left: 20, top: 20, width: 20, height: 20, borderRadius: 20, borderColor: borderColor,
+            left: 10, top: 30, width: 20, height: 20, borderRadius: 20, borderColor: borderColor,
             borderWidth: borderWidth,
             backgroundColor: backColor
-        }, {fontSize: 12, color: textColor}, rowID - 2);
+        }, {fontSize: 12, color: textColor}, rowID - 1);
     } else {
         return null;
     }

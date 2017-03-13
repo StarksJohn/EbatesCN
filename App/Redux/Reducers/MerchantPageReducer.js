@@ -2,7 +2,7 @@
  * Created by Ebates on 17/2/17.
  * MerchantPageReducer
  */
-import InitialState,{InitListState,ListToLoadingState,ListSuccesState} from '../InitialState/ListInitialState'
+import InitialState,{InitListState,ListToLoadingState,ListSuccesState,ListFailureState,ListRemoveOneItem} from '../InitialState/ListInitialState'
 import *as BaseListActions from '../Actions/BaseListActions'
 import *as BizApi from '../../NetWork/API/BizApi'
 const {List, fromJS} = require('immutable') //导入  Immutable.js 的 Record API
@@ -35,6 +35,16 @@ export default function MerchantPageReducer(state = initialState, action) {
 
             return ListSuccesState(state,action);
 
+        }
+            break;
+        case BaseListActions.BaseListStatus.FAILURE: {
+
+            return ListFailureState(state,action);
+        }
+            break;
+        case BaseListActions.BaseListStatus.REMOVE: {
+
+            return ListRemoveOneItem(state,action);
         }
             break;
     }

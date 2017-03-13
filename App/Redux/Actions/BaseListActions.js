@@ -74,6 +74,17 @@ export function FailureFetchinglist(opt, ApiName) {
 }
 
 /**
+ * 删除列表里某条数据
+ * @param ApiName
+ * @param newData {index:xxx} index是被删除数据在列表里的下标
+ * @returns {{type: string, ApiName: *, newData: *}}
+ * @constructor
+ */
+export function RemoveOneItemFromlist( ApiName,newData) {
+    return { type: BaseListStatus.REMOVE,  ApiName,newData };
+}
+
+/**
  * 列表将要被 从 DOM移除
  * @param ApiName
  * @returns {{type: string, ApiName: *}}

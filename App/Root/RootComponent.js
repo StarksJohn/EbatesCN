@@ -18,7 +18,7 @@ export class RootComponent extends Component {
     }
 
     componentWillUnmount() {
-        // Log.log('componentWillUnmount');
+        Log.log('componentWillUnmount');
     }
 
     render() {

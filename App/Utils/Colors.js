@@ -41,7 +41,7 @@ export default  Colors = {
         return '#' +
             (function (color) {
                 return (color += '0123456789abcdef'[Math.floor(Math.random() * 16)])
-                && (color.length == 6) ? color : arguments.callee(color);
+                && (color.length == 6) ? color : arguments.callee(color);//如果 本文件 'use strict';  此处的 callee 就报错
             })('');
     },
     /**

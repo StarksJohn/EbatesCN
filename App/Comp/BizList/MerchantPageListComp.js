@@ -15,6 +15,7 @@ import BaseTitleBt from '../Base/BaseTitleBt'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import AllMerchantPage from '../../Pages/AllMerchantPage'
 import *as BizApi from '../../NetWork/API/BizApi'
+import *as TokenAPI from '../../NetWork/API/TokenAPI'
 
 
 export default class MerchantPageListComp extends Component {
@@ -22,7 +23,7 @@ export default class MerchantPageListComp extends Component {
         super(props);
     }
 
-    componentWillMount(){
+    componentWillMount() {
     }
 
     onCheckAllMerchant() {
@@ -35,9 +36,9 @@ export default class MerchantPageListComp extends Component {
     renderRow = (rowData, sectionID, rowID, highlightRow) => {
         Log.log('MerchantPageListComp renderRow rowID==' + rowID);
 
-        if (rowID != '0' && this.props.baseReducer.$dataArray.toJS().length>10&&rowID == this.props.baseReducer.$dataArray.toJS().length - 1) {//最底部画 占位view
+        if (rowID != '0' && this.props.baseReducer.$dataArray.toJS().length > 10 && rowID == this.props.baseReducer.$dataArray.toJS().length - 1) {//最底部画 占位view
             return BizViews.renderBottomTabbarBackView();
-        } else if (this.props.baseReducer.$dataArray.toJS().length>10&&rowID == this.props.baseReducer.$dataArray.toJS().length - 2) {//查看全部cell
+        } else if (this.props.baseReducer.$dataArray.toJS().length > 10 && rowID == this.props.baseReducer.$dataArray.toJS().length - 2) {//查看全部cell
             return <BaseTitleBt
                 btStyle={[{
                     marginTop: 5, height: 45, justifyContent: 'center',
@@ -54,6 +55,21 @@ export default class MerchantPageListComp extends Component {
                 disabled={false}
             >
             </BaseTitleBt>
+        }
+        //画网络异常cell
+        else if (this.props.baseReducer.$dataArray.toJS().length == 3 &&rowData.key&&  rowData.key === BizApi.MerchantPageApi.NetWorkAbnormalCellData) {
+            return BizViews.netWorkAbnormalView({}, {
+                marginTop: 0,
+                width: 90,
+                height: 90,
+            }, {marginTop: 25,}, {marginTop: 17, marginBottom:55}, () => {
+                TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
+                    () => {
+                        Log.log('BizApi MerchantPageApi 开始 调 top10商家接口 ')
+                            this.props.dispatch(BizApi.MerchantPageApi.fetchTopTen());
+                    }
+                );
+            });
         }
         switch (rowID) {
             case '0': {
@@ -114,8 +130,8 @@ export default class MerchantPageListComp extends Component {
                     paddingTop = 5;
                 }
 
-                if (this.props.baseReducer.ApiName==BizApi.MerchantPageApi.ApiName){
-                    rowData.isInTopTenList=true;
+                if (this.props.baseReducer.ApiName == BizApi.MerchantPageApi.ApiName) {
+                    rowData.isInTopTenList = true;
                 }
 
                 return BizMerchantListCell.RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRow, (rowData) => {

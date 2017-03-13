@@ -17,6 +17,24 @@ import *as BizLoadingView from '../../Comp/BizCommonComp/BizLoadingView'
 import *as BaseGridViewActions from '../../Redux/Actions/BaseGridViewActions'
 
 /**
+ * 列表类型 接口 都会返回的 通用的 可判断 couldLoadMore 的 数据结构
+ * @type {{pagination: {total: number, count: number, per_page: number, current_page: number, total_pages: number, links: {next: number, previous: number}}}}
+ */
+export const metaSchema={
+    "pagination": {
+        "total": 0,
+        "count": 0,
+        "per_page": 0,
+        "current_page": 0,
+        "total_pages": 0,
+        "links": {
+            "next": 0,
+            "previous": 0
+        }
+    }
+}
+
+/**
  * 注册页面的API
  * @type {{ApiName: string}}
  */
@@ -612,6 +630,9 @@ export const SearchResultPageCouponListAPI = {
  */
 export const MerchantPageApi = {
     ApiName: 'MerchantPageApi',
+    // meta:null,
+    NetWorkAbnormalCellData:'网络异常cell',
+    isInNetWorkAbnormalBeforeFetchSuccess:false,//本次请求成功数据之前,列表的状态是不是 网络异常 状态
 
     /**
      * 初始化 商家页 列表 的 默认数据源, 也就是 0号cell的数据源
@@ -623,18 +644,18 @@ export const MerchantPageApi = {
             if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE) {//一开始 挂载
                 dispatch(BaseListActions.InitListDataSource(this.ApiName));// 当前 列表的 $dataArray 清0
 
-                //列表一开始画0号cell, 让 网格控件 可以 自动加载其API
+                //列表一开始画0号cell和1号cell, 让 网格控件 可以 自动加载其API
                 dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
                     couldLoadMore: true,
                     newContentArray: [{key: '0号cell'},{key: '1号cell'}]
                 }));
 
-                dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
+                // dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
 
                 TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
                     () => {
                         Log.log('BizApi MerchantPageApi 开始 调 top10商家接口 ')
-                        dispatch(MerchantPageApi.fetchTopTen());
+                        dispatch(MerchantPageApi.fetchTopTen('merchants/top1123'));
                     }
                 );
 
@@ -664,8 +685,6 @@ export const MerchantPageApi = {
                         Log.log('BizApi MerchantPageApi FeaturedCategoryListApi 拿到 7个按钮的数据 responseData=' + responseData)
                         dispatch(BaseGridViewActions.changeBaseGridViewStates(this.ApiName, BaseGridViewActions.BaseGridViewStates.fetchOk, responseData.data));
                         // dispatch(BaseGridViewActions.changeBaseGridViewStates(this.ApiName, BaseGridViewActions.BaseGridViewStates.fetchFail, []));
-
-
                     }).catch((error) => {
                         Log.log('BizApi MerchantPageApi FeaturedCategoryListApi 拿 7个按钮的数据 失败  error=' + Log.writeObjToJson(error))
 
@@ -681,39 +700,20 @@ export const MerchantPageApi = {
     },
 
     /**
-     * 获取top10商家数据
+     * 获取top10商家数据 TOP MERCHANTS
      */
     fetchTopTen(){
         return (dispatch) => {
-
-            // this.timer = new SMSTimer({
-            //     timerNums: 1.5,
-            //     callBack: (time) => {
-            //         Log.log('time===' + time);
-            //         if (time == -1) {
-            //
-            //             {//模拟拿到 top10商家数据 网络数据
-            //                 let arr = [];
-            //                 for (let i = 0; i < 12; i++) {
-            //                     arr.push({index: i});
-            //                 }
-            //                 dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.MORE, this.ApiName, {
-            //                     couldLoadMore: false,
-            //                     newContentArray: arr
-            //                 }));
-            //             }
-            //
-            //             {//模拟没拿到数据
-            //
-            //             }
-            //
-            //         }
-            //     }
-            // });
-            // this.timer.start();
+            if (this.isInNetWorkAbnormalBeforeFetchSuccess){//本次拿到数据前,列表处于 网络异常 状态,拿到数据后, 删除 网络异常cell
+                this.isInNetWorkAbnormalBeforeFetchSuccess=false;
+                dispatch(BaseListActions.RemoveOneItemFromlist( this.ApiName, {
+                    index: 2
+                }));
+            }
+            dispatch(BaseListActions.Loadinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName));
 
             {
-                let url = RequestUtil.getStagingOrProductionHost() + 'merchants/top';
+                let url = RequestUtil.getStagingOrProductionHost() + 'merchants/top' ;
                 RequestUtil.GET(url, {
                         page:1,perPage:10,include:'hotCoupons',
                     },
@@ -722,18 +722,43 @@ export const MerchantPageApi = {
                     },
                 ).then((responseData) => {
                     Log.log('BizApi MerchantPageApi fetchTopTen top10商家接口OK =' + Log.writeObjToJson(responseData))
+
+                    let data=responseData.data;
+                    data.push({key:'全部商家cell'});
+                    data.push({key:'底部留白cell'});
+
                     dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.MORE, this.ApiName, {
-                        couldLoadMore: false,
-                        newContentArray: responseData.data
+                        meta: responseData.meta,
+                        newContentArray: data
                     }));
                 }).catch((error) => {
                     Log.log('BizApi MerchantPageApi fetchTopTen top10商家接口 失败 =' + error)
                     RequestUtil.showErrorMsg(error)
+                    // {
+                    //     dispatch(BaseListActions.FailureFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName ));
+                    // }
+
+                    this.isInNetWorkAbnormalBeforeFetchSuccess=true;
+                    dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
+                        couldLoadMore: true,
+                        newContentArray: [{key: this.NetWorkAbnormalCellData}]
+                    }));
                 });
             }
         }
 
     }
+}
+
+/**
+ * 商家详情页, 优惠及折扣 列表 接口 GET COUPONS FOR MERCHANT
+ * https://api-staging-current.ebates.cn/docs.html#merchants-get-coupons-for-merchant-get
+ */
+export const getCouponsForMerchant={
+    ApiName: 'getCouponsForMerchant',
+
+
+
 }
 
 /**

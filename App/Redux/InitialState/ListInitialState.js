@@ -4,7 +4,7 @@
  * 通用列表的  初始 Immutable 状态, 参考 snowflake 项目 的 authInitialState,
  */
 'use strict'
-const {Record, fromJS} = require('immutable') //导入  Immutable.js 的 Record API
+const {Record, fromJS,} = require('immutable') //导入  Immutable.js 的 Record API
 import {
     ListView,
 } from 'react-native';
@@ -15,7 +15,7 @@ let InitialState = Record({
     status: BaseListActions.BaseListStatus.INITIALIZE,
     componentDidMount: false, //控件是否被 挂载
     dataArray: [], //已经拿到的数据,慢慢被 $dataArray 代替
-    $dataArray: fromJS([]), //已经拿到的数据,immutable.Array 结构 , 里边放 model, toJS()可转成JS 数组
+    $dataArray: fromJS([]), //已经拿到的数据,immutable.List 数据类型  , 里边放 model, toJS()可转成JS 数组
     dataSource: new ListView.DataSource({
         rowHasChanged: (row1, row2) => row1 !== row2,
     }),
@@ -26,6 +26,19 @@ let InitialState = Record({
     isRenderFooterView: true,// 是否画列表底部 的 加载更多| 加载完毕 控件
     opt: BaseListActions.BaseListFetchDataType.INITIALIZE,//请求接口的方式
     tabLabel: '',//如果 列表用于 react-native-scrollable-tab-view 的 child, 此属性就用于 react-native-scrollable-tab-view
+    meta: {
+        "pagination": {
+            "total": 0,
+            "count": 0,
+            "per_page": 0,
+            "current_page": 0,
+            "total_pages": 0,
+            "links": {
+                "next": 0,
+                "previous": 0
+            }
+        }
+    },
 })
 export default InitialState;
 
@@ -75,7 +88,7 @@ export function ListToLoadingState(state, action) {
  */
 export function ListSuccesState(state, action) {
 
-    let {newContentArray, couldLoadMore}= action.newData;
+    let {newContentArray, meta/*服务器返回的 字段*/}= action.newData;
 
     let temp$dataArray = state.getIn(['$dataArray']);
 
@@ -86,7 +99,9 @@ export function ListSuccesState(state, action) {
         //新获取到的数据添加到数组 结尾
         newContentArray.map(
             (v, i) => {
-                temp$dataArray = temp$dataArray.push(v);
+                // temp$dataArray = temp$dataArray.push(v);
+                temp$dataArray=temp$dataArray.set(temp$dataArray.size,v );
+
             }
         );
     }
@@ -95,9 +110,10 @@ export function ListSuccesState(state, action) {
         .setIn(['$dataArray'], temp$dataArray)
         .setIn(['dataSource'], state.dataSource.cloneWithRows(temp$dataArray.toJS()))
         .setIn(['status'], BaseListActions.BaseListStatus.SUCCESS)
-        .setIn(['couldLoadMore'], couldLoadMore)
+        .setIn(['couldLoadMore'], meta?meta.pagination.current_page < meta.pagination.total_pages:action.newData.couldLoadMore)
         .setIn(['opt'], action.opt)
-        .setIn(['isRefreshing'], false);
+        .setIn(['isRefreshing'], false)
+        .setIn(['meta'], meta);
 
     return nextState;
 
@@ -130,4 +146,25 @@ export function ListWillUnmount(state) {
             .setIn(['componentDidMount'], false)
         ;
     return _nextState;
+}
+
+/**
+ * 列表删除某条数据
+ * @returns {Cursor}
+ * @constructor
+ */
+export function ListRemoveOneItem(state, action) {
+    let {index/*被删除元素在数组里的下标*/}= action.newData;
+
+    let temp$dataArray = state.getIn(['$dataArray']);
+
+    if (temp$dataArray) {
+        temp$dataArray = temp$dataArray.delete(index);
+    }
+
+    let nextState = state
+        .setIn(['$dataArray'], temp$dataArray)
+        .setIn(['dataSource'], state.dataSource.cloneWithRows(temp$dataArray.toJS()))
+
+    return nextState;
 }
