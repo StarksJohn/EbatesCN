@@ -16,6 +16,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import AllMerchantPage from '../../Pages/AllMerchantPage'
 import *as BizApi from '../../NetWork/API/BizApi'
 import *as TokenAPI from '../../NetWork/API/TokenAPI'
+import MerchantDetailPage from '../../Pages/MerchantDetailPage'
 
 
 export default class MerchantPageListComp extends Component {
@@ -136,6 +137,11 @@ export default class MerchantPageListComp extends Component {
 
                 return BizMerchantListCell.RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRow, (rowData) => {
                     Log.log('MerchantListComp renderRow callback rowData==' + rowData);
+                    this.props.navigator.push({
+                        component: MerchantDetailPage,
+                        name: gRouteName.MerchantDetailPage,
+                        merchantData:rowData,
+                    });
                 }, paddingTop);
             }
                 break;
@@ -145,15 +151,22 @@ export default class MerchantPageListComp extends Component {
 
     render() {
         return (
-            <View style={{flex: 1}}>
-                <BaseListComp
-                    {...this.props }
-                    renderRow={
-                        this.renderRow
-                    }
+            <BaseListComp
+                {...this.props }
+                renderRow={
+                    this.renderRow
+                }
 
-                />
-            </View>
+            />
+            // {/*<View style={{flex: 1}}>*/}
+            //     {/*<BaseListComp*/}
+            //         {/*{...this.props }*/}
+            //         {/*renderRow={*/}
+            //             {/*this.renderRow*/}
+            //         {/*}*/}
+            //
+            //     {/*/>*/}
+            // {/*</View>*/}
 
         );
     }

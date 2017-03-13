@@ -21,6 +21,7 @@ import FontAwesomeIconBts from './BaseFontAwesomeIconBts';
 // import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import BaseTitleBt from './BaseTitleBt'
 import *as RootNavigator from '../../Root/RootNavigator'
+import BaseIoniconsBt from './BaseIoniconsBt'
 
 
 const NAV_BAR_HEIGHT_IOS = GlobalStyles.nav_bar_height_ios;
@@ -45,11 +46,11 @@ const StatusBarShape = {
  通用默认的左上角点击
  routeName: 返回到指定页面
  */
-export function baseOnBackPress(navigator, backAndroidEventListener,routeName) {
+export function baseOnBackPress(navigator, backAndroidEventListener, routeName) {
 
-    if (routeName){
+    if (routeName) {
         RootNavigator.popToDesignatedPage(navigator, routeName);
-    }else{
+    } else {
         navigator.pop();//app 页面回退
     }
 
@@ -113,7 +114,7 @@ export default class BaseNavigationBar extends Component {
             <Text style={styles.title}>{this.props.leftButtonTitle}</Text> : null;
         return (
             <TouchableOpacity
-                onPress={()=>this.onLeftButtonClick()}>
+                onPress={() => this.onLeftButtonClick()}>
                 <View style={{width: 50, alignItems: 'center', flex: 1, justifyContent: 'center'}}>
                     {this.props.leftView ? this.props.leftView : leftView}
                 </View>
@@ -132,16 +133,16 @@ export default class BaseNavigationBar extends Component {
 
     getButtonElement(data = {}, style) {
         return (
-            (data&&!!data.props) ? data : (
-                // <View style={styles.navBarButton}>
-                //     <NavBarButton
-                //         title={data.title}
-                //         style={[data.style, style,]}
-                //         tintColor={data.tintColor}
-                //         handler={data.handler}/>
-                // </View>
+            (data && !!data.props) ? data : (
+                    // <View style={styles.navBarButton}>
+                    //     <NavBarButton
+                    //         title={data.title}
+                    //         style={[data.style, style,]}
+                    //         tintColor={data.tintColor}
+                    //         handler={data.handler}/>
+                    // </View>
                     null
-            )
+                )
 
             // <View style={styles.navBarButton}>
             //     {(!!data.props) ? data : (
@@ -166,9 +167,9 @@ export default class BaseNavigationBar extends Component {
                 />
             </View> : null;
 
-        let titleTextView=null;
-        if (!this.props.searchBar){//没有有 searchBar,就画 titleTextView,如果外部有自定义titleTextView,就画外部自定义的
-            titleTextView= this.props.titleTextView ? this.props.titleTextView :
+        let titleTextView = null;
+        if (!this.props.searchBar) {//没有有 searchBar,就画 titleTextView,如果外部有自定义titleTextView,就画外部自定义的
+            titleTextView = this.props.titleTextView ? this.props.titleTextView :
                 <Text style={[styles.defaultTitleStyle, this.props.titleTextStyle]}
                       numberOfLines={this.props.titleTextNumberOfLines}
                 >
@@ -180,12 +181,12 @@ export default class BaseNavigationBar extends Component {
         let content = this.props.hide ? null :
             <View style={styles.navBar}>
                 {this.getButtonElement(this.props.leftButton)}
-                {titleTextView?
+                {titleTextView ?
                     <View style={styles.navBarTitleContainer}>
                         {titleTextView}
                     </View>
-                :this.props.searchBar}
-                {this.getButtonElement(this.props.rightButton, {marginRight: 8,})}
+                    : this.props.searchBar}
+                {this.getButtonElement(this.props.rightButton, /*{marginRight: 8,}*/)}
             </View>;
         return (
             <View style={[styles.container, this.props.style]}>
@@ -243,6 +244,43 @@ export class NavBarButton extends Component {
             onPress={callBack}
         />
     }
+
+    /**
+     * 商家详情页 左上角返回按钮
+     * @param callBack
+     * @returns {XML}
+     */
+    static getMerchantDetailPageBackButton(callBack) {
+        return <BaseIoniconsBt
+            btStyle={{
+                width: 30,
+                height: 30,
+                borderRadius: 30, marginLeft: 10,
+                backgroundColor: Colors.white
+            }}
+            iconStyle={{name:'ios-arrow-back',iconSize:26,iconColor:Colors.black}}
+            onPress={callBack}
+        />;
+    }
+
+    /**
+     * 商家详情页 右上角按钮
+     * @param callBack
+     * @returns {XML}
+     */
+    static getMerchantDetailRightBt(callBack) {
+        return <BaseIoniconsBt
+            btStyle={{
+                width: 30,
+                height: 30,marginRight: 10,
+                borderRadius: 30, marginLeft: 10,
+                backgroundColor: Colors.white
+            }}
+            iconStyle={{name:'ios-more',iconSize:23,iconColor:Colors.black}}
+            onPress={callBack}
+        />;
+    }
+
 
     //新用户注册|已有账号去登录
     static newUserRegister(callBack, props) {

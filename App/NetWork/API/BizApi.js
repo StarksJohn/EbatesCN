@@ -693,8 +693,6 @@ export const MerchantPageApi = {
                     });
                 }
             );
-
-
         }
 
     },
@@ -734,10 +732,8 @@ export const MerchantPageApi = {
                 }).catch((error) => {
                     Log.log('BizApi MerchantPageApi fetchTopTen top10商家接口 失败 =' + error)
                     RequestUtil.showErrorMsg(error)
-                    // {
-                    //     dispatch(BaseListActions.FailureFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName ));
-                    // }
 
+                    //商家页的top10接口如果返回错误, 不能直接把 列表处于 失败状态,因还得画0和1号cell,故只能 添加一个 3号异常cell
                     this.isInNetWorkAbnormalBeforeFetchSuccess=true;
                     dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
                         couldLoadMore: true,
