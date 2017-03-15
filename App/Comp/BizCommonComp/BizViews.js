@@ -106,7 +106,7 @@ export function renderBottomTabbarBackView(isInTwoLevelPage) {
 }
 
 /**
- * 画 带阴影的 横线
+ * 画 带阴影的 线 ,横竖线 都能画, props里可用 position: 'absolute' 控制,如 商家详情页底部的bar
  * @returns {XML}
  */
 export function renderShadowLine(props) {

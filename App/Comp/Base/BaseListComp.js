@@ -39,6 +39,7 @@ export default class BaseListComp extends Component {
         scrollRenderAheadDistance: PropTypes.number,//下一个 屏幕外的 cell(一般cell都是 从 屏幕底部 入屏) 距离屏幕多少像素时 就开始 画出来,避免 cell
         // 入屏后还没画完;如果cell 比较高,此值可设置小点,默认 1000 像素
         initialListSize: PropTypes.number,//初始状态下，要加载的数据条数等于 （默认为 10 条）；
+        customContainer:PropTypes.any ,
     };
 
     static defaultProps = {
@@ -46,6 +47,7 @@ export default class BaseListComp extends Component {
         automaticallyAdjustContentInsets: false,
         scrollRenderAheadDistance: 1000,
         initialListSize: 10,
+        customContainer:null,
         onScroll: () => {
         },
         renderScrollComponent: () => {
@@ -56,6 +58,10 @@ export default class BaseListComp extends Component {
     componentWillMount() {
         this._fetchData(BaseListActions.BaseListFetchDataType.INITIALIZE);
 
+    }
+
+    componentDidMount() {
+        // this._fetchData(BaseListActions.BaseListFetchDataType.INITIALIZE);
     }
 
     componentWillUnmount() {
@@ -355,7 +361,7 @@ export default class BaseListComp extends Component {
             );
         }
         return (
-            <View style={styles.container}>
+            <View style={[styles.container,this.props.customContainer]}>
                 {contentView}
             </View>
         );

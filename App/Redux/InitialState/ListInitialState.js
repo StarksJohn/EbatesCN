@@ -39,7 +39,8 @@ let InitialState = Record({
             }
         }
     },
-})
+    AdditionalObj:null,//附加对象,供外部赋值
+});
 export default InitialState;
 
 /**

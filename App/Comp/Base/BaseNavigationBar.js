@@ -253,12 +253,12 @@ export class NavBarButton extends Component {
     static getMerchantDetailPageBackButton(callBack) {
         return <BaseIoniconsBt
             btStyle={{
-                width: 30,
-                height: 30,
-                borderRadius: 30, marginLeft: 10,
+                width: 28,
+                height: 28,
+                borderRadius: 28, marginLeft: 10,
                 backgroundColor: Colors.white
             }}
-            iconStyle={{name:'ios-arrow-back',iconSize:26,iconColor:Colors.black}}
+            iconStyle={{name:'ios-arrow-back',iconSize:22,iconColor:Colors.BizCommonBlack}}
             onPress={callBack}
         />;
     }
@@ -271,12 +271,12 @@ export class NavBarButton extends Component {
     static getMerchantDetailRightBt(callBack) {
         return <BaseIoniconsBt
             btStyle={{
-                width: 30,
-                height: 30,marginRight: 10,
-                borderRadius: 30, marginLeft: 10,
+                width: 28,
+                height: 28,marginRight: 10,
+                borderRadius: 28, marginLeft: 10,
                 backgroundColor: Colors.white
             }}
-            iconStyle={{name:'ios-more',iconSize:23,iconColor:Colors.black}}
+            iconStyle={{name:'ios-more',iconSize:20,iconColor:Colors.black}}
             onPress={callBack}
         />;
     }

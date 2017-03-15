@@ -747,18 +747,106 @@ export const MerchantPageApi = {
 }
 
 /**
- * 商家详情页, 优惠及折扣 列表 接口 GET COUPONS FOR MERCHANT
- * https://api-staging-current.ebates.cn/docs.html#merchants-get-coupons-for-merchant-get
+ * 商家详情页
+ * @type {{ApiName: string}}
  */
-export const getCouponsForMerchant={
-    ApiName: 'getCouponsForMerchant',
+export const MerchantDetailPageApi ={
+    ApiName: 'MerchantDetailPageApi',
+    isInNetWorkAbnormalBeforeFetchSuccess:false,
+
+    //页面一进来默认显示的数据
+    fetchPageData(opt,BaseListCompProps){
+        // Log.log('BizApi MerchantDetailPageApi fetchPageData () =='+BaseListCompProps.route.merchantData)
+        return (dispatch) =>{
+            Log.log('BizApi MerchantDetailPageApi fetchPageData opt='+opt)
+
+            if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE) {//一开始 挂载
+                dispatch(BaseListActions.InitListDataSource(this.ApiName));// 当前 列表的 $dataArray 清0
+
+                dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
+                    couldLoadMore:false,
+                    newContentArray: [BaseListCompProps.route.merchantData,'优惠及折扣cell']
+
+                }));
+
+                TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
+                    () => {
+                        Log.log('BizApi MerchantDetailPageApi 开始 调 优惠及折扣 列表 接口  ')
+                        dispatch(this.fetchCouponsForMerchant(BaseListCompProps.route.merchantData.id));
+                    }
+                );
+            }
+        }
+    },
+    /**
+     * 标签数据
+     * @param items
+     * @returns {function(*)}
+     */
+    fetchTagsData(items){
+        return (dispatch) =>{
+
+            dispatch(BaseGridViewActions.changeBaseGridViewStates(this.ApiName, BaseGridViewActions.BaseGridViewStates.fetchOk, items));
+
+        }
+    },
+
+    /**
+     * 优惠及折扣 列表 接口 GET COUPONS FOR MERCHANT https://api-staging-current.ebates.cn/docs.html#merchants-get-coupons-for-merchant-get
+     *
+     * @param id 商家id
+     * @returns {function(*)}
+     */
+    fetchCouponsForMerchant(id){
+        return (dispatch) => {
+            // if (this.isInNetWorkAbnormalBeforeFetchSuccess){//本次拿到数据前,列表处于 网络异常 状态,拿到数据后, 删除 网络异常cell
+            //     this.isInNetWorkAbnormalBeforeFetchSuccess=false;
+            //     dispatch(BaseListActions.RemoveOneItemFromlist( this.ApiName, {
+            //         index: 2
+            //     }));
+            // }
 
 
+            {
+                dispatch(BaseListActions.Loadinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, MerchantDetailPageApi.ApiName));
+                let url = RequestUtil.getStagingOrProductionHost() + 'merchants/'+id+'/coupons' ;
+                RequestUtil.GET(url, {
+                        page:1,perPage:10,exclude:'merchant'/*优惠及折扣 列表 因在商家详情页,故此列表的优惠cel的左下角不需要展示商家名称,故加 exclude:'merchant' 这个参数 */,
+                    },
+                    (header) => {
+                        commonApiHeaderAppend(header)
+                    },
+                ).then((responseData) => {
+                    Log.log('BizApi  fetchCouponsForMerchant 优惠及折扣 接口OK =' + Log.writeObjToJson(responseData))
 
+                    // let data=responseData.data;
+                    // data.push({key:'全部商家cell'});
+                    // data.push({key:'底部留白cell'});
+                    //
+                    dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.MORE, this.ApiName, {
+                        meta: responseData.meta,
+                        newContentArray: responseData.data
+                    }));
+                }).catch((error) => {
+                    Log.log('BizApi  fetchCouponsForMerchant 优惠及折扣 失败 =' + error)
+                    RequestUtil.showErrorMsg(error)
+
+                    //商家页的top10接口如果返回错误, 不能直接把 列表处于 失败状态,因还得画0和1号cell,故只能 添加一个 3号异常cell
+                    // this.isInNetWorkAbnormalBeforeFetchSuccess=true;
+                    // dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
+                    //     couldLoadMore: true,
+                    //     newContentArray: [{key: this.NetWorkAbnormalCellData}]
+                    // }));
+                });
+            }
+        }
+
+    }
 }
 
+
 /**
- * 初步分解 各种API
+ * 初步分解 BaseListComp 发起的 列表 通用的 各种API
  * @param opt
  * @param pageNo
  * @param BaseListCompProps 外部传给 BaseListComp的 props
@@ -780,6 +868,10 @@ export function fetchApi(opt, pageNo, BaseListCompProps) {
             break;
         case MerchantPageApi.ApiName: {
             return MerchantPageApi.fetchData(opt);
+        }
+            break;
+        case MerchantDetailPageApi.ApiName: {
+            return MerchantDetailPageApi.fetchPageData(opt,BaseListCompProps);
         }
             break;
     }

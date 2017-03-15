@@ -1,6 +1,6 @@
 /**
  * Created by Ebates on 17/3/13.
- * BaseIoniconsBt
+ * BaseIoniconsBt  http://ionicons.com/  http://ionicons.com/cheatsheet.html
  */
 
 import React, {

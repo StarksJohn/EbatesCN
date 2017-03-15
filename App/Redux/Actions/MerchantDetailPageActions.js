@@ -1,0 +1,30 @@
+/**
+ * Created by Ebates on 17/3/14.
+ * MerchantDetailPageActions
+ */
+import Colors from '../../Utils/Colors'
+
+/**
+ * 优化及折扣和 如何获得返利 这2个按钮的 可能状态
+ * @type {{unable: {disabled: boolean, backColor: string}, enable: {disabled: boolean, backColor: string}}}
+ */
+export const btStates = {
+    unSelect: {
+        TextColor: Colors.backPopBtColor,
+        lineColor: Colors.transparent
+    },
+    Select: {
+        TextColor: Colors.appUnifiedBackColor,
+        lineColor: Colors.appUnifiedBackColor
+    },
+}
+
+/**
+ * 改变优惠及折扣cell2个按钮的状态
+ * @type {string}
+ */
+export const ChangeIsSelectCouponsForMerchantBt='ChangeIsSelectCouponsForMerchantBt';
+export function changeIsSelectCouponsForMerchantBt(b,ApiName) {
+    return {type:ChangeIsSelectCouponsForMerchantBt,data:b,ApiName:ApiName}
+}
+

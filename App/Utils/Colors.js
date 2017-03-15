@@ -1,14 +1,15 @@
 /**
  * http://tool.oschina.net/commons?type=3    RGB 颜色对照表
+ * 如果用 MAC 系统 的 数码测色计 ,选 sRGB 和 UI 给的颜色一致
  */
 
 export default  Colors = {
     lightGray: "#F0F0F0",
     lineGray: '#F0F0F0',
-    white:'#FFFFFF',
+    white:'#FFFFFF',//'rgba(255, 255, 255, 1)'
     borderColor:'#dddddd',//一般用于 边框颜色|分割线 颜色
     green: '#80BD01',
-    orange:'#FFA500',
+    orange:'#FF730C',//'rgba(255, 115, 12, 1)'
     backGray: '#E5E5E5',
     textGray: '#C0C0C0', //'rgba(192, 192, 192, 1)',
     textBlack: '#333333',
@@ -18,7 +19,7 @@ export default  Colors = {
     textGold: '#BC7233',
     // borderColor: '#E2E2E2',
     black: '#000000',
-    BizCommonBlack:'rgba(64, 64, 64, 1)',//Ebates 中国 项目的 通用 黑色,也是 #404040
+    BizCommonBlack:'#404040',// Ebates 中国 项目的 通用 黑色,也是'rgba(64, 64, 64, 1)'
     BizCommonGrayBack:'rgba(239, 239, 239, 1)',//Ebates 中国 项目的 通用 灰色背景
     blackTranslucent: 'rgba(0, 0, 0, 0.1)',//黑色半透明
     blue: '#3e9ce9',
