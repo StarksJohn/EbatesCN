@@ -20,7 +20,7 @@ import *as BaseGridViewActions from '../../Redux/Actions/BaseGridViewActions'
  * 列表类型 接口 都会返回的 通用的 可判断 couldLoadMore 的 数据结构
  * @type {{pagination: {total: number, count: number, per_page: number, current_page: number, total_pages: number, links: {next: number, previous: number}}}}
  */
-export const metaSchema={
+export const metaSchema = {
     "pagination": {
         "total": 0,
         "count": 0,
@@ -384,7 +384,6 @@ export const SearchResultPageSearchKeyWordAPI = {
                             }
 
 
-
                             {//模拟拿到 商家列表的 第一页 网络数据
                                 let arr = [];
                                 let all = Math.randomNums(4, 30);
@@ -631,8 +630,8 @@ export const SearchResultPageCouponListAPI = {
 export const MerchantPageApi = {
     ApiName: 'MerchantPageApi',
     // meta:null,
-    NetWorkAbnormalCellData:'网络异常cell',
-    isInNetWorkAbnormalBeforeFetchSuccess:false,//本次请求成功数据之前,列表的状态是不是 网络异常 状态
+    NetWorkAbnormalCellData: '网络异常cell',
+    isInNetWorkAbnormalBeforeFetchSuccess: false,//本次请求成功数据之前,列表的状态是不是 网络异常 状态
 
     /**
      * 初始化 商家页 列表 的 默认数据源, 也就是 0号cell的数据源
@@ -647,7 +646,7 @@ export const MerchantPageApi = {
                 //列表一开始画0号cell和1号cell, 让 网格控件 可以 自动加载其API
                 dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
                     couldLoadMore: true,
-                    newContentArray: [{key: '0号cell'},{key: '1号cell'}]
+                    newContentArray: [{key: '0号cell'}, {key: '1号cell'}]
                 }));
 
                 // dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
@@ -702,18 +701,18 @@ export const MerchantPageApi = {
      */
     fetchTopTen(){
         return (dispatch) => {
-            if (this.isInNetWorkAbnormalBeforeFetchSuccess){//本次拿到数据前,列表处于 网络异常 状态,拿到数据后, 删除 网络异常cell
-                this.isInNetWorkAbnormalBeforeFetchSuccess=false;
-                dispatch(BaseListActions.RemoveOneItemFromlist( this.ApiName, {
+            if (this.isInNetWorkAbnormalBeforeFetchSuccess) {//本次拿到数据前,列表处于 网络异常 状态,拿到数据后, 删除 网络异常cell
+                this.isInNetWorkAbnormalBeforeFetchSuccess = false;
+                dispatch(BaseListActions.RemoveOneItemFromlist(this.ApiName, {
                     index: 2
                 }));
             }
             dispatch(BaseListActions.Loadinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName));
 
             {
-                let url = RequestUtil.getStagingOrProductionHost() + 'merchants/top' ;
+                let url = RequestUtil.getStagingOrProductionHost() + 'merchants/top';
                 RequestUtil.GET(url, {
-                        page:1,perPage:10,include:'hotCoupons',
+                        page: 1, perPage: 10, include: 'hotCoupons',
                     },
                     (header) => {
                         commonApiHeaderAppend(header)
@@ -721,9 +720,9 @@ export const MerchantPageApi = {
                 ).then((responseData) => {
                     Log.log('BizApi MerchantPageApi fetchTopTen top10商家接口OK =' + Log.writeObjToJson(responseData))
 
-                    let data=responseData.data;
-                    data.push({key:'全部商家cell'});
-                    data.push({key:'底部留白cell'});
+                    let data = responseData.data;
+                    data.push({key: '全部商家cell'});
+                    data.push({key: '底部留白cell'});
 
                     dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.MORE, this.ApiName, {
                         meta: responseData.meta,
@@ -734,7 +733,7 @@ export const MerchantPageApi = {
                     RequestUtil.showErrorMsg(error)
 
                     //商家页的top10接口如果返回错误, 不能直接把 列表处于 失败状态,因还得画0和1号cell,故只能 添加一个 3号异常cell
-                    this.isInNetWorkAbnormalBeforeFetchSuccess=true;
+                    this.isInNetWorkAbnormalBeforeFetchSuccess = true;
                     dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
                         couldLoadMore: true,
                         newContentArray: [{key: this.NetWorkAbnormalCellData}]
@@ -750,29 +749,36 @@ export const MerchantPageApi = {
  * 商家详情页
  * @type {{ApiName: string}}
  */
-export const MerchantDetailPageApi ={
+export const MerchantDetailPageApi = {
     ApiName: 'MerchantDetailPageApi',
-    isInNetWorkAbnormalBeforeFetchSuccess:false,
+    isInNetWorkAbnormalBeforeFetchSuccess: false,
 
     //页面一进来默认显示的数据
-    fetchPageData(opt,BaseListCompProps){
+    fetchPageData(opt, BaseListCompProps){
         // Log.log('BizApi MerchantDetailPageApi fetchPageData () =='+BaseListCompProps.route.merchantData)
-        return (dispatch) =>{
-            Log.log('BizApi MerchantDetailPageApi fetchPageData opt='+opt)
+        return (dispatch) => {
+            Log.log('BizApi MerchantDetailPageApi fetchPageData opt=' + opt)
 
             if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE) {//一开始 挂载
-                dispatch(BaseListActions.InitListDataSource(this.ApiName));// 当前 列表的 $dataArray 清0
+                // dispatch(BaseListActions.InitListDataSource(this.ApiName));// 当前 列表的 $dataArray 清0
 
                 dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
-                    couldLoadMore:false,
-                    newContentArray: [BaseListCompProps.route.merchantData,'优惠及折扣cell']
+                    couldLoadMore: false,
+                    newContentArray: [BaseListCompProps.route.merchantData, '优惠及折扣cell']
 
                 }));
 
                 TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
                     () => {
                         Log.log('BizApi MerchantDetailPageApi 开始 调 优惠及折扣 列表 接口  ')
-                        dispatch(this.fetchCouponsForMerchant(BaseListCompProps.route.merchantData.id));
+                        dispatch(this.fetchCouponsForMerchant(BaseListCompProps.route.merchantData.id, BaseListCompProps.baseReducer.meta));
+                    }
+                );
+            }else if(opt == BaseListActions.BaseListFetchDataType.MORE){//翻页
+                TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
+                    () => {
+                        Log.log('BizApi MerchantDetailPageApi fetchPageData() 开始 调 优惠及折扣 列表 接口 获取下页数据  ')
+                        dispatch(this.fetchCouponsForMerchant(BaseListCompProps.route.merchantData.id, BaseListCompProps.baseReducer.meta));
                     }
                 );
             }
@@ -784,7 +790,7 @@ export const MerchantDetailPageApi ={
      * @returns {function(*)}
      */
     fetchTagsData(items){
-        return (dispatch) =>{
+        return (dispatch) => {
 
             dispatch(BaseGridViewActions.changeBaseGridViewStates(this.ApiName, BaseGridViewActions.BaseGridViewStates.fetchOk, items));
 
@@ -797,7 +803,7 @@ export const MerchantDetailPageApi ={
      * @param id 商家id
      * @returns {function(*)}
      */
-    fetchCouponsForMerchant(id){
+    fetchCouponsForMerchant(id, meta){
         return (dispatch) => {
             // if (this.isInNetWorkAbnormalBeforeFetchSuccess){//本次拿到数据前,列表处于 网络异常 状态,拿到数据后, 删除 网络异常cell
             //     this.isInNetWorkAbnormalBeforeFetchSuccess=false;
@@ -809,15 +815,17 @@ export const MerchantDetailPageApi ={
 
             {
                 dispatch(BaseListActions.Loadinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, MerchantDetailPageApi.ApiName));
-                let url = RequestUtil.getStagingOrProductionHost() + 'merchants/'+id+'/coupons' ;
+                let url = RequestUtil.getStagingOrProductionHost() + 'merchants/' + id + '/coupons';
                 RequestUtil.GET(url, {
-                        page:1,perPage:10,exclude:'merchant'/*优惠及折扣 列表 因在商家详情页,故此列表的优惠cel的左下角不需要展示商家名称,故加 exclude:'merchant' 这个参数 */,
+                        page: meta.pagination.current_page+1,
+                        perPage: meta.pagination.per_page,
+                        exclude: 'merchant'/*优惠及折扣 列表 因在商家详情页,故此列表的优惠cel的左下角不需要展示商家名称,故加 exclude:'merchant' 这个参数 */,
                     },
                     (header) => {
                         commonApiHeaderAppend(header)
                     },
                 ).then((responseData) => {
-                    Log.log('BizApi  fetchCouponsForMerchant 优惠及折扣 接口OK =' + Log.writeObjToJson(responseData))
+                    Log.log('BizApi  fetchCouponsForMerchant 优惠及折扣 接口OK, responseData.data.length =' + responseData.data.length)
 
                     // let data=responseData.data;
                     // data.push({key:'全部商家cell'});
@@ -871,7 +879,7 @@ export function fetchApi(opt, pageNo, BaseListCompProps) {
         }
             break;
         case MerchantDetailPageApi.ApiName: {
-            return MerchantDetailPageApi.fetchPageData(opt,BaseListCompProps);
+            return MerchantDetailPageApi.fetchPageData(opt, BaseListCompProps);
         }
             break;
     }

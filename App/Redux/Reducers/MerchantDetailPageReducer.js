@@ -9,7 +9,7 @@ import InitialState, {
     ListToLoadingState,
     ListSuccesState,
     ListFailureState,
-    ListRemoveOneItem
+    ListRemoveOneItem,ListWillUnmount
 } from '../InitialState/ListInitialState'
 import *as BaseListActions from '../Actions/BaseListActions'
 import *as BizApi from '../../NetWork/API/BizApi'
@@ -22,7 +22,8 @@ import *as MerchantDetailPageActions from '../Actions/MerchantDetailPageActions'
 // }
 
 
-const initialState = new InitialState().setIn(['ApiName'], BizApi.MerchantDetailPageApi.ApiName)
+const initialState = new InitialState()
+    .setIn(['ApiName'], BizApi.MerchantDetailPageApi.ApiName)
     .setIn(['isRenderRefreshControl'], false)
     .setIn(['isRenderFooterView'], true)
     .setIn(['AdditionalObj'], {isSelectCouponsForMerchantBt: true})
@@ -69,11 +70,11 @@ export default function MerchantDetailPageReducer(state = initialState, action) 
             return ListRemoveOneItem(state, action);
         }
             break;
-        case MerchantDetailPageActions.ChangeIsSelectCouponsForMerchantBt:{
+        case MerchantDetailPageActions.ChangeIsSelectCouponsForMerchantBt: {
             let temp$dataArray = state.getIn(['$dataArray']);
 
             if (temp$dataArray) {
-                temp$dataArray = temp$dataArray.set(1,{key:'优惠及折扣cell'});
+                temp$dataArray = temp$dataArray.set(1, {key: '优惠及折扣cell'});
             }
 
             let _nextState = state
@@ -83,7 +84,10 @@ export default function MerchantDetailPageReducer(state = initialState, action) 
 
             return _nextState;
         }
-        break;
+            break;
+        case BaseListActions.BaseListStatus.WillUnmount:{
+            return ListWillUnmount(state,action);
+        }
     }
 
     /**

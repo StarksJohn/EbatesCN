@@ -77,7 +77,7 @@ class MerchantDetailPageMarkGridViewContainer extends React.Component {
                               paddingTop: 5,
                               paddingBottom: 5, //height: 20,
                               width:GlobalStyles.window.width,
-                              backgroundColor: Colors.getRandomColor()//'rgba(250, 250, 250, 1)'
+                              backgroundColor: 'rgba(250, 250, 250, 1)'//'rgba(250, 250, 250, 1)'
                           }}
                           renderItem={(model/*此处的model是 {name:'接受国卡'} 结构*/) => {
                               return (
@@ -85,7 +85,7 @@ class MerchantDetailPageMarkGridViewContainer extends React.Component {
                                       flexDirection: 'row', marginLeft: 10, marginRight: 15, marginTop: 5,
                                       marginBottom: 5,height: 15, //width: Math.randomNums(60, 100), ,
                                       alignItems: 'center',
-                                      backgroundColor: Colors.getRandomColor(),
+                                      //backgroundColor: Colors.getRandomColor(),
                                   }}>
                                       <Image source={ this.getTagImg(model.name) } style={{
                                           width: 15, height: 15,

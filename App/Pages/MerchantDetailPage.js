@@ -107,7 +107,7 @@ export class MerchantDetailPage extends Component {
                         {/*UI定的, 有标语的显示标语 没有的显示商家名*/}
                         <Text style={{
                             fontSize: 15, color: Colors.BizCommonBlack, marginTop: 30,
-                            backgroundColor: Colors.getRandomColor()
+                            //backgroundColor: Colors.getRandomColor()
                         }}>
                             { StringOauth.isNull(rowData.slogan) ? rowData.name : rowData.slogan}
                         </Text>

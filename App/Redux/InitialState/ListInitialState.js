@@ -26,11 +26,11 @@ let InitialState = Record({
     isRenderFooterView: true,// 是否画列表底部 的 加载更多| 加载完毕 控件
     opt: BaseListActions.BaseListFetchDataType.INITIALIZE,//请求接口的方式
     tabLabel: '',//如果 列表用于 react-native-scrollable-tab-view 的 child, 此属性就用于 react-native-scrollable-tab-view
-    meta: {
+    meta: {//列表接口一般都会返回的字段,用于翻页
         "pagination": {
             "total": 0,
             "count": 0,
-            "per_page": 0,
+            "per_page": 10,
             "current_page": 0,
             "total_pages": 0,
             "links": {
@@ -39,7 +39,7 @@ let InitialState = Record({
             }
         }
     },
-    AdditionalObj:null,//附加对象,供外部赋值
+    AdditionalObj: null,//附加对象,供外部赋值
 });
 export default InitialState;
 
@@ -61,7 +61,8 @@ export function InitListState(state, action) {
         .setIn(['couldLoadMore'], false)
         .setIn(['opt'], action.opt)
         .setIn(['componentDidMount'], true)
-        .setIn(['isRefreshing'], false);
+        .setIn(['isRefreshing'], false)
+        .remove('meta');
 
     return _nextState;
 }
@@ -101,7 +102,7 @@ export function ListSuccesState(state, action) {
         newContentArray.map(
             (v, i) => {
                 // temp$dataArray = temp$dataArray.push(v);
-                temp$dataArray=temp$dataArray.set(temp$dataArray.size,v );
+                temp$dataArray = temp$dataArray.set(temp$dataArray.size, v);
 
             }
         );
@@ -111,7 +112,7 @@ export function ListSuccesState(state, action) {
         .setIn(['$dataArray'], temp$dataArray)
         .setIn(['dataSource'], state.dataSource.cloneWithRows(temp$dataArray.toJS()))
         .setIn(['status'], BaseListActions.BaseListStatus.SUCCESS)
-        .setIn(['couldLoadMore'], meta?meta.pagination.current_page < meta.pagination.total_pages:action.newData.couldLoadMore)
+        .setIn(['couldLoadMore'], meta ? meta.pagination.current_page < meta.pagination.total_pages : action.newData.couldLoadMore)
         .setIn(['opt'], action.opt)
         .setIn(['isRefreshing'], false)
         .setIn(['meta'], meta);
@@ -142,10 +143,23 @@ export function ListFailureState(state, action) {
  * @returns {Map<K, V>|List<T>|Cursor|*}
  * @constructor
  */
-export function ListWillUnmount(state) {
+export function ListWillUnmount(state,action) {
+
+    let temp$dataArray = state.getIn(['$dataArray']);
+    if (temp$dataArray.toJS().length > 0) {
+        temp$dataArray = temp$dataArray.clear();
+    }
+
     let _nextState = state
-            .setIn(['componentDidMount'], false)
-        ;
+        .setIn(['$dataArray'], temp$dataArray)
+        .setIn(['dataSource'], state.dataSource.cloneWithRows(temp$dataArray.toJS()))
+        .setIn(['status'], action.type)
+        .setIn(['couldLoadMore'], false)
+        .setIn(['opt'], action.opt)
+        .setIn(['componentDidMount'], false)
+        .setIn(['isRefreshing'], false)
+        .remove('meta');
+
     return _nextState;
 }
 
