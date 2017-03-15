@@ -5,7 +5,7 @@
  */
 import *as BaseListActions from '../../Redux/Actions/BaseListActions'
 import *as HistorySearchDB from '../../DB/BizDB/HistorySearchDB'
-const {fromJS} = require('immutable'); //导入  Immutable.js 的 Record API
+const {fromJS,List} = require('immutable'); //导入  Immutable.js 的 Record API
 import *as SearchResultPageActions from '../../Redux/Actions/SearchResultPageActions'
 import SMSTimer from '../../Utils/SMSTimer'
 import BizSearchResultPagScrollableTabBar, {UpdateTabUnderlineWidthEventName} from '../../Comp/BizCommonComp/BizSearchResultPagScrollableTabBar'
@@ -752,6 +752,7 @@ export const MerchantPageApi = {
 export const MerchantDetailPageApi = {
     ApiName: 'MerchantDetailPageApi',
     isInNetWorkAbnormalBeforeFetchSuccess: false,
+    $dataArray: fromJS([]),//缓存 优惠及折扣列表的model,切换到 如何获得返利 按钮后, reducer里的$dataArray 会 只保留 3个cell,切回 优惠及折扣 按钮后,reducer里的$dataArray再恢复 优惠及折扣列表的model
 
     //页面一进来默认显示的数据
     fetchPageData(opt, BaseListCompProps){
@@ -761,7 +762,9 @@ export const MerchantDetailPageApi = {
 
             if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE) {//一开始 挂载
                 // dispatch(BaseListActions.InitListDataSource(this.ApiName));// 当前 列表的 $dataArray 清0
+                this.$dataArray.clear();
 
+                //一开始画 2个cell
                 dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
                     couldLoadMore: false,
                     newContentArray: [BaseListCompProps.route.merchantData, '优惠及折扣cell']
@@ -774,7 +777,7 @@ export const MerchantDetailPageApi = {
                         dispatch(this.fetchCouponsForMerchant(BaseListCompProps.route.merchantData.id, BaseListCompProps.baseReducer.meta));
                     }
                 );
-            }else if(opt == BaseListActions.BaseListFetchDataType.MORE){//翻页
+            } else if (opt == BaseListActions.BaseListFetchDataType.MORE) {//翻页
                 TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
                     () => {
                         Log.log('BizApi MerchantDetailPageApi fetchPageData() 开始 调 优惠及折扣 列表 接口 获取下页数据  ')
@@ -817,7 +820,7 @@ export const MerchantDetailPageApi = {
                 dispatch(BaseListActions.Loadinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, MerchantDetailPageApi.ApiName));
                 let url = RequestUtil.getStagingOrProductionHost() + 'merchants/' + id + '/coupons';
                 RequestUtil.GET(url, {
-                        page: meta.pagination.current_page+1,
+                        page: meta.pagination.current_page + 1,
                         perPage: meta.pagination.per_page,
                         exclude: 'merchant'/*优惠及折扣 列表 因在商家详情页,故此列表的优惠cel的左下角不需要展示商家名称,故加 exclude:'merchant' 这个参数 */,
                     },
@@ -827,10 +830,15 @@ export const MerchantDetailPageApi = {
                 ).then((responseData) => {
                     Log.log('BizApi  fetchCouponsForMerchant 优惠及折扣 接口OK, responseData.data.length =' + responseData.data.length)
 
-                    // let data=responseData.data;
-                    // data.push({key:'全部商家cell'});
-                    // data.push({key:'底部留白cell'});
-                    //
+                    {
+
+                        responseData.data.map(
+                            (v, i) => {
+                                this.$dataArray = this.$dataArray.set(this.$dataArray.size, v);
+                            }
+                        );
+                    }
+
                     dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.MORE, this.ApiName, {
                         meta: responseData.meta,
                         newContentArray: responseData.data
@@ -848,8 +856,47 @@ export const MerchantDetailPageApi = {
                 });
             }
         }
+    },
 
+    /**
+     * 列表数据源切换到 如何获得返利 列表状态
+     * @param BaseListCompProps
+     * @returns {function(*)}
+     */
+    changeToHowtoGetRebatesList(BaseListCompProps){
+        return (dispatch) => {
+            dispatch(BaseListActions.RemoveNumsItemFromlist( this.ApiName, {
+                fromIndex: 2,toIndex:BaseListCompProps.baseReducer.$dataArray.size-1
+            }));
+
+            dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.MORE, this.ApiName, {
+                couldLoadMore: false,
+                meta: BaseListCompProps.baseReducer.meta,
+                newContentArray:  [{key:BaseListCompProps.route.merchantData.restrictions}]
+            }));
+        }
+    },
+
+    /**
+     * 点击 优惠及折扣 列表
+     * @param BaseListCompProps
+     * @returns {function(*)}
+     */
+    changeToCouponList(BaseListCompProps){
+
+        return (dispatch) => {
+            //删除 如何获得返利的 内容  cell
+            dispatch(BaseListActions.RemoveOneItemFromlist(this.ApiName, {
+                index: 2
+            }));
+
+            dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.MORE, this.ApiName, {
+                meta: BaseListCompProps.baseReducer.meta,
+                newContentArray: this.$dataArray.toJS()
+            }));
+        }
     }
+
 }
 
 

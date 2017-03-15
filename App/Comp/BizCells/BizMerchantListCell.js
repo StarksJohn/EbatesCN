@@ -12,12 +12,16 @@ import *as BizViews from '../BizCommonComp/BizViews'
 import *as Math from '../../Utils/Math'
 import GlobalStyles from '../../Global/GlobalStyles'
 import BaseBt from '../Base/BaseBt'
+import *as StringOauth from '../../Utils/StringUtils/StringOauth'
 
 export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRow, callback, paddingTop) {
 
     Log.log('BizMerchantListCell renderBizMerchantListCell rowData==' + Log.writeObjToJson(rowData));
     // let str='rowID  '+rowID;
     // let uri={uri:  'http://extrabux-static.b0.upaiyun.com/images/merchants/1912.jpg'}
+
+    /* "* 使用iPhones、 iPads下单，无法获得返利。
+     ↵* 购买礼品卡，Nike Air Foamposite， Lunarglide 6，Jordan，Kobe，Durant，Under Armour Curry， Lebron/Yeezy系列等无返利。" */
 
     //美工约定的左图的尺寸
     let logoW = 112;

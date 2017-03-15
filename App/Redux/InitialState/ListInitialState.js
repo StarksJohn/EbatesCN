@@ -183,3 +183,28 @@ export function ListRemoveOneItem(state, action) {
 
     return nextState;
 }
+
+/**
+ * 列表删多某条数据
+ * @returns {Cursor}
+ * @constructor
+ */
+export function ListRemoveNumsItem(state, action) {
+    let {fromIndex/*被删除元素在数组里的下标*/,toIndex}= action.newData;
+
+    let nums=toIndex-fromIndex+1;
+
+    let temp$dataArray = state.getIn(['$dataArray']);
+
+    if (temp$dataArray) {
+        for (let i=0;i<=nums;i++){
+            temp$dataArray = temp$dataArray.delete(fromIndex);
+        }
+    }
+
+    let nextState = state
+        .setIn(['$dataArray'], temp$dataArray)
+        .setIn(['dataSource'], state.dataSource.cloneWithRows(temp$dataArray.toJS()))
+
+    return nextState;
+}

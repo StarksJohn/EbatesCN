@@ -23,8 +23,17 @@ export const btStates = {
  * 改变优惠及折扣cell2个按钮的状态
  * @type {string}
  */
-export const ChangeIsSelectCouponsForMerchantBt='ChangeIsSelectCouponsForMerchantBt';
-export function changeIsSelectCouponsForMerchantBt(b,ApiName) {
-    return {type:ChangeIsSelectCouponsForMerchantBt,data:b,ApiName:ApiName}
+export const ChangeIsSelectCouponsForMerchantBt = 'ChangeIsSelectCouponsForMerchantBt';
+export function changeIsSelectCouponsForMerchantBt(b, ApiName) {
+    return {type: ChangeIsSelectCouponsForMerchantBt, data: b, ApiName: ApiName}
+}
+
+/**
+ * 是否显示 底部 加载中 视图
+ * @type {string}
+ */
+export const changeIsRenderFooterView = 'isRenderFooterView';
+export function changeIsRenderFooterViewAction(b, ApiName) {
+    return {type: changeIsRenderFooterView, data: b, ApiName: ApiName}
 }
 

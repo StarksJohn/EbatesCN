@@ -9,7 +9,7 @@ import InitialState, {
     ListToLoadingState,
     ListSuccesState,
     ListFailureState,
-    ListRemoveOneItem,ListWillUnmount
+    ListRemoveOneItem,ListWillUnmount,ListRemoveNumsItem
 } from '../InitialState/ListInitialState'
 import *as BaseListActions from '../Actions/BaseListActions'
 import *as BizApi from '../../NetWork/API/BizApi'
@@ -67,14 +67,17 @@ export default function MerchantDetailPageReducer(state = initialState, action) 
             break;
         case BaseListActions.BaseListStatus.REMOVE: {
 
-            return ListRemoveOneItem(state, action);
-        }
-            break;
+        return ListRemoveOneItem(state, action);
+    }
+        break;
         case MerchantDetailPageActions.ChangeIsSelectCouponsForMerchantBt: {
             let temp$dataArray = state.getIn(['$dataArray']);
 
             if (temp$dataArray) {
-                temp$dataArray = temp$dataArray.set(1, {key: '优惠及折扣cell'});
+                temp$dataArray = temp$dataArray.set(1, {key: '优惠及折扣cell'});//为了重画 1号cell
+
+                let str=temp$dataArray.toJS()[2].key;
+                temp$dataArray = temp$dataArray.set(2,{key:str});//为了重画 2 号cell
             }
 
             let _nextState = state
@@ -85,9 +88,26 @@ export default function MerchantDetailPageReducer(state = initialState, action) 
             return _nextState;
         }
             break;
-        case BaseListActions.BaseListStatus.WillUnmount:{
-            return ListWillUnmount(state,action);
+        case MerchantDetailPageActions.changeIsRenderFooterView: {
+
+            let _nextState = state
+                .setIn(['isRenderFooterView'], action.data);
+
+            return _nextState;
         }
+            break;
+        case BaseListActions.BaseListStatus.WillUnmount:{
+            let _nextState = state
+                .setIn(['AdditionalObj'], {isSelectCouponsForMerchantBt: true});
+
+            return ListWillUnmount(_nextState,action);
+        }
+
+        case BaseListActions.BaseListStatus.RemoveNums: {
+
+            return ListRemoveNumsItem(state, action);
+        }
+            break;
     }
 
     /**

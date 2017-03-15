@@ -18,6 +18,7 @@ export const BaseListStatus = {
     NODATA: 'fetch_list_data_status_nodata', //列表获取到无缓存数据
     ADD: 'fetch_list_data_status_addOneData',//列表添加一条数据
     REMOVE:'fetch_list_data_status_removeOneData',//列表删除一条数据
+    RemoveNums:'RemoveNums',//列表删除多条数据
     CHANGEITEMSTATE:'fetch_list_data_status_changeItemState',//列表一条数据改变状态
     WillUnmount:'WillUnmount'//列表将要被 从 DOM移除
 };
@@ -82,6 +83,17 @@ export function FailureFetchinglist(opt, ApiName) {
  */
 export function RemoveOneItemFromlist( ApiName,newData) {
     return { type: BaseListStatus.REMOVE,  ApiName,newData };
+}
+
+/**
+ * 删除列表里多条连续的数据
+ * @param ApiName
+ * @param newData:{fromIndex:xxx,toIndex:xxx} 被删除的 model 在数组的起始和 结束 下标
+ * @returns {{type: string, ApiName: *, newData: *}}
+ * @constructor
+ */
+export function RemoveNumsItemFromlist( ApiName,newData) {
+    return { type: BaseListStatus.RemoveNums,  ApiName,newData };
 }
 
 /**

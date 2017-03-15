@@ -18,6 +18,7 @@ import *as MerchantDetailPageActions from '../Redux/Actions/MerchantDetailPageAc
 import *as BizCouponListCell from '../Comp/BizCells/BizCouponListCell'
 import *as BizViews from '../Comp/BizCommonComp/BizViews'
 import BaseBt from '../Comp/Base/BaseBt'
+import *as BizApi from '../NetWork/API/BizApi'
 
 export class MerchantDetailPage extends Component {
     constructor(props) {
@@ -48,6 +49,10 @@ export class MerchantDetailPage extends Component {
     onCouponsForMerchant() {
 
         if (this.props.baseReducer.AdditionalObj.isSelectCouponsForMerchantBt == false) {
+
+            this.props.dispatch(BizApi.MerchantDetailPageApi.changeToCouponList(this.props))
+            this.props.dispatch(MerchantDetailPageActions.changeIsRenderFooterViewAction(true, this.props.baseReducer.ApiName))
+
             this.props.dispatch(MerchantDetailPageActions.changeIsSelectCouponsForMerchantBt(true, this.props.baseReducer.ApiName))
         }
 
@@ -56,13 +61,93 @@ export class MerchantDetailPage extends Component {
     //点击 如何获得返利 按钮
     onHowtoGetTheRebate() {
 
+
         if (this.props.baseReducer.AdditionalObj.isSelectCouponsForMerchantBt) {
+            this.props.dispatch(BizApi.MerchantDetailPageApi.changeToHowtoGetRebatesList(this.props))
+            this.props.dispatch(MerchantDetailPageActions.changeIsRenderFooterViewAction(false, this.props.baseReducer.ApiName))
+
             this.props.dispatch(MerchantDetailPageActions.changeIsSelectCouponsForMerchantBt(false, this.props.baseReducer.ApiName))
         }
+
     }
 
     renderRow = (rowData, sectionID, rowID, highlightRow) => {
         Log.log('MerchantDetailPage renderRow rowID=' + rowID);
+
+        if (rowID == '2' && this.props.baseReducer.$dataArray.size == 3) {//如何获得返利cell
+            return <View style={{
+                flex: 1, paddingBottom:15,backgroundColor: Colors.white
+            }}>
+                <Text style={{
+                    fontSize: 15, color: '#555555', marginTop: 20, marginLeft: 15,
+                    //backgroundColor: Colors.getRandomColor()
+                }}>
+                    如何获得返利
+                </Text>
+                <View style={{
+                    marginTop: 15, marginLeft: 15, width: GlobalStyles.window.width - 30, flexDirection: 'row',
+                    //backgroundColor: Colors.getRandomColor()
+
+                }}>
+                    {BizViews.renderBadge({
+                        width: 20, height: 20, borderRadius: 20,
+                        backgroundColor: '#F1FAF3'
+                    }, {fontSize: 12, color: '#36A642'},'1' )}
+                    <Text style={{
+                        fontSize: 13, color: '#555555', marginTop: 0, marginLeft: 10,
+                        //backgroundColor: Colors.getRandomColor()
+                    }}>
+                        点击一个Coupon或者点击按钮去购物,拿返利从Foot Locker上获取返利.
+                    </Text>
+                </View>
+                <View style={{
+                    marginTop: 15, marginLeft: 15, marginRight: 15,//width: GlobalStyles.window.width - 30,
+                    flexDirection: 'row',
+                    //backgroundColor: Colors.getRandomColor()
+
+                }}>
+                    {BizViews.renderBadge({
+                        width: 20, height: 20, borderRadius: 20,
+                        backgroundColor: '#F1FAF3'
+                    }, {fontSize: 12, color: '#36A642'},'2' )}
+                    <Text style={{
+                        fontSize: 13, color: '#555555', marginTop: 0, marginLeft: 10,marginRight:15,
+                        //backgroundColor: Colors.getRandomColor()
+                    }}>
+                        完成您的订单. 如果您使用一个优惠券, 您的折扣将会在结账时生效.
+                    </Text>
+                </View>
+                <View style={{
+                    marginTop: 15, marginLeft: 15, marginRight: 15,//width: GlobalStyles.window.width - 30,
+                    flexDirection: 'row',
+                    //backgroundColor: Colors.getRandomColor()
+
+                }}>
+                    {BizViews.renderBadge({
+                        width: 20, height: 20, borderRadius: 20,
+                        backgroundColor: '#F1FAF3'
+                    }, {fontSize: 12, color: '#36A642'},'3' )}
+                    <Text style={{
+                        fontSize: 13, color: '#555555', marginTop: 0, marginLeft: 10,marginRight:15,
+                        //backgroundColor: Colors.getRandomColor()
+                    }}>
+                        您的返利将在1-7天内加至您的Ebates.cn账户.
+                    </Text>
+                </View>
+                <Text style={{
+                    fontSize: 15, color: '#555555', marginTop: 15, marginLeft: 15,
+                    //backgroundColor: Colors.getRandomColor()
+                }}>
+                    返利条件
+                </Text>
+                <Text style={{
+                    fontSize: 13, color: '#555555', marginTop: 15, marginLeft: 15, marginRight:15,
+                    //backgroundColor: Colors.getRandomColor()
+                }}>
+                    {rowData.key}
+                </Text>
+            </View>
+        }
         switch (rowID) {
             case '0': {//顶部背景图一直往下倒 商家介绍 按钮都是 0号cell
                 let nowRate = rowData.nowRate + ' ';
@@ -99,7 +184,7 @@ export class MerchantDetailPage extends Component {
                                 //position:'absolute',left:0, right: 0,top:0, bottom: 0,
                                 width: 140, height: 30,
                                 resizeMode: 'contain',
-                                borderColor: Colors.getRandomColor(), borderWidth: 0.5,
+                                //borderColor: Colors.getRandomColor(), borderWidth: 0.5,
                                 //backgroundColor: Colors.getRandomColor()
                             }}>
                             </Image>
@@ -245,6 +330,7 @@ export class MerchantDetailPage extends Component {
 
             }
                 break;
+
             default://优惠cell
             {
                 let paddingTop = 5;
@@ -364,9 +450,9 @@ export class MerchantDetailPage extends Component {
             {BizViews.renderShadowLine({
                 position: 'absolute',
                 top: 0,
-                left: (GlobalStyles.window.width - 150) / 2 ,
-                 bottom: 0,shadowColor: Colors.transparent,
-                height: 50, width: 0.5,borderWidth: .5
+                left: (GlobalStyles.window.width - 150) / 2,
+                bottom: 0, shadowColor: Colors.transparent,
+                height: 50, width: 0.5, borderWidth: .5
             })}
         </View>
 
