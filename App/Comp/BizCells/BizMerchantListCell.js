@@ -26,7 +26,7 @@ export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRo
     //美工约定的左图的尺寸
     let logoW = 112;
     let logoH = 24;
-    let nowRate = rowData.nowRate + ' ';
+    let nowRate = rowData.now_rate + ' ';
     let wasRate = rowData.wasRate;
     return (
         <BaseBt

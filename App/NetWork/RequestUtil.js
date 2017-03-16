@@ -172,6 +172,7 @@ const encodeBody = (body) => {
  */
 export function showErrorMsg(error) {
     BizShowToast(error.error.message);
+    Log.log('RequestUtil  showErrorMsg   error.error.message =' + error.error.message)
 
 }
 

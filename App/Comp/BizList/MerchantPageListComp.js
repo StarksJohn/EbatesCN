@@ -34,40 +34,40 @@ export default class MerchantPageListComp extends Component {
         // });
 
         //因 top10 接口报错,故写死数据给 商家详情页用
-        this.props.navigator.push({
-            component: MerchantDetailPage,
-            name: gRouteName.MerchantDetailPage,
-            merchantData: {
-                "id": 3150,
-                "name": "Levi's (李维斯)",
-                "nowRate": "返利4%",
-                "wasRate": "返1%",
-                "image": "http://extrabux-static.b0.upaiyun.com/images/merchants/3150.jpg",
-                "transfers": 14955,
-                "slogan": "旷世经典人人都爱的牛仔裤",
-                "restrictions": "* 礼品卡无返利。",
-                "description": "Levis（李维斯）是著名的牛仔裤品牌，作为牛仔裤的“鼻祖”，它象征着美国野性、刚毅、叛逆与美国开拓者的精神。Levis有时会推出折扣优惠活动，得到了众多海淘爱好者的亲睐。Levis除了提供各类男女士牛仔裤外，还销售各类牛仔外套、牛仔裙、短裤、鞋、包包及其它配件等。",
-                "hotCoupons": {
-                    "data": [
-                        {
-                            "id": "2406890",
-                            "name": "Best Digital Thermometer for Babies-Forehead Thermometer by Vive",
-                            "chinese_name": "雅诗兰黛首款内外双膜,全新密集修护肌透面膜上市",
-                            "chinese_highlight": "【一片抵半瓶小棕瓶修护精粹】",
-                            "code": "2EBE",
-                            "end_date": "2017/05/12"
-                        }
-                    ]
-                },
-                "tags": {
-                    "data": [
-                        {
-                            "name": "接受国卡"
-                        }
-                    ]
-                }
-            },
-        });
+        // this.props.navigator.push({
+        //     component: MerchantDetailPage,
+        //     name: gRouteName.MerchantDetailPage,
+        //     merchantData: {
+        //         "id": 3150,
+        //         "name": "Levi's (李维斯)",
+        //         "nowRate": "返利4%",
+        //         "wasRate": "返1%",
+        //         "image": "http://extrabux-static.b0.upaiyun.com/images/merchants/3150.jpg",
+        //         "transfers": 14955,
+        //         "slogan": "旷世经典人人都爱的牛仔裤",
+        //         "restrictions": "* 礼品卡无返利。",
+        //         "description": "Levis（李维斯）是著名的牛仔裤品牌，作为牛仔裤的“鼻祖”，它象征着美国野性、刚毅、叛逆与美国开拓者的精神。Levis有时会推出折扣优惠活动，得到了众多海淘爱好者的亲睐。Levis除了提供各类男女士牛仔裤外，还销售各类牛仔外套、牛仔裙、短裤、鞋、包包及其它配件等。",
+        //         "hotCoupons": {
+        //             "data": [
+        //                 {
+        //                     "id": "2406890",
+        //                     "name": "Best Digital Thermometer for Babies-Forehead Thermometer by Vive",
+        //                     "chinese_name": "雅诗兰黛首款内外双膜,全新密集修护肌透面膜上市",
+        //                     "chinese_highlight": "【一片抵半瓶小棕瓶修护精粹】",
+        //                     "code": "2EBE",
+        //                     "end_date": "2017/05/12"
+        //                 }
+        //             ]
+        //         },
+        //         "tags": {
+        //             "data": [
+        //                 {
+        //                     "name": "接受国卡"
+        //                 }
+        //             ]
+        //         }
+        //     },
+        // });
 
 
     }

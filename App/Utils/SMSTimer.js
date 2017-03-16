@@ -38,7 +38,7 @@ export default class SMSTimer {
                 if (this.timerNums <= 0) {
                     Log.log('clearInterval');
 
-                    this.props.callBack(-1);
+                    this.props.callBack(0);
                     this.timerNums = this.defaultTimerNums;
                     clearInterval(this.interval);
                 }

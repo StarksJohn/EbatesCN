@@ -5,7 +5,7 @@
  */
 import *as BaseListActions from '../../Redux/Actions/BaseListActions'
 import *as HistorySearchDB from '../../DB/BizDB/HistorySearchDB'
-const {fromJS,List} = require('immutable'); //导入  Immutable.js 的 Record API
+const {fromJS, List} = require('immutable'); //导入  Immutable.js 的 Record API
 import *as SearchResultPageActions from '../../Redux/Actions/SearchResultPageActions'
 import SMSTimer from '../../Utils/SMSTimer'
 import BizSearchResultPagScrollableTabBar, {UpdateTabUnderlineWidthEventName} from '../../Comp/BizCommonComp/BizSearchResultPagScrollableTabBar'
@@ -156,6 +156,7 @@ export const LogInApi = {
 export function commonApiHeaderAppend(header) {
     let token = TokenDB.getAvailableToken();//此token必须是未过期的
 
+    Log.log('BizApi commonApiHeaderAppend token.data.access_token='+token.data.access_token);
     header.append('Authorization', token.data.token_type + ' ' + token.data.access_token);//xxx是获取到的token,拿到token后的其他所有接口都传此header参数
 }
 
@@ -762,7 +763,7 @@ export const MerchantDetailPageApi = {
 
             if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE) {//一开始 挂载
                 // dispatch(BaseListActions.InitListDataSource(this.ApiName));// 当前 列表的 $dataArray 清0
-                this.$dataArray.clear();
+                this.$dataArray = this.$dataArray.clear();
 
                 //一开始画 2个cell
                 dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
@@ -865,14 +866,13 @@ export const MerchantDetailPageApi = {
      */
     changeToHowtoGetRebatesList(BaseListCompProps){
         return (dispatch) => {
-            dispatch(BaseListActions.RemoveNumsItemFromlist( this.ApiName, {
-                fromIndex: 2,toIndex:BaseListCompProps.baseReducer.$dataArray.size-1
+            dispatch(BaseListActions.RemoveNumsItemFromlist(this.ApiName, {
+                fromIndex: 2, toIndex: BaseListCompProps.baseReducer.$dataArray.size - 1
             }));
 
             dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.MORE, this.ApiName, {
-                couldLoadMore: false,
                 meta: BaseListCompProps.baseReducer.meta,
-                newContentArray:  [{key:BaseListCompProps.route.merchantData.restrictions}]
+                newContentArray: [{key: BaseListCompProps.route.merchantData.restrictions}]
             }));
         }
     },
@@ -897,6 +897,56 @@ export const MerchantDetailPageApi = {
         }
     }
 
+}
+
+/**
+ * 跳转页的API
+ * @type {{ApiName: string}}
+ */
+export const TransferWebViewPageApi = {
+    ApiName: 'TransferWebViewPageApi',
+
+    // fetchPageData(opt, BaseListCompProps){
+    //     return (dispatch) => {
+    //         Log.log('BizApi MerchantDetailPageApi fetchPageData opt=' + opt)
+    //
+    //         if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE) {//一开始 挂载
+    //             dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
+    //                 couldLoadMore: false,
+    //                 newContentArray: [{}]
+    //             }));
+    //         }
+    //     }
+    // }
+}
+
+export const ClickApi = {
+    ApiName: 'ClickApi',
+
+    fetchClickData(merchant_id){
+        return new Promise((resolve, reject) => {
+            Log.log('BizApi  开启请求 ClickApi   接口 , merchant_id =' + merchant_id);
+
+            let url = RequestUtil.getStagingOrProductionHost() + 'click';
+
+            RequestUtil.GET(url, {
+                    merchant_id: merchant_id,
+                    //coupon_id: ' '
+                },
+                (header) => {
+                    commonApiHeaderAppend(header)
+                },
+            ).then((responseData) => {
+                Log.log('BizApi  ClickApi  接口OK, responseData =' + Log.writeObjToJson(responseData))
+
+                resolve(responseData)
+            }).catch((error) => {
+                RequestUtil.showErrorMsg(error)
+
+                reject(error);
+            });
+        });
+    }
 }
 
 
@@ -929,5 +979,9 @@ export function fetchApi(opt, pageNo, BaseListCompProps) {
             return MerchantDetailPageApi.fetchPageData(opt, BaseListCompProps);
         }
             break;
+        // case TransferWebViewPageApi.ApiName: {
+        //     return TransferWebViewPageApi.fetchPageData(opt, BaseListCompProps);
+        // }
+        //     break;
     }
 }

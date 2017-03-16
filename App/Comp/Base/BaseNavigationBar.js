@@ -158,6 +158,8 @@ export default class BaseNavigationBar extends Component {
 
     render() {
 
+        // Log.log('BaseNavigationBar render()');
+
         let statusBar = !this.props.statusBarCustomStyle.hidden ?
             <View style={ {height: Platform.OS === 'ios' ? 20 : 0}}>
                 <StatusBar
@@ -169,7 +171,8 @@ export default class BaseNavigationBar extends Component {
 
         let titleTextView = null;
         if (!this.props.searchBar) {//没有有 searchBar,就画 titleTextView,如果外部有自定义titleTextView,就画外部自定义的
-            titleTextView = this.props.titleTextView ? this.props.titleTextView :
+            titleTextView = this.props.titleTextView ? /*this.props.titleTextView*/ this.getButtonElement(this.props.titleTextView)
+                :
                 <Text style={[styles.defaultTitleStyle, this.props.titleTextStyle]}
                       numberOfLines={this.props.titleTextNumberOfLines}
                 >
@@ -258,7 +261,7 @@ export class NavBarButton extends Component {
                 borderRadius: 28, marginLeft: 10,
                 backgroundColor: Colors.white
             }}
-            iconStyle={{name:'ios-arrow-back',iconSize:22,iconColor:Colors.BizCommonBlack}}
+            iconStyle={{name: 'ios-arrow-back', iconSize: 22, iconColor: Colors.BizCommonBlack}}
             onPress={callBack}
         />;
     }
@@ -272,11 +275,11 @@ export class NavBarButton extends Component {
         return <BaseIoniconsBt
             btStyle={{
                 width: 28,
-                height: 28,marginRight: 10,
+                height: 28, marginRight: 10,
                 borderRadius: 28, marginLeft: 10,
                 backgroundColor: Colors.white
             }}
-            iconStyle={{name:'ios-more',iconSize:20,iconColor:Colors.black}}
+            iconStyle={{name: 'ios-more', iconSize: 20, iconColor: Colors.black}}
             onPress={callBack}
         />;
     }
@@ -374,7 +377,7 @@ const styles = StyleSheet.create({
     defaultTitleStyle: {//默认title的style
         fontSize: 20,
         color: '#FFFFFF',
-        // backgroundColor: Colors.blue,
+        //backgroundColor: Colors.blue,
         textAlign: 'center',
         // height: Platform.OS === 'ios' ? NAV_BAR_HEIGHT_IOS : NAV_BAR_HEIGHT_ANDROID
     },

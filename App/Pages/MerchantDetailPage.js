@@ -19,6 +19,7 @@ import *as BizCouponListCell from '../Comp/BizCells/BizCouponListCell'
 import *as BizViews from '../Comp/BizCommonComp/BizViews'
 import BaseBt from '../Comp/Base/BaseBt'
 import *as BizApi from '../NetWork/API/BizApi'
+import TransferWebViewPage from './TransferWebViewPage'
 
 export class MerchantDetailPage extends Component {
     constructor(props) {
@@ -150,7 +151,7 @@ export class MerchantDetailPage extends Component {
         }
         switch (rowID) {
             case '0': {//顶部背景图一直往下倒 商家介绍 按钮都是 0号cell
-                let nowRate = rowData.nowRate + ' ';
+                let now_rate = rowData.now_rate + ' ';
                 let nums = '近两周' + rowData.transfers + '人拿到返利';
                 return (
                     <View style={{
@@ -203,7 +204,7 @@ export class MerchantDetailPage extends Component {
                             color: Colors.orange,
                             //backgroundColor: Colors.getRandomColor()
                         }} numberOfLines={1} textAlign="center"
-                        >{nowRate}
+                        >{now_rate}
                             <Text style={{
                                 fontSize: 12, marginLeft: 10, color: Colors.textGray,
                                 textDecorationLine: 'line-through',
@@ -354,7 +355,11 @@ export class MerchantDetailPage extends Component {
     }
 
     onShopping() {
-
+        this.props.navigator.push({
+            component: TransferWebViewPage,
+            name: gRouteName.TransferWebViewPage,
+            merchantData:this.props.route.merchantData
+        });
     }
 
     //画底部的bar

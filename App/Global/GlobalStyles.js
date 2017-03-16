@@ -101,7 +101,12 @@ module.exports =
             backgroundColor: Colors.white,
         },
         //导航栏标题字体的样式
-        navBarTitleTextStyle:{
+        navBarTitleTextStyle: {
             color: Colors.allNavTitleColor, fontSize: 17
-        }
+        },
+        //顶部 状态栏+nav 的高
+        statusBarAndNavBarH: Platform.OS === 'ios' ? 20 + 44 : 50,
     };
+
+//顶部 状态栏+nav 的高
+// export const statusBarAndNavBarH = Platform.OS === 'ios' ? this.statusBarStyle.height + this.nav_bar_height_ios : this.nav_bar_height_android,
