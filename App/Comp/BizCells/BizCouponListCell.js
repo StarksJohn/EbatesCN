@@ -14,6 +14,56 @@ import GlobalStyles from '../../Global/GlobalStyles'
 import BaseBt from '../Base/BaseBt'
 import *as StringOauth from '../../Utils/StringUtils/StringOauth'
 
+function renderBadge(rowData, rowID) {
+    if (rowData.isRenderBadge) {
+        let backColor = null;
+        let textColor = Colors.white;
+        let borderColor = '#BDBDBD';
+        let borderWidth = 0.5;
+        switch (rowID) {
+            case '0': {
+                backColor = '#F4AC00'
+            }
+                break;
+            case '1': {
+                backColor = '#A5A5A5'
+            }
+                break;
+            case '2': {
+                backColor = '#BD9A69'
+            }
+                break;
+            // default: {
+            //     backColor = Colors.white;
+            //     textColor = '#888888',
+
+            // }
+            //     break;
+        }
+        return BizViews.renderBadge({
+            position: 'absolute',
+            left: 10, top: 15, width: 20, height: 20, borderRadius: 20, //borderColor: borderColor,
+            //borderWidth: borderWidth,
+            backgroundColor: backColor
+        }, {fontSize: 12, color: textColor},  Number(rowID) +1);
+    } else {
+        return null;
+    }
+}
+
+/**
+ * 画EB独家ICON
+ * @param rowData
+ * @returns {XML}
+ */
+function renderEBIcon(rowData){
+    return <View style={[{position: 'absolute',left:15,  alignItems: 'center', justifyContent: 'center',}]}>
+        <Text style={textStyle}>
+            {text}
+        </Text>
+    </View>;
+}
+
 export function RenderBizCouponListCell(rowData, sectionID, rowID, highlightRow, paddingTop, callback) {
 
     Log.log('RenderBizCouponListCell rowID==' + rowID);
@@ -60,10 +110,21 @@ export function RenderBizCouponListCell(rowData, sectionID, rowID, highlightRow,
             }}>
                 {/*左logo*/}
                 <Image source={ {uri: rowData.image}} style={{
-                    marginLeft: 15, marginTop: 20, marginBottom: 20, width: 75, height: 75,
-                    borderColor: Colors.getRandomColor(), borderWidth: 0.5
+                    marginLeft: 15, marginTop: 20, marginBottom: 20, width: 75, height: 75, borderWidth: 0.5,
+                    //borderColor: Colors.getRandomColor(),
                     //backgroundColor: Colors.getRandomColor()
-                }}/>
+                }}>
+                    {rowData.isRenderEB?
+                        <View style={[{width: 37, height: 14,
+                            backgroundColor:'rgba(255, 84, 0, 1)',alignItems: 'center', justifyContent: 'center',}]}>
+                            <Text style={{fontSize:9, color:Colors.white}}>
+                                EB独家
+                            </Text>
+                        </View>
+                    :null}
+                </Image>
+                {/*圆圈*/}
+                {renderBadge(rowData, rowID)}
                 {/*右边所有文字的背景view*/}
                 <View style={{
                     marginTop: 20 - 3,//因标题Text的内容上下有点空白,故往上移点,能让Text的内容和左图平行
@@ -100,7 +161,7 @@ export function RenderBizCouponListCell(rowData, sectionID, rowID, highlightRow,
                         }
                         {/*最后一行,在 左边icon 右边的view*/}
                         <View style={{
-                            flexDirection: StringOauth.isNull(name) ?'row':'row-reverse',
+                            flexDirection: StringOauth.isNull(name) ? 'row' : 'row-reverse',
                             justifyContent: 'space-between',
                             alignItems: 'center',
                             height: 14,

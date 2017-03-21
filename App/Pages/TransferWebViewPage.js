@@ -4,7 +4,7 @@
  * https://github.com/iwgang/GankCamp-React-Native
  */
 import React, {Component, PropTypes} from 'react';
-import {View, WebView, Platform, BackAndroid, InteractionManager, ScrollView, Image, Text} from 'react-native';
+import {View, WebView, Platform, BackAndroid, InteractionManager, ScrollView, Image, Text,StyleSheet} from 'react-native';
 import {connect} from 'react-redux';
 import  BaseNavigationBar, {NavBarButton, baseOnBackPress} from '../Comp/Base/BaseNavigationBar'
 import Colors from '../Utils/Colors';
@@ -16,6 +16,7 @@ import BaseDashLine from '../Comp/Base/BaseDashLine'
 import SMSTimer from '../Utils/SMSTimer'
 import *as BizApi from '../NetWork/API/BizApi'
 import *as BizLoadingView from '../Comp/BizCommonComp/BizLoadingView'
+import *as Math from '../Utils/Math'
 
 
 const WEBVIEW_REF = 'webview';
@@ -44,16 +45,19 @@ export class TransferWebViewPage extends Component {
             });
         }
 
-        this.isWebViewonLoad=false;//webview是否加载成功
+        let tipArr = ['不要在您购物的时候删除cookie', '不要从Ebates点击到一个商家后连续下多单', '不要使用非Ebates提供的优惠码', '要从Ebates点击到商家页面', '不要在购物的时候关闭商家网站', '不要使用商家的邮件或者其他来源的优惠码'];
+        this.tip = 'Tip: ' + tipArr[Math.randomNums(0, tipArr.length - 1)];
+
         this.state = {
             isShareModal: false, //
             canGoBack: false,//webview页面内跳转
             loadEnd: false,
             url: this.props.route.url,
-            CountDown: 1,
+            CountDown: 5,
             isCountDownOver: false,//倒计时是否完毕
             isClickApiSuccess: false,//click 接口是否成功
             navTitle: '正在载入...',
+            isWebViewOnLoadEnd: false,//webview是否加载完毕,不管成功还是失败
         };
 
         this.timer = new SMSTimer({
@@ -162,11 +166,14 @@ export class TransferWebViewPage extends Component {
         let strCountDown = '将在' + this.state.CountDown + '秒后带你去';
         let str = '完成订单后, 你可以获得' + route.merchantData.now_rate + '.';
 
-        return <View style={{
-            flex: 0, height: GlobalStyles.window.height - GlobalStyles.statusBarAndNavBarH,
-            alignItems: 'center', justifyContent: 'center',
-            //backgroundColor: Colors.white
-        }}>
+        let style =null;
+        if (!this.state.isClickApiSuccess){//transferUrl 没拿到前,不画 webview
+            style=styles.TransferViewDefaultStyle;
+        }else if(this.state.isClickApiSuccess && !this.state.isWebViewOnLoadEnd){//transferUrl拿到,开始
+            // 画webview加载此url,在加载完毕前, 同时画webview和transferview, 否则屏幕内会大白
+            style=styles.TransferViewAbsoluteStyle;
+        }
+        return <View style={style}>
             <ScrollView showsVerticalScrollIndicator={false} centerContent={true}
             >
                 <View style={{
@@ -237,7 +244,7 @@ export class TransferWebViewPage extends Component {
                             fontSize: 12, color: 'rgba(136, 136, 136, 1)', marginTop: 5,
                             //backgroundColor: Colors.getRandomColor()
                         }}>
-                            Tip: 不要在您购物的时候删除cookie
+                            {this.tip}
                         </Text>
                     </View>
                     <BaseDashLine customContainerStyle={{marginTop: 20, width: 295}} customDashItemStyle={{
@@ -273,7 +280,7 @@ export class TransferWebViewPage extends Component {
             decelerationRate="normal"
             onLoad={() => {
                 Log.log(' TransferWebViewPage renderWebview onLoad')
-                this.isWebViewonLoad=true;
+
             }
             }
             onLoadStart={() => {
@@ -287,8 +294,10 @@ export class TransferWebViewPage extends Component {
                 {/*this.setState({loadEnd: true})*/
                 }
                 Log.log(' TransferWebViewPage renderWebview onLoadEnd')
-                {/*BizLoadingView.closeBizLoadingView()*/
-                }
+                this.setState({
+                    isWebViewOnLoadEnd:true
+                })
+
             }}
             onShouldStartLoadWithRequest={() => {
                 const shouldStartLoad = true;
@@ -296,8 +305,9 @@ export class TransferWebViewPage extends Component {
             }}
             onError={() => {
                 Log.log(' TransferWebViewPage renderWebview onError')
-                this.isWebViewonLoad=false;
-
+                this.setState({
+                    isWebViewOnLoadEnd:true
+                })
             }}
             // startInLoadingState={true}
             //renderError={() => <CommonLoadView loadState="error" onRetry={() => this.refs.webView.reload()}/>}
@@ -310,7 +320,7 @@ export class TransferWebViewPage extends Component {
         const {navigator, route} = this.props;
 
         return <View style={{
-            alignItems:'center' ,
+            alignItems: 'center',
             //backgroundColor: Colors.getRandomColor()
         }}>
             <Text style={{
@@ -337,9 +347,34 @@ export class TransferWebViewPage extends Component {
                 statusBarCustomStyle={GlobalStyles.statusBarDefaultProps}
                 title={this.state.navTitle}
                 titleTextStyle={{color: Colors.black, fontSize: 17}}
-                titleTextView={this.state.isClickApiSuccess&&this.state.isCountDownOver&& this.isWebViewonLoad?this.renderTitleTextView():null}
+                titleTextView={this.state.isClickApiSuccess && this.state.isCountDownOver && this.state.isWebViewOnLoadEnd ? this.renderTitleTextView() : null}
                 leftButton={NavBarButton.getBackButton(() => baseOnBackPress(navigator, this.backAndroidEventListener))}
                 hide={false}/>;
+
+        let content = null;
+        if(!this.state.isClickApiSuccess ){
+            Log.log('TransferWebViewPage render 只画 TransferView')
+            content= this.renderTransferView();
+        }
+        else if (this.state.isClickApiSuccess && !this.state.isWebViewOnLoadEnd) {//
+
+            Log.log('TransferWebViewPage render 同时画 2个view')
+
+            content= [0,1].map(
+                (v)=>{
+                    if (v == 0) {
+                        return this.renderWebview();
+                    } else if (v == 1) {
+                        return this.renderTransferView();
+                    }
+                }
+            );
+        }else if(this.state.isClickApiSuccess && this.state.isWebViewOnLoadEnd){//webview 不管成功还是失败,加载完毕,就 不画
+            // transferview了,只画 webview
+            Log.log('TransferWebViewPage render 只画 webview')
+
+            content= this.renderWebview();
+        }
 
         return (
             <View style={{flex: 1, backgroundColor: 'rgba(242, 242, 242, 1)'}}>
@@ -347,9 +382,11 @@ export class TransferWebViewPage extends Component {
                 {BizViews.renderShadowLine({})}
 
                 {/*跳转view*/}
-                {
-                    this.state.isCountDownOver && this.state.isClickApiSuccess ? this.renderWebview() : this.renderTransferView()
-                }
+                {content}
+                {/*{*/}
+                    {/*/!*this.state.isCountDownOver && this.state.isClickApiSuccess && this.state.isWebViewonLoad ? this.renderWebview() : this.renderTransferView()*!/*/}
+
+                {/*}*/}
 
             </View>
         );
@@ -357,6 +394,21 @@ export class TransferWebViewPage extends Component {
 
 
 }
+
+const styles = StyleSheet.create({
+    //不显示 webview时, TransferView 的style
+    TransferViewDefaultStyle: {
+        flex: 0, height: GlobalStyles.window.height - GlobalStyles.statusBarAndNavBarH,
+        alignItems: 'center', justifyContent: 'center',
+        //backgroundColor: Colors.white
+    },
+    //既显示webview,又显示TransferView时的 style
+    TransferViewAbsoluteStyle: {
+        position: 'absolute',
+        left:0,right:0,top:0, bottom:0,
+    },
+
+})
 
 function mapStateToProps(state) {
 

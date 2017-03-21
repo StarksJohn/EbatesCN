@@ -156,7 +156,7 @@ export const LogInApi = {
 export function commonApiHeaderAppend(header) {
     let token = TokenDB.getAvailableToken();//此token必须是未过期的
 
-    Log.log('BizApi commonApiHeaderAppend token.data.access_token='+token.data.access_token);
+    Log.log('BizApi commonApiHeaderAppend token.data.access_token=' + token.data.access_token);
     header.append('Authorization', token.data.token_type + ' ' + token.data.access_token);//xxx是获取到的token,拿到token后的其他所有接口都传此header参数
 }
 
@@ -349,6 +349,8 @@ export const SearchPageListApi = {
 
 /**
  * 搜索 结果页 搜索关键词 接口 的 API
+ * https://api-staging-current.ebates.cn/docs.html#search-search-coupons-get 搜索结果页 优惠列表的 api
+ * https://api-staging-current.ebates.cn/docs.html#search-search-merchants-get 搜索结果页 商家列表 API
  */
 export const SearchResultPageSearchKeyWordAPI = {
     ApiName: 'SearchResultPageSearchKeyWordAPI',
@@ -878,7 +880,7 @@ export const MerchantDetailPageApi = {
     },
 
     /**
-     * 点击 优惠及折扣 列表
+     *  列表数据源切换到 优惠及折扣 列表状态
      * @param BaseListCompProps
      * @returns {function(*)}
      */
@@ -949,6 +951,290 @@ export const ClickApi = {
     }
 }
 
+/**
+ * 首页 热门优惠 列表 的 API
+ * @type {{}}
+ */
+export const HomePageHotCouponListApi = {
+    ApiName: 'HomePageHotCouponListApi',
+    // $dataArray: fromJS([]),//加倍返利商家 接口的数据
+    isFlashDealsApiOk: false,//限时返利接口是否拿到数据
+    isHotCouonListApiOK:false,
+
+    fetchPageData(opt, BaseListCompProps){
+        // Log.log('BizApi MerchantDetailPageApi fetchPageData () =='+BaseListCompProps.route.merchantData)
+        return (dispatch) => {
+            // Log.log('BizApi MerchantDetailPageApi fetchPageData opt=' + opt)
+
+            if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE) {//一开始 挂载
+
+                this.isHotCouonListApiOK=false;
+
+                //一开始画 轮播图 和 加倍返利商家 和 热门优惠 3 个cell
+                dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
+                    couldLoadMore: true,
+                    newContentArray: [[
+                        'https://gitlab.pro/yuji/demo/uploads/d6133098b53fe1a5f3c5c00cf3c2d670/DVrj5Hz.jpg_1',
+                        'https://gitlab.pro/yuji/demo/uploads/2d5122a2504e5cbdf01f4fcf85f2594b/Mwb8VWH.jpg',
+                        'https://gitlab.pro/yuji/demo/uploads/4421f77012d43a0b4e7cfbe1144aac7c/XFVzKhq.jpg',
+                        'https://gitlab.pro/yuji/demo/uploads/576ef91941b0bda5761dde6914dae9f0/kD3eeHe.jpg'
+                    ], '加倍返利商家' ,'热门优惠 cell ']
+
+                }));
+
+                TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
+                    () => {
+                        dispatch(this.fetchDoubleCashbackMerchants());
+                    }
+                );
+
+                TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
+                    () => {
+                        dispatch(this.HotCouonListApi(BaseListCompProps));
+                    }
+                );
+
+            } else if (opt == BaseListActions.BaseListFetchDataType.MORE) {//翻页
+
+            }
+        }
+    },
+
+    /**
+     * 加倍返利商家 接口 DOUBLE CASHBACK MERCHANTS
+     * https://api-staging-current.ebates.cn/docs.html#merchants-double-cashback-merchants-get
+     */
+    fetchDoubleCashbackMerchants(){
+        return (dispatch) => {
+
+            Log.log('BizApi  fetchDoubleCashbackMerchants 开始加载 加倍返利商家 接口 ');
+
+            let url = RequestUtil.getStagingOrProductionHost() + 'merchants/double_cashback';
+            RequestUtil.GET(url, {
+                    page: 1,
+                    perPage: 10,
+                },
+                (header) => {
+                    commonApiHeaderAppend(header)
+                },
+            ).then((responseData) => {
+                Log.log('BizApi  fetchDoubleCashbackMerchants 加倍返利商家 接口OK, responseData.data.length =' + responseData.data.length)
+
+                dispatch(BaseListActions.ChangeListOneItemAction(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
+                    index: 1,
+                    newData: responseData.data
+                }));
+            }).catch((error) => {
+                Log.log('BizApi  fetchDoubleCashbackMerchants 加倍返利商家 接口失败 =' + error)
+                RequestUtil.showErrorMsg(error)
+
+                //商家页的top10接口如果返回错误, 不能直接把 列表处于 失败状态,因还得画0和1号cell,故只能 添加一个 3号异常cell
+                // this.isInNetWorkAbnormalBeforeFetchSuccess=true;
+                // dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
+                //     couldLoadMore: true,
+                //     newContentArray: [{key: this.NetWorkAbnormalCellData}]
+                // }));
+            });
+        }
+    },
+
+    /**
+     * 限时返利 https://api-staging-current.ebates.cn/docs.html#coupons-flash-deals-get
+     * @constructor
+     */
+    FLashDealsApi(){
+
+    },
+
+    /**
+     * 首页热门优惠 列表 API https://api-staging-current.ebates.cn/docs.html#coupons-hot-coupon-list-get
+     * @returns {function(*)}
+     */
+    HotCouonListApi(BaseListCompProps){
+        return (dispatch) => {
+            // if (this.isInNetWorkAbnormalBeforeFetchSuccess){//本次拿到数据前,列表处于 网络异常 状态,拿到数据后, 删除 网络异常cell
+            //     this.isInNetWorkAbnormalBeforeFetchSuccess=false;
+            //     dispatch(BaseListActions.RemoveOneItemFromlist( this.ApiName, {
+            //         index: 2
+            //     }));
+            // }
+
+            {
+                Log.log('BizApi  HotCouonListApi 开始请求 首页热门优惠 接口')
+                dispatch(BaseListActions.Loadinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName));
+
+                let url = RequestUtil.getStagingOrProductionHost() + 'coupons/hot';
+                RequestUtil.GET(url, {
+                        page: BaseListCompProps.baseReducer.meta.pagination.current_page + 1,
+                        perPage: BaseListCompProps.baseReducer.meta.pagination.per_page,
+                        include: 'merchant'/* */,
+                    },
+                    (header) => {
+                        commonApiHeaderAppend(header)
+                    },
+                ).then((responseData) => {
+                    Log.log('BizApi  HotCouonListApi 首页热门优惠 接口OK, responseData.data.length =' + responseData.data.length)
+
+                    let arr=responseData.data;
+                    arr.push('查看更多cell');
+                    arr.push('底部留白cell');
+
+                    this.isHotCouonListApiOK=true;
+
+                    dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.MORE, this.ApiName, {
+                        couldLoadMore: false,
+                        newContentArray: arr,
+                    }));
+                }).catch((error) => {
+                    Log.log('BizApi  HotCouonListApi 首页热门优惠 接口失败 =' + error)
+                    RequestUtil.showErrorMsg(error)
+
+                    //商家页的top10接口如果返回错误, 不能直接把 列表处于 失败状态,因还得画0和1号cell,故只能 添加一个 3号异常cell
+                    // this.isInNetWorkAbnormalBeforeFetchSuccess=true;
+                    // dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
+                    //     couldLoadMore: true,
+                    //     newContentArray: [{key: this.NetWorkAbnormalCellData}]
+                    // }));
+                });
+            }
+        }
+    }
+}
+
+/**
+ * 优惠排行 https://api-staging-current.ebates.cn/docs.html#coupons-coupon-list-get
+ * @type {{}}
+ */
+export const CouponListRankApi= {
+    ApiName: 'CouponListRankApi',
+
+    fetchListData(opt, BaseListCompProps){
+        return (dispatch) => {
+            Log.log('BizApi CouponListApi fetchListData opt=' + opt)
+
+            if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE || opt == BaseListActions.BaseListFetchDataType.MORE) {//一开始 挂载 | 翻页
+
+                TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
+                    () => {
+                        Log.log('BizApi CouponListApi 开始 调 首页 优惠排行 列表 接口  ')
+
+                        {
+                            dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
+
+                            let url = RequestUtil.getStagingOrProductionHost() + 'coupons';
+                            RequestUtil.GET(url, {
+                                    page: BaseListCompProps.baseReducer.meta.pagination.current_page + 1,
+                                    perPage: BaseListCompProps.baseReducer.meta.pagination.per_page,
+                                    include: 'merchant'/* */,
+                                },
+                                (header) => {
+                                    commonApiHeaderAppend(header)
+                                },
+                            ).then((responseData) => {
+                                Log.log('BizApi  CouponListApi 首页 优惠排行 接口OK, responseData.data.length =' + responseData.data.length)
+
+                                let arr=responseData.data;
+                                // if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE){
+                                //     arr.push('底部留白cell');
+                                // }
+
+                                dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
+                                    meta: responseData.meta,
+                                    newContentArray: arr,
+                                }));
+                            }).catch((error) => {
+                                Log.log('BizApi  EBCouponListApi 首页 优惠排行 接口失败 =' + error)
+                                RequestUtil.showErrorMsg(error)
+
+                                //商家页的top10接口如果返回错误, 不能直接把 列表处于 失败状态,因还得画0和1号cell,故只能 添加一个 3号异常cell
+                                // this.isInNetWorkAbnormalBeforeFetchSuccess=true;
+                                // dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
+                                //     couldLoadMore: true,
+                                //     newContentArray: [{key: this.NetWorkAbnormalCellData}]
+                                // }));
+                            });
+                        }
+                    }
+                );
+            }
+            // else if (opt == BaseListActions.BaseListFetchDataType.MORE) {//翻页
+            //     TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
+            //         () => {
+            //             Log.log('BizApi CouponListApi 开始 调 首页 优惠排行 列表 接口 获取下页数据  ')
+            //         }
+            //     );
+            // }
+        }
+    },
+}
+
+/**
+ * EB独家优惠
+ * @type {{}}
+ */
+export const EBCouponListApi= {
+    ApiName: 'EBCouponListApi',
+
+    fetchListData(opt, BaseListCompProps){
+        return (dispatch) => {
+            Log.log('BizApi EBCouponListApi fetchListData opt=' + opt)
+
+            if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE || opt == BaseListActions.BaseListFetchDataType.MORE) {//一开始 挂载 | 翻页
+
+                TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
+                    () => {
+                        Log.log('BizApi EBCouponListApi 开始 调 首页 EB独家优惠 列表 接口  ')
+
+                        {
+                            dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
+
+                            let url = RequestUtil.getStagingOrProductionHost() + 'coupons';
+                            RequestUtil.GET(url, {
+                                    page: BaseListCompProps.baseReducer.meta.pagination.current_page + 1,
+                                    perPage: BaseListCompProps.baseReducer.meta.pagination.per_page,
+                                    include: 'merchant'/* */,
+                                },
+                                (header) => {
+                                    commonApiHeaderAppend(header)
+                                },
+                            ).then((responseData) => {
+                                Log.log('BizApi  EBCouponListApi 首页 EB独家优惠 接口OK, responseData.data.length =' + responseData.data.length)
+
+                                let arr=responseData.data;
+                                // if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE){
+                                //     arr.push('底部留白cell');
+                                // }
+
+                                dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
+                                    meta: responseData.meta,
+                                    newContentArray: arr,
+                                }));
+                            }).catch((error) => {
+                                Log.log('BizApi  EBCouponListApi 首页 EB独家优惠 接口失败 =' + error)
+                                RequestUtil.showErrorMsg(error)
+
+                                //商家页的top10接口如果返回错误, 不能直接把 列表处于 失败状态,因还得画0和1号cell,故只能 添加一个 3号异常cell
+                                // this.isInNetWorkAbnormalBeforeFetchSuccess=true;
+                                // dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
+                                //     couldLoadMore: true,
+                                //     newContentArray: [{key: this.NetWorkAbnormalCellData}]
+                                // }));
+                            });
+                        }
+                    }
+                );
+            }
+            // else if (opt == BaseListActions.BaseListFetchDataType.MORE) {//翻页
+            //     TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
+            //         () => {
+            //             Log.log('BizApi CouponListApi 开始 调 首页 优惠排行 列表 接口 获取下页数据  ')
+            //         }
+            //     );
+            // }
+        }
+    },
+}
+
 
 /**
  * 初步分解 BaseListComp 发起的 列表 通用的 各种API
@@ -979,9 +1265,17 @@ export function fetchApi(opt, pageNo, BaseListCompProps) {
             return MerchantDetailPageApi.fetchPageData(opt, BaseListCompProps);
         }
             break;
-        // case TransferWebViewPageApi.ApiName: {
-        //     return TransferWebViewPageApi.fetchPageData(opt, BaseListCompProps);
-        // }
-        //     break;
+        case HomePageHotCouponListApi.ApiName: {
+            return HomePageHotCouponListApi.fetchPageData(opt, BaseListCompProps);
+        }
+            break;
+        case CouponListRankApi.ApiName: {
+            return CouponListRankApi.fetchListData(opt, BaseListCompProps);
+        }
+            break;
+        case EBCouponListApi.ApiName: {
+            return EBCouponListApi.fetchListData(opt, BaseListCompProps);
+        }
+            break;
     }
 }

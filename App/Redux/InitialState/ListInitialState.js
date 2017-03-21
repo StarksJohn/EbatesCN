@@ -115,7 +115,7 @@ export function ListSuccesState(state, action) {
         .setIn(['couldLoadMore'], meta ? meta.pagination.current_page < meta.pagination.total_pages : action.newData.couldLoadMore)
         .setIn(['opt'], action.opt)
         .setIn(['isRefreshing'], false)
-        .setIn(['meta'], meta);
+        .setIn(['meta'], meta?meta:null);
 
     return nextState;
 
@@ -175,6 +175,28 @@ export function ListRemoveOneItem(state, action) {
 
     if (temp$dataArray) {
         temp$dataArray = temp$dataArray.delete(index);
+    }
+
+    let nextState = state
+        .setIn(['$dataArray'], temp$dataArray)
+        .setIn(['dataSource'], state.dataSource.cloneWithRows(temp$dataArray.toJS()))
+
+    return nextState;
+}
+
+/**
+ * 列表改变一条数据
+ * @param state
+ * @param action
+ * @returns {Cursor}
+ * @constructor
+ */
+export function ListChangeOneItem(state, action) {
+    let {index/*被改变item 在数组里的下标*/,newData/*新的数据源*/}= action.newData;
+    let temp$dataArray = state.getIn(['$dataArray']);
+
+    if (temp$dataArray) {
+        temp$dataArray = temp$dataArray.set(index,newData);
     }
 
     let nextState = state

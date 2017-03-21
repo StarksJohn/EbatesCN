@@ -1,6 +1,6 @@
 /**
  * Created by Ebates on 17/3/14.
- * MerchantDetailPageReducer
+ * HomePageHotCouponListReducer
  */
 const {Record, fromJS,} = require('immutable') //导入  Immutable.js 的 Record API
 
@@ -9,21 +9,20 @@ import InitialState, {
     ListToLoadingState,
     ListSuccesState,
     ListFailureState,
-    ListRemoveOneItem,ListWillUnmount,ListRemoveNumsItem
+    ListRemoveOneItem,ListWillUnmount,ListRemoveNumsItem,ListChangeOneItem
 } from '../InitialState/ListInitialState'
 import *as BaseListActions from '../Actions/BaseListActions'
 import *as BizApi from '../../NetWork/API/BizApi'
-import *as MerchantDetailPageActions from '../Actions/MerchantDetailPageActions'
+// import *as MerchantDetailPageActions from '../Actions/MerchantDetailPageActions'
 
 
 const initialState = new InitialState()
-    .setIn(['ApiName'], BizApi.MerchantDetailPageApi.ApiName)
+    .setIn(['ApiName'], BizApi.HomePageHotCouponListApi.ApiName)
     .setIn(['isRenderRefreshControl'], false)
-    .setIn(['isRenderFooterView'], true)
-    .setIn(['AdditionalObj'], {isSelectCouponsForMerchantBt: true})
+    .setIn(['isRenderFooterView'], true);
 
 
-export default function MerchantDetailPageReducer(state = initialState, action) {
+export default function HomePageHotCouponListReducer(state = initialState, action) {
     if (state.ApiName && state.ApiName != action.ApiName) {
         return state;
     }
@@ -55,45 +54,22 @@ export default function MerchantDetailPageReducer(state = initialState, action) 
             break;
         case BaseListActions.BaseListStatus.REMOVE: {
 
-        return ListRemoveOneItem(state, action);
-    }
-        break;
-        case MerchantDetailPageActions.ChangeIsSelectCouponsForMerchantBt: {
-            let temp$dataArray = state.getIn(['$dataArray']);
-
-            if (temp$dataArray) {
-                temp$dataArray = temp$dataArray.set(1, {key: '优惠及折扣cell'});//为了重画 1号cell
-
-                let str=temp$dataArray.toJS()[2].key;
-                temp$dataArray = temp$dataArray.set(2,{key:str});//为了重画 2 号cell
-            }
-
-            let _nextState = state
-                .setIn(['$dataArray'], temp$dataArray)
-                .setIn(['dataSource'], state.dataSource.cloneWithRows(temp$dataArray.toJS()))
-                .setIn(['AdditionalObj'], {isSelectCouponsForMerchantBt: action.data});
-
-            return _nextState;
-        }
-            break;
-        case MerchantDetailPageActions.changeIsRenderFooterView: {
-
-            let _nextState = state
-                .setIn(['isRenderFooterView'], action.data);
-
-            return _nextState;
+            return ListRemoveOneItem(state, action);
         }
             break;
         case BaseListActions.BaseListStatus.WillUnmount:{
-            let _nextState = state
-                .setIn(['AdditionalObj'], {isSelectCouponsForMerchantBt: true});
 
-            return ListWillUnmount(_nextState,action);
+            return ListWillUnmount(state,action);
         }
 
         case BaseListActions.BaseListStatus.RemoveNums: {
 
             return ListRemoveNumsItem(state, action);
+        }
+            break;
+        case BaseListActions.BaseListStatus.ChangeOneItem: {
+
+            return ListChangeOneItem(state, action);
         }
             break;
     }

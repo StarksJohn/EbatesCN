@@ -19,7 +19,7 @@ export const BaseListStatus = {
     ADD: 'fetch_list_data_status_addOneData',//列表添加一条数据
     REMOVE:'fetch_list_data_status_removeOneData',//列表删除一条数据
     RemoveNums:'RemoveNums',//列表删除多条数据
-    CHANGEITEMSTATE:'fetch_list_data_status_changeItemState',//列表一条数据改变状态
+    ChangeOneItem:'fetch_list_data_status_changeItemState',//列表一条数据改变
     WillUnmount:'WillUnmount'//列表将要被 从 DOM移除
 };
 
@@ -61,6 +61,18 @@ export function Loadinglist(opt, ApiName) {
  */
 export function SuccessFetchinglist(opt, ApiName, newData) {
     return { type: BaseListStatus.SUCCESS, opt, ApiName,  newData };
+}
+
+/**
+ * 改变列表里一个item
+ * @param opt
+ * @param ApiName
+ * @param newData {index:'被改变item 的下标 ',newData:'新的数据源'}
+ * @returns {{type: string, opt: *, ApiName: *, newData: *}}
+ * @constructor
+ */
+export function ChangeListOneItemAction(opt, ApiName, newData) {
+    return { type: BaseListStatus.ChangeOneItem, opt, ApiName,  newData };
 }
 
 /**

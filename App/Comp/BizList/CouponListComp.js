@@ -16,6 +16,7 @@ export default class CouponListComp extends Component {
 
     static propTypes = {
         renderNoDataView: PropTypes.any,//外部可自定义如何绘制 列表无数据 状态的 view
+        renderRow:PropTypes.func,
     };
 
     constructor(props) {
@@ -53,7 +54,7 @@ export default class CouponListComp extends Component {
                     initialListSize={5}
                     scrollRenderAheadDistance={300}
                     renderRow={
-                        this.renderRow
+                        this.props.renderRow ? this.props.renderRow :this.renderRow
                     }
                     renderNoDataView={(props) =>
                     {

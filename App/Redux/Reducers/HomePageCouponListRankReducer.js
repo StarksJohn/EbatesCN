@@ -1,7 +1,7 @@
 /**
  * Created by Ebates on 16/12/27.
- * SearchResultPageCouponListReducer
- * 搜索结果页 优惠 列表的 reducer
+ * HomePageCouponListRankReducer
+ * 首页 优惠排行 列表的 reducer
  */
 import {
     ListView,
@@ -19,11 +19,10 @@ const {List, fromJS} = require('immutable') //导入  Immutable.js 的 Record AP
 
 const initialState = new InitialState()/*通用列表的初始UI状态*/
 /*搜索结果页 优惠 列表的 特殊状态*/
-    .setIn(['ApiName'], BizApi.SearchResultPageCouponListAPI.ApiName)
+    .setIn(['ApiName'], BizApi.CouponListRankApi.ApiName)
     .setIn(['isRenderRefreshControl'], false)
-    .setIn(['tabLabel'], BizApi.SearchResultPageCouponListAPI.tabLabel);
 
-export default function SearchResultPageCouponListReducer(state = initialState, action) {
+export default function HomePageCouponListRankReducer(state = initialState, action) {
     if (state.ApiName && state.ApiName != action.ApiName) {
         return state;
     }

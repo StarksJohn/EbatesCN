@@ -20,6 +20,7 @@ import *as BizViews from '../Comp/BizCommonComp/BizViews'
 import BaseBt from '../Comp/Base/BaseBt'
 import *as BizApi from '../NetWork/API/BizApi'
 import TransferWebViewPage from './TransferWebViewPage'
+import LogInPage from './LogInPage'
 
 export class MerchantDetailPage extends Component {
     constructor(props) {
@@ -77,7 +78,7 @@ export class MerchantDetailPage extends Component {
 
         if (rowID == '2' && this.props.baseReducer.$dataArray.size == 3) {//如何获得返利cell
             return <View style={{
-                flex: 1, paddingBottom:15,backgroundColor: Colors.white
+                flex: 1, paddingBottom: 15, backgroundColor: Colors.white
             }}>
                 <Text style={{
                     fontSize: 15, color: '#555555', marginTop: 20, marginLeft: 15,
@@ -93,7 +94,7 @@ export class MerchantDetailPage extends Component {
                     {BizViews.renderBadge({
                         width: 20, height: 20, borderRadius: 20,
                         backgroundColor: '#F1FAF3'
-                    }, {fontSize: 12, color: '#36A642'},'1' )}
+                    }, {fontSize: 12, color: '#36A642'}, '1')}
                     <Text style={{
                         fontSize: 13, color: '#555555', marginTop: 0, marginLeft: 10,
                         //backgroundColor: Colors.getRandomColor()
@@ -110,9 +111,9 @@ export class MerchantDetailPage extends Component {
                     {BizViews.renderBadge({
                         width: 20, height: 20, borderRadius: 20,
                         backgroundColor: '#F1FAF3'
-                    }, {fontSize: 12, color: '#36A642'},'2' )}
+                    }, {fontSize: 12, color: '#36A642'}, '2')}
                     <Text style={{
-                        fontSize: 13, color: '#555555', marginTop: 0, marginLeft: 10,marginRight:15,
+                        fontSize: 13, color: '#555555', marginTop: 0, marginLeft: 10, marginRight: 15,
                         //backgroundColor: Colors.getRandomColor()
                     }}>
                         完成您的订单. 如果您使用一个优惠券, 您的折扣将会在结账时生效.
@@ -127,9 +128,9 @@ export class MerchantDetailPage extends Component {
                     {BizViews.renderBadge({
                         width: 20, height: 20, borderRadius: 20,
                         backgroundColor: '#F1FAF3'
-                    }, {fontSize: 12, color: '#36A642'},'3' )}
+                    }, {fontSize: 12, color: '#36A642'}, '3')}
                     <Text style={{
-                        fontSize: 13, color: '#555555', marginTop: 0, marginLeft: 10,marginRight:15,
+                        fontSize: 13, color: '#555555', marginTop: 0, marginLeft: 10, marginRight: 15,
                         //backgroundColor: Colors.getRandomColor()
                     }}>
                         您的返利将在1-7天内加至您的Ebates.cn账户.
@@ -142,7 +143,7 @@ export class MerchantDetailPage extends Component {
                     返利条件
                 </Text>
                 <Text style={{
-                    fontSize: 13, color: '#555555', marginTop: 15, marginLeft: 15, marginRight:15,
+                    fontSize: 13, color: '#555555', marginTop: 15, marginLeft: 15, marginRight: 15,
                     //backgroundColor: Colors.getRandomColor()
                 }}>
                     {rowData.key}
@@ -150,7 +151,7 @@ export class MerchantDetailPage extends Component {
             </View>
         }
         switch (rowID) {
-            case '0': {//顶部背景图一直往下倒 商家介绍 按钮都是 0号cell
+            case '0': {//顶部背景图一直往下到 商家介绍 按钮都是 0号cell
                 let now_rate = rowData.now_rate + ' ';
                 let nums = '近两周' + rowData.transfers + '人拿到返利';
                 return (
@@ -355,11 +356,31 @@ export class MerchantDetailPage extends Component {
     }
 
     onShopping() {
-        this.props.navigator.push({
-            component: TransferWebViewPage,
-            name: gRouteName.TransferWebViewPage,
-            merchantData:this.props.route.merchantData
-        });
+
+        gUserDB.isLogin().then(
+            (b) => {//已登录
+                this.props.navigator.push({
+                    component: TransferWebViewPage,
+                    name: gRouteName.TransferWebViewPage,
+                    merchantData: this.props.route.merchantData
+                });
+            },
+            (e) => {//非登录状态
+
+                gPopBackToRouteAfteRegisterOrLoginSuceess = gRouteName.MerchantDetailPage;
+                gAutoPushToRouteAfteRegisterOrLoginSuceess=gRouteName.TransferWebViewPage;
+
+                this.props.navigator.push({
+                    component: LogInPage,
+                    name: gRouteName.LogInPage//'
+
+                });
+            }
+        ).catch((error) => {
+            Log.log('TokenAPI getTokenWhenAppOpen error= ' + error);
+        })
+
+
     }
 
     //画底部的bar

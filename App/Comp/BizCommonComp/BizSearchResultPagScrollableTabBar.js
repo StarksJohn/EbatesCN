@@ -1,6 +1,6 @@
 /**
  * 根据 Ebates 中国 项目的 UI 需求, 改的 react-native-scrollable-tab-view 库 的 ScrollableTabBar 文件的代码
- * 用于 搜索结果页的 左右滚动 tabbar
+ * 用于 搜索结果页的 左右滚动 tabbar及 Ebates 项目其他页
  */
 
 const React = require('react');

@@ -1,6 +1,6 @@
 import {combineReducers} from 'redux';
 import RootPageReducer from './RootPageReducer';
-import HomePageReducer from './HomePageReducer'
+import HomePageReducer from './HomePageHotCouponListReducer'
 import quickLogReducer from './QuickLogReducer'
 import RegisterReducer from './RegisterReducer'
 import LogInReducer from './LogInReducer'
@@ -19,7 +19,10 @@ import SearchPageGridViewReducer from './SearchPageGridViewReducer'
 import MerchantDetailPageReducer from './MerchantDetailPageReducer'
 import MerchantDetailPageMarkGridViewReducer from './MerchantDetailPageMarkGridViewReducer'
 import TransferWebViewPageReducer from './TransferWebViewPageReducer'
+import HomePageHotCouponListReducer from './HomePageHotCouponListReducer'
+import HomePageCouponListRankReducer from './HomePageCouponListRankReducer'
+import HomePageEBCouponListReducer from './HomePageEBCouponListReducer'
 
 export default combineReducers({
-    RootPageReducer,HomePageReducer,quickLogReducer,RegisterReducer,LogInReducer,RootComponentReducer,RootHomeNavReducer,RootRecommendFriendNavReducer,SearchPageListReducer,SearchResultPageMerchantListReducer,SearchResultPageReducer,SearchResultPageCouponListReducer,MerchantPageReducer,ForgetPassPageReducer,FilterMenuReducer,MerchantPageGridViewReducer,SearchPageGridViewReducer,MerchantDetailPageReducer,MerchantDetailPageMarkGridViewReducer,TransferWebViewPageReducer
+    RootPageReducer,HomePageReducer,quickLogReducer,RegisterReducer,LogInReducer,RootComponentReducer,RootHomeNavReducer,RootRecommendFriendNavReducer,SearchPageListReducer,SearchResultPageMerchantListReducer,SearchResultPageReducer,SearchResultPageCouponListReducer,MerchantPageReducer,ForgetPassPageReducer,FilterMenuReducer,MerchantPageGridViewReducer,SearchPageGridViewReducer,MerchantDetailPageReducer,MerchantDetailPageMarkGridViewReducer,TransferWebViewPageReducer,HomePageHotCouponListReducer,HomePageCouponListRankReducer,HomePageEBCouponListReducer
 });

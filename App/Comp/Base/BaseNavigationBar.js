@@ -315,9 +315,9 @@ export class NavBarButton extends Component {
     static getBarsButton(callBack) {
         return <FontAwesomeIconBts
             btStyle={{
-                width: 36,
-                height: 36,
-                /*justifyContent: 'center', alignItems: 'center', marginTop: 15,  */ marginLeft: 15,
+                width: 30,
+                height: 30,
+                /*justifyContent: 'center', alignItems: 'center', marginTop: 15,  */ marginLeft: 10,
                 //backgroundColor: Colors.getRandomColor()
             }}
             btSelectColor={Colors.blackTranslucent}
@@ -347,6 +347,7 @@ export class NavBarButton extends Component {
 }
 
 const styles = StyleSheet.create({
+    //包含 状态栏和导航栏
     container: {
         backgroundColor: '#4caf50',
     },

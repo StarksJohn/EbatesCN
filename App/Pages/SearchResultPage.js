@@ -139,7 +139,8 @@ export class SearchResultPage extends Component {
                         }}
                         underlineColor='rgba(67, 187, 78, 1)'
                         underLineBottom={10}
-                        underlineHeight={2}/>}
+                        underlineHeight={2}/>
+                }
                 onScroll={(value) => {
                     //暂时只有2个tab, 先写死,以后超过2个 再说
                     this.onScroll(value);

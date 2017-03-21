@@ -1,3 +1,7 @@
+/**
+ * BaseBt
+ */
+
 import React from 'react';
 import {TouchableHighlight, TouchableNativeFeedback,TouchableOpacity, Platform} from 'react-native';
 // import Colors from '../utils/Colors';
