@@ -404,7 +404,7 @@ export class MerchantDetailPage extends Component {
                     flexDirection: 'row', alignItems: 'center',
                     //backgroundColor:Colors.getRandomColor()
                 }}>
-                    <Image source={ require('../Img/common_bkg_error.png') } style={{
+                    <Image source={ require('../Img/common_navigation_share.png') } style={{
                         //position:'absolute',left:0, right: 0,top:0, bottom: 0,
                         width: 17, height: 17,
                         alignSelf: 'center',

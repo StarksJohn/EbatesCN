@@ -85,12 +85,13 @@ export default Log = {
      * @returns {string}
      */
     writeObjToJson(obj) {
-        var names = "";
-        for (var name in obj) {
-            names += name + ": " + obj[name] + ", ";
-        }
-
-        return names;
+        // var names = "";
+        // for (var name in obj) {
+        //     names += name + ": " + obj[name] + ", ";
+        // }
+        //
+        // return names;
+        return JSON.stringify(obj);
     }
 }
 

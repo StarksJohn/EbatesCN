@@ -68,7 +68,7 @@ export const request = (url, method, headersAppendCallBack, body) => {
                     if (isOk) {//接口是通的,并且request时的参数没问题,故返回了正确的数据
 
                         // Log.log('RequestUtil request() 解析 body isOk ,responseData='+Log.writeObjToJson(responseData))
-                        Log.log('RequestUtil request() 解析 body isOk ,responseData=' + responseData)
+                        // Log.log('RequestUtil request() 解析 body isOk ,responseData=' + responseData)
 
                         resolve(responseData);
                     } else {//接口是通的,但request时可能参数不对,导致返回的数据是不对的

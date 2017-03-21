@@ -1,7 +1,7 @@
 /**
  * Created by Ebates on 17/1/18.
- *
- *  搜索结果页
+ * SearchResultPage
+ * 搜索结果页
  */
 import React, {Component} from 'react';
 import {StyleSheet, View, Text, ListView, Platform} from 'react-native';
@@ -21,6 +21,8 @@ import *as SearchResultPageActions from '../Redux/Actions/SearchResultPageAction
 import *as BaseListActions from '../Redux/Actions/BaseListActions'
 import *as StringOauth from '../Utils/StringUtils/StringOauth'
 import *as HistorySearchDB from '../DB/BizDB/HistorySearchDB'
+import *as EventListener from '../Utils/EventListener/EventListener'
+import SMSTimer from '../Utils/SMSTimer'
 
 /**
  *
@@ -70,13 +72,52 @@ export class SearchResultPage extends Component {
         });
 
         this.BaseSearchBarValue = value;
+        this.props.route.value = value;
 
-        if (this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex == 0) {
-            this.props.dispatch(BizApi.SearchResultPageMerchantListAPI.fetchData(BaseListActions.BaseListFetchDataType.REFRESH, value));//刷新 列表
-        } else if (this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex == 1) {
-            this.props.dispatch(BizApi.SearchResultPageCouponListAPI.fetchData(BaseListActions.BaseListFetchDataType.REFRESH, value));//刷新 列表
+        {
+            this.props.dispatch(BaseListActions.InitListDataSource(BizApi.SearchResultPageMerchantListAPI.ApiName));// 商家 列表的 InitListState  重置
+            this.props.dispatch(BaseListActions.InitListDataSource(BizApi.SearchResultPageCouponListAPI.ApiName));// 优惠 列表的
+            // InitListState  重置
+
+            this.props.dispatch(SearchResultPageActions.updateTabLabelsAction(BizApi.SearchResultPageMerchantListAPI.tabLabel, 0));//商家列表的 tabLabel 清零
+            this.props.dispatch(SearchResultPageActions.updateTabLabelsAction(BizApi.SearchResultPageCouponListAPI.tabLabel, 0));//优惠 列表的 tabLabel 清零
+        }
+
+        // if (this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex == 0)
+        {
+
+            // Log.log('SearchResultPage onSubmit  this.refs.scrollableTabView.props.children[0]='+Log.writeObjToJson(this.refs.scrollableTabView.props.children[0]));
+
+            // this.refs.SearchResultPageMerchantListContanierRef.onRefresh();
+
+            // React.Children.map(this.refs.scrollableTabView.props.children, function (child) {
+            //     Log.log('SearchResultPage onSubmit  child='+child);
+            //
+            //     return child.onRefresh();
+            // })
+
+            // this.props.dispatch(BizApi.SearchResultPageMerchantListAPI.fetchData(BaseListActions.BaseListFetchDataType.REFRESH, this.SearchResultPageMerchantListContanierRef.props));//刷新 列表
+
+            this.props.dispatch(BaseListActions.Loadinglist(BaseListActions.BaseListFetchDataType.REFRESH, BizApi.SearchResultPageMerchantListAPI.ApiName));
+
+            //为了 让 2个 列表 数据源 重置成功,只能暂时 慢一秒再请求接口,否则 this.props.baseReducer.meta 数据没重置
+            this.timer = new SMSTimer({
+                timerNums: 1,
+                callBack: (time) => {
+                    Log.log('time===' + time);
+                    if (time == -1  ) {
+                        EventListener.sendEvent(BizApi.SearchResultPageMerchantListAPI.ApiName);
+                        EventListener.sendEvent(BizApi.SearchResultPageCouponListAPI.ApiName);
+
+                    }
+                }
+            }).start();
 
         }
+        // else if (this.refs.scrollableTabView.refs.BizSearchResultPagScrollableTabBar.curTabIndex == 1) {
+            // this.props.dispatch(BizApi.SearchResultPageCouponListAPI.fetchData(BaseListActions.BaseListFetchDataType.REFRESH, this.SearchResultPageCouponListContanierRef.props));//刷新 列表
+        //
+        // }
     }
 
     /**
@@ -108,6 +149,7 @@ export class SearchResultPage extends Component {
 
     render() {
         const {navigator} = this.props;
+        let self=this;
 
         let searchBar = BizViews.renderTwoLevelPageSearchBar('输入商家,  优惠名称', this.BaseSearchBarValue, (value) => this.onSubmit(value),);
 
@@ -155,10 +197,13 @@ export class SearchResultPage extends Component {
                     this.onChangeTab(i, ref, from);
                 }}
             >
-                <SearchResultPageMerchantListContanier {...this.props}
+                <SearchResultPageMerchantListContanier ref='SearchResultPageMerchantListContanierRef' {...this.props}
                                                        tabLabel={this.props.baseReducer.merchantListTabLable }
                 />
-                <SearchResultPageCouponListContanier {...this.props}
+                <SearchResultPageCouponListContanier ref={(r) => {
+                    self.SearchResultPageCouponListContanierRef = r;
+                }
+                } {...this.props}
                                                      tabLabel={this.props.baseReducer.couponListTabLable }
                 />
             </ScrollableTabView>

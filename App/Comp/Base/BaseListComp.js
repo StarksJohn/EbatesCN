@@ -16,6 +16,7 @@ import *as BizApi from '../../NetWork/API/BizApi'
 import GlobalStyles from '../../Global/GlobalStyles'
 import Colors from '../../Utils/Colors'
 import Spinner from 'react-native-spinkit'
+import EventListener from '../../Utils/EventListener/EventListener'
 
 
 export default class BaseListComp extends Component {
@@ -62,10 +63,22 @@ export default class BaseListComp extends Component {
 
     componentDidMount() {
         // this._fetchData(BaseListActions.BaseListFetchDataType.INITIALIZE);
+
+        //主动刷新 事件 监听,外部任何 地方都可能 让此列表 主动刷新,而不需要 下拉才能刷新
+        this.activeRefreshListener = new EventListener({
+            eventName: this.props.baseReducer.ApiName, eventCallback: ()=> {
+                this._onRefresh();
+            }
+        });
     }
 
     componentWillUnmount() {
         this.props.dispatch(BaseListActions.WillUnmount(this.props.baseReducer.ApiName));
+
+        if (this.activeRefreshListener) {
+            this.activeRefreshListener.removeEventListener();
+        }
+
     }
 
     /**
@@ -227,6 +240,7 @@ export default class BaseListComp extends Component {
         //
         // }
 
+        Log.log('BaseListComp _onRefresh this.props.baseReducer.meta.pagination'+this.props.baseReducer.meta.pagination);
         this._fetchData(BaseListActions.BaseListFetchDataType.REFRESH);
 
     }

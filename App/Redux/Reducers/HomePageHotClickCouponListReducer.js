@@ -19,10 +19,10 @@ const {List, fromJS} = require('immutable') //导入  Immutable.js 的 Record AP
 
 const initialState = new InitialState()/*通用列表的初始UI状态*/
 /*搜索结果页 优惠 列表的 特殊状态*/
-    .setIn(['ApiName'], BizApi.CouponListRankApi.ApiName)
+    .setIn(['ApiName'], BizApi.HomePageHotClickCouponListApi.ApiName)
     .setIn(['isRenderRefreshControl'], false)
 
-export default function HomePageCouponListRankReducer(state = initialState, action) {
+export default function HomePageHotClickCouponListReducer(state = initialState, action) {
     if (state.ApiName && state.ApiName != action.ApiName) {
         return state;
     }
@@ -58,8 +58,7 @@ export default function HomePageCouponListRankReducer(state = initialState, acti
             break;
         case BaseListActions.BaseListStatus.WillUnmount: {
 
-            BizApi.SearchResultPageCouponListAPI.componentDidMount = false;
-            return ListWillUnmount(state);
+            return ListWillUnmount(state,action);
         }
             break;
     }

@@ -16,7 +16,7 @@ import *as StringOauth from '../../Utils/StringUtils/StringOauth'
 
 export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRow, callback, paddingTop) {
 
-    Log.log('BizMerchantListCell renderBizMerchantListCell rowData==' + Log.writeObjToJson(rowData));
+    // Log.log('BizMerchantListCell renderBizMerchantListCell rowData==' + Log.writeObjToJson(rowData));
     // let str='rowID  '+rowID;
     // let uri={uri:  'http://extrabux-static.b0.upaiyun.com/images/merchants/1912.jpg'}
 
@@ -95,7 +95,8 @@ export function RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRo
                         marginLeft: 0, marginRight: 0,
                         width: logoW, height: logoH,
                         alignSelf: 'center', resizeMode: 'contain',
-                        borderColor: Colors.getRandomColor(), borderWidth: 0.5,
+                        //borderColor: Colors.getRandomColor(),
+                        //borderWidth: 0.5,
                         //backgroundColor: Colors.getRandomColor()
                     }}/>
                 </View>

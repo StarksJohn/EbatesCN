@@ -17,7 +17,7 @@ import *as BizCouponListCell from '../../Comp/BizCells/BizCouponListCell'
 import GlobalStyles from '../../Global/GlobalStyles'
 
 
-class HomePageCouponListRankContanier extends React.Component {
+class HomePageHotClickCouponListContanier extends React.Component {
 
     /**
      * @param props
@@ -75,11 +75,11 @@ class HomePageCouponListRankContanier extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const {HomePageCouponListRankReducer}=state;
+    const {HomePageHotClickCouponListReducer}=state;
     return {
-        baseReducer: HomePageCouponListRankReducer,
+        baseReducer: HomePageHotClickCouponListReducer,
     };
 
 }
 
-export default connect(mapStateToProps)(HomePageCouponListRankContanier);
+export default connect(mapStateToProps)(HomePageHotClickCouponListContanier);

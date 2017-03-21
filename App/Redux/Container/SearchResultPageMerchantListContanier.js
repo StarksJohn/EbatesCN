@@ -35,8 +35,12 @@ class SearchResultPageMerchantListContanier extends React.Component {
     }
 
     render() {
+        Log.log('SearchResultPageMerchantListContanier render this.props.baseReducer.meta.pagination=' +Log.writeObjToJson(this.props.baseReducer.meta.pagination))
         return (
-            <MerchantListComp {...this.props}
+            <MerchantListComp ref={(r)=>{
+                this.MerchantListCompRef=r;
+            }}
+                                  {...this.props}
                               renderNoDataView={(props) => {
                                   return this.renderNoDataView(props);
                               }

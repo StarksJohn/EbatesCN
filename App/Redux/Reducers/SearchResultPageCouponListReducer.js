@@ -59,8 +59,7 @@ export default function SearchResultPageCouponListReducer(state = initialState, 
             break;
         case BaseListActions.BaseListStatus.WillUnmount: {
 
-            BizApi.SearchResultPageCouponListAPI.componentDidMount = false;
-            return ListWillUnmount(state);
+            return ListWillUnmount(state,action);
         }
             break;
     }

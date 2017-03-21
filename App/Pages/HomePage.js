@@ -16,7 +16,7 @@ import SearchPage from './SearchPage'
 import ScrollableTabView, {ScrollableTabBar,} from 'react-native-scrollable-tab-view';
 import BizSearchResultPagScrollableTabBar from '../Comp/BizCommonComp/BizSearchResultPagScrollableTabBar'
 import HomePageHotCouponList from '../Comp/BizList/HomePageHotCouponList'
-import HomePageCouponListRankContanier from '../Redux/Container/HomePageCouponListRankContanier'
+import HomePageHotClickCouponListContanier from '../Redux/Container/HomePageHotClickCouponListContanier'
 import HomePageEBCouponListContanier from '../Redux/Container/HomePageEBCouponListContanier'
 
 /**
@@ -151,7 +151,7 @@ class HomePage extends Component {
                 }}
             >
                 <HomePageHotCouponList {...this.props} tabLabel={this.tabLabelArr[0]}/>
-                <HomePageCouponListRankContanier {...this.props} tabLabel={this.tabLabelArr[1]}/>
+                <HomePageHotClickCouponListContanier {...this.props} tabLabel={this.tabLabelArr[1]}/>
                 <HomePageEBCouponListContanier {...this.props} tabLabel={this.tabLabelArr[2]}/>
             </ScrollableTabView>
 

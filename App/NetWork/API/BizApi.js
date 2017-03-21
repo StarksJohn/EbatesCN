@@ -156,7 +156,7 @@ export const LogInApi = {
 export function commonApiHeaderAppend(header) {
     let token = TokenDB.getAvailableToken();//此token必须是未过期的
 
-    Log.log('BizApi commonApiHeaderAppend token.data.access_token=' + token.data.access_token);
+    // Log.log('BizApi commonApiHeaderAppend token.data.access_token=' + token.data.access_token);
     header.append('Authorization', token.data.token_type + ' ' + token.data.access_token);//xxx是获取到的token,拿到token后的其他所有接口都传此header参数
 }
 
@@ -352,68 +352,68 @@ export const SearchPageListApi = {
  * https://api-staging-current.ebates.cn/docs.html#search-search-coupons-get 搜索结果页 优惠列表的 api
  * https://api-staging-current.ebates.cn/docs.html#search-search-merchants-get 搜索结果页 商家列表 API
  */
-export const SearchResultPageSearchKeyWordAPI = {
-    ApiName: 'SearchResultPageSearchKeyWordAPI',
-
-    /**
-     * 模拟 搜索结果页 搜素关键词  接口 ,此方法第一次 调用 由 一进入 搜索结果页 商家列表 挂载 后 触发 拿到 商家列表 和 优惠列表 的 第一页 数据; 之后 可能由于 在搜索结果页 再次搜索 后触发,再次搜索调用此接口时,opt 发 REFRESH ;  也可能 在这2个列表 翻页时 触发
-     * @param opt
-     * @param keyword
-     * @returns {function(*)}
-     */
-    searchKeyWordAPI(opt, keyword){
-
-        return (dispatch) => {
-
-            this.timer = new SMSTimer({
-                timerNums: 3,
-                callBack: (time) => {
-                    Log.log('time===' + time);
-                    if (time == -1) {
-
-                        if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE || opt == BaseListActions.BaseListFetchDataType.REFRESH) {//模拟 拿到2个列表的 第一页数据, 调用的搜索API
-
-                            {//模拟拿到 优惠 列表的 第一页 网络数据, 先 刷新 优惠列表的 tabLabel是因为, 商家列表 的 tabLabl 在 第一次进入页面后 先显示,所以 得 最后 发送 商家列表的 updateTabLabelsAction, 让 tabLable底部的 横线 的 长度 适配 商家列表 的 tabLabel
-                                let arr = [];
-                                let all = Math.randomNums(3, 30);
-
-                                let firstPageNums = (all > SearchResultPageCouponListAPI.perPageOfNums ? SearchResultPageCouponListAPI.perPageOfNums : all);
-                                //模拟 服务器发来的 第一页 数据
-                                for (let i = 0; i < firstPageNums; i++) {
-                                    arr.push({index: SearchResultPageCouponListAPI.tabLabel + i});
-                                }
-
-                                dispatch(SearchResultPageCouponListAPI.handleNetWorkData(opt, arr, all));
-                            }
-
-
-                            {//模拟拿到 商家列表的 第一页 网络数据
-                                let arr = [];
-                                let all = Math.randomNums(4, 30);
-                                let firstPageNums = (all > SearchResultPageMerchantListAPI.perPageOfNums ? SearchResultPageMerchantListAPI.perPageOfNums : all);
-
-                                for (let i = 0; i < firstPageNums; i++) {
-                                    arr.push({index: SearchResultPageMerchantListAPI.tabLabel + i});
-                                }
-
-                                dispatch(SearchResultPageMerchantListAPI.handleNetWorkData(opt, arr, all));
-                            }
-
-                            // {//模拟商家列表网络异常
-                            //     dispatch(BaseListActions.FailureFetchinglist(opt, SearchResultPageMerchantListAPI.ApiName ));
-                            // }
-                        }
-                    }
-                }
-            });
-
-            this.timer.start();
-        }
-    }
-}
+// export const SearchResultPageSearchKeyWordAPI = {
+//     ApiName: 'SearchResultPageSearchKeyWordAPI',
+//
+//     /**
+//      * 模拟 搜索结果页 搜素关键词  接口 ,此方法第一次 调用 由 一进入 搜索结果页 商家列表 挂载 后 触发 拿到 商家列表 和 优惠列表 的 第一页 数据; 之后 可能由于 在搜索结果页 再次搜索 后触发,再次搜索调用此接口时,opt 发 REFRESH ;  也可能 在这2个列表 翻页时 触发
+//      * @param opt
+//      * @param keyword
+//      * @returns {function(*)}
+//      */
+//     searchKeyWordAPI(opt, keyword){
+//
+//         return (dispatch) => {
+//
+//             this.timer = new SMSTimer({
+//                 timerNums: 3,
+//                 callBack: (time) => {
+//                     Log.log('time===' + time);
+//                     if (time == -1) {
+//
+//                         if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE || opt == BaseListActions.BaseListFetchDataType.REFRESH) {//模拟 拿到2个列表的 第一页数据, 调用的搜索API
+//
+//                             {//模拟拿到 优惠 列表的 第一页 网络数据, 先 刷新 优惠列表的 tabLabel是因为, 商家列表 的 tabLabl 在 第一次进入页面后 先显示,所以 得 最后 发送 商家列表的 updateTabLabelsAction, 让 tabLable底部的 横线 的 长度 适配 商家列表 的 tabLabel
+//                                 let arr = [];
+//                                 let all = Math.randomNums(3, 30);
+//
+//                                 let firstPageNums = (all > SearchResultPageCouponListAPI.perPageOfNums ? SearchResultPageCouponListAPI.perPageOfNums : all);
+//                                 //模拟 服务器发来的 第一页 数据
+//                                 for (let i = 0; i < firstPageNums; i++) {
+//                                     arr.push({index: SearchResultPageCouponListAPI.tabLabel + i});
+//                                 }
+//
+//                                 dispatch(SearchResultPageCouponListAPI.handleNetWorkData(opt, arr, all));
+//                             }
+//
+//
+//                             {//模拟拿到 商家列表的 第一页 网络数据
+//                                 let arr = [];
+//                                 let all = Math.randomNums(4, 30);
+//                                 let firstPageNums = (all > SearchResultPageMerchantListAPI.perPageOfNums ? SearchResultPageMerchantListAPI.perPageOfNums : all);
+//
+//                                 for (let i = 0; i < firstPageNums; i++) {
+//                                     arr.push({index: SearchResultPageMerchantListAPI.tabLabel + i});
+//                                 }
+//
+//                                 dispatch(SearchResultPageMerchantListAPI.handleNetWorkData(opt, arr, all));
+//                             }
+//
+//                             // {//模拟商家列表网络异常
+//                             //     dispatch(BaseListActions.FailureFetchinglist(opt, SearchResultPageMerchantListAPI.ApiName ));
+//                             // }
+//                         }
+//                     }
+//                 }
+//             });
+//
+//             this.timer.start();
+//         }
+//     }
+// }
 
 /**
- * 搜索结果页 的 商家 列表 的 API
+ * 搜索结果页 的 商家 列表 的 API,在 商家列表 挂载,加载更多, 重新搜索刷新 商家列表 时 调用此api的 函数, 挂载和重新搜索时, 此API 还负责调 https://api-staging-current.ebates.cn/docs.html#search-search-coupons-count-get 接口 拿 优惠列表的 tabLabel 显示的 数量
  * @type {{ApiName: string}}
  */
 export const SearchResultPageMerchantListAPI = {
@@ -423,43 +423,131 @@ export const SearchResultPageMerchantListAPI = {
     tabLabelCurNums: 0,//用于 商家列表 已经 拿到的数据源 数量
     perPageOfNums: 10,//服务器每页发几条数据
 
-    fetchData(opt, keyWord){
+    fetchData(opt, BaseListCompProps){
         return (dispatch) => {
-            // Log.log('SearchResultPageMerchantListAPI fetchData() ')
 
-            if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE || opt == BaseListActions.BaseListFetchDataType.REFRESH) {//此 控件 首次 挂载时 回调的
-                dispatch(SearchResultPageActions.updateTabLabelsAction(this.tabLabel, 0));//商家列表的 tabLabel 清零
-                dispatch(BaseListActions.InitListDataSource(this.ApiName));// 商家 列表的 $dataArray 清0
+            if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE || opt == BaseListActions.BaseListFetchDataType.REFRESH/*此处的刷新就是 搜索结果页 重新搜索 事件*/) {//此 控件 首次 挂载| 重新搜索 时 回调的
+                if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE ){
+                    dispatch(SearchResultPageActions.updateTabLabelsAction(this.tabLabel, 0));//商家列表的 tabLabel 清零
+                    dispatch(SearchResultPageActions.updateTabLabelsAction(SearchResultPageCouponListAPI.tabLabel, 0));//优惠 列表的 tabLabel 清零
+                }
 
-                dispatch(SearchResultPageActions.updateTabLabelsAction(SearchResultPageCouponListAPI.tabLabel, 0));//优惠 列表的 tabLabel 清零
+
+                //重新搜索,重置2个列表的数据源,但是貌似 没等 重置完,就 开始请求 接口了,导致 BaseListCompProps.baseReducer.meta 数据还是上次接口返回的数据
+                // if (opt == BaseListActions.BaseListFetchDataType.REFRESH){
+                //     dispatch(BaseListActions.InitListDataSource(this.ApiName));// 商家 列表的 InitListState  重置
+                //     dispatch(BaseListActions.InitListDataSource(SearchResultPageCouponListAPI.ApiName));// 优惠 列表的
+                //     // InitListState  重置
+                // }
+
+                dispatch(this.SearchMerchantsCountApi(BaseListCompProps));
+                dispatch(SearchResultPageCouponListAPI.SearchCouponsCountApi(BaseListCompProps));
 
                 //调 搜索结果页的 搜索关键词 接口,拿2个列表的数据
-                dispatch(SearchResultPageSearchKeyWordAPI.searchKeyWordAPI(opt, keyWord));
-            } else if (opt == BaseListActions.BaseListFetchDataType.MORE) {//请求 列表 下页数据
-                this.timer = new SMSTimer({
-                    timerNums: 3,
-                    callBack: (time) => {
-                        Log.log('time===' + time);
-                        if (time == -1) {
-
-                            {//模拟拿到 商家列表的 下一页 网络数据
-                                let arr = [];
-                                let newPageDataNums = this.tabLabelTotalNums - this.tabLabelCurNums >= this.perPageOfNums ? this.perPageOfNums : this.tabLabelTotalNums - this.tabLabelCurNums;//模拟服务器发来的 下页数据
-                                for (let i = 0; i < newPageDataNums; i++) {
-                                    arr.push({index: SearchResultPageMerchantListAPI.tabLabel + i});
-                                }
-                                dispatch(SearchResultPageMerchantListAPI.handleNetWorkData(opt, arr, this.tabLabelTotalNums));
-                            }
-
-                        }
-                    }
-                });
-
-                this.timer.start();
+                // dispatch(SearchResultPageSearchKeyWordAPI.searchKeyWordAPI(opt, keyWord));
             }
-            dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
+            // else if (opt == BaseListActions.BaseListFetchDataType.MORE) {//请求 列表 下页数据
+            //     this.timer = new SMSTimer({
+            //         timerNums: 3,
+            //         callBack: (time) => {
+            //             Log.log('time===' + time);
+            //             if (time == -1) {
+            //
+            //                 {//模拟拿到 商家列表的 下一页 网络数据
+            //                     let arr = [];
+            //                     let newPageDataNums = this.tabLabelTotalNums - this.tabLabelCurNums >= this.perPageOfNums ? this.perPageOfNums : this.tabLabelTotalNums - this.tabLabelCurNums;//模拟服务器发来的 下页数据
+            //                     for (let i = 0; i < newPageDataNums; i++) {
+            //                         arr.push({index: SearchResultPageMerchantListAPI.tabLabel + i});
+            //                     }
+            //                     dispatch(SearchResultPageMerchantListAPI.handleNetWorkData(opt, arr, this.tabLabelTotalNums));
+            //                 }
+            //
+            //             }
+            //         }
+            //     });
+            //
+            //     this.timer.start();
+            // }
+            TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
+                () => {
+                    Log.log('BizApi SearchResultPageMerchantListAPI 开始 调 搜索结果页 商家 列表 接口  ')
+
+                    Log.log('BizApi SearchResultPageMerchantListAPI BaseListCompProps.baseReducer.meta.pagination='+Log.writeObjToJson(BaseListCompProps.baseReducer.meta.pagination));
+
+                    {
+                        dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
+
+                        let url = RequestUtil.getStagingOrProductionHost() + 'search/merchants';
+                        RequestUtil.GET(url, {
+                                q: BaseListCompProps.route.value,
+                                page: BaseListCompProps.baseReducer.meta.pagination.current_page + 1,
+                                perPage: BaseListCompProps.baseReducer.meta.pagination.per_page,
+                                include: 'hot_coupons'/* */,
+                            },
+                            (header) => {
+                                commonApiHeaderAppend(header)
+                            },
+                        ).then((responseData) => {
+                            Log.log('BizApi  SearchResultPageMerchantListAPI 搜索结果页 商家列表 接口OK, responseData.data.length =' + responseData.data.length)
+
+                            dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
+                                meta: responseData.meta,
+                                newContentArray: responseData.data,
+                            }));
+                        }).catch((error) => {
+                            Log.log('BizApi  SearchResultPageMerchantListAPI 搜索结果页 商家列表 接口失败 =' + error)
+                            RequestUtil.showErrorMsg(error)
+
+                            //商家页的top10接口如果返回错误, 不能直接把 列表处于 失败状态,因还得画0和1号cell,故只能 添加一个 3号异常cell
+                            // this.isInNetWorkAbnormalBeforeFetchSuccess=true;
+                            // dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
+                            //     couldLoadMore: true,
+                            //     newContentArray: [{key: this.NetWorkAbnormalCellData}]
+                            // }));
+                        });
+                    }
+                }
+            );
         }
     },
+
+    /**
+     * 搜索结果页 获取 商家列表 tabLabel 显示数量 的 接口
+     * https://api-staging-current.ebates.cn/docs.html#search-search-merchants-count-get
+     * @constructor
+     */
+    SearchMerchantsCountApi(BaseListCompProps){
+        return (dispatch) => {
+            let url = RequestUtil.getStagingOrProductionHost() + 'search/merchants/count';
+            RequestUtil.GET(url, {
+                    q: BaseListCompProps.route.value,
+                },
+                (header) => {
+                    commonApiHeaderAppend(header)
+                },
+            ).then((responseData) => {
+                Log.log('BizApi  SearchMerchantsCountApi 搜索结果页 商家列表 tabLabel 显示数量 接口OK, responseData.count =' + responseData.count)
+                dispatch(SearchResultPageActions.updateTabLabelsAction(this.tabLabel, responseData.count));
+
+                if (responseData.count == 0) {//模拟没搜索到 关键词 相关的 商家 数据后,发 商家列表的 Nodata action
+                    dispatch(SearchResultPageActions.nodataAction(/*BaseListCompProps.route.value,*/this.ApiName, opt));
+                }
+
+            }).catch((error) => {
+                Log.log('BizApi  SearchMerchantsCountApi 搜索结果页 商家列表 tabLabel 显示数量 接口失败 =' + error)
+                RequestUtil.showErrorMsg(error)
+
+                //商家页的top10接口如果返回错误, 不能直接把 列表处于 失败状态,因还得画0和1号cell,故只能 添加一个 3号异常cell
+                // this.isInNetWorkAbnormalBeforeFetchSuccess=true;
+                // dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
+                //     couldLoadMore: true,
+                //     newContentArray: [{key: this.NetWorkAbnormalCellData}]
+                // }));
+            });
+        }
+
+    },
+
 
     /**
      * 处理 拿到一次 网络请求 后的数据
@@ -468,38 +556,39 @@ export const SearchResultPageMerchantListAPI = {
      * @param tabLabelTotalNums  商家列表 数据总数
      * @returns {function(*)}
      */
-    handleNetWorkData(opt, newArr, tabLabelTotalNums){
-        return (dispatch) => {
-
-            this.tabLabelTotalNums = tabLabelTotalNums;
-
-            if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE || opt == BaseListActions.BaseListFetchDataType.REFRESH) {
-                this.tabLabelCurNums = 0;
-                dispatch(SearchResultPageActions.updateTabLabelsAction(this.tabLabel, this.tabLabelTotalNums));
-
-                if (tabLabelTotalNums == 0) {//模拟没搜索到 关键词 相关的 商家 数据后,发 商家列表的 Nodata action
-                    dispatch(SearchResultPageActions.nodataAction(/*BaseListCompProps.route.value,*/this.ApiName, opt));
-                    return;
-                }
-
-                //搜索结果页 再次搜索, 拿到数据后,触发 刷新
-                if (opt == BaseListActions.BaseListFetchDataType.REFRESH) {
-                    dispatch(BaseListActions.InitListDataSource(this.ApiName));// 商家 列表的 $dataArray 清0
-                }
-            }
-
-            this.tabLabelCurNums += newArr.length;
-
-            dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
-                couldLoadMore: this.tabLabelCurNums < this.tabLabelTotalNums,
-                newContentArray: newArr
-            }));
-        }
-    }
+    // handleNetWorkData(opt, newArr, tabLabelTotalNums){
+    //     return (dispatch) => {
+    //
+    //         this.tabLabelTotalNums = tabLabelTotalNums;
+    //
+    //         if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE || opt == BaseListActions.BaseListFetchDataType.REFRESH) {
+    //             this.tabLabelCurNums = 0;
+    //             dispatch(SearchResultPageActions.updateTabLabelsAction(this.tabLabel, this.tabLabelTotalNums));
+    //
+    //             if (tabLabelTotalNums == 0) {//模拟没搜索到 关键词 相关的 商家 数据后,发 商家列表的 Nodata action
+    //                 dispatch(SearchResultPageActions.nodataAction(/*BaseListCompProps.route.value,*/this.ApiName, opt));
+    //                 return;
+    //             }
+    //
+    //             //搜索结果页 再次搜索, 拿到数据后,触发 刷新
+    //             if (opt == BaseListActions.BaseListFetchDataType.REFRESH) {
+    //                 dispatch(BaseListActions.InitListDataSource(this.ApiName));// 商家 列表的 $dataArray 清0
+    //             }
+    //         }
+    //
+    //         this.tabLabelCurNums += newArr.length;
+    //
+    //         dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
+    //             couldLoadMore: this.tabLabelCurNums < this.tabLabelTotalNums,
+    //             newContentArray: newArr
+    //         }));
+    //     }
+    // }
 }
 
 /**
  * 搜索结果页 的 优惠 列表 的 API
+ * https://api-staging-current.ebates.cn/docs.html#search-search-coupons-get
  * @type {{ApiName: string}}
  */
 export const SearchResultPageCouponListAPI = {
@@ -509,7 +598,7 @@ export const SearchResultPageCouponListAPI = {
     tabLabelCurNums: 0,//用于 列表 已经 拿到的数据源 数量
     $dataArray: fromJS([]),//存储 SearchResultPageSearchKeyWordAPI.searchKeyWord方法拿到的 优惠列表的 第一页 的 网络数据
     perPageOfNums: 10,//服务器每页发几条数据
-    componentDidMount: false,//false: 此时 此控件还没挂载, 不发 SuccessFetchinglist   true:此时 此控件 刚 挂载 或 请求好了 下页数据
+    // componentDidMount: false,//false: 此时 此控件还没挂载, 不发 SuccessFetchinglist   true:此时 此控件 刚 挂载 或 请求好了 下页数据
 
     /**
      * 请求数据
@@ -517,63 +606,122 @@ export const SearchResultPageCouponListAPI = {
      * @param keyWord
      * @returns {function(*)}
      */
-    fetchData(opt, keyWord){
+    fetchData(opt, BaseListCompProps){
         return (dispatch) => {
 
             // Log.log('BizApi SearchResultPageCouponListAPI fetchData opt=='+opt);
             if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE || opt == BaseListActions.BaseListFetchDataType.REFRESH) {// 第一次挂载
-                dispatch(BaseListActions.InitListDataSource(this.ApiName));// 优惠 列表的 $dataArray 清0
+                // dispatch(BaseListActions.InitListDataSource(this.ApiName));// 优惠 列表的 $dataArray 清0
 
-                if (!this.componentDidMount && opt == BaseListActions.BaseListFetchDataType.INITIALIZE) {//第一次挂载
-                    this.componentDidMount = true;
+                //重新搜索,重置2个列表的数据源
+                // if (opt == BaseListActions.BaseListFetchDataType.REFRESH){
+                //     dispatch(BaseListActions.InitListDataSource(SearchResultPageMerchantListAPI.ApiName));// 商家 列表的 InitListState  重置
+                //     dispatch(BaseListActions.InitListDataSource(this.ApiName));// 优惠 列表的
+                //     // InitListState  重置
+                // }
 
-                    if (this.tabLabelTotalNums > 0) {// 之前通过 searchKeyWordAPI 接口拿到了 数据
-                        this.tabLabelCurNums = 0;
+//                 if (!this.componentDidMount && opt == BaseListActions.BaseListFetchDataType.INITIALIZE) {//第一次挂载
+//                     this.componentDidMount = true;
+//
+//                     if (this.tabLabelTotalNums > 0) {// 之前通过 searchKeyWordAPI 接口拿到了 数据
+//                         this.tabLabelCurNums = 0;
+//
+//                         dispatch(this.handleNetWorkData(opt, this.$dataArray.toJS(), this.tabLabelTotalNums));
+//                     } else {
+//                         dispatch(SearchResultPageActions.nodataAction(this.ApiName, opt));
+//
+//                         // {//模拟商家列表网络异常
+//                         //     dispatch(BaseListActions.FailureFetchinglist(opt, SearchResultPageCouponListAPI.ApiName ));
+//                         // }
+//                     }
+//
+//                 } else if (opt == BaseListActions.BaseListFetchDataType.REFRESH && this.componentDidMount) {//搜索结果页, 优惠列表已挂载后, 再次搜索,触发 此接口
+//                     dispatch(BaseListActions.Loadinglist(opt, this.ApiName));//优惠列表 变loading 状态
+//                     dispatch(SearchResultPageActions.updateTabLabelsAction(SearchResultPageMerchantListAPI.tabLabel, 0));//商家列表的 tabLabel 清零
+//                     // dispatch(BaseListActions.InitListDataSource(SearchResultPageMerchantListAPI.ApiName));// 商家 列表的 $dataArray 清0
+//                     dispatch(SearchResultPageActions.updateTabLabelsAction(SearchResultPageCouponListAPI.tabLabel, 0));//优惠 列表的 tabLabel 清零
+// //调 搜索结果页的 搜索关键词 接口,拿2个列表的数据
+//                     dispatch(SearchResultPageSearchKeyWordAPI.searchKeyWordAPI(opt, keyWord));
+//                 }
 
-                        dispatch(this.handleNetWorkData(opt, this.$dataArray.toJS(), this.tabLabelTotalNums));
-                    } else {
-                        dispatch(SearchResultPageActions.nodataAction(this.ApiName, opt));
+            }
 
-                        // {//模拟商家列表网络异常
-                        //     dispatch(BaseListActions.FailureFetchinglist(opt, SearchResultPageCouponListAPI.ApiName ));
-                        // }
+            TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
+                () => {
+                    Log.log('BizApi SearchResultPageCouponListAPI 开始 调 搜索结果页 优惠 列表 接口  ')
+
+                    {
+                        dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
+
+                        let url = RequestUtil.getStagingOrProductionHost() + 'search/coupons';
+                        RequestUtil.GET(url, {
+                                q: BaseListCompProps.route.value,
+                                page: BaseListCompProps.baseReducer.meta.pagination.current_page + 1,
+                                perPage: BaseListCompProps.baseReducer.meta.pagination.per_page,
+                                include: 'merchant'/* */,
+                            },
+                            (header) => {
+                                commonApiHeaderAppend(header)
+                            },
+                        ).then((responseData) => {
+                            Log.log('BizApi  SearchResultPageCouponListAPI 搜索结果页 优惠列表 接口OK, responseData.data.length =' + responseData.data.length)
+
+                            dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
+                                meta: responseData.meta,
+                                newContentArray: responseData.data,
+                            }));
+                        }).catch((error) => {
+                            Log.log('BizApi  SearchResultPageCouponListAPI 搜索结果页 优惠列表 接口失败 =' + error)
+                            RequestUtil.showErrorMsg(error)
+
+                            //商家页的top10接口如果返回错误, 不能直接把 列表处于 失败状态,因还得画0和1号cell,故只能 添加一个 3号异常cell
+                            // this.isInNetWorkAbnormalBeforeFetchSuccess=true;
+                            // dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
+                            //     couldLoadMore: true,
+                            //     newContentArray: [{key: this.NetWorkAbnormalCellData}]
+                            // }));
+                        });
                     }
+                }
+            )
+        }
+    },
 
-                } else if (opt == BaseListActions.BaseListFetchDataType.REFRESH && this.componentDidMount) {//搜索结果页, 优惠列表已挂载后, 再次搜索,触发 此接口
-                    dispatch(BaseListActions.Loadinglist(opt, this.ApiName));//优惠列表 变loading 状态
-                    dispatch(SearchResultPageActions.updateTabLabelsAction(SearchResultPageMerchantListAPI.tabLabel, 0));//商家列表的 tabLabel 清零
-                    // dispatch(BaseListActions.InitListDataSource(SearchResultPageMerchantListAPI.ApiName));// 商家 列表的 $dataArray 清0
-                    dispatch(SearchResultPageActions.updateTabLabelsAction(SearchResultPageCouponListAPI.tabLabel, 0));//优惠 列表的 tabLabel 清零
-//调 搜索结果页的 搜索关键词 接口,拿2个列表的数据
-                    dispatch(SearchResultPageSearchKeyWordAPI.searchKeyWordAPI(opt, keyWord));
+    /**
+     * 搜索结果页 获取 优惠列表 tabLabel 显示数量 的 接口
+     * https://api-staging-current.ebates.cn/docs.html#search-search-coupons-count-get
+     * @constructor
+     */
+    SearchCouponsCountApi(BaseListCompProps){
+        return (dispatch) => {
+            let url = RequestUtil.getStagingOrProductionHost() + 'search/coupons/count';
+            RequestUtil.GET(url, {
+                    q: BaseListCompProps.route.value,
+                },
+                (header) => {
+                    commonApiHeaderAppend(header)
+                },
+            ).then((responseData) => {
+                Log.log('BizApi  SearchCouponsCountApi 搜索结果页 优惠列表 tabLabel 显示数量 接口OK, responseData.count =' + responseData.count)
+                dispatch(SearchResultPageActions.updateTabLabelsAction(this.tabLabel, responseData.count));
+
+                if (responseData.count == 0) {//模拟没搜索到 关键词 相关的 商家 数据后,发 商家列表的 Nodata action
+                    dispatch(SearchResultPageActions.nodataAction(/*BaseListCompProps.route.value,*/this.ApiName, opt));
                 }
 
-            } else if (opt == BaseListActions.BaseListFetchDataType.MORE) {//请求 列表的 下页数据
-                dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
+            }).catch((error) => {
+                Log.log('BizApi  SearchCouponsCountApi 搜索结果页 优惠列表 tabLabel 显示数量 接口失败 =' + error)
+                RequestUtil.showErrorMsg(error)
 
-                this.timer = new SMSTimer({
-                    timerNums: 3,
-                    callBack: (time) => {
-                        Log.log('time===' + time);
-                        if (time == -1) {
-
-                            {//模拟拿到 优惠 列表的 下一页 网络数据
-                                let arr = [];
-                                let newPageDataNums = this.tabLabelTotalNums - this.tabLabelCurNums >= this.perPageOfNums ? this.perPageOfNums : this.tabLabelTotalNums - this.tabLabelCurNums
-                                for (let i = 0; i < newPageDataNums; i++) {
-                                    arr.push({index: SearchResultPageMerchantListAPI.tabLabel + i});
-                                }
-
-                                dispatch(this.handleNetWorkData(opt, arr, this.tabLabelTotalNums));
-                            }
-
-                        }
-                    }
-                });
-
-                this.timer.start();
-            }
+                //商家页的top10接口如果返回错误, 不能直接把 列表处于 失败状态,因还得画0和1号cell,故只能 添加一个 3号异常cell
+                // this.isInNetWorkAbnormalBeforeFetchSuccess=true;
+                // dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
+                //     couldLoadMore: true,
+                //     newContentArray: [{key: this.NetWorkAbnormalCellData}]
+                // }));
+            });
         }
+
     },
 
     /**
@@ -583,47 +731,47 @@ export const SearchResultPageCouponListAPI = {
      * @param tabLabelTotalNums  列表 数据总数
      * @returns {function(*)}
      */
-    handleNetWorkData(opt, newArr, tabLabelTotalNums){
-        return (dispatch) => {
-
-            this.tabLabelTotalNums = tabLabelTotalNums;
-
-            if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE || opt == BaseListActions.BaseListFetchDataType.REFRESH) {//处理 刚进页面,  searchKeyWordAPI 接口拿到的 数据 , 重置 tabLabel, $dataArray
-                this.tabLabelCurNums = 0;
-                dispatch(SearchResultPageActions.updateTabLabelsAction(this.tabLabel, this.tabLabelTotalNums));
-
-                if (tabLabelTotalNums == 0) {//模拟没搜索到 关键词 相关的 优惠 数据后,发 优惠 列表的 Nodata action
-                    dispatch(SearchResultPageActions.nodataAction(/*BaseListCompProps.route.value,*/this.ApiName, opt));
-                    Log.log('BizApi SearchResultPageCouponListAPI handleNetWorkData nodataAction')
-                    return;
-                }
-
-                if (!this.componentDidMount) {
-                    this.$dataArray = this.$dataArray.clear();
-                    newArr.map(
-                        (v, i) => {
-                            this.$dataArray = this.$dataArray.push(v);
-                        }
-                    );
-                }
-
-            }
-
-            this.tabLabelCurNums += newArr.length;
-
-            // if (opt == BaseListActions.BaseListFetchDataType.REFRESH) {
-            //     dispatch(BaseListActions.InitListDataSource(this.ApiName));// 优惠 列表的 $dataArray 清0
-            // }
-
-            if (this.componentDidMount) {
-                dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
-                    couldLoadMore: this.tabLabelCurNums < this.tabLabelTotalNums,
-                    newContentArray: newArr
-                }));
-            }
-
-        }
-    }
+    // handleNetWorkData(opt, newArr, tabLabelTotalNums){
+    //     return (dispatch) => {
+    //
+    //         this.tabLabelTotalNums = tabLabelTotalNums;
+    //
+    //         if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE || opt == BaseListActions.BaseListFetchDataType.REFRESH) {//处理 刚进页面,  searchKeyWordAPI 接口拿到的 数据 , 重置 tabLabel, $dataArray
+    //             this.tabLabelCurNums = 0;
+    //             dispatch(SearchResultPageActions.updateTabLabelsAction(this.tabLabel, this.tabLabelTotalNums));
+    //
+    //             if (tabLabelTotalNums == 0) {//模拟没搜索到 关键词 相关的 优惠 数据后,发 优惠 列表的 Nodata action
+    //                 dispatch(SearchResultPageActions.nodataAction(/*BaseListCompProps.route.value,*/this.ApiName, opt));
+    //                 Log.log('BizApi SearchResultPageCouponListAPI handleNetWorkData nodataAction')
+    //                 return;
+    //             }
+    //
+    //             if (!this.componentDidMount) {
+    //                 this.$dataArray = this.$dataArray.clear();
+    //                 newArr.map(
+    //                     (v, i) => {
+    //                         this.$dataArray = this.$dataArray.push(v);
+    //                     }
+    //                 );
+    //             }
+    //
+    //         }
+    //
+    //         this.tabLabelCurNums += newArr.length;
+    //
+    //         // if (opt == BaseListActions.BaseListFetchDataType.REFRESH) {
+    //         //     dispatch(BaseListActions.InitListDataSource(this.ApiName));// 优惠 列表的 $dataArray 清0
+    //         // }
+    //
+    //         if (this.componentDidMount) {
+    //             dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
+    //                 couldLoadMore: this.tabLabelCurNums < this.tabLabelTotalNums,
+    //                 newContentArray: newArr
+    //             }));
+    //         }
+    //
+    //     }
+    // }
 }
 
 /**
@@ -959,7 +1107,7 @@ export const HomePageHotCouponListApi = {
     ApiName: 'HomePageHotCouponListApi',
     // $dataArray: fromJS([]),//加倍返利商家 接口的数据
     isFlashDealsApiOk: false,//限时返利接口是否拿到数据
-    isHotCouonListApiOK:false,
+    isHotCouonListApiOK: false,
 
     fetchPageData(opt, BaseListCompProps){
         // Log.log('BizApi MerchantDetailPageApi fetchPageData () =='+BaseListCompProps.route.merchantData)
@@ -968,7 +1116,7 @@ export const HomePageHotCouponListApi = {
 
             if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE) {//一开始 挂载
 
-                this.isHotCouonListApiOK=false;
+                this.isHotCouonListApiOK = false;
 
                 //一开始画 轮播图 和 加倍返利商家 和 热门优惠 3 个cell
                 dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
@@ -978,7 +1126,7 @@ export const HomePageHotCouponListApi = {
                         'https://gitlab.pro/yuji/demo/uploads/2d5122a2504e5cbdf01f4fcf85f2594b/Mwb8VWH.jpg',
                         'https://gitlab.pro/yuji/demo/uploads/4421f77012d43a0b4e7cfbe1144aac7c/XFVzKhq.jpg',
                         'https://gitlab.pro/yuji/demo/uploads/576ef91941b0bda5761dde6914dae9f0/kD3eeHe.jpg'
-                    ], '加倍返利商家' ,'热门优惠 cell ']
+                    ], '加倍返利商家', '热门优惠 cell ']
 
                 }));
 
@@ -1075,11 +1223,11 @@ export const HomePageHotCouponListApi = {
                 ).then((responseData) => {
                     Log.log('BizApi  HotCouonListApi 首页热门优惠 接口OK, responseData.data.length =' + responseData.data.length)
 
-                    let arr=responseData.data;
+                    let arr = responseData.data;
                     arr.push('查看更多cell');
                     arr.push('底部留白cell');
 
-                    this.isHotCouonListApiOK=true;
+                    this.isHotCouonListApiOK = true;
 
                     dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.MORE, this.ApiName, {
                         couldLoadMore: false,
@@ -1102,26 +1250,26 @@ export const HomePageHotCouponListApi = {
 }
 
 /**
- * 优惠排行 https://api-staging-current.ebates.cn/docs.html#coupons-coupon-list-get
+ * 优惠排行 https://api-staging-current.ebates.cn/docs.html#coupons-hot-click-coupon-list-get
  * @type {{}}
  */
-export const CouponListRankApi= {
-    ApiName: 'CouponListRankApi',
+export const HomePageHotClickCouponListApi = {
+    ApiName: 'HomePageHotClickCouponListApi',
 
     fetchListData(opt, BaseListCompProps){
         return (dispatch) => {
-            Log.log('BizApi CouponListApi fetchListData opt=' + opt)
+            Log.log('BizApi HotClickCouponListRankApi fetchListData opt=' + opt)
 
             if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE || opt == BaseListActions.BaseListFetchDataType.MORE) {//一开始 挂载 | 翻页
 
                 TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
                     () => {
-                        Log.log('BizApi CouponListApi 开始 调 首页 优惠排行 列表 接口  ')
+                        Log.log('BizApi HotClickCouponListRankApi 开始 调 首页 优惠排行 列表 接口  ')
 
                         {
                             dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
 
-                            let url = RequestUtil.getStagingOrProductionHost() + 'coupons';
+                            let url = RequestUtil.getStagingOrProductionHost() + 'coupons/click';
                             RequestUtil.GET(url, {
                                     page: BaseListCompProps.baseReducer.meta.pagination.current_page + 1,
                                     perPage: BaseListCompProps.baseReducer.meta.pagination.per_page,
@@ -1131,9 +1279,9 @@ export const CouponListRankApi= {
                                     commonApiHeaderAppend(header)
                                 },
                             ).then((responseData) => {
-                                Log.log('BizApi  CouponListApi 首页 优惠排行 接口OK, responseData.data.length =' + responseData.data.length)
+                                Log.log('BizApi  HotClickCouponListRankApi 首页 优惠排行 接口OK, responseData.data.length =' + responseData.data.length)
 
-                                let arr=responseData.data;
+                                let arr = responseData.data;
                                 // if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE){
                                 //     arr.push('底部留白cell');
                                 // }
@@ -1143,7 +1291,7 @@ export const CouponListRankApi= {
                                     newContentArray: arr,
                                 }));
                             }).catch((error) => {
-                                Log.log('BizApi  EBCouponListApi 首页 优惠排行 接口失败 =' + error)
+                                Log.log('BizApi  HotClickCouponListRankApi 首页 优惠排行 接口失败 =' + error)
                                 RequestUtil.showErrorMsg(error)
 
                                 //商家页的top10接口如果返回错误, 不能直接把 列表处于 失败状态,因还得画0和1号cell,故只能 添加一个 3号异常cell
@@ -1169,10 +1317,10 @@ export const CouponListRankApi= {
 }
 
 /**
- * EB独家优惠
+ * EB独家优惠 https://api-staging-current.ebates.cn/docs.html#coupons-exclusive-coupon-list-get
  * @type {{}}
  */
-export const EBCouponListApi= {
+export const EBCouponListApi = {
     ApiName: 'EBCouponListApi',
 
     fetchListData(opt, BaseListCompProps){
@@ -1188,7 +1336,7 @@ export const EBCouponListApi= {
                         {
                             dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
 
-                            let url = RequestUtil.getStagingOrProductionHost() + 'coupons';
+                            let url = RequestUtil.getStagingOrProductionHost() + 'coupons/exclusive';
                             RequestUtil.GET(url, {
                                     page: BaseListCompProps.baseReducer.meta.pagination.current_page + 1,
                                     perPage: BaseListCompProps.baseReducer.meta.pagination.per_page,
@@ -1200,7 +1348,7 @@ export const EBCouponListApi= {
                             ).then((responseData) => {
                                 Log.log('BizApi  EBCouponListApi 首页 EB独家优惠 接口OK, responseData.data.length =' + responseData.data.length)
 
-                                let arr=responseData.data;
+                                let arr = responseData.data;
                                 // if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE){
                                 //     arr.push('底部留白cell');
                                 // }
@@ -1250,11 +1398,11 @@ export function fetchApi(opt, pageNo, BaseListCompProps) {
         }
             break;
         case SearchResultPageMerchantListAPI.ApiName: {
-            return SearchResultPageMerchantListAPI.fetchData(opt, BaseListCompProps.route.value);
+            return SearchResultPageMerchantListAPI.fetchData(opt, BaseListCompProps);
         }
             break;
         case SearchResultPageCouponListAPI.ApiName: {
-            return SearchResultPageCouponListAPI.fetchData(opt, BaseListCompProps.route.value);
+            return SearchResultPageCouponListAPI.fetchData(opt, BaseListCompProps);
         }
             break;
         case MerchantPageApi.ApiName: {
@@ -1269,8 +1417,8 @@ export function fetchApi(opt, pageNo, BaseListCompProps) {
             return HomePageHotCouponListApi.fetchPageData(opt, BaseListCompProps);
         }
             break;
-        case CouponListRankApi.ApiName: {
-            return CouponListRankApi.fetchListData(opt, BaseListCompProps);
+        case HomePageHotClickCouponListApi.ApiName: {
+            return HomePageHotClickCouponListApi.fetchListData(opt, BaseListCompProps);
         }
             break;
         case EBCouponListApi.ApiName: {

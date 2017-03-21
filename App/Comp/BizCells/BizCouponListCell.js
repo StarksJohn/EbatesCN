@@ -67,7 +67,7 @@ function renderEBIcon(rowData){
 export function RenderBizCouponListCell(rowData, sectionID, rowID, highlightRow, paddingTop, callback) {
 
     Log.log('RenderBizCouponListCell rowID==' + rowID);
-    Log.log('RenderBizCouponListCell rowData==' + Log.writeObjToJson(rowData));
+    // Log.log('RenderBizCouponListCell rowData==' + Log.writeObjToJson(rowData));
 
     // let str='rowID  '+rowID;
 
@@ -110,7 +110,7 @@ export function RenderBizCouponListCell(rowData, sectionID, rowID, highlightRow,
             }}>
                 {/*左logo*/}
                 <Image source={ {uri: rowData.image}} style={{
-                    marginLeft: 15, marginTop: 20, marginBottom: 20, width: 75, height: 75, borderWidth: 0.5,
+                    marginLeft: 15, marginTop: 20, marginBottom: 20, width: 75, height: 75, //borderWidth: 0.5,
                     //borderColor: Colors.getRandomColor(),
                     //backgroundColor: Colors.getRandomColor()
                 }}>

@@ -44,7 +44,7 @@ let InitialState = Record({
 export default InitialState;
 
 /**
- * 通用的 初始化 列表的 state, 在 控件第一次 componentDidMount 挂载时 回调
+ * 通用的 初始化 列表的 state, 在 控件第一次 componentDidMount 挂载时 | 刷新 列表 时 回调
  * @param state
  * @constructor
  */
@@ -60,10 +60,24 @@ export function InitListState(state, action) {
         .setIn(['status'], action.type)
         .setIn(['couldLoadMore'], false)
         .setIn(['opt'], action.opt)
-        .setIn(['componentDidMount'], true)
+        // .setIn(['componentDidMount'], true)
         .setIn(['isRefreshing'], false)
         .remove('meta');
+        // .setIn(['meta'],{//列表接口一般都会返回的字段,用于翻页
+        //     "pagination": {
+        //         "total": 0,
+        //         "count": 0,
+        //         "per_page": 10,
+        //         "current_page": 0,
+        //         "total_pages": 0,
+        //         "links": {
+        //             "next": 0,
+        //             "previous": 0
+        //         }
+        //     }
+        // });
 
+    Log.log('ListInitialState InitListState state.ApiName='+state.getIn(['ApiName'])+' 马上 重置完毕')
     return _nextState;
 }
 
@@ -156,7 +170,7 @@ export function ListWillUnmount(state,action) {
         .setIn(['status'], action.type)
         .setIn(['couldLoadMore'], false)
         .setIn(['opt'], action.opt)
-        .setIn(['componentDidMount'], false)
+        // .setIn(['componentDidMount'], false)
         .setIn(['isRefreshing'], false)
         .remove('meta');
 
