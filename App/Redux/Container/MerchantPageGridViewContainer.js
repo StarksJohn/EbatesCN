@@ -38,7 +38,7 @@ import *as BizViews from '../../Comp/BizCommonComp/BizViews'
                           renderItem={(model/*此处的model是 {id:'',cnName:'',image:''} 结构*/) => {
                               return (
                                   <BaseBt
-                                      key={model.cnName}
+                                      key={model.cn_name}
                                       style={ {
                                           flex: 0,
                                           marginTop: 5, marginBottom: 0, marginLeft: 0, marginRight: 0, paddingTop: 0,
@@ -64,7 +64,7 @@ import *as BizViews from '../../Comp/BizCommonComp/BizViews'
                                           alignSelf: 'center',
                                           //backgroundColor: Colors.getRandomColor()
                                       }} numberOfLines={1} textAlign="center"
-                                      >{model.cnName}</Text>
+                                      >{model.cn_name}</Text>
                                   </ BaseBt >
                               );
                           }}

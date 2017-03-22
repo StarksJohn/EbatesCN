@@ -76,7 +76,7 @@ export class MerchantDetailPage extends Component {
     renderRow = (rowData, sectionID, rowID, highlightRow) => {
         Log.log('MerchantDetailPage renderRow rowID=' + rowID);
 
-        if (rowID == '2' && this.props.baseReducer.$dataArray.size == 3) {//如何获得返利cell
+        if (rowID == '2' && this.props.baseReducer.$dataArray.size == 3 && !this.props.baseReducer.AdditionalObj.isSelectCouponsForMerchantBt) {//如何获得返利cell
             return <View style={{
                 flex: 1, paddingBottom: 15, backgroundColor: Colors.white
             }}>
@@ -258,7 +258,7 @@ export class MerchantDetailPage extends Component {
                 break;
             case '1'://优惠及折扣cell
             {
-                Log.log('画 优惠及折扣cell')
+                Log.log('MerchantDetailPage renderRow () 画 优惠及折扣cell')
                 let self = this;
                 return (
                     <View style={{

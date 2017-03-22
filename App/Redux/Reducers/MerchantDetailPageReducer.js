@@ -64,8 +64,11 @@ export default function MerchantDetailPageReducer(state = initialState, action) 
             if (temp$dataArray) {
                 temp$dataArray = temp$dataArray.set(1, {key: '优惠及折扣cell'});//为了重画 1号cell
 
-                let str=temp$dataArray.toJS()[2].key;
-                temp$dataArray = temp$dataArray.set(2,{key:str});//为了重画 2 号cell
+                if(!action.data){//点击 如何获得返利 按钮时
+                    let str=temp$dataArray.toJS()[2].key;
+                    temp$dataArray = temp$dataArray.set(2,{key:str});//为了重画 2 号cell
+                }
+
             }
 
             let _nextState = state
@@ -76,6 +79,35 @@ export default function MerchantDetailPageReducer(state = initialState, action) 
             return _nextState;
         }
             break;
+        // case MerchantDetailPageActions.changeToCouponList:{
+        //     let {newContentArray, meta/*服务器返回的 字段*/}= action.newData;
+        //
+        //     let temp$dataArray = state.getIn(['$dataArray']);
+        //
+        //     if (temp$dataArray) {
+        //         temp$dataArray = temp$dataArray.delete(2);//先删除 如何获得返利列表的 2号cell
+        //         //新获取到的数据添加到数组 结尾
+        //         newContentArray.map(
+        //             (v, i) => {
+        //                 // temp$dataArray = temp$dataArray.push(v);
+        //                 temp$dataArray = temp$dataArray.set(temp$dataArray.size, v);
+        //
+        //             }
+        //         );
+        //     }
+        //     // return ListSuccesState(state.setIn(['$dataArray'], temp$dataArray), action);
+        //     let nextState = state
+        //         .setIn(['$dataArray'], temp$dataArray)
+        //         .setIn(['dataSource'], state.dataSource.cloneWithRows(temp$dataArray.toJS()))
+        //         .setIn(['status'], BaseListActions.BaseListStatus.SUCCESS)
+        //         .setIn(['couldLoadMore'], meta ? meta.pagination.current_page < meta.pagination.total_pages : action.newData.couldLoadMore)
+        //         .setIn(['opt'], action.opt)
+        //         .setIn(['isRefreshing'], false)
+        //         .setIn(['meta'], meta?meta:null);
+        //
+        //     return nextState;
+        // }
+        // break;
         case MerchantDetailPageActions.changeIsRenderFooterView: {
 
             let _nextState = state

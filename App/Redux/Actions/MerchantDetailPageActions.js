@@ -37,3 +37,12 @@ export function changeIsRenderFooterViewAction(b, ApiName) {
     return {type: changeIsRenderFooterView, data: b, ApiName: ApiName}
 }
 
+/**
+ * 切换到 优惠及折扣 列表 的对应数据源
+ * @type {string}
+ */
+export const changeToCouponList='changeToCouponList';
+export function changeToCouponListAction(opt, ApiName, newData) {
+    return {type:changeToCouponList,opt,ApiName,newData}
+}
+

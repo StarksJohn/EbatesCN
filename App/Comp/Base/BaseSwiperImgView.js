@@ -53,6 +53,15 @@ export default class BaseSwiperImgView extends Component {
         this.loadHandle = this.loadHandle.bind(this)
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (this.state.imgList !== nextProps.imgList) {
+            this.state = {
+                imgList: nextProps.imgList,
+            }
+        }
+
+    }
+
     loadHandle(i) {
         let loadQueue = this.state.loadQueue
         loadQueue[i] = 1

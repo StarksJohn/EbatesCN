@@ -95,27 +95,45 @@ export class HomePageHotCouponList extends Component {
 
 
         if (rowID == '0') {//画 轮播图 cell
-            return <BaseSwiperImgView containerStyle={{
-                //backgroundColor: Colors.white
-            } } height={175} imgList={rowData} renderLoadingView={
-                () => {
-                    return <Spinner style={{
+            if (DataType.isString(rowData)){//接口未拿到数据
+                return <View style={{height:175, alignItems:'center', justifyContent:'center'}}>
+                    <Spinner style={{
                         //backgroundColor: Colors.white
                     }} isVisible={true} size={25}
-                                    color={Colors.backPopBtColor}
-                                    type='FadingCircle'//'FadingCircleAlt'//'FadingCircle'//'Circle'//CircleFlip
+                             color={Colors.backPopBtColor}
+                             type='FadingCircle'//'FadingCircleAlt'//'FadingCircle'//'Circle'//CircleFlip
                         // 圆圈反转//Bounce 圆圈大小缩放
                         //'rgba(136, 136, 136, 1)'
                     />
+                </View>
+            }else if(DataType.isArray(rowData)){
+                return <BaseSwiperImgView containerStyle={{
+                    //backgroundColor: Colors.white
+                } } height={175} imgList={rowData.map(
+                    (v,i)=>{
+                        return v.image;
+                    }
+                )} renderLoadingView={
+                    () => {
+                        return <Spinner style={{
+                            //backgroundColor: Colors.white
+                        }} isVisible={true} size={25}
+                                        color={Colors.backPopBtColor}
+                                        type='FadingCircle'//'FadingCircleAlt'//'FadingCircle'//'Circle'//CircleFlip
+                            // 圆圈反转//Bounce 圆圈大小缩放
+                            //'rgba(136, 136, 136, 1)'
+                        />
+                    }
                 }
+                >
+                </BaseSwiperImgView>
             }
-            >
-            </BaseSwiperImgView>
+
 
         } else if (rowID == '1') {//加倍返利商家cell
             let content = null;
             if (DataType.isString(rowData)) {
-                Log.log('HomePageHotCouponList renderRow rowData==' + rowData);
+                // Log.log('HomePageHotCouponList renderRow rowData==' + rowData);
                 content = <Spinner style={{
                     marginTop: 40, alignSelf: 'center',
                     //backgroundColor: Colors.getRandomColor()
@@ -126,7 +144,7 @@ export class HomePageHotCouponList extends Component {
                     //'rgba(136, 136, 136, 1)'
                 />;
             } else if (DataType.isArray(rowData)) {
-                Log.log('HomePageHotCouponList renderRow rowData==' + rowData);
+                // Log.log('HomePageHotCouponList renderRow rowData==' + rowData);
                 let self = this;
                 content = <ScrollView
                     showsHorizontalScrollIndicator={false}

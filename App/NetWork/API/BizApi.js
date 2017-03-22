@@ -15,6 +15,7 @@ import *as RequestUtil from '../RequestUtil'
 import *as TokenDB from '../../DB/BizDB/TokenDB'
 import *as BizLoadingView from '../../Comp/BizCommonComp/BizLoadingView'
 import *as BaseGridViewActions from '../../Redux/Actions/BaseGridViewActions'
+import *as MerchantDetailPageActions from '../../Redux/Actions/MerchantDetailPageActions'
 
 /**
  * 列表类型 接口 都会返回的 通用的 可判断 couldLoadMore 的 数据结构
@@ -805,7 +806,8 @@ export const MerchantPageApi = {
                 TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
                     () => {
                         Log.log('BizApi MerchantPageApi 开始 调 top10商家接口 ')
-                        dispatch(MerchantPageApi.fetchTopTen('merchants/top1123'));
+                        dispatch(MerchantPageApi.fetchTopTen());
+
                     }
                 );
 
@@ -819,6 +821,9 @@ export const MerchantPageApi = {
      */
     FeaturedCategoryListApi(){
         return (dispatch) => {
+
+            Log.log('BizApi MerchantPageApi FeaturedCategoryListApi 开始请求顶部 7个按钮的 接口 ')
+
             dispatch(BaseGridViewActions.changeBaseGridViewStates(this.ApiName, BaseGridViewActions.BaseGridViewStates.Loading, null));
 
             TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
@@ -832,7 +837,7 @@ export const MerchantPageApi = {
                         // resolve(responseData);
                         // BizLoadingView.closeBizLoadingView();
 
-                        Log.log('BizApi MerchantPageApi FeaturedCategoryListApi 拿到 7个按钮的数据 responseData=' + responseData)
+                        Log.log('BizApi MerchantPageApi FeaturedCategoryListApi 拿到 7个按钮的数据 responseData=' + Log.writeObjToJson(responseData))
                         dispatch(BaseGridViewActions.changeBaseGridViewStates(this.ApiName, BaseGridViewActions.BaseGridViewStates.fetchOk, responseData.data));
                         // dispatch(BaseGridViewActions.changeBaseGridViewStates(this.ApiName, BaseGridViewActions.BaseGridViewStates.fetchFail, []));
                     }).catch((error) => {
@@ -897,7 +902,7 @@ export const MerchantPageApi = {
 }
 
 /**
- * 商家详情页
+ * 商家详情页API   https://api-staging-current.ebates.cn/docs.html#merchants-merchant-details-get
  * @type {{ApiName: string}}
  */
 export const MerchantDetailPageApi = {
@@ -1035,15 +1040,35 @@ export const MerchantDetailPageApi = {
     changeToCouponList(BaseListCompProps){
 
         return (dispatch) => {
+
             //删除 如何获得返利的 内容  cell
             dispatch(BaseListActions.RemoveOneItemFromlist(this.ApiName, {
                 index: 2
             }));
 
-            dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.MORE, this.ApiName, {
-                meta: BaseListCompProps.baseReducer.meta,
-                newContentArray: this.$dataArray.toJS()
-            }));
+            dispatch(BaseListActions.Loadinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, MerchantDetailPageApi.ApiName));
+
+            //刚删除一个cell, 得等 列表 刷新后再 添加数据,否则 时间太紧, 列表未刷新完毕就添加数据,导致 商家详情页切换到 优惠及折扣 列表后, 2号cell的 数据源是 {}
+            new SMSTimer({
+                timerNums: 1,
+                callBack: (time) => {
+                    Log.log('time===' + time);
+                    if (time == -1  ) {
+                        // Log.log('BizApi changeToCouponList 列表数据源 即将 切换到 优惠及折扣 列表状态, this.$dataArray.toJS()='+Log.writeObjToJson(this.$dataArray.toJS()));
+                        dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.MORE, this.ApiName, {
+                            meta: BaseListCompProps.baseReducer.meta,
+                            newContentArray: this.$dataArray.toJS()
+                        }));
+
+                    }
+                }
+            }).start();
+
+            // Log.log('BizApi changeToCouponList 列表数据源 即将 切换到 优惠及折扣 列表状态, this.$dataArray.toJS()='+Log.writeObjToJson(this.$dataArray.toJS()));
+            // dispatch(MerchantDetailPageActions.changeToCouponListAction(BaseListActions.BaseListFetchDataType.MORE, this.ApiName, {
+            //     meta: BaseListCompProps.baseReducer.meta,
+            //     newContentArray: this.$dataArray.toJS()
+            // }));
         }
     }
 
@@ -1121,30 +1146,57 @@ export const HomePageHotCouponListApi = {
                 //一开始画 轮播图 和 加倍返利商家 和 热门优惠 3 个cell
                 dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
                     couldLoadMore: true,
-                    newContentArray: [[
-                        'https://gitlab.pro/yuji/demo/uploads/d6133098b53fe1a5f3c5c00cf3c2d670/DVrj5Hz.jpg_1',
-                        'https://gitlab.pro/yuji/demo/uploads/2d5122a2504e5cbdf01f4fcf85f2594b/Mwb8VWH.jpg',
-                        'https://gitlab.pro/yuji/demo/uploads/4421f77012d43a0b4e7cfbe1144aac7c/XFVzKhq.jpg',
-                        'https://gitlab.pro/yuji/demo/uploads/576ef91941b0bda5761dde6914dae9f0/kD3eeHe.jpg'
-                    ], '加倍返利商家', '热门优惠 cell ']
+                    newContentArray: ['轮播图接口未成功', '加倍返利商家', '热门优惠 cell ']
 
                 }));
 
                 TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
                     () => {
+                        dispatch(this.HeroBannersApi());
                         dispatch(this.fetchDoubleCashbackMerchants());
-                    }
-                );
-
-                TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
-                    () => {
                         dispatch(this.HotCouonListApi(BaseListCompProps));
+
                     }
                 );
 
             } else if (opt == BaseListActions.BaseListFetchDataType.MORE) {//翻页
 
             }
+        }
+    },
+
+    /**
+     * 轮播图, banner
+     * @constructor
+     */
+    HeroBannersApi(){
+        return (dispatch) => {
+
+            Log.log('BizApi  HeroBannersApi 开始加载 轮播图 接口 ');
+
+            let url = RequestUtil.getStagingOrProductionHost() + 'banners/hero';
+            RequestUtil.GET(url, null,
+                (header) => {
+                    commonApiHeaderAppend(header)
+                },
+            ).then((responseData) => {
+                Log.log('BizApi  HeroBannersApi 轮播图 接口OK, responseData.data.length =' + responseData.data.length)
+
+                dispatch(BaseListActions.ChangeListOneItemAction(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
+                    index: 0,
+                    newData: responseData.data
+                }));
+            }).catch((error) => {
+                Log.log('BizApi  HeroBannersApi 轮播图 接口失败 =' + error)
+                RequestUtil.showErrorMsg(error)
+
+                //商家页的top10接口如果返回错误, 不能直接把 列表处于 失败状态,因还得画0和1号cell,故只能 添加一个 3号异常cell
+                // this.isInNetWorkAbnormalBeforeFetchSuccess=true;
+                // dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
+                //     couldLoadMore: true,
+                //     newContentArray: [{key: this.NetWorkAbnormalCellData}]
+                // }));
+            });
         }
     },
 
@@ -1382,7 +1434,6 @@ export const EBCouponListApi = {
         }
     },
 }
-
 
 /**
  * 初步分解 BaseListComp 发起的 列表 通用的 各种API
