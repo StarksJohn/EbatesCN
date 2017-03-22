@@ -4,7 +4,17 @@
  * https://github.com/iwgang/GankCamp-React-Native
  */
 import React, {Component, PropTypes} from 'react';
-import {View, WebView, Platform, BackAndroid, InteractionManager, ScrollView, Image, Text,StyleSheet} from 'react-native';
+import {
+    View,
+    WebView,
+    Platform,
+    BackAndroid,
+    InteractionManager,
+    ScrollView,
+    Image,
+    Text,
+    StyleSheet
+} from 'react-native';
 import {connect} from 'react-redux';
 import  BaseNavigationBar, {NavBarButton, baseOnBackPress} from '../Comp/Base/BaseNavigationBar'
 import Colors from '../Utils/Colors';
@@ -166,12 +176,12 @@ export class TransferWebViewPage extends Component {
         let strCountDown = '将在' + this.state.CountDown + '秒后带你去';
         let str = '完成订单后, 你可以获得' + route.merchantData.now_rate + '.';
 
-        let style =null;
-        if (!this.state.isClickApiSuccess){//transferUrl 没拿到前,不画 webview
-            style=styles.TransferViewDefaultStyle;
-        }else if(this.state.isClickApiSuccess && !this.state.isWebViewOnLoadEnd){//transferUrl拿到,开始
+        let style = null;
+        if (!this.state.isClickApiSuccess) {//transferUrl 没拿到前,不画 webview
+            style = styles.TransferViewDefaultStyle;
+        } else if (this.state.isClickApiSuccess && !this.state.isWebViewOnLoadEnd) {//transferUrl拿到,开始
             // 画webview加载此url,在加载完毕前, 同时画webview和transferview, 否则屏幕内会大白
-            style=styles.TransferViewAbsoluteStyle;
+            style = styles.TransferViewAbsoluteStyle;
         }
         return <View style={style}>
             <ScrollView showsVerticalScrollIndicator={false} centerContent={true}
@@ -270,8 +280,10 @@ export class TransferWebViewPage extends Component {
     renderWebview() {
         return <WebView
             ref={WEBVIEW_REF}
+            style={{flex: 1,
+                //backgroundColor: Colors.getRandomColor()
+            }}
             automaticallyAdjustContentInsets={false}
-            style={{flex: 1}}
             source={{uri: this.state.url, method: 'GET'}}
             javaScriptEnabled={true}
             domStorageEnabled={true}
@@ -295,7 +307,7 @@ export class TransferWebViewPage extends Component {
                 }
                 Log.log(' TransferWebViewPage renderWebview onLoadEnd')
                 this.setState({
-                    isWebViewOnLoadEnd:true
+                    isWebViewOnLoadEnd: true
                 })
 
             }}
@@ -306,7 +318,7 @@ export class TransferWebViewPage extends Component {
             onError={() => {
                 Log.log(' TransferWebViewPage renderWebview onError')
                 this.setState({
-                    isWebViewOnLoadEnd:true
+                    isWebViewOnLoadEnd: true
                 })
             }}
             // startInLoadingState={true}
@@ -352,16 +364,16 @@ export class TransferWebViewPage extends Component {
                 hide={false}/>;
 
         let content = null;
-        if(!this.state.isClickApiSuccess ){
+        if (!this.state.isClickApiSuccess) {
             Log.log('TransferWebViewPage render 只画 TransferView')
-            content= this.renderTransferView();
+            content = this.renderTransferView();
         }
         else if (this.state.isClickApiSuccess && !this.state.isWebViewOnLoadEnd) {//
 
             Log.log('TransferWebViewPage render 同时画 2个view')
 
-            content= [0,1].map(
-                (v)=>{
+            content = [0, 1].map(
+                (v) => {
                     if (v == 0) {
                         return this.renderWebview();
                     } else if (v == 1) {
@@ -369,11 +381,11 @@ export class TransferWebViewPage extends Component {
                     }
                 }
             );
-        }else if(this.state.isClickApiSuccess && this.state.isWebViewOnLoadEnd){//webview 不管成功还是失败,加载完毕,就 不画
+        } else if (this.state.isClickApiSuccess && this.state.isWebViewOnLoadEnd) {//webview 不管成功还是失败,加载完毕,就 不画
             // transferview了,只画 webview
             Log.log('TransferWebViewPage render 只画 webview')
 
-            content= this.renderWebview();
+            content = this.renderWebview();
         }
 
         return (
@@ -384,7 +396,7 @@ export class TransferWebViewPage extends Component {
                 {/*跳转view*/}
                 {content}
                 {/*{*/}
-                    {/*/!*this.state.isCountDownOver && this.state.isClickApiSuccess && this.state.isWebViewonLoad ? this.renderWebview() : this.renderTransferView()*!/*/}
+                {/*/!*this.state.isCountDownOver && this.state.isClickApiSuccess && this.state.isWebViewonLoad ? this.renderWebview() : this.renderTransferView()*!/*/}
 
                 {/*}*/}
 
@@ -405,7 +417,7 @@ const styles = StyleSheet.create({
     //既显示webview,又显示TransferView时的 style
     TransferViewAbsoluteStyle: {
         position: 'absolute',
-        left:0,right:0,top:0, bottom:0,
+        left: 0, right: 0, top: GlobalStyles.statusBarAndNavBarH, bottom: 0,
     },
 
 })

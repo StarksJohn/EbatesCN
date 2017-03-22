@@ -20,7 +20,8 @@ export const BaseListStatus = {
     REMOVE:'fetch_list_data_status_removeOneData',//列表删除一条数据
     RemoveNums:'RemoveNums',//列表删除多条数据
     ChangeOneItem:'fetch_list_data_status_changeItemState',//列表一条数据改变
-    WillUnmount:'WillUnmount'//列表将要被 从 DOM移除
+    WillUnmount:'WillUnmount',//列表将要被 从 DOM移除
+    InsertOneItem:'InsertOneItem',// 列表 插入一条 数据
 };
 
 /**
@@ -73,6 +74,18 @@ export function SuccessFetchinglist(opt, ApiName, newData) {
  */
 export function ChangeListOneItemAction(opt, ApiName, newData) {
     return { type: BaseListStatus.ChangeOneItem, opt, ApiName,  newData };
+}
+
+/**
+ * 列表里插入一个item
+ * @param opt
+ * @param ApiName
+ * @param newData {index:'被插入item 的下标 ',newData:'新的数据源'}
+ * @returns {{type: string, opt: *, ApiName: *, newData: *}}
+ * @constructor
+ */
+export function ListInsertOneItemAction(opt, ApiName, newData) {
+    return { type: BaseListStatus.InsertOneItem, opt, ApiName,  newData };
 }
 
 /**

@@ -794,7 +794,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ebates.EbatesCN;
 				PRODUCT_NAME = EbatesCN;
-				PROVISIONING_PROFILE = "b289c742-20e0-40ae-bb5f-3bd86a4dff0d";
+				PROVISIONING_PROFILE = "4172c443-fbba-4137-b738-403f0eb45d7d";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -828,7 +828,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ebates.EbatesCN;
 				PRODUCT_NAME = EbatesCN;
-				PROVISIONING_PROFILE = "b289c742-20e0-40ae-bb5f-3bd86a4dff0d";
+				PROVISIONING_PROFILE = "4172c443-fbba-4137-b738-403f0eb45d7d";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

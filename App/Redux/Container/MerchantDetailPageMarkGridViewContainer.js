@@ -33,7 +33,7 @@ class MerchantDetailPageMarkGridViewContainer extends React.Component {
                 return require('../../Img/merchant_icon_paypal.png')
             }
             break;
-            case '支持直邮':{
+            case '直邮中国':{
                 return require('../../Img/merchant_icon_shipping.png')
             }
             break

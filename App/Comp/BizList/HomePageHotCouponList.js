@@ -36,6 +36,19 @@ export class HomePageHotCouponList extends Component {
     }
 
     /**
+     * 画 限时 返利 cell
+     * @param rowData
+     */
+    renderFlashDealsCell(rowData){
+        Log.log('HomePageHotCouponList renderFlashDealsCell 正在画 限时返利cell rowData='+rowData);
+        return <View style={{
+            height: 235 , paddingTop: 5, paddingBottom: 5,justifyContent: 'center',
+            backgroundColor: Colors.getRandomColor()
+        }}>
+        </View>
+    }
+
+    /**
      * 画 热门优惠 cell
      * @returns {XML}
      */
@@ -128,8 +141,6 @@ export class HomePageHotCouponList extends Component {
                 >
                 </BaseSwiperImgView>
             }
-
-
         } else if (rowID == '1') {//加倍返利商家cell
             let content = null;
             if (DataType.isString(rowData)) {
@@ -162,7 +173,7 @@ export class HomePageHotCouponList extends Component {
                     }}>
                         {
                             rowData.map((item, i) => {
-                                Log.log('HomePageHotCouponList renderRow item=' + Log.writeObjToJson(item))
+                                {/*Log.log('HomePageHotCouponList renderRow item=' + Log.writeObjToJson(item))*/}
                                 return (
                                     <BaseBt key={i} style={{
                                         alignItems: 'center', borderRadius: 0, width: 150, height: 75, marginTop: 15,
@@ -272,7 +283,7 @@ export class HomePageHotCouponList extends Component {
             </View>
         } else if (rowID == '2') {//限时返利|热门优惠 cell
             if (BizApi.HomePageHotCouponListApi.isFlashDealsApiOk) {//画 限时返利 cell
-
+                return this.renderFlashDealsCell(rowData);
             } else {//画 热门优惠 cell
                 return this.renderHotCouponCell();
             }

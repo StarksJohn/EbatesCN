@@ -9,7 +9,7 @@ import InitialState, {
     ListToLoadingState,
     ListSuccesState,
     ListFailureState,
-    ListRemoveOneItem,ListWillUnmount,ListRemoveNumsItem
+    ListRemoveOneItem,ListWillUnmount,ListRemoveNumsItem,ListChangeOneItem,ListInsertOneItem
 } from '../InitialState/ListInitialState'
 import *as BaseListActions from '../Actions/BaseListActions'
 import *as BizApi from '../../NetWork/API/BizApi'
@@ -126,6 +126,16 @@ export default function MerchantDetailPageReducer(state = initialState, action) 
         case BaseListActions.BaseListStatus.RemoveNums: {
 
             return ListRemoveNumsItem(state, action);
+        }
+            break;
+        case BaseListActions.BaseListStatus.ChangeOneItem: {
+
+            return ListChangeOneItem(state, action);
+        }
+            break;
+        case BaseListActions.BaseListStatus.InsertOneItem: {
+
+            return ListInsertOneItem(state, action);
         }
             break;
     }

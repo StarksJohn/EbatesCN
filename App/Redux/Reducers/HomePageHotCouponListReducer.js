@@ -1,6 +1,6 @@
 /**
  * Created by Ebates on 17/3/14.
- * HomePageHotCouponListReducer
+ * HomePageHotCouponListReducer 首页热门优惠列表
  */
 const {Record, fromJS,} = require('immutable') //导入  Immutable.js 的 Record API
 
@@ -9,7 +9,7 @@ import InitialState, {
     ListToLoadingState,
     ListSuccesState,
     ListFailureState,
-    ListRemoveOneItem,ListWillUnmount,ListRemoveNumsItem,ListChangeOneItem
+    ListRemoveOneItem,ListWillUnmount,ListRemoveNumsItem,ListChangeOneItem,ListInsertOneItem
 } from '../InitialState/ListInitialState'
 import *as BaseListActions from '../Actions/BaseListActions'
 import *as BizApi from '../../NetWork/API/BizApi'
@@ -70,6 +70,11 @@ export default function HomePageHotCouponListReducer(state = initialState, actio
         case BaseListActions.BaseListStatus.ChangeOneItem: {
 
             return ListChangeOneItem(state, action);
+        }
+            break;
+        case BaseListActions.BaseListStatus.InsertOneItem: {
+
+            return ListInsertOneItem(state, action);
         }
             break;
     }

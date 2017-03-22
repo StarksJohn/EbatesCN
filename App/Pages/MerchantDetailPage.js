@@ -225,10 +225,15 @@ export class MerchantDetailPage extends Component {
                         }} numberOfLines={1}
                         >{nums}</Text>
                         {/*标签背景*/}
-                        <MerchantDetailPageMarkGridViewContainer
-                            items={rowData.tags ? rowData.tags.data : [{name: "接受国卡"}, {name: '接受PayPal'}, {name: '支持直邮'}, /*{name: '联名卡推荐商家'}, {name: '接受支付宝'}, {name: '支持中文'}, {name: '最高返利保障'}*/]}
-                        >
-                        </MerchantDetailPageMarkGridViewContainer>
+                        {
+                            rowData.tags&&rowData.tags.data.length>0?
+                                <MerchantDetailPageMarkGridViewContainer
+                                    items={rowData.tags.data}
+                                >
+                                </MerchantDetailPageMarkGridViewContainer>
+                                :null
+                        }
+
                         {/*商家介绍按钮*/}
                         <BaseTitleBt
                             //key={rowData}

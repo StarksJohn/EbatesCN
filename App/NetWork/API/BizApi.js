@@ -428,7 +428,7 @@ export const SearchResultPageMerchantListAPI = {
         return (dispatch) => {
 
             if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE || opt == BaseListActions.BaseListFetchDataType.REFRESH/*此处的刷新就是 搜索结果页 重新搜索 事件*/) {//此 控件 首次 挂载| 重新搜索 时 回调的
-                if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE ){
+                if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE) {
                     dispatch(SearchResultPageActions.updateTabLabelsAction(this.tabLabel, 0));//商家列表的 tabLabel 清零
                     dispatch(SearchResultPageActions.updateTabLabelsAction(SearchResultPageCouponListAPI.tabLabel, 0));//优惠 列表的 tabLabel 清零
                 }
@@ -473,7 +473,7 @@ export const SearchResultPageMerchantListAPI = {
                 () => {
                     Log.log('BizApi SearchResultPageMerchantListAPI 开始 调 搜索结果页 商家 列表 接口  ')
 
-                    Log.log('BizApi SearchResultPageMerchantListAPI BaseListCompProps.baseReducer.meta.pagination='+Log.writeObjToJson(BaseListCompProps.baseReducer.meta.pagination));
+                    Log.log('BizApi SearchResultPageMerchantListAPI BaseListCompProps.baseReducer.meta.pagination=' + Log.writeObjToJson(BaseListCompProps.baseReducer.meta.pagination));
 
                     {
                         dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
@@ -929,6 +929,10 @@ export const MerchantDetailPageApi = {
 
                 TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
                     () => {
+
+                        dispatch(this.fetchMerchantDetails(BaseListCompProps.route.merchantData.id));
+
+
                         Log.log('BizApi MerchantDetailPageApi 开始 调 优惠及折扣 列表 接口  ')
                         dispatch(this.fetchCouponsForMerchant(BaseListCompProps.route.merchantData.id, BaseListCompProps.baseReducer.meta));
                     }
@@ -943,6 +947,40 @@ export const MerchantDetailPageApi = {
             }
         }
     },
+
+    /**
+     * 商家详情 接口 https://api-staging-current.ebates.cn/docs.html#merchants-merchant-details-get
+     * @param id
+     * @returns {function(*)}
+     */
+    fetchMerchantDetails(id){
+        return (dispatch) => {
+
+            {
+                Log.log('BizApi fetchMerchantDetails 开始调 商家详情 接口');
+                let url = RequestUtil.getStagingOrProductionHost() + 'merchants/' + id;
+                RequestUtil.GET(url, {
+                        include: 'tags',
+                    },
+                    (header) => {
+                        commonApiHeaderAppend(header)
+                    },
+                ).then((responseData) => {
+                    Log.log('BizApi  fetchMerchantDetails 商家详情 接口OK, responseData =' + Log.writeObjToJson(responseData))
+
+                    dispatch(BaseListActions.ChangeListOneItemAction(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
+                        index: 0,
+                        newData: responseData
+                    }));
+
+                }).catch((error) => {
+                    Log.log('BizApi  fetchMerchantDetails 商家详情 失败 =' + error)
+                    RequestUtil.showErrorMsg(error)
+                });
+            }
+        }
+    },
+
     /**
      * 标签数据
      * @param items
@@ -1053,7 +1091,7 @@ export const MerchantDetailPageApi = {
                 timerNums: 1,
                 callBack: (time) => {
                     Log.log('time===' + time);
-                    if (time == -1  ) {
+                    if (time == -1) {
                         // Log.log('BizApi changeToCouponList 列表数据源 即将 切换到 优惠及折扣 列表状态, this.$dataArray.toJS()='+Log.writeObjToJson(this.$dataArray.toJS()));
                         dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.MORE, this.ApiName, {
                             meta: BaseListCompProps.baseReducer.meta,
@@ -1152,8 +1190,9 @@ export const HomePageHotCouponListApi = {
 
                 TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
                     () => {
-                        dispatch(this.HeroBannersApi());
-                        dispatch(this.fetchDoubleCashbackMerchants());
+                        dispatch(this.HeroBannersApi(BaseListCompProps));
+                        dispatch(this.fetchDoubleCashbackMerchants(BaseListCompProps));
+                        dispatch(this.FLashDealsApi(BaseListCompProps));
                         dispatch(this.HotCouonListApi(BaseListCompProps));
 
                     }
@@ -1169,7 +1208,7 @@ export const HomePageHotCouponListApi = {
      * 轮播图, banner
      * @constructor
      */
-    HeroBannersApi(){
+    HeroBannersApi(BaseListCompProps){
         return (dispatch) => {
 
             Log.log('BizApi  HeroBannersApi 开始加载 轮播图 接口 ');
@@ -1186,6 +1225,19 @@ export const HomePageHotCouponListApi = {
                     index: 0,
                     newData: responseData.data
                 }));
+
+
+                // new SMSTimer({
+                //     timerNums: 1,
+                //     callBack: (time) => {
+                //         Log.log('time===' + time);
+                //         if (time == -1) {
+                //             dispatch(this.fetchDoubleCashbackMerchants(BaseListCompProps));
+                //
+                //         }
+                //     }
+                // }).start();
+
             }).catch((error) => {
                 Log.log('BizApi  HeroBannersApi 轮播图 接口失败 =' + error)
                 RequestUtil.showErrorMsg(error)
@@ -1204,7 +1256,7 @@ export const HomePageHotCouponListApi = {
      * 加倍返利商家 接口 DOUBLE CASHBACK MERCHANTS
      * https://api-staging-current.ebates.cn/docs.html#merchants-double-cashback-merchants-get
      */
-    fetchDoubleCashbackMerchants(){
+    fetchDoubleCashbackMerchants(BaseListCompProps){
         return (dispatch) => {
 
             Log.log('BizApi  fetchDoubleCashbackMerchants 开始加载 加倍返利商家 接口 ');
@@ -1224,6 +1276,17 @@ export const HomePageHotCouponListApi = {
                     index: 1,
                     newData: responseData.data
                 }));
+
+                // new SMSTimer({
+                //     timerNums: 1,
+                //     callBack: (time) => {
+                //         Log.log('time===' + time);
+                //         if (time == -1) {
+                //             dispatch(this.HotCouonListApi(BaseListCompProps));
+                //
+                //         }
+                //     }
+                // }).start();
             }).catch((error) => {
                 Log.log('BizApi  fetchDoubleCashbackMerchants 加倍返利商家 接口失败 =' + error)
                 RequestUtil.showErrorMsg(error)
@@ -1242,8 +1305,46 @@ export const HomePageHotCouponListApi = {
      * 限时返利 https://api-staging-current.ebates.cn/docs.html#coupons-flash-deals-get
      * @constructor
      */
-    FLashDealsApi(){
+    FLashDealsApi(BaseListCompProps){
+        return (dispatch) => {
 
+            Log.log('BizApi  FLashDealsApi 开始加载 限时返利 接口 ');
+
+            let url = RequestUtil.getStagingOrProductionHost() + 'coupons/flash';
+            RequestUtil.GET(url, {
+                    page: 1,
+                    perPage: 1,
+                },
+                (header) => {
+                    commonApiHeaderAppend(header)
+                },
+            ).then((responseData) => {
+
+                this.isFlashDealsApiOk = responseData.data.length > 0;
+
+                if (this.isFlashDealsApiOk) {
+
+                    Log.log('BizApi  FLashDealsApi 限时返利 接口OK, responseData =' + Log.writeObjToJson(responseData))
+
+                    dispatch(BaseListActions.ListInsertOneItemAction(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
+                        index: 2,
+                        newData: responseData.data
+                    }));
+
+
+                }
+            }).catch((error) => {
+                Log.log('BizApi  FLashDealsApi 限时返利 接口失败 =' + error)
+                RequestUtil.showErrorMsg(error)
+
+                //商家页的top10接口如果返回错误, 不能直接把 列表处于 失败状态,因还得画0和1号cell,故只能 添加一个 3号异常cell
+                // this.isInNetWorkAbnormalBeforeFetchSuccess=true;
+                // dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
+                //     couldLoadMore: true,
+                //     newContentArray: [{key: this.NetWorkAbnormalCellData}]
+                // }));
+            });
+        }
     },
 
     /**
@@ -1273,7 +1374,7 @@ export const HomePageHotCouponListApi = {
                         commonApiHeaderAppend(header)
                     },
                 ).then((responseData) => {
-                    Log.log('BizApi  HotCouonListApi 首页热门优惠 接口OK, responseData.data.length =' + responseData.data.length)
+                    Log.log('BizApi  HotCouonListApi 首页热门优惠 接口OK, responseData.data =' + Log.writeObjToJson(responseData.data))
 
                     let arr = responseData.data;
                     arr.push('查看更多cell');
@@ -1285,6 +1386,17 @@ export const HomePageHotCouponListApi = {
                         couldLoadMore: false,
                         newContentArray: arr,
                     }));
+
+                    // new SMSTimer({
+                    //     timerNums: 1,
+                    //     callBack: (time) => {
+                    //         Log.log('time===' + time);
+                    //         if (time == -1) {
+                    //             dispatch(this.FLashDealsApi(BaseListCompProps));
+                    //
+                    //         }
+                    //     }
+                    // }).start();
                 }).catch((error) => {
                     Log.log('BizApi  HotCouonListApi 首页热门优惠 接口失败 =' + error)
                     RequestUtil.showErrorMsg(error)

@@ -244,3 +244,25 @@ export function ListRemoveNumsItem(state, action) {
 
     return nextState;
 }
+
+/**
+ * 插入1条数据
+ * @param state
+ * @param action
+ * @returns {Cursor}
+ * @constructor
+ */
+export function ListInsertOneItem(state, action) {
+    let {index/*被插入item 在数组里的下标*/,newData/*新的数据源*/}= action.newData;
+    let temp$dataArray = state.getIn(['$dataArray']);
+
+    if (temp$dataArray) {
+        temp$dataArray = temp$dataArray.insert(index,newData);
+    }
+
+    let nextState = state
+        .setIn(['$dataArray'], temp$dataArray)
+        .setIn(['dataSource'], state.dataSource.cloneWithRows(temp$dataArray.toJS()))
+
+    return nextState;
+}

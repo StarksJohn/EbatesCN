@@ -67,7 +67,7 @@ function renderEBIcon(rowData){
 export function RenderBizCouponListCell(rowData, sectionID, rowID, highlightRow, paddingTop, callback) {
 
     Log.log('BizCouponListCell RenderBizCouponListCell rowID==' + rowID);
-    Log.log('BizCouponListCell RenderBizCouponListCell rowData==' + Log.writeObjToJson(rowData));
+    // Log.log('BizCouponListCell RenderBizCouponListCell rowData==' + Log.writeObjToJson(rowData));
 
     // let str='rowID  '+rowID;
 
