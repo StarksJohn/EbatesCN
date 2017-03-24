@@ -1,5 +1,5 @@
 /**
- 个人主页
+ 个人主页 PersonalPage
  */
 import React, {Component} from 'react';
 import {StyleSheet, View, Text} from 'react-native';
@@ -12,7 +12,7 @@ import LogInPage from './LogInPage'
 /**
  *  展示组件
  */
-class HomePage extends Component {
+export  default class PersonalPage extends Component {
 
     constructor(props) {
         super(props);
@@ -34,6 +34,7 @@ class HomePage extends Component {
     onLogin() {
         gUserDB.isLogin().then(
             (b) => {//已登录
+                Log.log('PersonalPage onLogin 已登陆')
                 // this.setState({
                 //     isLogin: false
                 // });
@@ -96,4 +97,3 @@ const styles = StyleSheet.create({
     },
 });
 
-export default HomePage;

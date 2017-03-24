@@ -19,6 +19,10 @@ import  BaseBt from '../Base/BaseBt'
 import ImageProgress from 'react-native-image-progress';
 import *as BizViews from '../BizCommonComp/BizViews'
 import MerchantDetailPage from '../../Pages/MerchantDetailPage'
+import GlobalStyles from '../../Global/GlobalStyles'
+import *as DateUtils from '../../Utils/DateUtils'
+import CountDown from '../BizCommonComp/BizCountDownView'
+import SMSTimer from '../../Utils/SMSTimer'
 
 
 export class HomePageHotCouponList extends Component {
@@ -29,6 +33,24 @@ export class HomePageHotCouponList extends Component {
 
     constructor(props) {
         super(props);
+
+        let t = DateUtils.CountDownUtil('2017-03-25T00:00:00+00:00', '2017-03-25T00:00:05+00:00');
+
+        new SMSTimer({
+            timerNums: t.RemainingTime,
+            callBack: (time) => {
+                Log.log('time===' + time);
+                time*=1000;//转成毫秒
+                let t = DateUtils.millisecondsToTime(time)
+                Log.log('还剩 ' + t.d + '天 ' + t.h + '小时 ' + t.m + '分 ' + t.s + '秒');
+
+                if (time == -1) {
+
+                    // Log.log('还剩 ' + nD + '天 ' + nH + '小时 ' + nM + '分 ' + nS + '秒');
+                }
+            }
+        }).start();
+
     }
 
     onCheckAllMerchant() {
@@ -39,12 +61,83 @@ export class HomePageHotCouponList extends Component {
      * 画 限时 返利 cell
      * @param rowData
      */
-    renderFlashDealsCell(rowData){
-        Log.log('HomePageHotCouponList renderFlashDealsCell 正在画 限时返利cell rowData='+rowData);
+    renderFlashDealsCell(rowData) {
+        Log.log('HomePageHotCouponList renderFlashDealsCell 正在画 限时返利cell rowData=' + Log.writeObjToJson(rowData));
         return <View style={{
-            height: 235 , paddingTop: 5, paddingBottom: 5,justifyContent: 'center',
-            backgroundColor: Colors.getRandomColor()
+            paddingTop: 5, paddingBottom: 5, alignItems: 'center',
+            backgroundColor: Colors.white
         }}>
+
+            <Image source={ {uri: rowData.image_url} } style={{
+                //position:'absolute',left:15, top:15, right:15,,,
+                width: GlobalStyles.window_width - 30, height: 125, marginTop: 15, resizeMode: 'cover'//marginLeft: 15,
+                //borderColor: Colors.getRandomColor(), borderWidth: 0.5,
+                //backgroundColor: Colors.getRandomColor()
+            }}>
+            </Image>
+
+            <Image source={ require('../../Img/common_icon_flashdeal.png') } style={{
+                position: 'absolute', left: 25, top: 10,
+                width: 60, height: 50,
+                //alignSelf: 'center', //resizeMode: 'contain',
+                //borderColor: Colors.getRandomColor(), borderWidth: 0.5,
+                //backgroundColor: Colors.getRandomColor()
+            }}>
+            </Image>
+            <Text style={{
+                marginLeft: 15, marginRight: 15, marginTop: 10,
+                fontSize: 14,
+                color: Colors.BizCommonBlack,
+                //fontWeight:'bold',
+                //backgroundColor: Colors.getRandomColor()
+            }} numberOfLines={0} textAlign="center"
+            >{rowData.name}
+            </Text>
+            {/*底部view*/}
+            <View style={{
+                flexDirection: 'row', width: GlobalStyles.window_width, justifyContent: 'space-between', marginTop: 5,
+                marginBottom: 5, //alignItems: 'center',
+                backgroundColor: Colors.getRandomColor()
+            }}>
+                {/*限时返利最高*/}
+                <Text style={{
+                    marginLeft: 15,
+                    fontSize: 15,
+                    color: Colors.orange,
+                    //fontWeight:'bold',
+                    //backgroundColor: Colors.getRandomColor()
+                }} numberOfLines={1} textAlign="center"
+                >{rowData.merchant.now_rate}
+                </Text>
+                {/*距离过期+倒计时*/}
+                <View style={{
+                    flexDirection: 'row', alignItems: 'center', marginRight: 15,
+                    backgroundColor: Colors.getRandomColor()
+                }}>
+                    <Text style={{
+                        marginLeft: 0,
+                        fontSize: 12,
+                        color: Colors.textGray,
+                        //fontWeight:'bold',
+                        //backgroundColor: Colors.getRandomColor()
+                    }} numberOfLines={1} textAlign="center"
+                    >距离过期
+                    </Text>
+                    {/*<Text style={styles.time}>06</Text>*/}
+                    {/*<Text style={{fontSize: 12, color: 'rgba(85, 85, 85, 1)'}}>:</Text>*/}
+                    {/*<Text style={styles.time}>22</Text>*/}
+                    {/*<Text style={{fontSize: 12, color: 'rgba(85, 85, 85, 1)'}}>:</Text>*/}
+                    {/*<Text style={styles.time}>57</Text>*/}
+
+                    <CountDown
+                        date="2017-03-25T15:35:00+00:00"
+                        days={{plural: 'Days', singular: 'Day'}}
+                        hours=':'
+                        mins=':'
+                        segs=''
+                    />
+                </View>
+            </View>
         </View>
     }
 
@@ -106,10 +199,9 @@ export class HomePageHotCouponList extends Component {
 
         Log.log('HomePageHotCouponList renderRow rowID==' + rowID);
 
-
         if (rowID == '0') {//画 轮播图 cell
-            if (DataType.isString(rowData)){//接口未拿到数据
-                return <View style={{height:175, alignItems:'center', justifyContent:'center'}}>
+            if (DataType.isString(rowData)) {//接口未拿到数据
+                return <View style={{height: 175, alignItems: 'center', justifyContent: 'center'}}>
                     <Spinner style={{
                         //backgroundColor: Colors.white
                     }} isVisible={true} size={25}
@@ -119,15 +211,16 @@ export class HomePageHotCouponList extends Component {
                         //'rgba(136, 136, 136, 1)'
                     />
                 </View>
-            }else if(DataType.isArray(rowData)){
+            } else if (DataType.isArray(rowData)) {
                 return <BaseSwiperImgView containerStyle={{
                     //backgroundColor: Colors.white
                 } } height={175} imgList={rowData.map(
-                    (v,i)=>{
+                    (v, i) => {
                         return v.image;
                     }
                 )} renderLoadingView={
                     () => {
+                        Log.log('HomePageHotCouponList renderRow 正在画 轮播图的 loadingView')
                         return <Spinner style={{
                             //backgroundColor: Colors.white
                         }} isVisible={true} size={25}
@@ -173,7 +266,8 @@ export class HomePageHotCouponList extends Component {
                     }}>
                         {
                             rowData.map((item, i) => {
-                                {/*Log.log('HomePageHotCouponList renderRow item=' + Log.writeObjToJson(item))*/}
+                                {/*Log.log('HomePageHotCouponList renderRow item=' + Log.writeObjToJson(item))*/
+                                }
                                 return (
                                     <BaseBt key={i} style={{
                                         alignItems: 'center', borderRadius: 0, width: 150, height: 75, marginTop: 15,
@@ -293,7 +387,7 @@ export class HomePageHotCouponList extends Component {
             return <BaseTitleBt
                 btStyle={[{
                     marginTop: 5, height: 45, justifyContent: 'center',
-                    alignItems: 'center', marginBottom:10
+                    alignItems: 'center', marginBottom: 10
                     //backgroundColor: Colors.getRandomColor(),
                 }]}
                 onPress={() => this.onCheckAllMerchant()}
@@ -353,3 +447,15 @@ function mapStateToProps(state) {
     return {baseReducer: HomePageHotCouponListReducer};
 }
 export default connect(mapStateToProps)(HomePageHotCouponList);
+
+const styles = StyleSheet.create({
+
+    time: {
+        paddingHorizontal: 3,
+        backgroundColor: 'rgba(85, 85, 85, 1)',
+        fontSize: 12,
+        color: Colors.white,
+        marginHorizontal: 3,
+        borderRadius: 2,
+    },
+});

@@ -7,14 +7,16 @@ import React, {Component} from 'react';
 import {View} from 'react-native';
 import {connect} from 'react-redux'
 import LeftDrawerComponent from './LeftDrawerComponent/LeftDrawerComponent'
-import *as TokenAPI from '../NetWork/API/TokenAPI'
 import BizLoadingView from '../Comp/BizCommonComp/BizLoadingView'
 import BizToast from '../Comp/BizCommonComp/BizToast'
 
 export class RootComponent extends Component {
+    componentWillMount(){
+
+    }
+
     componentDidMount() {
 
-        TokenAPI.getTokenWhenAppOpen();
     }
 
     componentWillUnmount() {

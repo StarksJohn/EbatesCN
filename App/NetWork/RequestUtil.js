@@ -2,6 +2,10 @@
  * 通用请求函数
  * RequestUtil
  */
+import {
+     Platform
+} from 'react-native'
+
 export const isProductionEnvironment = false;//是否是生产环境
 export const Staging_Host = 'https://api-staging-current.ebates.cn/';//测试环境的url的 host
 export const Production_Host = 'https://api-staging-current.ebates.cn/';//生产环境的url的 host
@@ -30,9 +34,24 @@ export const request = (url, method, headersAppendCallBack, body) => {
     // Log.log('RequestUtil request() encodeBody(body)='+encodeBody(body));
     Log.log('RequestUtil request() url='+url);
 
-    let request = new Request(url, {
-        method: method, headers: header, body: encodeBody(body)
-    });
+    let options=null;
+    if (Platform.OS === 'ios'){
+        options= {
+            method: method, headers: header,body:encodeBody(body)
+        }
+    }else if(Platform.OS === 'android'){
+        if (method=='GET'){
+            options= {
+                method: method, headers: header,
+            }
+        }else if(method=='POST'){
+            options= {
+                method: method, headers: header,body:encodeBody(body)
+            }
+        }
+    }
+
+    let request = new Request(url, options);
     let isOk;
 
     // console.log('1111   '+fetch);

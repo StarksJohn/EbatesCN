@@ -1175,9 +1175,9 @@ export const HomePageHotCouponListApi = {
     fetchPageData(opt, BaseListCompProps){
         // Log.log('BizApi MerchantDetailPageApi fetchPageData () =='+BaseListCompProps.route.merchantData)
         return (dispatch) => {
-            // Log.log('BizApi MerchantDetailPageApi fetchPageData opt=' + opt)
 
             if (opt == BaseListActions.BaseListFetchDataType.INITIALIZE) {//一开始 挂载
+                Log.log('BizApi HomePageHotCouponListApi fetchPageData 开始请求 首页的4个接口')
 
                 this.isHotCouonListApiOK = false;
 
@@ -1190,10 +1190,10 @@ export const HomePageHotCouponListApi = {
 
                 TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
                     () => {
-                        dispatch(this.HeroBannersApi(BaseListCompProps));
-                        dispatch(this.fetchDoubleCashbackMerchants(BaseListCompProps));
-                        dispatch(this.FLashDealsApi(BaseListCompProps));
-                        dispatch(this.HotCouonListApi(BaseListCompProps));
+                        // dispatch(this.HeroBannersApi(BaseListCompProps));
+                        // dispatch(this.fetchDoubleCashbackMerchants(BaseListCompProps));
+                        // dispatch(this.FLashDealsApi(BaseListCompProps));
+                        // dispatch(this.HotCouonListApi(BaseListCompProps));
 
                     }
                 );
@@ -1328,10 +1328,38 @@ export const HomePageHotCouponListApi = {
 
                     dispatch(BaseListActions.ListInsertOneItemAction(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
                         index: 2,
-                        newData: responseData.data
+                        newData: responseData.data[0]
                     }));
-
-
+                }else{
+                    if (responseData.data.length ==0){
+                        Log.log('BizApi  FLashDealsApi 限时返利 接口返回0');
+                        this.isFlashDealsApiOk=true;
+                        dispatch(BaseListActions.ListInsertOneItemAction(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
+                            index: 2,
+                            newData:  {
+                                "name": "满$25立减$10,下单即享美境包邮!满$50送优惠券(第二单$25减$10)",
+                                "image_url": "http://extrabux-static.b0.upaiyun.com/images/flash-deal/201511/20151125/origins.jpg",
+                                "now": "2017-03-17T08:08:59+00:00",
+                                "expired_at": "2017-03-25T15:11:00+00:00",
+                                "restrictions": "Here are restrictions",
+                                "merchant": {
+                                    "id": 3150,
+                                    "name": "Levi's (李维斯)",
+                                    "now_rate": "返利4%",
+                                    "was_rate": "返1%",
+                                    "image": "http://extrabux-static.b0.upaiyun.com/images/merchants/3150.jpg",
+                                    "thumbnail_image": "http://extrabux-static.b0.upaiyun.com/images/merchants/3015_t.jpg",
+                                    "transfers": 14955,
+                                    "slogan": "旷世经典人人都爱的牛仔裤",
+                                    "restrictions": "* 礼品卡无返利。",
+                                    "description": "Levis（李维斯）是著名的牛仔裤品牌，作为牛仔裤的“鼻祖”，它象征着美国野性、刚毅、叛逆与美国开拓者的精神。Levis有时会推出折扣优惠活动，得到了众多海淘爱好者的亲睐。Levis除了提供各类男女士牛仔裤外，还销售各类牛仔外套、牛仔裙、短裤、鞋、包包及其它配件等。"
+                                },
+                                "coupon": {
+                                    "transfer_url": "/transfer/store/1879/2209603"
+                                }
+                            }
+                        }));
+                    }
                 }
             }).catch((error) => {
                 Log.log('BizApi  FLashDealsApi 限时返利 接口失败 =' + error)
@@ -1546,6 +1574,8 @@ export const EBCouponListApi = {
         }
     },
 }
+
+
 
 /**
  * 初步分解 BaseListComp 发起的 列表 通用的 各种API
