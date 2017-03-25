@@ -1190,10 +1190,10 @@ export const HomePageHotCouponListApi = {
 
                 TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
                     () => {
-                        // dispatch(this.HeroBannersApi(BaseListCompProps));
-                        // dispatch(this.fetchDoubleCashbackMerchants(BaseListCompProps));
-                        // dispatch(this.FLashDealsApi(BaseListCompProps));
-                        // dispatch(this.HotCouonListApi(BaseListCompProps));
+                        dispatch(this.HeroBannersApi(BaseListCompProps));
+                        dispatch(this.fetchDoubleCashbackMerchants(BaseListCompProps));
+                        dispatch(this.FLashDealsApi(BaseListCompProps));
+                        dispatch(this.HotCouonListApi(BaseListCompProps));
 
                     }
                 );
@@ -1332,7 +1332,7 @@ export const HomePageHotCouponListApi = {
                     }));
                 }else{
                     if (responseData.data.length ==0){
-                        Log.log('BizApi  FLashDealsApi 限时返利 接口返回0');
+                        Log.log('BizApi  FLashDealsApi 限时返利 接口返回0,故 添加一条假数据');
                         this.isFlashDealsApiOk=true;
                         dispatch(BaseListActions.ListInsertOneItemAction(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
                             index: 2,

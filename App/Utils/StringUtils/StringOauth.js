@@ -76,3 +76,13 @@ export function isAllNum(val) {
 export function isNull(str) {
     return (str.length == 0 || str == "" || str.replace(/(^s*)|(s*$)/g, "").length == 0 || new RegExp("^[ ]+$").test(str) || typeof str == "null");
 }
+
+/**
+ * 任何东西转成 str
+ * @param value
+ * @returns {string}
+ */
+export function anyThingToString(value) {
+
+    return String(value);
+}

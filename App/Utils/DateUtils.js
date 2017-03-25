@@ -65,7 +65,7 @@ export function CountDownUtil(start, end) {
 }
 
 /**
- * 毫秒级别的 时间戳 转化成 天,时,分,秒格式
+ * 毫秒级别的 时间戳 转化成 {天,时,分,秒} 对象格式
  * @param milliseconds
  * @returns {{d: number, h: number, m: number, s: number, RemainingTime: number}}
  */
@@ -77,4 +77,24 @@ export function millisecondsToTime(milliseconds) {
         s: Math.floor(milliseconds / 1000) % 60,
         RemainingTime:milliseconds/1000
     };
+}
+
+/**
+ * 表示 时间 的数字如果是 个位数, 变成 0x 格式的 字符串
+ * @param num
+ * @param length
+ * @returns {*}
+ */
+export function leadingZeros(num, length = null) {
+
+    let length_ = length;
+    let num_ = num;
+    if (length_ === null) {
+        length_ = 2;
+    }
+    num_ = String(num_);
+    while (num_.length < length_) {
+        num_ = '0' + num_;
+    }
+    return num_;
 }

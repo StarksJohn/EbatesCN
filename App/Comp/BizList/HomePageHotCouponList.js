@@ -20,9 +20,7 @@ import ImageProgress from 'react-native-image-progress';
 import *as BizViews from '../BizCommonComp/BizViews'
 import MerchantDetailPage from '../../Pages/MerchantDetailPage'
 import GlobalStyles from '../../Global/GlobalStyles'
-import *as DateUtils from '../../Utils/DateUtils'
 import CountDown from '../BizCommonComp/BizCountDownView'
-import SMSTimer from '../../Utils/SMSTimer'
 
 
 export class HomePageHotCouponList extends Component {
@@ -33,23 +31,6 @@ export class HomePageHotCouponList extends Component {
 
     constructor(props) {
         super(props);
-
-        let t = DateUtils.CountDownUtil('2017-03-25T00:00:00+00:00', '2017-03-25T00:00:05+00:00');
-
-        new SMSTimer({
-            timerNums: t.RemainingTime,
-            callBack: (time) => {
-                Log.log('time===' + time);
-                time*=1000;//转成毫秒
-                let t = DateUtils.millisecondsToTime(time)
-                Log.log('还剩 ' + t.d + '天 ' + t.h + '小时 ' + t.m + '分 ' + t.s + '秒');
-
-                if (time == -1) {
-
-                    // Log.log('还剩 ' + nD + '天 ' + nH + '小时 ' + nM + '分 ' + nS + '秒');
-                }
-            }
-        }).start();
 
     }
 
@@ -97,7 +78,7 @@ export class HomePageHotCouponList extends Component {
             <View style={{
                 flexDirection: 'row', width: GlobalStyles.window_width, justifyContent: 'space-between', marginTop: 5,
                 marginBottom: 5, //alignItems: 'center',
-                backgroundColor: Colors.getRandomColor()
+                //backgroundColor: Colors.getRandomColor()
             }}>
                 {/*限时返利最高*/}
                 <Text style={{
@@ -112,7 +93,7 @@ export class HomePageHotCouponList extends Component {
                 {/*距离过期+倒计时*/}
                 <View style={{
                     flexDirection: 'row', alignItems: 'center', marginRight: 15,
-                    backgroundColor: Colors.getRandomColor()
+                    //backgroundColor: Colors.getRandomColor()
                 }}>
                     <Text style={{
                         marginLeft: 0,
@@ -123,18 +104,19 @@ export class HomePageHotCouponList extends Component {
                     }} numberOfLines={1} textAlign="center"
                     >距离过期
                     </Text>
-                    {/*<Text style={styles.time}>06</Text>*/}
-                    {/*<Text style={{fontSize: 12, color: 'rgba(85, 85, 85, 1)'}}>:</Text>*/}
-                    {/*<Text style={styles.time}>22</Text>*/}
-                    {/*<Text style={{fontSize: 12, color: 'rgba(85, 85, 85, 1)'}}>:</Text>*/}
-                    {/*<Text style={styles.time}>57</Text>*/}
-
                     <CountDown
-                        date="2017-03-25T15:35:00+00:00"
-                        days={{plural: 'Days', singular: 'Day'}}
-                        hours=':'
-                        mins=':'
-                        segs=''
+                        startDate={rowData.now}
+                        endDate={rowData.expired_at}
+                        hoursStyle={styles.time}
+                        minsStyle={styles.time}
+                        secsStyle={styles.time}
+                        firstColonStyle={styles.colon}
+                        secondColonStyle={styles.colon}
+                        onEnd={
+                            ()=>{
+
+                            }
+                        }
                     />
                 </View>
             </View>
@@ -449,7 +431,6 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps)(HomePageHotCouponList);
 
 const styles = StyleSheet.create({
-
     time: {
         paddingHorizontal: 3,
         backgroundColor: 'rgba(85, 85, 85, 1)',
@@ -458,4 +439,8 @@ const styles = StyleSheet.create({
         marginHorizontal: 3,
         borderRadius: 2,
     },
+    //冒号
+    colon:{
+        fontSize: 12, color: 'rgba(85, 85, 85, 1)'
+    }
 });
