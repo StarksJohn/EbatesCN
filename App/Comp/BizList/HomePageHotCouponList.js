@@ -20,7 +20,7 @@ import ImageProgress from 'react-native-image-progress';
 import *as BizViews from '../BizCommonComp/BizViews'
 import MerchantDetailPage from '../../Pages/MerchantDetailPage'
 import GlobalStyles from '../../Global/GlobalStyles'
-import CountDown from '../BizCommonComp/BizCountDownView'
+import *as BizRemainingTimeView from '../BizCommonComp/BizRemainingTimeView'
 
 
 export class HomePageHotCouponList extends Component {
@@ -43,11 +43,13 @@ export class HomePageHotCouponList extends Component {
      * @param rowData
      */
     renderFlashDealsCell(rowData) {
-        Log.log('HomePageHotCouponList renderFlashDealsCell 正在画 限时返利cell rowData=' + Log.writeObjToJson(rowData));
-        return <View style={{
+        // Log.log('HomePageHotCouponList renderFlashDealsCell 正在画 限时返利cell rowData=' + Log.writeObjToJson(rowData));
+        return <BaseBt style={{
             paddingTop: 5, paddingBottom: 5, alignItems: 'center',
             backgroundColor: Colors.white
-        }}>
+        }}
+                       activeOpacity={0.6}
+        >
 
             <Image source={ {uri: rowData.image_url} } style={{
                 //position:'absolute',left:15, top:15, right:15,,,
@@ -104,23 +106,10 @@ export class HomePageHotCouponList extends Component {
                     }} numberOfLines={1} textAlign="center"
                     >距离过期
                     </Text>
-                    <CountDown
-                        startDate={rowData.now}
-                        endDate={rowData.expired_at}
-                        hoursStyle={styles.time}
-                        minsStyle={styles.time}
-                        secsStyle={styles.time}
-                        firstColonStyle={styles.colon}
-                        secondColonStyle={styles.colon}
-                        onEnd={
-                            ()=>{
-
-                            }
-                        }
-                    />
+                    {BizRemainingTimeView.renderBizRemainingTimeView(rowData.now, rowData.expired_at, styles.time, styles.time, styles.time, styles.colon, styles.colon)}
                 </View>
             </View>
-        </View>
+        </BaseBt>
     }
 
     /**
@@ -440,7 +429,7 @@ const styles = StyleSheet.create({
         borderRadius: 2,
     },
     //冒号
-    colon:{
+    colon: {
         fontSize: 12, color: 'rgba(85, 85, 85, 1)'
     }
 });

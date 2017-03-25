@@ -13,6 +13,7 @@ import *as Math from '../../Utils/Math'
 import GlobalStyles from '../../Global/GlobalStyles'
 import BaseBt from '../Base/BaseBt'
 import *as StringOauth from '../../Utils/StringUtils/StringOauth'
+import *as BizRemainingTimeView from '../BizCommonComp/BizRemainingTimeView'
 
 function renderBadge(rowData, rowID) {
     if (rowData.isRenderBadge) {
@@ -67,7 +68,7 @@ function renderEBIcon(rowData){
 export function RenderBizCouponListCell(rowData, sectionID, rowID, highlightRow, paddingTop, callback) {
 
     Log.log('BizCouponListCell RenderBizCouponListCell rowID==' + rowID);
-    // Log.log('BizCouponListCell RenderBizCouponListCell rowData==' + Log.writeObjToJson(rowData));
+    Log.log('BizCouponListCell RenderBizCouponListCell 正在画 rowData  ==' + Log.writeObjToJson(rowData));
 
     // let str='rowID  '+rowID;
 
@@ -79,11 +80,11 @@ export function RenderBizCouponListCell(rowData, sectionID, rowID, highlightRow,
     //右边所有文字的背景view 的 宽
     let rightBigViewW = GlobalStyles.window.width - 15 - 75 - 15 - 15;
 
-    let arrMerchaintName = ['Amazon.com', 'Amazon.co.jp(亚马逊日本)', 'Amazon.de(亚马逊德国)', 'Amazon.uk(英国亚马逊)'];
-    let arrTime = ['01/01/2017后过期', '00:41:55', '2天后过期']
+    // let arrMerchaintName = ['Amazon.com', 'Amazon.co.jp(亚马逊日本)', 'Amazon.de(亚马逊德国)', 'Amazon.uk(英国亚马逊)'];
+    // let arrTime = ['01/01/2017后过期', '00:41:55', '2天后过期']
     let name = rowData.merchant ? rowData.merchant.name : '';//arrMerchaintName[Math.randomNums(0, arrMerchaintName.length
     // - 1)];
-    let time = arrTime[Math.randomNums(0, arrTime.length - 1)];//rowData.end_date;
+    // let time = arrTime[Math.randomNums(0, arrTime.length - 1)];//rowData.end_date;
 
 
     // let msg='用户信息';
@@ -193,13 +194,8 @@ export function RenderBizCouponListCell(rowData, sectionID, rowID, highlightRow,
                                            //backgroundColor:Colors.getRandomColor()
                                        }}/>
                                 {/*倒计时时间*/}
-                                <Text style={{//flex:1,
-                                    marginLeft: 5, marginTop: 0, fontSize: 12, color: 'rgba(136, 136,' +
-                                    ' 136, 1)', textAlign: "right", alignSelf: 'center',
-                                    //backgroundColor: Colors.getRandomColor()
-                                }} numberOfLines={1}
-                                >{time}
-                                </Text>
+                                {BizRemainingTimeView.renderBizRemainingTimeView(rowData.now,rowData.expired_at,{color:Colors.red},{color:Colors.red},{color:Colors.red},{color:Colors.red},{color:Colors.red})}
+
                             </View>
                             {/*优惠商家名称*/}
                             {

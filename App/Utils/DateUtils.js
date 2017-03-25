@@ -55,17 +55,32 @@ export function CountDownUtil(start, end) {
     // Log.log('new Date().getTime()=' + new Date().getTime());
 
     let endDate = new Date(end);//得到的是 传入的时间+8小时 后的时间,因为 服务器 发来 的都是 0时区的, 所以得到的 new Date() 也是当前时区的 时间
+    // Log.log('DateUtils CountDownUtil temp.getTimezoneOffset()='+temp.getTimezoneOffset());
+    endDate.setHours(endDate.getHours()-Math.abs(temp.getTimezoneOffset())/60);
     Log.log('DateUtils CountDownUtil endDate=' + endDate);
 
     let leftDate = endDate - startDate;//减下来是个  Unix时间戳 形式的 数字
     Log.log('DateUtils CountDownUtil leftDate=' + leftDate);
 
-    return millisecondsToTime(leftDate);
+    if (leftDate<0){
+        Log.log('DateUtils CountDownUtil leftDate <0 ,无剩余时间');
 
+        return {
+            d: 0,
+            h: 0,
+            m: 0,
+            s: 0,
+            RemainingTime:0
+        };
+    }else{
+        return millisecondsToTime(leftDate);
+
+    }
 }
 
 /**
  * 毫秒级别的 时间戳 转化成 {天,时,分,秒} 对象格式
+ * https://segmentfault.com/a/1190000007581722#articleHeader15 计算 Durations:时长
  * @param milliseconds
  * @returns {{d: number, h: number, m: number, s: number, RemainingTime: number}}
  */

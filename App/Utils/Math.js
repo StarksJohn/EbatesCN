@@ -1,6 +1,6 @@
 /**
  * Created by Ebates on 16/12/28.
- *
+ * Math
  * 计算相关
  */
 
@@ -27,3 +27,13 @@ export function randomNums(min, max) {
 export function Math_parseInt(n) {
     return parseInt(n);
 }
+
+/**
+ * 计算 绝对值, 不知道为啥外部 调用就报错
+ * @param value
+ * @returns {number}
+ * @constructor
+ */
+// export function AbsoluteValue(value) {
+//     return Math.abs(value)
+// }

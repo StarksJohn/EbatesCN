@@ -1340,7 +1340,7 @@ export const HomePageHotCouponListApi = {
                                 "name": "满$25立减$10,下单即享美境包邮!满$50送优惠券(第二单$25减$10)",
                                 "image_url": "http://extrabux-static.b0.upaiyun.com/images/flash-deal/201511/20151125/origins.jpg",
                                 "now": "2017-03-17T08:08:59+00:00",
-                                "expired_at": "2017-03-25T15:11:00+00:00",
+                                "expired_at": "2017-03-26T00:00:00+00:00",
                                 "restrictions": "Here are restrictions",
                                 "merchant": {
                                     "id": 3150,
