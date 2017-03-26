@@ -80,7 +80,7 @@ export default class BizFilterMenuBtView extends Component {
                     paddingBottom: 0, justifyContent: 'center',
                     alignItems: 'center',
                     //width: (GlobalStyles.window.width - 20 ) / 4,
-                    //height: (200 - 30 ) / 2,
+                    height: 45,
                     //backgroundColor: Colors.getRandomColor()
                 }}
                 activeOpacity={0.6}

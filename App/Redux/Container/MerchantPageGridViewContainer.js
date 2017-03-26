@@ -17,7 +17,7 @@ import BaseBt from '../../Comp/Base/BaseBt'
 import *as BizViews from '../../Comp/BizCommonComp/BizViews'
 
 
- class MerchantPageGridViewContainer extends React.Component {
+export class MerchantPageGridViewContainer extends React.Component {
 
     render() {
         return (

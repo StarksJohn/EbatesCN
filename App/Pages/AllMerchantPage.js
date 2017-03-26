@@ -4,6 +4,7 @@
  */
 import React, {Component} from 'react';
 import {StyleSheet, View, Text, TextInput, Platform, Image} from 'react-native';
+// import {connect} from 'react-redux'
 import BackAndroidEventListener from '../Utils/EventListener/BackAndroidEventListener'
 import  BaseNavigationBar, {NavBarButton, baseOnBackPress} from '../Comp/Base/BaseNavigationBar'
 import *as BizViews from '../Comp/BizCommonComp/BizViews'
@@ -11,7 +12,8 @@ import Colors from '../Utils/Colors';
 import BaseFontAwesomeIconBts from '../Comp/Base/BaseFontAwesomeIconBts'
 import BaseImgBt from '../Comp/Base/BaseImgBt'
 import SearchPage from './SearchPage'
-import BizFilterMenuView from '../Comp/BizCommonComp/BizFilterMenuView'
+import AllMerchantPageMenuGridViewContainer from '../Redux/Container/AllMerchantPageMenuGridViewContainer'
+import *as BizApi from '../NetWork/API/BizApi'
 
 export default class AllMerchantPage extends Component {
     constructor(props) {
@@ -25,6 +27,10 @@ export default class AllMerchantPage extends Component {
             });
         }
 
+    }
+
+    componentWillUnmount() {
+        // this.props.dispatch(BizApi.AllMerchantPageApi.fetchPageData());
     }
 
     componentDidMount() {
@@ -45,7 +51,7 @@ export default class AllMerchantPage extends Component {
     /**
      * 画 下拉出来的列表
      */
-    renderDropdownListView(){
+    renderDropdownListView() {
 
     }
 
@@ -68,19 +74,32 @@ export default class AllMerchantPage extends Component {
         >
         </BaseImgBt>
 
-        let navigationBar = BizViews.renderBaseNavigationBar(null, NavBarButton.getBackButton(() => baseOnBackPress(navigator, this.backAndroidEventListener)), rightBt, null, '全部商家', {} );
+        let navigationBar = BizViews.renderBaseNavigationBar(null, NavBarButton.getBackButton(() => baseOnBackPress(navigator, this.backAndroidEventListener)), rightBt, null, '全部商家', {});
 
         return (
             <View style={{flex: 1, backgroundColor: Colors.BizCommonGrayBack,}}>
                 {navigationBar}
                 {BizViews.renderShadowLine()}
-                <BizFilterMenuView
-                    onItemPress={(index)=>{
-                        Log.log('AllMerchantPage render onItemPress index='+index);
+                <AllMerchantPageMenuGridViewContainer
+                    {...this.props}
+                    onItemPress={(index) => {
+                        Log.log('AllMerchantPage render onItemPress index=' + index);
                     }}
-                />
+                >
+                </AllMerchantPageMenuGridViewContainer>
+                {BizViews.renderShadowLine()}
             </View>
         );
     }
 
 }
+
+//
+// function mapStateToProps(state) {
+//
+//     // 把 state里的 homePageReducer 注入到 this.props里
+//     const {AllMerchantPageReducer}=state;
+//     return {baseReducer: AllMerchantPageReducer};
+// }
+//
+// export default connect(mapStateToProps)(AllMerchantPage)

@@ -1330,13 +1330,13 @@ export const HomePageHotCouponListApi = {
                         index: 2,
                         newData: responseData.data[0]
                     }));
-                }else{
-                    if (responseData.data.length ==0){
+                } else {
+                    if (responseData.data.length == 0) {
                         Log.log('BizApi  FLashDealsApi 限时返利 接口返回0,故 添加一条假数据');
-                        this.isFlashDealsApiOk=true;
+                        this.isFlashDealsApiOk = true;
                         dispatch(BaseListActions.ListInsertOneItemAction(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
                             index: 2,
-                            newData:  {
+                            newData: {
                                 "name": "满$25立减$10,下单即享美境包邮!满$50送优惠券(第二单$25减$10)",
                                 "image_url": "http://extrabux-static.b0.upaiyun.com/images/flash-deal/201511/20151125/origins.jpg",
                                 "now": "2017-03-17T08:08:59+00:00",
@@ -1575,7 +1575,34 @@ export const EBCouponListApi = {
     },
 }
 
+/**
+ * 全部商家页 api
+ * @type {{}}
+ */
+export const AllMerchantPageApi = {
+    ApiName: 'AllMerchantPageApi',
 
+    fetchPageData(){
+        return (dispatch) => {
+            dispatch(this.fetchMenuData());
+        }
+    },
+
+    /**
+     * 获取 4个menu的数据
+     */
+    fetchMenuData(){
+        return (dispatch) => {
+            dispatch(BaseGridViewActions.changeBaseGridViewStates(this.ApiName, BaseGridViewActions.BaseGridViewStates.fetchOk, [{
+                id: 0,
+                title: '母婴'
+            }, {id: 1, title: '国家'}, {id: 2, title: '排序'}, {
+                id: 3,
+                title: '筛选'
+            }]));
+        }
+    }
+}
 
 /**
  * 初步分解 BaseListComp 发起的 列表 通用的 各种API
@@ -1618,5 +1645,10 @@ export function fetchApi(opt, pageNo, BaseListCompProps) {
             return EBCouponListApi.fetchListData(opt, BaseListCompProps);
         }
             break;
+        case AllMerchantPageApi.ApiName:{
+            return AllMerchantPageApi.fetchPageData( BaseListCompProps );
+
+        }
+        break;
     }
 }

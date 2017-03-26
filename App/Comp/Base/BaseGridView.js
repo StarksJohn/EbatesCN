@@ -39,6 +39,8 @@ export  default class BaseGridView extends Component {
     componentWillMount() {
         // this.props.dispatch(this.props.fetchApi());
         // this.props.fetchApi();
+
+
     }
 
     fetchData(){

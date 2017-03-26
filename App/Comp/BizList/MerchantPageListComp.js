@@ -28,10 +28,11 @@ export default class MerchantPageListComp extends Component {
     }
 
     onCheckAllMerchant() {
-        // this.props.navigator.push({
-        //     component: AllMerchantPage,
-        //     name: gRouteName.AllMerchantPage,
-        // });
+        Log.log('MerchantPageListComp onCheckAllMerchant')
+        this.props.navigator.push({
+            component: AllMerchantPage,
+            name: gRouteName.AllMerchantPage,
+        });
 
         //因 top10 接口报错,故写死数据给 商家详情页用
         // this.props.navigator.push({

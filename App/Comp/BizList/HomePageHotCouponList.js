@@ -45,7 +45,7 @@ export class HomePageHotCouponList extends Component {
     renderFlashDealsCell(rowData) {
         // Log.log('HomePageHotCouponList renderFlashDealsCell 正在画 限时返利cell rowData=' + Log.writeObjToJson(rowData));
         return <BaseBt style={{
-            paddingTop: 5, paddingBottom: 5, alignItems: 'center',
+            paddingTop: 5, paddingBottom: 10, alignItems: 'center', marginTop: 5,
             backgroundColor: Colors.white
         }}
                        activeOpacity={0.6}
@@ -53,7 +53,7 @@ export class HomePageHotCouponList extends Component {
 
             <Image source={ {uri: rowData.image_url} } style={{
                 //position:'absolute',left:15, top:15, right:15,,,
-                width: GlobalStyles.window_width - 30, height: 125, marginTop: 15, resizeMode: 'cover'//marginLeft: 15,
+                width: GlobalStyles.window_width - 30, height: 125, marginTop: 10, resizeMode: 'cover'//marginLeft: 15,
                 //borderColor: Colors.getRandomColor(), borderWidth: 0.5,
                 //backgroundColor: Colors.getRandomColor()
             }}>
@@ -70,7 +70,7 @@ export class HomePageHotCouponList extends Component {
             <Text style={{
                 marginLeft: 15, marginRight: 15, marginTop: 10,
                 fontSize: 14,
-                color: Colors.BizCommonBlack,
+                color: Colors.BizCommonBlack, lineHeight:20
                 //fontWeight:'bold',
                 //backgroundColor: Colors.getRandomColor()
             }} numberOfLines={0} textAlign="center"
