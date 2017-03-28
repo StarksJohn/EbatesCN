@@ -230,11 +230,12 @@ export function renderTwoLevelPageSearchBar(placeholder, value, onSubmitCallback
  * @param searchBar
  * @param title
  * @param titleTextStyle 默认是 GlobalStyles.navBarTitleTextStyle,外部若不想改默认的,可传 {}
+ * containerStyle: 容器的style
  * @returns {XML}
  */
-export function renderBaseNavigationBar(titleTextView, leftButton, rightButton, searchBar, title, titleTextStyle) {
+export function renderBaseNavigationBar(titleTextView, leftButton, rightButton, searchBar, title, titleTextStyle, containerStyle) {
     return <BaseNavigationBar
-        style={ {backgroundColor: Colors.white} }
+        style={ [{backgroundColor: Colors.white},containerStyle] }
         statusBarCustomStyle={GlobalStyles.statusBarDefaultProps}
         titleTextView={titleTextView}
         leftButton={leftButton}

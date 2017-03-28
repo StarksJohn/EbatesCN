@@ -60,7 +60,8 @@ export  default class PersonalPage extends Component {
     render() {
         const {HomePageReducer, navigator} = this.props;
 
-        let navigationBar = BizViews.renderBaseNavigationBar(null, null /*NavBarButton.getBackButton(() => baseOnBackPress(navigator, this.backAndroidEventListener))*/, null, null, '我的账户', {});
+        let navigationBar = BizViews.renderBaseNavigationBar(null, null /*NavBarButton.getBackButton(() =>
+         baseOnBackPress(navigator, this.backAndroidEventListener))*/, null, null, '我的账户', {},{});
 
         return (
             <View style={styles.container}>

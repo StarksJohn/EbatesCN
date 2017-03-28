@@ -44,7 +44,7 @@ export default class ForgetPassEmailOkPage extends Component {
     render() {
         const {navigator} = this.props;
 
-        let navigationBar = BizViews.renderBaseNavigationBar(null, NavBarButton.getBackButton(() => baseOnBackPress(navigator, this.backAndroidEventListener,gRouteName.LogInPage)), null, null, '重置您的密码', {});
+        let navigationBar = BizViews.renderBaseNavigationBar(null, NavBarButton.getBackButton(() => baseOnBackPress(navigator, this.backAndroidEventListener,gRouteName.LogInPage)), null, null, '重置您的密码', {},{});
 
         let str='请到'+this.props.route.email+'查阅找回密码邮件,从邮件重设您的密码';
 

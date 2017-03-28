@@ -39,7 +39,7 @@ export class AllMerchantPageMenuGridViewContainer extends React.Component {
 
         this.BizFilterMenuBtViewRefArr.map((v, i) => {
             if (index != i) {//改变 非 点击 按钮的 箭头方向
-                v.chengeArrowDir(0);
+                // v.chengeArrowDir(0);
             }
         });
     }
@@ -55,11 +55,11 @@ export class AllMerchantPageMenuGridViewContainer extends React.Component {
                                   dispatch(BizApi.AllMerchantPageApi.fetchMenuData())
                               }
                           }}
-                          containerStyle={{
+                          containerStyle={[{
                               paddingLeft: 0,
                               paddingRight: 0, paddingTop: 0, paddingBottom: 0,
                               backgroundColor: Colors.white
-                          }}
+                          },this.props.containerStyle]}
                           renderItem={(model/*此处的model类似是 {id:0,title:'母婴'}  结构*/) => {
                               return (
                                   <View style={{

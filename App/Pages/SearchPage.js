@@ -105,7 +105,7 @@ export class SearchPage extends Component {
 
         let searchBar = !isInTwoLevelPage ? BizViews.renderFirstLevelPageSearchBar('输入商家,  优惠名称', (value) => this.onSubmit(value)) : BizViews.renderTwoLevelPageSearchBar('输入商家,  优惠名称', '', (value) => this.onSubmit(value),);
 
-        let navigationBar = BizViews.renderBaseNavigationBar(null, (isInTwoLevelPage ? NavBarButton.getBackButton(() => baseOnBackPress(navigator, this.backAndroidEventListener)) : null), null, searchBar, null, null);
+        let navigationBar = BizViews.renderBaseNavigationBar(null, (isInTwoLevelPage ? NavBarButton.getBackButton(() => baseOnBackPress(navigator, this.backAndroidEventListener)) : null), null, searchBar, null, null,{});
         // <BaseNavigationBar
         //     style={ {backgroundColor: Colors.white} }
         //     statusBarCustomStyle={GlobalStyles.statusBarDefaultProps}

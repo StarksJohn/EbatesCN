@@ -3,12 +3,22 @@
  * @flow
  */
 import {
-    Dimensions, Platform
+    Dimensions, Platform,PixelRatio
 } from 'react-native'
 import Layout from 'react-native-tab-navigator/Layout';
 import Colors from '../Utils/Colors';
 
 const {height, width} = Dimensions.get('window');
+
+//慢慢代替 下边的 module.exports 里的内容
+global.gScreen = {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+    navBarHeight: Platform.OS === 'ios' ? 64 : 50,
+    navBarPaddingTop: Platform.OS === 'ios' ? 20 : 0,
+    onePix: 1 / PixelRatio.get(),
+    isIOS: Platform.OS === 'ios'
+}
 
 module.exports =
 // export default GlobalStyles=  这样导出报错
@@ -46,7 +56,7 @@ module.exports =
         window_width: width,
         nav_bar_height_ios: 44,
         nav_bar_height_android: 50,
-        // STATUS_BAR_HEIGHT : 20,
+        STATUS_BAR_HEIGHT : 20,//IOS 顶部状态栏高
 
         statusBarStyle: {
             height: Platform.OS === 'ios' ? 20 : 0,
@@ -106,6 +116,7 @@ module.exports =
         },
         //顶部 状态栏+nav 的高
         statusBarAndNavBarH: Platform.OS === 'ios' ? 20 + 44 : 50,
+        AllMerchantPageMenuBtH:45,//全部商家页 筛选 按钮 的H
     };
 
 //顶部 状态栏+nav 的高

@@ -3,8 +3,8 @@
  * AllMerchantPage  全部商家
  */
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, TextInput, Platform, Image} from 'react-native';
-// import {connect} from 'react-redux'
+import {StyleSheet, View, Text, TextInput, Platform, Image, Animated} from 'react-native';
+import {connect} from 'react-redux'
 import BackAndroidEventListener from '../Utils/EventListener/BackAndroidEventListener'
 import  BaseNavigationBar, {NavBarButton, baseOnBackPress} from '../Comp/Base/BaseNavigationBar'
 import *as BizViews from '../Comp/BizCommonComp/BizViews'
@@ -12,10 +12,15 @@ import Colors from '../Utils/Colors';
 import BaseFontAwesomeIconBts from '../Comp/Base/BaseFontAwesomeIconBts'
 import BaseImgBt from '../Comp/Base/BaseImgBt'
 import SearchPage from './SearchPage'
-import AllMerchantPageMenuGridViewContainer from '../Redux/Container/AllMerchantPageMenuGridViewContainer'
 import *as BizApi from '../NetWork/API/BizApi'
+import BizMerchantListCell from '../Comp/BizCells/BizMerchantListCell'
+import AllMerchantPageListContanier from '../Redux/Container/AllMerchantPageListContanier'
+import GlobalStyles from '../Global/GlobalStyles'
+import BizDropDownMenuAndListContainer from '../Comp/BizCommonComp/BizDropDownMenuAndListContainer'
 
-export default class AllMerchantPage extends Component {
+const DropDownListDefualtY = GlobalStyles.statusBarAndNavBarH + GlobalStyles.AllMerchantPageMenuBtH;//下拉视图 显示时 Y的 起点
+
+export class AllMerchantPage extends Component {
     constructor(props) {
         super(props);
 
@@ -26,6 +31,11 @@ export default class AllMerchantPage extends Component {
                 hardwareBackPressListenerName: gRouteName.AllMerchantPage
             });
         }
+
+        this.props.dispatch(BizApi.AllMerchantPageCategoryListApi.fetchCategoryList())
+        ;
+
+        // 下拉 视图Y值
 
     }
 
@@ -49,13 +59,57 @@ export default class AllMerchantPage extends Component {
     }
 
     /**
-     * 画 下拉出来的列表
+     * 画 下拉列表
      */
-    renderDropdownListView() {
+    renderDropDownList() {
 
+        let height = 100 //8 * (30 + 10) + 10;//点击后下拉出来视图的高暂时写死
+        let DropDownListStyle = [styles.dropDownListStyle];
+        //下拉视图的 style 数组 添加一个 top 属性,控制 下拉视图 的动画
+
+        DropDownListStyle.push({
+            top: this.props.baseReducer.DropDownListY.interpolate({
+                inputRange: [0, 1],
+                outputRange: [/*84+*/DropDownListDefualtY - height, DropDownListDefualtY] //未下拉时,其实是画在 如图(笔记里 RN Demo )
+            }),
+            height: height
+        });
+
+        return (
+            // 下拉出来的列表的容器
+            <Animated.View style={DropDownListStyle}>
+
+            </Animated.View>
+        )
+    }
+
+    onMenuBtSelect(i) {
+        const {baseReducer} = this.props;
+
+        Animated.sequence([
+            // 1)同时执行 营养素frameY、箭头角度 2个动画
+            Animated.parallel([
+                Animated.timing(baseReducer.DropDownListY, {
+                    toValue: baseReducer.isShowDropDownlist ? 0 : 1,
+                    duration: 500,
+                }),
+                // Animated.timing(this.state.angleRotation, {
+                //     toValue: FoodsList.showSortTypeView ? 0 : 1,
+                //     duration: 500,
+                // })
+            ]),
+            // 2)遮盖层透明度
+            // Animated.timing(this.state.coverViewOpacity, {
+            //     toValue: FoodsList.showSortTypeView ? 0 : 1,
+            //     duration: 100,
+            // })
+        ]).start();
     }
 
     render() {
+
+        Log.log('AllMerchantPage render');
+
         const {navigator} = this.props;
         let rightBt = <BaseImgBt
             btStyle={{
@@ -74,32 +128,51 @@ export default class AllMerchantPage extends Component {
         >
         </BaseImgBt>
 
-        let navigationBar = BizViews.renderBaseNavigationBar(null, NavBarButton.getBackButton(() => baseOnBackPress(navigator, this.backAndroidEventListener)), rightBt, null, '全部商家', {});
+        let navigationBar = BizViews.renderBaseNavigationBar(null, NavBarButton.getBackButton(() => baseOnBackPress(navigator, this.backAndroidEventListener)), rightBt, null, '全部商家', {}, /*{position: "absolute", top: 0,  left: 0,
+         right: 0}*/ {zIndex: 2});
 
         return (
             <View style={{flex: 1, backgroundColor: Colors.BizCommonGrayBack,}}>
+
+                {/*下拉列表*/}
+                {/*{this.renderDropDownList()}*/}
                 {navigationBar}
-                {BizViews.renderShadowLine()}
-                <AllMerchantPageMenuGridViewContainer
-                    {...this.props}
-                    onItemPress={(index) => {
-                        Log.log('AllMerchantPage render onItemPress index=' + index);
-                    }}
-                >
-                </AllMerchantPageMenuGridViewContainer>
-                {BizViews.renderShadowLine()}
+                {BizViews.renderShadowLine({zIndex: 3, borderWidth: 0.3})}
+                <BizDropDownMenuAndListContainer
+                    dataSource={[]}
+                    onSelectItem={this.onSelectItem}
+                    //onChangeOrderAsc={this._onChangeOrderAsc}
+
+                />
+                {BizViews.renderShadowLine({zIndex: 3, borderWidth: 0.3})}
+                {/*商家列表*/}
+                <AllMerchantPageListContanier
+                    //customContainer={{position: "absolute", top: DropDownListDefualtY, bottom: 0, left: 0, right: 0}}
+                />
+
             </View>
         );
     }
 
 }
+const styles = StyleSheet.create({
+    dropDownListStyle: {
+        //flexDirection: 'row',
+        // flexWrap: 'wrap',
+        position: 'absolute',
+        backgroundColor: Colors.getRandomColor(), //'white',
+        borderBottomColor: '#ccc',
+        width: GlobalStyles.window.width,
+        paddingTop: 10,
+    }
+});
+//
+function mapStateToProps(state) {
 
-//
-// function mapStateToProps(state) {
-//
-//     // 把 state里的 homePageReducer 注入到 this.props里
-//     const {AllMerchantPageReducer}=state;
-//     return {baseReducer: AllMerchantPageReducer};
-// }
-//
-// export default connect(mapStateToProps)(AllMerchantPage)
+    // 把 state里的 xxx 注入到 this.props里
+    const {AllMerchantPageReducer}=state;
+    return {baseReducer: AllMerchantPageReducer};
+}
+
+export default connect(mapStateToProps)(AllMerchantPage)
+

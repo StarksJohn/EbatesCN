@@ -420,6 +420,7 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps)(HomePageHotCouponList);
 
 const styles = StyleSheet.create({
+    //时间文字
     time: {
         paddingHorizontal: 3,
         backgroundColor: 'rgba(85, 85, 85, 1)',

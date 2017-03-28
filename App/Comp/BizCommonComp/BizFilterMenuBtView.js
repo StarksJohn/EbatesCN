@@ -8,6 +8,8 @@ import {connect} from 'react-redux'
 import Colors from '../../Utils/Colors'
 import BaseBt from '../Base/BaseBt'
 import *as BizViews from './BizViews'
+import GlobalStyles from '../../Global/GlobalStyles'
+
 
 export default class BizFilterMenuBtView extends Component {
     static propTypes = {
@@ -80,7 +82,7 @@ export default class BizFilterMenuBtView extends Component {
                     paddingBottom: 0, justifyContent: 'center',
                     alignItems: 'center',
                     //width: (GlobalStyles.window.width - 20 ) / 4,
-                    height: 45,
+                    height: GlobalStyles.AllMerchantPageMenuBtH,
                     //backgroundColor: Colors.getRandomColor()
                 }}
                 activeOpacity={0.6}

@@ -213,6 +213,8 @@ export default class BaseListComp extends Component {
             return;
         }
 
+        Log.log('BaseListComp onLoadMore');
+
         this._fetchData(BaseListActions.BaseListFetchDataType.MORE);
 
 

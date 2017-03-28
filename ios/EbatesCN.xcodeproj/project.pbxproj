@@ -476,7 +476,7 @@
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = UA98ELY82J;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -796,8 +796,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ebates.EbatesCN;
 				PRODUCT_NAME = EbatesCN;
-				PROVISIONING_PROFILE = "4172c443-fbba-4137-b738-403f0eb45d7d";
-				PROVISIONING_PROFILE_SPECIFIER = EbatesCNDev;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -832,8 +832,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ebates.EbatesCN;
 				PRODUCT_NAME = EbatesCN;
-				PROVISIONING_PROFILE = "4172c443-fbba-4137-b738-403f0eb45d7d";
-				PROVISIONING_PROFILE_SPECIFIER = EbatesCNDev;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

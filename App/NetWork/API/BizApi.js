@@ -15,7 +15,8 @@ import *as RequestUtil from '../RequestUtil'
 import *as TokenDB from '../../DB/BizDB/TokenDB'
 import *as BizLoadingView from '../../Comp/BizCommonComp/BizLoadingView'
 import *as BaseGridViewActions from '../../Redux/Actions/BaseGridViewActions'
-import *as MerchantDetailPageActions from '../../Redux/Actions/MerchantDetailPageActions'
+import *as AllMerchantPageActions from '../../Redux/Actions/AllMerchantPageActions'
+import *as BizDropDownMenuAndListActions from '../../Redux/Actions/BizDropDownMenuAndListActions'
 
 /**
  * 列表类型 接口 都会返回的 通用的 可判断 couldLoadMore 的 数据结构
@@ -1581,12 +1582,8 @@ export const EBCouponListApi = {
  */
 export const AllMerchantPageApi = {
     ApiName: 'AllMerchantPageApi',
+    SearchKeys: '',//筛选出来的关键词
 
-    fetchPageData(){
-        return (dispatch) => {
-            dispatch(this.fetchMenuData());
-        }
-    },
 
     /**
      * 获取 4个menu的数据
@@ -1601,8 +1598,207 @@ export const AllMerchantPageApi = {
                 title: '筛选'
             }]));
         }
+    },
+
+    /**
+     * https://api-staging-current.ebates.cn/docs.html#tags COUNTRIES 接口
+     * 全部商家页 国家 下拉列表 接口
+     */
+    fetchCountries(){
+
     }
 }
+
+/**
+ * 全部商家页 商家列表 的API
+ * @type {{ApiName: string, SearchMerchants: ((BaseProps)=>(p1:*))}}
+ */
+export const AllMerchantPageListApi = {
+    ApiName: 'AllMerchantPageListApi',
+
+    /**
+     * 全部商家页 搜索商家 接口, 也是此页面 第一次进来 的 默认 列表 接口
+     * @param BaseProps
+     * @returns {function(*)}
+     * @constructor
+     */
+    SearchMerchants (opt, BaseProps){
+        return (dispatch) => {
+            // if (this.isInNetWorkAbnormalBeforeFetchSuccess){//本次拿到数据前,列表处于 网络异常 状态,拿到数据后, 删除 网络异常cell
+            //     this.isInNetWorkAbnormalBeforeFetchSuccess=false;
+            //     dispatch(BaseListActions.RemoveOneItemFromlist( this.ApiName, {
+            //         index: 2
+            //     }));
+            // }
+
+            TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
+                () => {
+                    Log.log('BizApi  AllMerchantPageListApi 开始请求 全部商家页 搜索商家 接口,opt=' + opt);
+                    dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
+
+                    let url = RequestUtil.getStagingOrProductionHost() + 'search/merchants';
+                    RequestUtil.GET(url, {
+                            q: AllMerchantPageApi.SearchKeys, include: 'hot_coupons,tags', coupon_amount: 2,
+                            page: BaseProps.baseReducer.meta.pagination.current_page + 1,
+                            perPage: BaseProps.baseReducer.meta.pagination.per_page,
+                        },
+                        (header) => {
+                            commonApiHeaderAppend(header)
+                        },
+                    ).then((responseData) => {
+                        Log.log('BizApi  AllMerchantPageListApi 全部商家页 搜索商家 接口OK, responseData.data =' + Log.writeObjToJson(responseData.data))
+                        Log.log('BizApi  AllMerchantPageListApi 全部商家页 搜索商家 接口OK, responseData.data.length =' + responseData.data.length)
+
+
+                        dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
+                            meta: responseData.meta,
+                            newContentArray: responseData.data,
+                        }));
+                    }).catch((error) => {
+                        Log.log('BizApi  AllMerchantPageListApi 全部商家页 搜索商家 接口失败 =' + error)
+                        RequestUtil.showErrorMsg(error)
+
+                        //商家页的top10接口如果返回错误, 不能直接把 列表处于 失败状态,因还得画0和1号cell,故只能 添加一个 3号异常cell
+                        // this.isInNetWorkAbnormalBeforeFetchSuccess=true;
+                        // dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
+                        //     couldLoadMore: true,
+                        //     newContentArray: [{key: this.NetWorkAbnormalCellData}]
+                        // }));
+                    });
+                }
+            )
+
+
+        }
+    }
+}
+
+/**
+ * 全部商家页 Category 下拉列表 API https://api-staging-current.ebates.cn/docs.html#categories-category-list-get
+ * @type {{ApiName: string, export: AllMerchantPageCategoryListApi.export}}
+ */
+export const AllMerchantPageCategoryListApi = {
+    ApiName: 'AllMerchantPageCategoryListApi',
+    $CategoryListDataArray: fromJS([]), //CATEGORY LIST 接口 已经拿到的数据,immutable.List 数据类型  , 里边放 model, toJS()可转成JS 数组
+    isLoading: false,//是否正在 请求接口
+
+    /**
+     * CATEGORY LIST 接口 https://api-staging-current.ebates.cn/docs.html#categories-category-list-get
+     * 拿 全部商家页 下拉列表 里 有 母婴 的 那个列表 的数据
+     */
+    fetchCategoryList(opt){
+        return (dispatch) => {
+            {
+                if (this.isLoading && this.$CategoryListDataArray.size == 0)//如果 列表控件 挂载时, 接口正在 请求中 ,列表控件就 切到 Loading 状态
+                {
+                    Log.log('BizApi fetchCategoryList 列表控件 挂载时, 接口正在 请求中 ,列表控件就 切到 Loading 状态')
+                    new SMSTimer({//为了能 从 初始化状态 切换到 Loading  状态, 否则太快了,切换不了
+                        timerNums: 1,
+                        callBack: (time) => {
+                            Log.log('time===' + time);
+                            if (time == -1) {
+
+                                dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
+
+                            }
+                        }
+                    }).start();
+
+                } else if (!this.isLoading && this.$CategoryListDataArray.size > 0) {//列表挂载时, 接口已经拿到数据,列表直接切到 成功状态
+                    dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
+                        couldLoadMore: false,
+                        newContentArray: this.$CategoryListDataArray.toJS(),
+                    }));
+                }
+                else if (!this.isLoading && this.$CategoryListDataArray.size == 0) {//刚进入 全部商家页, 主动 调此接口, 走这里的代码
+                    Log.log('BizApi  fetchCategoryList 开始请求 全部商家页 下拉列表 里 有 母婴 的 那个列表 接口 ');
+                    this.isLoading = true;
+
+                    let url = RequestUtil.getStagingOrProductionHost() + 'categories';
+                    RequestUtil.GET(url, {
+                            parent: 'top'
+                        },
+                        (header) => {
+                            commonApiHeaderAppend(header)
+                        },
+                    ).then((responseData) => {
+
+                        new SMSTimer({//模拟 拿到数据后, Loading状态的列表 切到 成功状态
+                            timerNums: 10,
+                            callBack: (time) => {
+                                Log.log('time===' + time);
+                                if (time == -1){
+                                    {
+
+                                        Log.log('BizApi  fetchCategoryList 全部商家页 下拉列表 里 有 母婴 的 那个列表 接口OK, responseData.data.length =' + responseData.data.length)
+
+                                        Log.log('BizApi  fetchCategoryList 全部商家页 下拉列表 里 有 母婴 的 那个列表 接口OK, responseData.data =' + Log.writeObjToJson(responseData.data));
+
+                                        responseData.data.map(
+                                            (v, i) => {
+                                                // if (i<5)
+                                                {
+                                                    this.$CategoryListDataArray = this.$CategoryListDataArray.set(this.$CategoryListDataArray.size, v);
+                                                }
+                                            }
+                                        );
+
+                                        Log.log('BizApi  fetchCategoryList 全部商家页 下拉列表 里 有 母婴 的 那个列表 的数据源 $CategoryListDataArray=' + Log.writeObjToJson(this.$CategoryListDataArray.toJS()))
+                                        this.isLoading = false;
+
+                                        dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
+                                            couldLoadMore: false,
+                                            newContentArray: this.$CategoryListDataArray.toJS(),
+                                        }));
+
+                                        dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizDropDownMenuAndListApi.ApiName,this.$CategoryListDataArray.size*44/*每个cell 高 默认 44 ,以后 把此 常量写到 专门的 cell里*/))
+                                    }
+                                }
+                            }
+                        }).start();
+
+
+
+                    }).catch((error) => {
+                        Log.log('BizApi  AllMerchantPageListApi 全部商家页 搜索商家 接口失败 =' + error)
+                        RequestUtil.showErrorMsg(error)
+                        this.isLoading = false;
+
+                        //商家页的top10接口如果返回错误, 不能直接把 列表处于 失败状态,因还得画0和1号cell,故只能 添加一个 3号异常cell
+                        // this.isInNetWorkAbnormalBeforeFetchSuccess=true;
+                        // dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
+                        //     couldLoadMore: true,
+                        //     newContentArray: [{key: this.NetWorkAbnormalCellData}]
+                        // }));
+                    });
+                }
+            }
+        }
+    },
+
+    /**
+     * 重置 CategoryList 接口的 数据 和 其 列表的 高度
+     * @returns {function(*)}
+     */
+    releaseCategoryListData(){
+        return (dispatch) => {
+            this.$CategoryListDataArray = this.$CategoryListDataArray.clear();
+            this.isLoading=false;
+            dispatch(BizDropDownMenuAndListActions.resetDropDownListHAction(BizDropDownMenuAndListApi.ApiName));
+
+        }
+
+    }
+}
+
+/**
+ * 通用的 包含 menu和 下拉列表的 控件的 api
+ * @type {{ApiName: string}}
+ */
+export const BizDropDownMenuAndListApi={
+    ApiName:'BizDropDownMenuAndListApi',
+}
+
 
 /**
  * 初步分解 BaseListComp 发起的 列表 通用的 各种API
@@ -1645,10 +1841,15 @@ export function fetchApi(opt, pageNo, BaseListCompProps) {
             return EBCouponListApi.fetchListData(opt, BaseListCompProps);
         }
             break;
-        case AllMerchantPageApi.ApiName:{
-            return AllMerchantPageApi.fetchPageData( BaseListCompProps );
+        case AllMerchantPageListApi.ApiName: {
+            return AllMerchantPageListApi.SearchMerchants(opt, BaseListCompProps);
 
         }
-        break;
+            break;
+        case AllMerchantPageCategoryListApi.ApiName: {
+            return AllMerchantPageCategoryListApi.fetchCategoryList(opt, BaseListCompProps);
+
+        }
+            break;
     }
 }
