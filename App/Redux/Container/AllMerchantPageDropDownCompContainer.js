@@ -23,6 +23,7 @@ import BaseBt from '../../Comp/Base/BaseBt'
 import Colors from '../../Utils/Colors'
 import AllMerchantPageCategoryListContanier from './AllMerchantPageCategoryListContanier'
 import AllMerchantPageCountryListContanier from './AllMerchantPageCountryListContanier'
+import AllMerchantPageSortListContanier from './AllMerchantPageSortListContanier'
 import *as BizDropDownMenuAndListActions from '../Actions/BizDropDownMenuAndListActions'
 import *as BaseListActions from '../Actions/BaseListActions'
 import *as BizDropDownMenuAndListInit from '../InitialState/BizDropDownMenuAndListInit'
@@ -39,8 +40,6 @@ export class AllMerchantPageDropDownCompContainer extends Component {
         super(props);
 
         this.curSelctIndex = 0;//当前选择的 几号下拉列表
-
-
     }
 
     //下拉视图的 y
@@ -52,16 +51,20 @@ export class AllMerchantPageDropDownCompContainer extends Component {
         orderAsc: 1
     }
 
-    componentWillMount(){
+    componentWillMount() {
         this.props.dispatch(BizApi.AllMerchantPageCategoryListApi.fetchCategoryList())
         ;
         this.props.dispatch(BizApi.AllMerchantPageCountryListApi.fetchCountryList());
+        this.props.dispatch(BizApi.AllMerchantPageSortDropDownListApi.fetchSortList());
+
     }
 
     componentWillUnmount() {
         Log.log('BizDropDownMenuAndListContainer componentWillUnmount ');
         this.props.dispatch(BizApi.AllMerchantPageCategoryListApi.releaseCategoryListData())
         this.props.dispatch(BizApi.AllMerchantPageCountryListApi.releaseCountryListData())
+        this.props.dispatch(BizApi.AllMerchantPageSortDropDownListApi.releaseSortListData())
+
         this.props.dispatch(BizDropDownMenuAndListActions.resetDropDownListHAction(BizApi.BizDropDownMenuAndListApi.ApiName));
 
     }
@@ -81,7 +84,7 @@ export class AllMerchantPageDropDownCompContainer extends Component {
 
     _close() {
         // this.curSelctIndex=-1;
-        let self=this
+        let self = this
         Animated.timing(this.orderByModalYValue, {
             toValue: 0,
             duration: 250,
@@ -145,7 +148,7 @@ export class AllMerchantPageDropDownCompContainer extends Component {
     // }
 
     renderMenuBar() {
-        let self=this;
+        let self = this;
         if (this.props.renderMenuBar === false) {
             return null;
         } else if (this.props.renderMenuBar) {
@@ -163,14 +166,18 @@ export class AllMerchantPageDropDownCompContainer extends Component {
 
                         //改变 下拉列表 容器的 高, 让 AllMerchantPageDropDownCompContainer 重新 render, 就能 画 对应 Index 的 下拉列表控件了
                         {
-                            if (index == 1) {
-                                self.props.dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizApi.BizDropDownMenuAndListApi.ApiName, BizApi.AllMerchantPageCountryListApi.$CountryListDataArray.size > 0 ? BizApi.AllMerchantPageCountryListApi.$CountryListDataArray.size * GlobalStyles.AllMerchantPageDropDownListCellH : BizDropDownMenuAndListInit.defaultH))
-                            } else if (index == 0) {
+                            if (index == 0) {//母婴列表
                                 self.props.dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizApi.BizDropDownMenuAndListApi.ApiName, BizApi.AllMerchantPageCategoryListApi.$CategoryListDataArray.size > 0 ? BizApi.AllMerchantPageCategoryListApi.$CategoryListDataArray.size * GlobalStyles.AllMerchantPageDropDownListCellH : BizDropDownMenuAndListInit.defaultH))
+                            }
+                           else if (index == 1) {//国家列表
+                                self.props.dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizApi.BizDropDownMenuAndListApi.ApiName, BizApi.AllMerchantPageCountryListApi.$CountryListDataArray.size > 0 ? BizApi.AllMerchantPageCountryListApi.$CountryListDataArray.size * GlobalStyles.AllMerchantPageDropDownListCellH : BizDropDownMenuAndListInit.defaultH))
+                            } else if(index==2){//排序列表
+                                self.props.dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizApi.BizDropDownMenuAndListApi.ApiName, BizApi.AllMerchantPageSortDropDownListApi.$SortListDataArray.size > 0 ? BizApi.AllMerchantPageSortDropDownListApi.$SortListDataArray.size * GlobalStyles.AllMerchantPageDropDownListCellH : BizDropDownMenuAndListInit.defaultH))
+
                             }
                         }
 
-                    }else if(self.curSelctIndex != index && !self.state.isShow){
+                    } else if (self.curSelctIndex != index && !self.state.isShow) {
                         self.show(index)
                     }
                 }
@@ -186,11 +193,7 @@ export class AllMerchantPageDropDownCompContainer extends Component {
             case 0://Category 列表
             {
                 return <AllMerchantPageCategoryListContanier
-                    ref={
-                        (r) => {
-                            this.CategoryListRef = r;
-                        }
-                    }
+
                 >
                 </AllMerchantPageCategoryListContanier>;
             }
@@ -198,13 +201,17 @@ export class AllMerchantPageDropDownCompContainer extends Component {
             case 1://商家列表
             {
                 return <AllMerchantPageCountryListContanier
-                    ref={
-                        (r) => {
-                            this.CategoryListRef = r;
-                        }
-                    }
+
                 >
                 </AllMerchantPageCountryListContanier>;
+            }
+                break
+            case 2://排序列表
+            {
+                return <AllMerchantPageSortListContanier
+
+                >
+                </AllMerchantPageSortListContanier>;
             }
                 break
         }
@@ -219,10 +226,10 @@ export class AllMerchantPageDropDownCompContainer extends Component {
             outputRange: ['transparent', 'rgba(1,1,1,0.3)']
         })
 
-        //下拉列表的高
+        //下拉列表容器 的高
         const contentHeight = this.countDropListH(this.props.baseReducer.DropDownListHeight)//gScreen.height * 0.4;
 
-        //下拉列表的 y
+        //下拉列表容器 的 y
         const contentYPosition = this.orderByModalYValue.interpolate({
             inputRange: [0, 1],
             outputRange: [-contentHeight, 0]
@@ -240,10 +247,6 @@ export class AllMerchantPageDropDownCompContainer extends Component {
                 {isShow &&
                 //下拉列表的 萌层容器,包括 下拉列表和其下边的 用于点击隐藏下拉列表的蒙层按钮
                 <Animated.View style={[styles.animatedCover, {backgroundColor}]}
-                               accessible={true}
-                               onAccessibilityTap={() => {
-                                   Log.log('BizDropDownListContainer render() onAccessibilityTap')
-                               }}
                 >
                     {/*下拉列表的容器*/}
                     <Animated.View style={[styles.animatedContent, {top: contentYPosition, height: contentHeight}]}>
@@ -258,7 +261,7 @@ export class AllMerchantPageDropDownCompContainer extends Component {
                         activeOpacity={0.5}
                         disabled={false}
                         onPress={
-                            ()=>{
+                            () => {
                                 this._close()
                             }
                         }

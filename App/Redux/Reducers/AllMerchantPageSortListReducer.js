@@ -1,7 +1,7 @@
 /**
  * Created by Ebates on 16/12/27.
- * AllMerchantPageCategoryListReducer
- * 全部商家页 Category 下拉列表的 reducer
+ * AllMerchantPageSortListReducer
+ * 全部商家页 排序 下拉列表的 reducer
  */
 import {
     ListView,
@@ -10,7 +10,7 @@ import InitialState, {
     InitListState,
     ListToLoadingState,
     ListSuccesState,
-    ListWillUnmount,ListChangeNumsItem
+    ListWillUnmount
 } from '../InitialState/ListInitialState'
 import *as BaseListActions from '../Actions/BaseListActions'
 import *as BizApi from '../../NetWork/API/BizApi'
@@ -19,10 +19,10 @@ const {List, fromJS} = require('immutable') //导入  Immutable.js 的 Record AP
 
 const initialState = new InitialState()/*通用列表的初始UI状态*/
 /*搜索结果页 优惠 列表的 特殊状态*/
-    .setIn(['ApiName'], BizApi.AllMerchantPageCategoryListApi.ApiName)
+    .setIn(['ApiName'], BizApi.AllMerchantPageSortDropDownListApi.ApiName)
     .setIn(['isRenderRefreshControl'], false)
 
-export default function AllMerchantPageCategoryListReducer(state = initialState, action) {
+export default function AllMerchantPageSortListReducer(state = initialState, action) {
     if (state.ApiName && state.ApiName != action.ApiName) {
         return state;
     }
@@ -62,13 +62,6 @@ export default function AllMerchantPageCategoryListReducer(state = initialState,
             return ListWillUnmount(state,action);
         }
             break;
-        case BaseListActions.BaseListStatus.ChangeNumsItem: {
-
-            // BizApi.SearchResultPageCouponListAPI.componentDidMount = false;
-            return ListChangeNumsItem(state,action);
-        }
-            break;
-
     }
 
     /**

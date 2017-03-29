@@ -222,6 +222,32 @@ export function ListChangeOneItem(state, action) {
 }
 
 /**
+ * 列表改变多条数据
+ * @param state
+ * @param action
+ * @returns {Cursor}
+ * @constructor
+ */
+export function ListChangeNumsItem(state, action) {
+    let {indexArr/*数组里放被改变item 在数组里的下标*/,newDataArr/*新的数据源数组*/}= action.newData;
+    let temp$dataArray = state.getIn(['$dataArray']);
+
+    if (temp$dataArray) {
+        indexArr.map(
+            (v,i)=>{
+                temp$dataArray = temp$dataArray.set(v,newDataArr[i]);
+            }
+        )
+    }
+
+    let nextState = state
+        .setIn(['$dataArray'], temp$dataArray)
+        .setIn(['dataSource'], state.dataSource.cloneWithRows(temp$dataArray.toJS()))
+
+    return nextState;
+}
+
+/**
  * 列表删多某条数据
  * @returns {Cursor}
  * @constructor
