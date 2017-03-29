@@ -24,6 +24,8 @@ import Colors from '../../Utils/Colors'
 import AllMerchantPageCategoryListContanier from './AllMerchantPageCategoryListContanier'
 import AllMerchantPageCountryListContanier from './AllMerchantPageCountryListContanier'
 import *as BizDropDownMenuAndListActions from '../Actions/BizDropDownMenuAndListActions'
+import *as BaseListActions from '../Actions/BaseListActions'
+import *as BizDropDownMenuAndListInit from '../InitialState/BizDropDownMenuAndListInit'
 
 export class AllMerchantPageDropDownCompContainer extends Component {
     static propTypes = {
@@ -36,11 +38,9 @@ export class AllMerchantPageDropDownCompContainer extends Component {
     constructor(props) {
         super(props);
 
-        this.curSelctIndex=0;//当前选择的 几号下拉列表
+        this.curSelctIndex = 0;//当前选择的 几号下拉列表
 
-        this.props.dispatch(BizApi.AllMerchantPageCategoryListApi.fetchCategoryList())
-        ;
-        this.props.dispatch(BizApi.AllMerchantPageCountryListApi.fetchCountryList());
+
     }
 
     //下拉视图的 y
@@ -52,6 +52,12 @@ export class AllMerchantPageDropDownCompContainer extends Component {
         orderAsc: 1
     }
 
+    componentWillMount(){
+        this.props.dispatch(BizApi.AllMerchantPageCategoryListApi.fetchCategoryList())
+        ;
+        this.props.dispatch(BizApi.AllMerchantPageCountryListApi.fetchCountryList());
+    }
+
     componentWillUnmount() {
         Log.log('BizDropDownMenuAndListContainer componentWillUnmount ');
         this.props.dispatch(BizApi.AllMerchantPageCategoryListApi.releaseCategoryListData())
@@ -61,9 +67,9 @@ export class AllMerchantPageDropDownCompContainer extends Component {
     }
 
     //点击 Menu 按钮 回调,展开 下拉列表
-    show (index) {
+    show(index) {
         // Log.log('AllMerchantPageDropDownCompContainer show index='+index)
-        this.curSelctIndex=index;
+        this.curSelctIndex = index;
 
         this.setState({isShow: true}, () => {
             Animated.timing(this.orderByModalYValue, {
@@ -73,11 +79,13 @@ export class AllMerchantPageDropDownCompContainer extends Component {
         })
     }
 
-    _close  () {
+    _close() {
+        // this.curSelctIndex=-1;
+        let self=this
         Animated.timing(this.orderByModalYValue, {
             toValue: 0,
             duration: 250,
-        }).start(() => this.setState({isShow: false}))
+        }).start(() => self.setState({isShow: false}))
     }
 
     //改变 外部 默认列表的排序
@@ -137,17 +145,34 @@ export class AllMerchantPageDropDownCompContainer extends Component {
     // }
 
     renderMenuBar() {
+        let self=this;
         if (this.props.renderMenuBar === false) {
             return null;
         } else if (this.props.renderMenuBar) {
             return React.cloneElement(this.props.renderMenuBar());
         } else {//默认 menuBar
             return <AllMerchantPageMenuGridViewContainer
-                {...this.props}
+                {...self.props}
                 containerStyle={{zIndex: 1}}
                 onItemPress={(index) => {
 
-                    this.state.isShow ? this._close() : this.show(index);
+                    if (self.curSelctIndex == index) {
+                        self.state.isShow ? self._close() : self.show(index);
+                    } else if (self.curSelctIndex != index && self.state.isShow) {//当前切换 index && 下拉列表 容器 正在显示, 就不收回了, 直接 画 对应 index的 下拉列表控件
+                        self.curSelctIndex = index;
+
+                        //改变 下拉列表 容器的 高, 让 AllMerchantPageDropDownCompContainer 重新 render, 就能 画 对应 Index 的 下拉列表控件了
+                        {
+                            if (index == 1) {
+                                self.props.dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizApi.BizDropDownMenuAndListApi.ApiName, BizApi.AllMerchantPageCountryListApi.$CountryListDataArray.size > 0 ? BizApi.AllMerchantPageCountryListApi.$CountryListDataArray.size * GlobalStyles.AllMerchantPageDropDownListCellH : BizDropDownMenuAndListInit.defaultH))
+                            } else if (index == 0) {
+                                self.props.dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizApi.BizDropDownMenuAndListApi.ApiName, BizApi.AllMerchantPageCategoryListApi.$CategoryListDataArray.size > 0 ? BizApi.AllMerchantPageCategoryListApi.$CategoryListDataArray.size * GlobalStyles.AllMerchantPageDropDownListCellH : BizDropDownMenuAndListInit.defaultH))
+                            }
+                        }
+
+                    }else if(self.curSelctIndex != index && !self.state.isShow){
+                        self.show(index)
+                    }
                 }
                 }
             >
@@ -156,8 +181,8 @@ export class AllMerchantPageDropDownCompContainer extends Component {
     }
 
     //画 下拉处理的 列表控件
-    renderDropDownListContainer(){
-        switch (this.curSelctIndex){
+    renderDropDownListContainer() {
+        switch (this.curSelctIndex) {
             case 0://Category 列表
             {
                 return <AllMerchantPageCategoryListContanier
@@ -169,7 +194,7 @@ export class AllMerchantPageDropDownCompContainer extends Component {
                 >
                 </AllMerchantPageCategoryListContanier>;
             }
-            break;
+                break;
             case 1://商家列表
             {
                 return <AllMerchantPageCountryListContanier
@@ -181,12 +206,12 @@ export class AllMerchantPageDropDownCompContainer extends Component {
                 >
                 </AllMerchantPageCountryListContanier>;
             }
-            break
+                break
         }
     }
 
     render() {
-        Log.log('BizDropDownListContainer render()')
+        Log.log('AllMerchantPageDropDownCompContainer render()')
         const {dataSource,} = this.props
         const {isShow, currentType, orderAsc} = this.state
         const backgroundColor = this.orderByModalYValue.interpolate({
@@ -233,7 +258,9 @@ export class AllMerchantPageDropDownCompContainer extends Component {
                         activeOpacity={0.5}
                         disabled={false}
                         onPress={
-                            this._close
+                            ()=>{
+                                this._close()
+                            }
                         }
 
                     >

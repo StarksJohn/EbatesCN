@@ -53,28 +53,28 @@ export class AllMerchantPage extends Component {
         });
     }
 
-    onMenuBtSelect(i) {
-        const {baseReducer} = this.props;
-
-        Animated.sequence([
-            // 1)同时执行 营养素frameY、箭头角度 2个动画
-            Animated.parallel([
-                Animated.timing(baseReducer.DropDownListY, {
-                    toValue: baseReducer.isShowDropDownlist ? 0 : 1,
-                    duration: 500,
-                }),
-                // Animated.timing(this.state.angleRotation, {
-                //     toValue: FoodsList.showSortTypeView ? 0 : 1,
-                //     duration: 500,
-                // })
-            ]),
-            // 2)遮盖层透明度
-            // Animated.timing(this.state.coverViewOpacity, {
-            //     toValue: FoodsList.showSortTypeView ? 0 : 1,
-            //     duration: 100,
-            // })
-        ]).start();
-    }
+    // onMenuBtSelect(i) {
+    //     const {baseReducer} = this.props;
+    //
+    //     Animated.sequence([
+    //         // 1)同时执行 营养素frameY、箭头角度 2个动画
+    //         Animated.parallel([
+    //             Animated.timing(baseReducer.DropDownListY, {
+    //                 toValue: baseReducer.isShowDropDownlist ? 0 : 1,
+    //                 duration: 500,
+    //             }),
+    //             // Animated.timing(this.state.angleRotation, {
+    //             //     toValue: FoodsList.showSortTypeView ? 0 : 1,
+    //             //     duration: 500,
+    //             // })
+    //         ]),
+    //         // 2)遮盖层透明度
+    //         // Animated.timing(this.state.coverViewOpacity, {
+    //         //     toValue: FoodsList.showSortTypeView ? 0 : 1,
+    //         //     duration: 100,
+    //         // })
+    //     ]).start();
+    // }
 
     render() {
 
