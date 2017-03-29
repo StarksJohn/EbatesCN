@@ -1,7 +1,7 @@
 /**
  * Created by Ebates on 2017/3/28.
- * BizDropDownMenuAndListContainer
- * 包含 menu和 下拉列表的 筛选容器控件
+ * AllMerchantPageDropDownCompContainer
+ * 全部商家页 包含 menu和 下拉列表的 筛选容器控件
  */
 import React, {Component, PropTypes} from 'react'
 import {
@@ -17,19 +17,30 @@ import {
 } from 'react-native'
 import {connect} from 'react-redux';
 import GlobalStyles from '../../Global/GlobalStyles'
-import AllMerchantPageMenuGridViewContainer from '../../Redux/Container/AllMerchantPageMenuGridViewContainer'
-import AllMerchantPageCategoryListContanier from '../../Redux/Container/AllMerchantPageCategoryListContanier'
+import AllMerchantPageMenuGridViewContainer from './AllMerchantPageMenuGridViewContainer'
 import *as BizApi from '../../NetWork/API/BizApi'
-import BaseBt from '../Base/BaseBt'
+import BaseBt from '../../Comp/Base/BaseBt'
 import Colors from '../../Utils/Colors'
+import AllMerchantPageCategoryListContanier from './AllMerchantPageCategoryListContanier'
+import AllMerchantPageCountryListContanier from './AllMerchantPageCountryListContanier'
+import *as BizDropDownMenuAndListActions from '../Actions/BizDropDownMenuAndListActions'
 
-
-export class BizDropDownMenuAndListContainer extends Component {
+export class AllMerchantPageDropDownCompContainer extends Component {
     static propTypes = {
-        dataSource: React.PropTypes.array, //下拉列表的数据源
+        //dropDownListCompArr: React.PropTypes.array, //存 点击 不同 menu 后,下拉列表的容器里 显示的不同 数据源的 下拉列表控件
         onSelectItem: React.PropTypes.func,//点击下拉列表里的item 回调
         onChangeOrderAsc: React.PropTypes.func,//改变 外部 默认列表的排序
         renderMenuBar: PropTypes.any,
+    }
+
+    constructor(props) {
+        super(props);
+
+        this.curSelctIndex=0;//当前选择的 几号下拉列表
+
+        this.props.dispatch(BizApi.AllMerchantPageCategoryListApi.fetchCategoryList())
+        ;
+        this.props.dispatch(BizApi.AllMerchantPageCountryListApi.fetchCountryList());
     }
 
     //下拉视图的 y
@@ -44,10 +55,16 @@ export class BizDropDownMenuAndListContainer extends Component {
     componentWillUnmount() {
         Log.log('BizDropDownMenuAndListContainer componentWillUnmount ');
         this.props.dispatch(BizApi.AllMerchantPageCategoryListApi.releaseCategoryListData())
+        this.props.dispatch(BizApi.AllMerchantPageCountryListApi.releaseCountryListData())
+        this.props.dispatch(BizDropDownMenuAndListActions.resetDropDownListHAction(BizApi.BizDropDownMenuAndListApi.ApiName));
+
     }
 
-    //点击 常见 按钮 回调,展开 下拉列表
-    show = (index) => {
+    //点击 Menu 按钮 回调,展开 下拉列表
+    show (index) {
+        // Log.log('AllMerchantPageDropDownCompContainer show index='+index)
+        this.curSelctIndex=index;
+
         this.setState({isShow: true}, () => {
             Animated.timing(this.orderByModalYValue, {
                 toValue: 1,
@@ -56,7 +73,7 @@ export class BizDropDownMenuAndListContainer extends Component {
         })
     }
 
-    _close = () => {
+    _close  () {
         Animated.timing(this.orderByModalYValue, {
             toValue: 0,
             duration: 250,
@@ -128,9 +145,43 @@ export class BizDropDownMenuAndListContainer extends Component {
             return <AllMerchantPageMenuGridViewContainer
                 {...this.props}
                 containerStyle={{zIndex: 1}}
-                onItemPress={this.state.isShow ? this._close : this.show}
+                onItemPress={(index) => {
+
+                    this.state.isShow ? this._close() : this.show(index);
+                }
+                }
             >
             </AllMerchantPageMenuGridViewContainer>;
+        }
+    }
+
+    //画 下拉处理的 列表控件
+    renderDropDownListContainer(){
+        switch (this.curSelctIndex){
+            case 0://Category 列表
+            {
+                return <AllMerchantPageCategoryListContanier
+                    ref={
+                        (r) => {
+                            this.CategoryListRef = r;
+                        }
+                    }
+                >
+                </AllMerchantPageCategoryListContanier>;
+            }
+            break;
+            case 1://商家列表
+            {
+                return <AllMerchantPageCountryListContanier
+                    ref={
+                        (r) => {
+                            this.CategoryListRef = r;
+                        }
+                    }
+                >
+                </AllMerchantPageCountryListContanier>;
+            }
+            break
         }
     }
 
@@ -160,8 +211,9 @@ export class BizDropDownMenuAndListContainer extends Component {
             <View style={{zIndex: 1}}>
                 {/*MenuBar*/}
                 {this.renderMenuBar()}
+                {/*不画时 AllMerchantPageCategoryListContanier就卸载了*/}
                 {isShow &&
-                //下拉列表的 萌层容器,包括 下拉列表和其下边的 蒙层按钮
+                //下拉列表的 萌层容器,包括 下拉列表和其下边的 用于点击隐藏下拉列表的蒙层按钮
                 <Animated.View style={[styles.animatedCover, {backgroundColor}]}
                                accessible={true}
                                onAccessibilityTap={() => {
@@ -170,19 +222,12 @@ export class BizDropDownMenuAndListContainer extends Component {
                 >
                     {/*下拉列表的容器*/}
                     <Animated.View style={[styles.animatedContent, {top: contentYPosition, height: contentHeight}]}>
-                        <AllMerchantPageCategoryListContanier
-                            ref={
-                                (r) => {
-                                    this.CategoryListRef = r;
-                                }
-                            }
-                        >
-
-                        </AllMerchantPageCategoryListContanier>
+                        {this.renderDropDownListContainer()}
                     </Animated.View>
+                    {/*下拉列表下边 可点击隐藏 下拉列表的 按钮*/}
                     <BaseBt
                         style={ [{
-                            backgroundColor: Colors.getRandomColor(), position: 'absolute', top: contentHeight, left: 0,
+                            backgroundColor: Colors.transparent, position: 'absolute', top: contentHeight, left: 0,
                             right: 0, bottom: 0
                         }]}
                         activeOpacity={0.5}
@@ -198,14 +243,6 @@ export class BizDropDownMenuAndListContainer extends Component {
             </View>
         )
     }
-}
-
-const LoadingProgressView = ({style}) => {
-    return (
-        <View style={[styles.loadingProgress, style]}>
-            <ActivityIndicator/>
-        </View>
-    )
 }
 
 const styles = StyleSheet.create({
@@ -322,4 +359,4 @@ function mapStateToProps(state) {
 
 }
 
-export default connect(mapStateToProps)(BizDropDownMenuAndListContainer);
+export default connect(mapStateToProps)(AllMerchantPageDropDownCompContainer);

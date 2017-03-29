@@ -93,6 +93,7 @@ export function ListToLoadingState(state, action) {
             .setIn(['status'], action.type)
             .setIn(['couldLoadMore'], action.opt == BaseListActions.BaseListFetchDataType.INITIALIZE/*第一次获取列表数据时,显示footerView*/)
             .setIn(['opt'], action.opt)
+            .setIn(['componentDidMount'], true)
             .setIn(['isRefreshing'], action.opt == BaseListActions.BaseListFetchDataType.REFRESH)
         ;
     return _nextState;
@@ -170,7 +171,7 @@ export function ListWillUnmount(state,action) {
         .setIn(['status'], action.type)
         .setIn(['couldLoadMore'], false)
         .setIn(['opt'], action.opt)
-        // .setIn(['componentDidMount'], false)
+        .setIn(['componentDidMount'], false)
         .setIn(['isRefreshing'], false)
         .remove('meta');
 

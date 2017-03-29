@@ -1,7 +1,7 @@
 /**
  * Created by Ebates on 17/1/19.
  * AllMerchantPageCategoryListContanier
- * 全部商家页 的 Category 下拉 列表 数据源
+ * 全部商家页 的 国家 下拉 列表 数据源
  */
 
 import React, {Component, PropTypes} from 'react';
@@ -14,16 +14,15 @@ import *as BizViews from '../../Comp/BizCommonComp/BizViews'
 import *as BaseListActions from '../Actions/BaseListActions'
 import *as BizApi from '../../NetWork/API/BizApi'
 import *as BizMerchantListCell from '../../Comp/BizCells/BizMerchantListCell'
-import GlobalStyles from '../../Global/GlobalStyles'
 import BaseListComp from '../../Comp/Base/BaseListComp'
 import BizDropDownListComp from '../../Comp/BizList/BizDropDownListComp'
 
 
-class AllMerchantPageCategoryListContanier extends Component {
+class AllMerchantPageCountryListContanier extends Component {
 
     static propTypes = {
         // AllMerchantPageReducer:PropTypes.any ,//全部商家 页面的 reducer
-        AnimatedViewStyle:PropTypes.any,//下拉列表的容器
+        // AnimatedViewStyle:PropTypes.any,//下拉列表的容器
     };
 
     static defaultProps = {
@@ -32,29 +31,14 @@ class AllMerchantPageCategoryListContanier extends Component {
     };
 
     componentWillUnmount() {
-        Log.log('AllMerchantPageCategoryListContanier componentWillUnmount ')
+        Log.log('AllMerchantPageCountryListContanier componentWillUnmount ')
 
-        BizApi.AllMerchantPageCategoryListApi.isThisCompDidMount=false;
+        BizApi.AllMerchantPageCountryListApi.isThisCompDidMount=false;
+
     }
 
-    /**
-     * @param props
-     * @returns {XML}
-     */
-    // renderNetWorkAbnormalView(props) {
-    //
-    //     return BizViews.netWorkAbnormalView({}, {
-    //         marginTop: 60,
-    //         width: 90,
-    //         height: 90,
-    //     }, {marginTop: 25,}, {marginTop: 17}, () => {
-    //         this.props.dispatch(BizApi.SearchResultPageMerchantListAPI.fetchData(BaseListActions.BaseListFetchDataType.REFRESH, props.route.value));//刷新 列表
-    //
-    //     });
-    // }
-
     render() {
-        Log.log('AllMerchantPageCategoryListContanier render() ')
+        Log.log('AllMerchantPageCountryListContanier render() ')
         return (
             <BizDropDownListComp
                 {...this.props}
@@ -78,11 +62,11 @@ class AllMerchantPageCategoryListContanier extends Component {
 }
 
 function mapStateToProps(state) {
-    const {AllMerchantPageCategoryListReducer}=state;
+    const {AllMerchantPageCountryListReducer}=state;
     return {
-        baseReducer: AllMerchantPageCategoryListReducer,
+        baseReducer: AllMerchantPageCountryListReducer,
     };
 
 }
 
-export default connect(mapStateToProps)(AllMerchantPageCategoryListContanier);
+export default connect(mapStateToProps)(AllMerchantPageCountryListContanier);

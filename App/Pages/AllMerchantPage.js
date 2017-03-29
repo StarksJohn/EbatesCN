@@ -16,7 +16,8 @@ import *as BizApi from '../NetWork/API/BizApi'
 import BizMerchantListCell from '../Comp/BizCells/BizMerchantListCell'
 import AllMerchantPageListContanier from '../Redux/Container/AllMerchantPageListContanier'
 import GlobalStyles from '../Global/GlobalStyles'
-import BizDropDownMenuAndListContainer from '../Comp/BizCommonComp/BizDropDownMenuAndListContainer'
+import AllMerchantPageDropDownCompContainer from '../Redux/Container/AllMerchantPageDropDownCompContainer'
+
 
 const DropDownListDefualtY = GlobalStyles.statusBarAndNavBarH + GlobalStyles.AllMerchantPageMenuBtH;//下拉视图 显示时 Y的 起点
 
@@ -31,12 +32,6 @@ export class AllMerchantPage extends Component {
                 hardwareBackPressListenerName: gRouteName.AllMerchantPage
             });
         }
-
-        this.props.dispatch(BizApi.AllMerchantPageCategoryListApi.fetchCategoryList())
-        ;
-
-        // 下拉 视图Y值
-
     }
 
     componentWillUnmount() {
@@ -56,31 +51,6 @@ export class AllMerchantPage extends Component {
             name: gRouteName.SearchPage,
             isInTwoLevelPage: true,
         });
-    }
-
-    /**
-     * 画 下拉列表
-     */
-    renderDropDownList() {
-
-        let height = 100 //8 * (30 + 10) + 10;//点击后下拉出来视图的高暂时写死
-        let DropDownListStyle = [styles.dropDownListStyle];
-        //下拉视图的 style 数组 添加一个 top 属性,控制 下拉视图 的动画
-
-        DropDownListStyle.push({
-            top: this.props.baseReducer.DropDownListY.interpolate({
-                inputRange: [0, 1],
-                outputRange: [/*84+*/DropDownListDefualtY - height, DropDownListDefualtY] //未下拉时,其实是画在 如图(笔记里 RN Demo )
-            }),
-            height: height
-        });
-
-        return (
-            // 下拉出来的列表的容器
-            <Animated.View style={DropDownListStyle}>
-
-            </Animated.View>
-        )
     }
 
     onMenuBtSelect(i) {
@@ -138,11 +108,9 @@ export class AllMerchantPage extends Component {
                 {/*{this.renderDropDownList()}*/}
                 {navigationBar}
                 {BizViews.renderShadowLine({zIndex: 3, borderWidth: 0.3})}
-                <BizDropDownMenuAndListContainer
-                    dataSource={[]}
+                <AllMerchantPageDropDownCompContainer
                     onSelectItem={this.onSelectItem}
                     //onChangeOrderAsc={this._onChangeOrderAsc}
-
                 />
                 {BizViews.renderShadowLine({zIndex: 3, borderWidth: 0.3})}
                 {/*商家列表*/}

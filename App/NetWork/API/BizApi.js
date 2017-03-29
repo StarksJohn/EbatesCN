@@ -17,6 +17,8 @@ import *as BizLoadingView from '../../Comp/BizCommonComp/BizLoadingView'
 import *as BaseGridViewActions from '../../Redux/Actions/BaseGridViewActions'
 import *as AllMerchantPageActions from '../../Redux/Actions/AllMerchantPageActions'
 import *as BizDropDownMenuAndListActions from '../../Redux/Actions/BizDropDownMenuAndListActions'
+import GlobalStyles from '../../Global/GlobalStyles'
+
 
 /**
  * 列表类型 接口 都会返回的 通用的 可判断 couldLoadMore 的 数据结构
@@ -1610,8 +1612,7 @@ export const AllMerchantPageApi = {
 }
 
 /**
- * 全部商家页 商家列表 的API
- * @type {{ApiName: string, SearchMerchants: ((BaseProps)=>(p1:*))}}
+ * 全部商家页 商家列表 的API https://api-staging-current.ebates.cn/docs.html#search-search-merchants-get
  */
 export const AllMerchantPageListApi = {
     ApiName: 'AllMerchantPageListApi',
@@ -1681,6 +1682,7 @@ export const AllMerchantPageCategoryListApi = {
     ApiName: 'AllMerchantPageCategoryListApi',
     $CategoryListDataArray: fromJS([]), //CATEGORY LIST 接口 已经拿到的数据,immutable.List 数据类型  , 里边放 model, toJS()可转成JS 数组
     isLoading: false,//是否正在 请求接口
+    isThisCompDidMount: false,//此API 对应的控件是否 挂载中
 
     /**
      * CATEGORY LIST 接口 https://api-staging-current.ebates.cn/docs.html#categories-category-list-get
@@ -1699,7 +1701,7 @@ export const AllMerchantPageCategoryListApi = {
                             if (time == -1) {
 
                                 dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
-
+                                this.isThisCompDidMount = true;
                             }
                         }
                     }).start();
@@ -1709,6 +1711,8 @@ export const AllMerchantPageCategoryListApi = {
                         couldLoadMore: false,
                         newContentArray: this.$CategoryListDataArray.toJS(),
                     }));
+                    dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizDropDownMenuAndListApi.ApiName, this.$CategoryListDataArray.size * GlobalStyles.AllMerchantPageDropDownListCellH/*每个cell 高 默认 44 ,以后 把此 常量写到 专门的 cell里*/))
+                    this.isThisCompDidMount = true;
                 }
                 else if (!this.isLoading && this.$CategoryListDataArray.size == 0) {//刚进入 全部商家页, 主动 调此接口, 走这里的代码
                     Log.log('BizApi  fetchCategoryList 开始请求 全部商家页 下拉列表 里 有 母婴 的 那个列表 接口 ');
@@ -1723,41 +1727,45 @@ export const AllMerchantPageCategoryListApi = {
                         },
                     ).then((responseData) => {
 
-                        new SMSTimer({//模拟 拿到数据后, Loading状态的列表 切到 成功状态
-                            timerNums: 10,
-                            callBack: (time) => {
-                                Log.log('time===' + time);
-                                if (time == -1){
+                        // new SMSTimer({//模拟 拿到数据后, Loading状态的列表 切到 成功状态
+                        //     timerNums: 10,
+                        //     callBack: (time) => {
+                        //         Log.log('time===' + time);
+                        //         if (time == -1){
+                        //
+                        //         }
+                        //     }
+                        // }).start();
+
+                        {
+
+                            Log.log('BizApi  fetchCategoryList 全部商家页 下拉列表 里 有 母婴 的 那个列表 接口OK, responseData.data.length =' + responseData.data.length)
+
+                            Log.log('BizApi  fetchCategoryList 全部商家页 下拉列表 里 有 母婴 的 那个列表 接口OK, responseData.data =' + Log.writeObjToJson(responseData.data));
+
+                            responseData.data.map(
+                                (v, i) => {
+                                    // if (i<5)
                                     {
-
-                                        Log.log('BizApi  fetchCategoryList 全部商家页 下拉列表 里 有 母婴 的 那个列表 接口OK, responseData.data.length =' + responseData.data.length)
-
-                                        Log.log('BizApi  fetchCategoryList 全部商家页 下拉列表 里 有 母婴 的 那个列表 接口OK, responseData.data =' + Log.writeObjToJson(responseData.data));
-
-                                        responseData.data.map(
-                                            (v, i) => {
-                                                // if (i<5)
-                                                {
-                                                    this.$CategoryListDataArray = this.$CategoryListDataArray.set(this.$CategoryListDataArray.size, v);
-                                                }
-                                            }
-                                        );
-
-                                        Log.log('BizApi  fetchCategoryList 全部商家页 下拉列表 里 有 母婴 的 那个列表 的数据源 $CategoryListDataArray=' + Log.writeObjToJson(this.$CategoryListDataArray.toJS()))
-                                        this.isLoading = false;
-
-                                        dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
-                                            couldLoadMore: false,
-                                            newContentArray: this.$CategoryListDataArray.toJS(),
-                                        }));
-
-                                        dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizDropDownMenuAndListApi.ApiName,this.$CategoryListDataArray.size*44/*每个cell 高 默认 44 ,以后 把此 常量写到 专门的 cell里*/))
+                                        this.$CategoryListDataArray = this.$CategoryListDataArray.set(this.$CategoryListDataArray.size, v);
                                     }
                                 }
+                            );
+
+                            Log.log('BizApi  fetchCategoryList 全部商家页 下拉列表 里 有 母婴 的 那个列表 的数据源 $CategoryListDataArray=' + Log.writeObjToJson(this.$CategoryListDataArray.toJS()))
+                            this.isLoading = false;
+
+                            if (this.isThisCompDidMount) {
+                                dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
+                                    couldLoadMore: false,
+                                    newContentArray: this.$CategoryListDataArray.toJS(),
+                                }));
+
+                                dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizDropDownMenuAndListApi.ApiName, this.$CategoryListDataArray.size * GlobalStyles.AllMerchantPageDropDownListCellH/*每个cell 高 默认 44 ,以后 把此 常量写到 专门的 cell里*/))
                             }
-                        }).start();
 
 
+                        }
 
                     }).catch((error) => {
                         Log.log('BizApi  AllMerchantPageListApi 全部商家页 搜索商家 接口失败 =' + error)
@@ -1783,9 +1791,130 @@ export const AllMerchantPageCategoryListApi = {
     releaseCategoryListData(){
         return (dispatch) => {
             this.$CategoryListDataArray = this.$CategoryListDataArray.clear();
-            this.isLoading=false;
-            dispatch(BizDropDownMenuAndListActions.resetDropDownListHAction(BizDropDownMenuAndListApi.ApiName));
+            this.isLoading = false;
+            this.isThisCompDidMount = false;
+            // dispatch(BizDropDownMenuAndListActions.resetDropDownListHAction(BizDropDownMenuAndListApi.ApiName));
 
+        }
+
+    }
+}
+
+/**
+ * 全部商家页 Country 下拉列表 API https://api-staging-current.ebates.cn/docs.html#tags-countries-get
+ * @type {{ApiName: string, export: AllMerchantPageCategoryListApi.export}}
+ */
+export const AllMerchantPageCountryListApi = {
+    ApiName: 'AllMerchantPageCountryListApi',
+    $CountryListDataArray: fromJS([]), //COUNTRIES 接口 已经拿到的数据,immutable.List 数据类型  , 里边放 model, toJS()可转成JS 数组
+    isLoading: false,//是否正在 请求接口
+    isThisCompDidMount: false,//此API 对应的控件是否 挂载中
+
+    /**
+     * 拿 全部商家页 国家 下拉列表   的数据
+     */
+    fetchCountryList(opt){
+        return (dispatch) => {
+            {
+                if (this.isLoading && this.$CountryListDataArray.size == 0)//如果 列表控件 挂载时, 接口正在 请求中 ,列表控件就 切到 Loading 状态
+                {
+                    Log.log('BizApi fetchCountryList 列表控件 挂载时, 接口正在 请求中 ,列表控件就 切到 Loading 状态')
+                    new SMSTimer({//为了能 从 初始化状态 切换到 Loading  状态, 否则太快了,切换不了
+                        timerNums: 1,
+                        callBack: (time) => {
+                            Log.log('time===' + time);
+                            if (time == -1) {
+
+                                dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
+                                this.isThisCompDidMount = true;
+                            }
+                        }
+                    }).start();
+
+                } else if (!this.isLoading && this.$CountryListDataArray.size > 0) {//列表挂载时, 接口已经拿到数据,列表直接切到 成功状态
+                    dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
+                        couldLoadMore: false,
+                        newContentArray: this.$CountryListDataArray.toJS(),
+                    }));
+                    dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizDropDownMenuAndListApi.ApiName, this.$CountryListDataArray.size * GlobalStyles.AllMerchantPageDropDownListCellH/*每个cell 高 默认 44 ,以后 把此 常量写到 专门的 cell里*/))
+
+                    this.isThisCompDidMount=true;
+
+                }
+                else if (!this.isLoading && this.$CountryListDataArray.size == 0) {//刚进入 全部商家页, 主动 调此接口, 走这里的代码,此时列表可能未 挂载
+                    Log.log('BizApi  fetchCountryList 开始请求 全部商家页 国家 下拉列表  接口 ');
+                    this.isLoading = true;
+
+                    let url = RequestUtil.getStagingOrProductionHost() + 'tags/countries';
+                    RequestUtil.GET(url, null,
+                        (header) => {
+                            commonApiHeaderAppend(header)
+                        },
+                    ).then((responseData) => {
+
+                        new SMSTimer({//模拟 拿到数据后, Loading状态的列表 切到 成功状态
+                            timerNums: 10,
+                            callBack: (time) => {
+                                Log.log('time===' + time);
+                                if (time == -1) {
+                                    {
+
+                                        Log.log('BizApi  fetchCountryList 全部商家页 国家 下拉列表  接口OK, responseData.data.length =' + responseData.data.length)
+
+                                        Log.log('BizApi  fetchCountryList 全部商家页 国家 下拉列表  接口OK, responseData.data =' + Log.writeObjToJson(responseData.data));
+
+                                        responseData.data.map(
+                                            (v, i) => {
+                                                // if (i<5)
+                                                {
+                                                    this.$CountryListDataArray = this.$CountryListDataArray.set(this.$CountryListDataArray.size, v);
+                                                }
+                                            }
+                                        );
+
+                                        // Log.log('BizApi  fetchCountryList 全部商家页 国家 下拉列表  的数据源 $CountryListDataArray=' + Log.writeObjToJson(this.$CategoryListDataArray.toJS()))
+                                        this.isLoading = false;
+
+                                        if (this.isThisCompDidMount) {//列表正在挂载
+                                            dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
+                                                couldLoadMore: false,
+                                                newContentArray: this.$CountryListDataArray.toJS(),
+                                            }));
+
+                                            dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizDropDownMenuAndListApi.ApiName, this.$CountryListDataArray.size * GlobalStyles.AllMerchantPageDropDownListCellH/*每个cell 高 默认 44 ,以后 把此 常量写到 专门的 cell里*/))
+                                        }
+                                    }
+                                }
+                            }
+                        }).start();
+
+
+                    }).catch((error) => {
+                        Log.log('BizApi  fetchCountryList 全部商家页 国家 下拉列表 接口失败 =' + error)
+                        RequestUtil.showErrorMsg(error)
+                        this.isLoading = false;
+
+                        //商家页的top10接口如果返回错误, 不能直接把 列表处于 失败状态,因还得画0和1号cell,故只能 添加一个 3号异常cell
+                        // this.isInNetWorkAbnormalBeforeFetchSuccess=true;
+                        // dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
+                        //     couldLoadMore: true,
+                        //     newContentArray: [{key: this.NetWorkAbnormalCellData}]
+                        // }));
+                    });
+                }
+            }
+        }
+    },
+
+    /**
+     * 重置 Country 接口的 数据 和 其 列表的 高度
+     * @returns {function(*)}
+     */
+    releaseCountryListData(){
+        return (dispatch) => {
+            this.$CountryListDataArray = this.$CountryListDataArray.clear();
+            this.isLoading = false;
+            this.isThisCompDidMount=false;
         }
 
     }
@@ -1795,8 +1924,8 @@ export const AllMerchantPageCategoryListApi = {
  * 通用的 包含 menu和 下拉列表的 控件的 api
  * @type {{ApiName: string}}
  */
-export const BizDropDownMenuAndListApi={
-    ApiName:'BizDropDownMenuAndListApi',
+export const BizDropDownMenuAndListApi = {
+    ApiName: 'BizDropDownMenuAndListApi',
 }
 
 
@@ -1848,6 +1977,11 @@ export function fetchApi(opt, pageNo, BaseListCompProps) {
             break;
         case AllMerchantPageCategoryListApi.ApiName: {
             return AllMerchantPageCategoryListApi.fetchCategoryList(opt, BaseListCompProps);
+
+        }
+            break;
+        case AllMerchantPageCountryListApi.ApiName: {
+            return AllMerchantPageCountryListApi.fetchCountryList(opt, BaseListCompProps);
 
         }
             break;

@@ -117,6 +117,7 @@ module.exports =
         //顶部 状态栏+nav 的高
         statusBarAndNavBarH: Platform.OS === 'ios' ? 20 + 44 : 50,
         AllMerchantPageMenuBtH:45,//全部商家页 筛选 按钮 的H
+        AllMerchantPageDropDownListCellH:44,//全部商家页 下拉列表的默认高
     };
 
 //顶部 状态栏+nav 的高

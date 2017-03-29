@@ -1,6 +1,6 @@
 /**
  * Created by Ebates on 17/3/9.
- * AllMerchantPageMenuGridViewContainer 的 在 全部商家页 用的 MENU 网格控件的 数据源
+ * AllMerchantPageMenuGridViewContainer  在 全部商家页 用的 MENU 网格控件的 数据源
  */
 import React, {Component,PropTypes} from 'react';
 import {
