@@ -10,6 +10,8 @@ import BaseListComp from '../Base/BaseListComp';
 import Colors from '../../Utils/Colors'
 import BizDropDownListCell from '../BizCells/BizDropDownListCell'
 import *as BaseListActions from '../../Redux/Actions/BaseListActions'
+import BizFilterDropDownListCell from '../BizCells/BizFilterDropDownListCell'
+import *as BizApi from '../../NetWork/API/BizApi'
 
 export default class BizDropDownListComp extends Component {
 
@@ -22,35 +24,35 @@ export default class BizDropDownListComp extends Component {
         super(props);
     }
 
+    componentDidMount() {
+
+        // this.refs.map(
+        //     (v,i)=>{
+        //         v.measure((fx, fy, width, height, px, py) => {
+        //             Log.log('BizDropDownListComp componentDidMount  FilterDropDownListCellRef.height='+height );
+        //         })
+        //     }
+        // )
+    }
+
+    /**
+     * 单选的cell 点击后回调
+     * @param rowData
+     */
     onPress(rowData) {
         if (!rowData.isSelect) {
             rowData.isSelect = true;//只改变 model  的属性不行,因 model的地址 没变,就 不能 重绘 对应的model
-
-            // this.props.baseReducer.$dataArray.toJS().map(
-            //     (model,i)=>{
-            //         Log.log('BizDropDownListComp onPress map() i=='+i);
-            //         if (rowData.id!=model.id && model.isSelect){
-            //             model.isSelect=false;
-            //
-            //             this.props.dispatch(BaseListActions.ChangeListNumsItemAction(BaseListActions.BaseListFetchDataType.REFRESH, this.props.baseReducer.ApiName, {
-            //                 indexArr: [rowData.index],
-            //                 newDataArr: [{...rowData},{...model}]
-            //             }));
-            //
-            //         }
-            //     }
-            // )
 
             let arr = this.props.baseReducer.$dataArray.toJS();
 
             for (let i = 0; i < arr.length; i++) {
                 Log.log('BizDropDownListComp onPress for() i==' + i);
                 let model = arr[i];
-                if (rowData.id != model.id && model.isSelect) {
+                if (rowData.index != model.index && model.isSelect) {
                     model.isSelect = false;
 
                     this.props.dispatch(BaseListActions.ChangeListNumsItemAction(BaseListActions.BaseListFetchDataType.REFRESH, this.props.baseReducer.ApiName, {
-                        indexArr: [rowData.index,model.index],
+                        indexArr: [rowData.index, model.index],
                         newDataArr: [{...rowData}, {...model}]
                     }));
                     break;
@@ -71,15 +73,34 @@ export default class BizDropDownListComp extends Component {
      */
     renderRow = (rowData, sectionID, rowID, highlightRow) => {
         Log.log('BizDropDownListComp renderRow rowID=' + rowID)
-        return <BizDropDownListCell
-            rowData={rowData}
-            onPress={ (rowData) => {
-                this.onPress(rowData);
-            } }
-        >
+        let self = this;
+        let cell = null;
+        if (self.props.baseReducer.ApiName == BizApi.AllMerchantPageFilterDropDownListApi.ApiName) {//画 筛选 下拉列表的cell
+            cell = <BizFilterDropDownListCell
+                {...self.props}
+                ref={
+                    rowData.index
+                }
+                rowData={rowData}
+                onPress={ (rowData) => {
+                    self.onPress(rowData);
+                } }
+            >
 
-        </BizDropDownListCell>;
+            </BizFilterDropDownListCell>;
+        } else {//画 其他下拉列表的 单选 cell
+            cell = <BizDropDownListCell
+                {...self.props}
+                rowData={rowData}
+                onPress={ (rowData) => {
+                    self.onPress(rowData);
+                } }
+            >
 
+            </BizDropDownListCell>;
+        }
+
+        return cell;
     }
 
     render() {
@@ -87,10 +108,10 @@ export default class BizDropDownListComp extends Component {
             <View style={{flex: 1}}>
                 <BaseListComp
                     {...this.props }
-                    //customContainer={{paddingTop:0}}
                     onScroll={
                         () => {
-                            {/*Log.log('BizDropDownListComp onScroll!');*/}
+                            {/*Log.log('BizDropDownListComp onScroll!');*/
+                            }
                         }
                     }
                     initialListSize={5}

@@ -13,6 +13,10 @@ import BaseBt from './BaseBt'
 export default class BaseTitleBt extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            isSelect: false
+        }
     }
 
     static propTypes = {
@@ -20,16 +24,20 @@ export default class BaseTitleBt extends Component {
         backgroundColor: PropTypes.string,
         title: PropTypes.string,
         textStyle: Text.propTypes.style,
-        btStyle:View.propTypes.style,
+        selectTextStyle: Text.propTypes.style,//按钮 选中状态下的 文字样式, 不是 按住不放,而是用于 多选 的情况下, 此按钮 可处于 选中和未选中状态
+
+        btStyle: View.propTypes.style,
+        selectBtStyle: View.propTypes.style,//按钮 选中状态下的 按钮样式
+
         // selectColor: PropTypes.string //按钮按下的颜色
-        activeOpacity:PropTypes.number,
-        disabled:PropTypes.bool
+        activeOpacity: PropTypes.number,
+        disabled: PropTypes.bool,
     };
 
     static defaultProps = {
-        backgroundColor:Colors.white,
-        activeOpacity:0.5,
-        disabled:false
+        backgroundColor: Colors.white,
+        activeOpacity: 0.5,
+        disabled: false,
     };
 
 
@@ -41,24 +49,43 @@ export default class BaseTitleBt extends Component {
 
     }
 
+    /**
+     * 外部 可根据 此控件的 state 判断 是否需要 绘制 children
+     * @returns {*}
+     */
+    renderChildren() {
+        if (this.props.renderChildren) {
+            // return React.cloneElement(this.props.renderChildren(state));
+            return this.props.renderChildren(this.state);
+        }
+    }
+
     render() {
+        Log.log('BaseTitleBt render()')
 
         return (
             <BaseBt
-                style={/*{
-                    backgroundColor: this.props.backgroundColor, flex: 1, borderRadius: 6,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                }*/ [{backgroundColor: this.props.backgroundColor},this.props.btStyle]}
+                style={ [{backgroundColor: this.props.backgroundColor}, this.state.isSelect ? (this.props.selectBtStyle ? this.props.selectBtStyle : this.props.btStyle) : this.props.btStyle]}
                 //underlayColor={/*Colors.blackTranslucent*/ this.props.selectColor}
                 activeOpacity={this.props.activeOpacity}
                 disabled={this.props.disabled}
-                onPress={ this.props.onPress }
+                onPress={
+                    () => {
+                        this.setState({
+                            isSelect: !this.state.isSelect
+                        })
+                        return this.props.onPress()
+                    }
+                }
             >
-                <Text style={ this.props.textStyle} numberOfLines={1}>
+                <Text
+                    style={ this.state.isSelect ? (this.props.selectTextStyle ? this.props.selectTextStyle : this.props.textStyle) : this.props.textStyle}
+                    numberOfLines={1}>
                     {this.props.title}
                 </Text>
-                {this.props.children}
+                {/*{this.props.children}*/}
+                {this.props.renderChildren ? this.renderChildren() : this.props.children}
+
             </BaseBt>
         );
     }

@@ -1601,14 +1601,6 @@ export const AllMerchantPageApi = {
             }]));
         }
     },
-
-    /**
-     * https://api-staging-current.ebates.cn/docs.html#tags COUNTRIES 接口
-     * 全部商家页 国家 下拉列表 接口
-     */
-    fetchCountries(){
-
-    }
 }
 
 /**
@@ -1747,7 +1739,7 @@ export const AllMerchantPageCategoryListApi = {
                                 (v, i) => {
                                     // if (i<5)
                                     {
-                                        v.isSelect=false;
+                                        v.isSelect=false;//给每个mode 加 是否被选中 属性
                                         v.index=i+1;//用于 点击 处理对号的位置
 
                                         this.$CategoryListDataArray = this.$CategoryListDataArray.set(this.$CategoryListDataArray.size, v);
@@ -1824,7 +1816,7 @@ export const AllMerchantPageCountryListApi = {
                 {
                     Log.log('BizApi fetchCountryList 列表控件 挂载时, 接口正在 请求中 ,列表控件就 切到 Loading 状态')
                     new SMSTimer({//为了能 从 初始化状态 切换到 Loading  状态, 否则太快了,切换不了
-                        timerNums: 1,
+                        timerNums: 0.5,
                         callBack: (time) => {
                             Log.log('time===' + time);
                             if (time == -1) {
@@ -1861,6 +1853,7 @@ export const AllMerchantPageCountryListApi = {
                         //     callBack: (time) => {
                         //         Log.log('time===' + time);
                         //         if (time == -1) {
+                        //
                         //         }
                         //     }
                         // }).start();
@@ -1875,12 +1868,13 @@ export const AllMerchantPageCountryListApi = {
                                 (v, i) => {
                                     // if (i<5)
                                     {
-                                        v.isSelect=false;
+                                        v.isSelect=false;//给每个mode 加 是否被选中 属性
+                                        v.index=i+1;//用于 点击 处理对号的位置
                                         this.$CountryListDataArray = this.$CountryListDataArray.set(this.$CountryListDataArray.size, v);
                                     }
                                 }
                             );
-                            this.$CountryListDataArray=this.$CountryListDataArray.insert(0,{id:-1,name:"全部",slug:null,isSelect:true});
+                            this.$CountryListDataArray=this.$CountryListDataArray.insert(0,{id:-1,name:"全部",slug:null,isSelect:true,index:0});
 
                             // Log.log('BizApi  fetchCountryList 全部商家页 国家 下拉列表  的数据源 $CountryListDataArray=' + Log.writeObjToJson(this.$CategoryListDataArray.toJS()))
                             this.isLoading = false;
@@ -1973,9 +1967,15 @@ export const AllMerchantPageSortDropDownListApi = {
 
                     {
 
-                        ['智能排序','按返利最高','按2周内拿到返利人数最多','按商家名首字母'].map(
+                        [{name:'智能排序'},{name:'按返利最高'},{name:'按2周内拿到返利人数最多'},{name:'按商家名首字母'}].map(
                             (v, i) => {
                                 {
+                                    v.isSelect=false;//给每个mode 加 是否被选中 属性
+                                    if (i==0){
+                                        v.isSelect=true
+                                    }
+                                    v.index=i;//用于 点击 处理对号的位置
+                                    v.id=i;
                                     this.$SortListDataArray = this.$SortListDataArray.set(this.$SortListDataArray.size, v);
                                 }
                             }
@@ -2007,6 +2007,257 @@ export const AllMerchantPageSortDropDownListApi = {
             this.$SortListDataArray = this.$SortListDataArray.clear();
             this.isLoading = false;
             this.isThisCompDidMount=false;
+        }
+
+    }
+}
+
+/**
+ * 全部商家页 筛选 下拉列表 API ,前2个cell 数据写死, 此列表的2个接口全部Ok后,才切换到 成功状态,否则 是 loading 状态,因 任何一个接口没成功,数据显示就不完整,筛选就没意义
+ * @type {{ApiName: string, export: AllMerchantPageCategoryListApi.export}}
+ */
+export const AllMerchantPageFilterDropDownListApi = {
+    ApiName: 'AllMerchantPageFilterDropDownListApi',
+    shipsApiName:'shipsApiName',//直邮方式api
+    paymentsApiName:'paymentsApiName',//支付方式api
+    $FilterListDataArray: fromJS([]), //筛选 接口 已经拿到的数据,immutable.List 数据类型  , 里边放 model, toJS()可转成JS 数组, 0和1号model对应 0和1 号 cell,2号model 对应直邮至 cell 的接口, 3号model 对应支付方式 cell的 接口,4号model对应 清空和确定cell
+    isLoading: false,//是否正在 请求接口
+    isThisCompDidMount: false,//此API 对应的控件是否 挂载中
+    isShipsApiOk:false,//直邮方式 接口是否OK
+    isPaymentsApiOk:false,// 支付方式 接口 是否 OK
+    shipsDataArr:[],//存 ships 接口的 数据
+    paymentsDataArr:[],//存 payments 接口的 数据
+
+    /**
+     * 拿 全部商家页 筛选 下拉列表   的数据
+     */
+    fetchFilterList(opt){
+        return (dispatch) => {
+            {
+                if (this.isLoading && this.$FilterListDataArray.size == 0)//如果 列表控件 挂载时, 接口正在 请求中 ,列表控件就 切到 Loading 状态
+                {
+                    Log.log('BizApi fetchFilterList 列表控件 挂载时, 接口正在 请求中 ,列表控件就 切到 Loading 状态')
+                    // new SMSTimer({//为了能 从 初始化状态 切换到 Loading  状态, 否则太快了,切换不了
+                    //     timerNums: 0.5,
+                    //     callBack: (time) => {
+                    //         Log.log('time===' + time);
+                    //         if (time == -1) {
+                    //
+                    //             dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
+                    //             this.isThisCompDidMount = true;
+                    //         }
+                    //     }
+                    // }).start();
+
+                    dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
+                    this.isThisCompDidMount = true;
+
+                } else if (!this.isLoading && this.$FilterListDataArray.size > 0) {//列表挂载时, 接口已经拿到数据,列表直接切到 成功状态
+                    dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
+                        couldLoadMore: false,
+                        newContentArray: this.$FilterListDataArray.toJS(),
+                    }));
+                    dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizDropDownMenuAndListApi.ApiName, GlobalStyles.AllMerchantPageFilterListH))
+
+                    this.isThisCompDidMount=true;
+
+                }
+                else if (!this.isLoading && this.$FilterListDataArray.size == 0) {//刚进入 全部商家页, 主动 调此接口, 走这里的代码,此时列表可能未 挂载
+                    Log.log('BizApi  fetchFilterList 开始请求 全部商家页 筛选 下拉列表  接口 ');
+
+                    this.isLoading=true;
+                    dispatch(this.fetchShipsApi(opt));
+                    dispatch(this.fetchPaymentsApi(opt));
+
+                }
+            }
+        }
+    },
+
+    /**
+     * 直邮方式 API https://api-staging-current.ebates.cn/docs.html#tags-ships-get
+     */
+    fetchShipsApi(opt){
+        return (dispatch) => {
+            if (this.shipsDataArr.length>0){
+                return;
+            }
+
+            let url = RequestUtil.getStagingOrProductionHost() + 'tags/ships';
+            RequestUtil.GET(url, null,
+                (header) => {
+                    commonApiHeaderAppend(header)
+                },
+            ).then((responseData) => {
+
+                // new SMSTimer({//模拟 拿到数据后, Loading状态的列表 切到 成功状态
+                //     timerNums: 3,
+                //     callBack: (time) => {
+                //         Log.log('time===' + time);
+                //         if (time == -1) {
+                //
+                //         }
+                //     }
+                // }).start();
+
+                {
+                    Log.log('BizApi  fetchShipsApi 全部商家页 ships  接口OK, responseData.data =' + Log.writeObjToJson(responseData.data));
+
+                    // this.shipsDataArr=responseData.data;
+
+                    responseData.data.map(
+                        (model, i) => {
+                            {
+                                model.isSelect=false;//给每个mode 加 是否被选中 属性
+                                this.shipsDataArr.push(model)
+
+                            }
+                        }
+                    );
+
+                    this.isShipsApiOk=true;
+
+                    // this.CombineData();
+                    dispatch(this.CombineData(opt));
+                }
+
+            }).catch((error) => {
+                Log.log('BizApi  fetchShipsApi 全部商家页 ships 接口失败 =' + error)
+                RequestUtil.showErrorMsg(error)
+                this.isLoading = false;
+
+                //商家页的top10接口如果返回错误, 不能直接把 列表处于 失败状态,因还得画0和1号cell,故只能 添加一个 3号异常cell
+                // this.isInNetWorkAbnormalBeforeFetchSuccess=true;
+                // dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
+                //     couldLoadMore: true,
+                //     newContentArray: [{key: this.NetWorkAbnormalCellData}]
+                // }));
+            });
+        }
+
+    },
+
+    /**
+     * 支付方式 API https://api-staging-current.ebates.cn/docs.html#tags-payments-get
+     */
+    fetchPaymentsApi(opt){
+        return (dispatch) => {
+            if (this.paymentsDataArr.length>0){
+                return;
+            }
+
+            let url = RequestUtil.getStagingOrProductionHost() + 'tags/payments';
+            RequestUtil.GET(url, null,
+                (header) => {
+                    commonApiHeaderAppend(header)
+                },
+            ).then((responseData) => {
+
+                // new SMSTimer({//模拟 拿到数据后, Loading状态的列表 切到 成功状态
+                //     timerNums: 5,
+                //     callBack: (time) => {
+                //         Log.log('time===' + time);
+                //         if (time == -1) {
+                //
+                //         }
+                //     }
+                // }).start();
+
+                {
+                    Log.log('BizApi  fetchPaymentsApi 全部商家页 payments  接口OK, responseData.data =' + Log.writeObjToJson(responseData.data));
+
+                    // this.paymentsDataArr=responseData.data;
+                    responseData.data.map(
+                        (model, i) => {
+                            {
+                                model.isSelect=false;//给每个mode 加 是否被选中 属性
+                                this.paymentsDataArr.push(model)
+                            }
+                        }
+                    );
+
+                    this.isPaymentsApiOk=true;
+                    dispatch(this.CombineData(opt));
+
+                }
+
+            }).catch((error) => {
+                Log.log('BizApi  fetchPaymentsApi 全部商家页 payments 接口失败 =' + error)
+                RequestUtil.showErrorMsg(error)
+                this.isLoading = false;
+
+                //商家页的top10接口如果返回错误, 不能直接把 列表处于 失败状态,因还得画0和1号cell,故只能 添加一个 3号异常cell
+                // this.isInNetWorkAbnormalBeforeFetchSuccess=true;
+                // dispatch(BaseListActions.SuccessFetchinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, this.ApiName, {
+                //     couldLoadMore: true,
+                //     newContentArray: [{key: this.NetWorkAbnormalCellData}]
+                // }));
+            });
+        }
+
+    },
+
+    /**
+     * 如果2个接口都OK ,开始组合此下拉列表的数据数据
+     * @constructor
+     */
+    CombineData(opt){
+        return (dispatch) => {
+            if (this.isShipsApiOk && this.isPaymentsApiOk){
+
+                this.$FilterListDataArray = this.$FilterListDataArray.set(this.$FilterListDataArray.size, {name:'只看返利商家',index:0,isSelect:false});
+                this.$FilterListDataArray = this.$FilterListDataArray.set(this.$FilterListDataArray.size, {name:'收藏的商家',index:1,isSelect:false});
+                this.$FilterListDataArray = this.$FilterListDataArray.set(this.$FilterListDataArray.size, {shipsDataArr:this.shipsDataArr,index:2});
+                this.$FilterListDataArray = this.$FilterListDataArray.set(this.$FilterListDataArray.size, {paymentsDataArr:this.paymentsDataArr,index:3});
+                // this.$FilterListDataArray = this.$FilterListDataArray.set(this.$FilterListDataArray.size, {name:'清空确定cell',index:4});
+
+                this.isLoading=false;
+
+                if (this.isThisCompDidMount) {//列表正在挂载
+                    dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
+                        couldLoadMore: false,
+                        newContentArray: this.$FilterListDataArray.toJS(),
+                    }));
+
+                    dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizDropDownMenuAndListApi.ApiName, GlobalStyles.AllMerchantPageFilterListH /*不想动态算了,先写死 *//*this.$FilterListDataArray.size *
+                     GlobalStyles.AllMerchantPageDropDownListCellH*/ ))
+                }
+            }
+        }
+
+    },
+
+    /**
+     * 为 直邮方式 网格视图 拿 数据源
+     * @returns {function(*)}
+     */
+    fetchShipsGridViewData(){
+        return (dispatch) => {
+            dispatch(BaseGridViewActions.changeBaseGridViewStates(this.shipsApiName, BaseGridViewActions.BaseGridViewStates.fetchOk, this.shipsDataArr));
+        }
+    },
+
+    /**
+     * 为 支付方式 网格视图 拿 数据源
+     * @returns {function(*)}
+     */
+    fetchPaymentsGridViewData(){
+        return (dispatch) => {
+            dispatch(BaseGridViewActions.changeBaseGridViewStates(this.paymentsApiName, BaseGridViewActions.BaseGridViewStates.fetchOk, this.paymentsDataArr));
+        }
+    },
+
+    /**
+     * 重置 筛选 接口的 数据 和 其 列表的 高度
+     * @returns {function(*)}
+     */
+    releaseFilterListData(){
+        return (dispatch) => {
+            this.$FilterListDataArray = this.$FilterListDataArray.clear();
+            this.isLoading = false;
+            this.isThisCompDidMount=false;
+            this.paymentsDataArr=[];
+            this.shipsDataArr=[];
         }
 
     }
@@ -2079,6 +2330,11 @@ export function fetchApi(opt, pageNo, BaseListCompProps) {
             break;
         case AllMerchantPageSortDropDownListApi.ApiName: {
             return AllMerchantPageSortDropDownListApi.fetchSortList(opt, BaseListCompProps);
+
+        }
+            break;
+        case AllMerchantPageFilterDropDownListApi.ApiName: {
+            return AllMerchantPageFilterDropDownListApi.fetchFilterList(opt, BaseListCompProps);
 
         }
             break;

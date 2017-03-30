@@ -13,3 +13,12 @@ export const ChangeBaseGridViewStatesAction='changeBaseGridViewStatesAction';
 export function changeBaseGridViewStates(ApiName, states,dataArr) {
     return {type: ChangeBaseGridViewStatesAction, ApiName:ApiName, newState:states,dataArr:dataArr};
 }
+
+/**
+ * 改变 网格视图里 item的 边框颜色
+ * @type {string}
+ */
+export const ChangeBaseGridViewItemborderColorAction='ChangeBaseGridViewItemborderColorAction';
+export function ChangeBaseGridViewItemborderColor(ApiName, newBorderColor) {
+    return {type: ChangeBaseGridViewStatesAction, ApiName:ApiName, newBorderColor};
+}

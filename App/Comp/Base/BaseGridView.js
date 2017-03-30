@@ -52,6 +52,7 @@ export  default class BaseGridView extends Component {
     }
 
     render() {
+        Log.log('BaseGridView render()')
         const {renderItem, containerStyle,renderLoadingStateView,renderFailStateView}=this.props;
         const {state, dataArray}=this.props.baseReducer;
 

@@ -24,6 +24,7 @@ import Colors from '../../Utils/Colors'
 import AllMerchantPageCategoryListContanier from './AllMerchantPageCategoryListContanier'
 import AllMerchantPageCountryListContanier from './AllMerchantPageCountryListContanier'
 import AllMerchantPageSortListContanier from './AllMerchantPageSortListContanier'
+import AllMerchantPageFilterListContanier from './AllMerchantPageFilterListContanier'
 import *as BizDropDownMenuAndListActions from '../Actions/BizDropDownMenuAndListActions'
 import *as BaseListActions from '../Actions/BaseListActions'
 import *as BizDropDownMenuAndListInit from '../InitialState/BizDropDownMenuAndListInit'
@@ -56,6 +57,7 @@ export class AllMerchantPageDropDownCompContainer extends Component {
         ;
         this.props.dispatch(BizApi.AllMerchantPageCountryListApi.fetchCountryList());
         this.props.dispatch(BizApi.AllMerchantPageSortDropDownListApi.fetchSortList());
+        this.props.dispatch(BizApi.AllMerchantPageFilterDropDownListApi.fetchFilterList());
 
     }
 
@@ -64,6 +66,7 @@ export class AllMerchantPageDropDownCompContainer extends Component {
         this.props.dispatch(BizApi.AllMerchantPageCategoryListApi.releaseCategoryListData())
         this.props.dispatch(BizApi.AllMerchantPageCountryListApi.releaseCountryListData())
         this.props.dispatch(BizApi.AllMerchantPageSortDropDownListApi.releaseSortListData())
+        this.props.dispatch(BizApi.AllMerchantPageFilterDropDownListApi.releaseFilterListData())
 
         this.props.dispatch(BizDropDownMenuAndListActions.resetDropDownListHAction(BizApi.BizDropDownMenuAndListApi.ApiName));
 
@@ -118,7 +121,7 @@ export class AllMerchantPageDropDownCompContainer extends Component {
      * @param height
      */
     countDropListH(height) {
-        let maxHeight = gScreen.height - 95/*屏幕底部往上到 下拉列表 最大Y的距离 */ - gScreen.navBarHeight - GlobalStyles.AllMerchantPageMenuBtH;
+        let maxHeight = gScreen.height - (this.curSelctIndex!=3?95:0)/*屏幕底部往上到 下拉列表 最大Y的距离, 筛选列表 最高可到 屏幕底部,因其 确定按钮得 固定画 */ - gScreen.navBarHeight - GlobalStyles.AllMerchantPageMenuBtH;
         return height < maxHeight ? height : maxHeight;
     }
 
@@ -173,6 +176,8 @@ export class AllMerchantPageDropDownCompContainer extends Component {
                                 self.props.dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizApi.BizDropDownMenuAndListApi.ApiName, BizApi.AllMerchantPageCountryListApi.$CountryListDataArray.size > 0 ? BizApi.AllMerchantPageCountryListApi.$CountryListDataArray.size * GlobalStyles.AllMerchantPageDropDownListCellH : BizDropDownMenuAndListInit.defaultH))
                             } else if(index==2){//排序列表
                                 self.props.dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizApi.BizDropDownMenuAndListApi.ApiName, BizApi.AllMerchantPageSortDropDownListApi.$SortListDataArray.size > 0 ? BizApi.AllMerchantPageSortDropDownListApi.$SortListDataArray.size * GlobalStyles.AllMerchantPageDropDownListCellH : BizDropDownMenuAndListInit.defaultH))
+                            }else if(index==3){//筛选列表
+                                self.props.dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizApi.BizDropDownMenuAndListApi.ApiName, BizApi.AllMerchantPageFilterDropDownListApi.$FilterListDataArray.size > 0 ? GlobalStyles.AllMerchantPageFilterListH : BizDropDownMenuAndListInit.defaultH))
 
                             }
                         }
@@ -212,6 +217,14 @@ export class AllMerchantPageDropDownCompContainer extends Component {
 
                 >
                 </AllMerchantPageSortListContanier>;
+            }
+                break
+            case 3://筛选列表
+            {
+                return <AllMerchantPageFilterListContanier
+
+                >
+                </AllMerchantPageFilterListContanier>;
             }
                 break
         }

@@ -10,7 +10,7 @@ import InitialState, {
     InitListState,
     ListToLoadingState,
     ListSuccesState,
-    ListWillUnmount
+    ListWillUnmount,ListChangeNumsItem
 } from '../InitialState/ListInitialState'
 import *as BaseListActions from '../Actions/BaseListActions'
 import *as BizApi from '../../NetWork/API/BizApi'
@@ -60,6 +60,11 @@ export default function AllMerchantPageSortListReducer(state = initialState, act
 
             // BizApi.SearchResultPageCouponListAPI.componentDidMount = false;
             return ListWillUnmount(state,action);
+        }
+            break;
+        case BaseListActions.BaseListStatus.ChangeNumsItem: {
+
+            return ListChangeNumsItem(state,action);
         }
             break;
     }

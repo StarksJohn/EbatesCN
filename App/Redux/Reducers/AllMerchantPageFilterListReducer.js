@@ -1,7 +1,7 @@
 /**
  * Created by Ebates on 16/12/27.
- * AllMerchantPageCountryListReducer
- * 全部商家页 国家 下拉列表的 reducer
+ * AllMerchantPageFilterListReducer
+ * 全部商家页 筛选 下拉列表的 reducer
  */
 import {
     ListView,
@@ -10,7 +10,7 @@ import InitialState, {
     InitListState,
     ListToLoadingState,
     ListSuccesState,
-    ListWillUnmount,ListChangeNumsItem
+    ListWillUnmount,ListChangeOneItem
 } from '../InitialState/ListInitialState'
 import *as BaseListActions from '../Actions/BaseListActions'
 import *as BizApi from '../../NetWork/API/BizApi'
@@ -19,10 +19,10 @@ const {List, fromJS} = require('immutable') //导入  Immutable.js 的 Record AP
 
 const initialState = new InitialState()/*通用列表的初始UI状态*/
 /*搜索结果页 优惠 列表的 特殊状态*/
-    .setIn(['ApiName'], BizApi.AllMerchantPageCountryListApi.ApiName)
+    .setIn(['ApiName'], BizApi.AllMerchantPageFilterDropDownListApi.ApiName)
     .setIn(['isRenderRefreshControl'], false);
 
-export default function AllMerchantPageCountryListReducer(state = initialState, action) {
+export default function AllMerchantPageFilterListReducer(state = initialState, action) {
     if (state.ApiName && state.ApiName != action.ApiName) {
         return state;
     }
@@ -62,9 +62,9 @@ export default function AllMerchantPageCountryListReducer(state = initialState, 
             return ListWillUnmount(state,action);
         }
             break;
-        case BaseListActions.BaseListStatus.ChangeNumsItem: {
+        case BaseListActions.BaseListStatus.ChangeOneItem: {
 
-            return ListChangeNumsItem(state,action);
+            return ListChangeOneItem(state,action);
         }
             break;
     }
