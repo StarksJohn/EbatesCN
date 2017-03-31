@@ -307,6 +307,12 @@ export default class BaseListComp extends Component {
         );
     }
 
+    /**
+     * 画 opt==BaseListActions.BaseListFetchDataType.INITIALIZE 或 opt==BaseListActions.BaseListFetchDataType.MORE 时的
+     * Loading 视图
+     * @returns {*}
+     * @private
+     */
     _renderFooter() {
         // if (!this.props.baseReducer.couldLoadMore) {
         //     return this._allDataHasLoadedFooterView();
@@ -340,6 +346,8 @@ export default class BaseListComp extends Component {
         } else if (this.props.baseReducer.status === BaseListActions.BaseListStatus.NODATA) {//列表无缓存数据
             contentView = this.renderNoDataViews(); //<CommonLoadView loadState={LOAD_STATE.LOAD_STATE_NOCACHEDATA}/>
 
+        } else if (this.props.baseReducer.opt==BaseListActions.BaseListFetchDataType.REFRESH && this.props.baseReducer.status === BaseListActions.BaseListStatus.Loading){//画 下拉 刷新 时的 Loading 视图
+            contentView=this._LoadingMoreFooterView();
         } else {
             // showToast('BaseListComp  render');
             // showToast('正在 绘制 '+ this.props.listApiTag.ApiName +'列表');

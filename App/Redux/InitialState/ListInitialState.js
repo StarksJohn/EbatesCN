@@ -60,7 +60,7 @@ export function InitListState(state, action) {
         .setIn(['status'], action.type)
         .setIn(['couldLoadMore'], false)
         .setIn(['opt'], action.opt)
-        // .setIn(['componentDidMount'], true)
+        .setIn(['componentDidMount'], false)
         .setIn(['isRefreshing'], false)
         .remove('meta');
         // .setIn(['meta'],{//列表接口一般都会返回的字段,用于翻页

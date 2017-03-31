@@ -1617,64 +1617,58 @@ export const AllMerchantPageListApi = {
      */
     SearchMerchants (opt, BaseProps){
         return (dispatch) => {
-            // if (this.isInNetWorkAbnormalBeforeFetchSuccess){//本次拿到数据前,列表处于 网络异常 状态,拿到数据后, 删除 网络异常cell
-            //     this.isInNetWorkAbnormalBeforeFetchSuccess=false;
-            //     dispatch(BaseListActions.RemoveOneItemFromlist( this.ApiName, {
-            //         index: 2
-            //     }));
-            // }
-
             TokenAPI.checkAvailableMemoryTokenExpiresWhenUseApi().then(
                 () => {
+
                     Log.log('BizApi  AllMerchantPageListApi 开始请求 全部商家页 搜索商家 接口,opt=' + opt);
                     dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
 
-                    let params={
+                    let params = {
                         include: 'hot_coupons,tags',
-                        page: BaseProps.baseReducer.meta.pagination.current_page + 1,
+                        page: opt == BaseListActions.BaseListFetchDataType.REFRESH ? 1 : BaseProps.baseReducer.meta.pagination.current_page + 1,
                         perPage: BaseProps.baseReducer.meta.pagination.per_page,
                     };
-                    if (AllMerchantPageCategoryListApi.categoryID!=-1){
-                        params.category=AllMerchantPageCategoryListApi.categoryID;
+                    if (AllMerchantPageCategoryListApi.categoryID != -1) {
+                        params.category = AllMerchantPageCategoryListApi.categoryID;
                     }
                     //添加 国家列表 或 筛选下拉列表 选中的 数据
-                    if (AllMerchantPageCountryListApi.tag!='-1' || AllMerchantPageFilterDropDownListApi.tagsArr.length>0){
-                        let tagsArr=[];
-                        if (AllMerchantPageCountryListApi.tag!='-1'){
+                    if (AllMerchantPageCountryListApi.tag != '-1' || AllMerchantPageFilterDropDownListApi.tagsArr.length > 0) {
+                        let tagsArr = [];
+                        if (AllMerchantPageCountryListApi.tag != '-1') {
                             tagsArr.push(AllMerchantPageCountryListApi.tag);
-                            Log.log('BizApi  AllMerchantPageListApi  SearchMerchants AllMerchantPageCountryListApi.tag='+AllMerchantPageCountryListApi.tag);
+                            Log.log('BizApi  AllMerchantPageListApi  SearchMerchants AllMerchantPageCountryListApi.tag=' + AllMerchantPageCountryListApi.tag);
 
                         }
-                        if (AllMerchantPageFilterDropDownListApi.tagsArr.length>0){//筛选下拉列表有选中的数据
+                        if (AllMerchantPageFilterDropDownListApi.tagsArr.length > 0) {//筛选下拉列表有选中的数据
                             AllMerchantPageFilterDropDownListApi.tagsArr.map(
-                                (model,i)=>{
+                                (model, i) => {
                                     tagsArr.push(model);
                                 }
                             )
                         }
 
-                        params.tag='';
+                        params.tag = '';
                         tagsArr.map(
-                            (model,i)=>{
-                                if (i!=0){
-                                    params.tag+=',';
+                            (model, i) => {
+                                if (i != 0) {
+                                    params.tag += ',';
                                 }
-                                params.tag+=model;
+                                params.tag += model;
                             }
                         )
 
-                        Log.log('BizApi SearchMerchants params.tag='+params.tag);
+                        Log.log('BizApi SearchMerchants params.tag=' + params.tag);
                         // params.tag=AllMerchantPageCountryListApi.tag;
                     }
-                    if (AllMerchantPageSortDropDownListApi.sort_by!='-1'){
-                        params.sort_by=AllMerchantPageSortDropDownListApi.sort_by;
+                    if (AllMerchantPageSortDropDownListApi.sort_by != '-1') {
+                        params.sort_by = AllMerchantPageSortDropDownListApi.sort_by;
                     }
 
-                    Log.log('BizApi SearchMerchants params='+JSON.stringify(params));
+                    Log.log('BizApi SearchMerchants params=' + JSON.stringify(params));
 
 
                     let url = RequestUtil.getStagingOrProductionHost() + 'search/merchants';
-                    RequestUtil.GET(url, params ,
+                    RequestUtil.GET(url, params,
                         (header) => {
                             commonApiHeaderAppend(header)
                         },
@@ -1700,9 +1694,8 @@ export const AllMerchantPageListApi = {
                 }
             )
 
-
         }
-    }
+    },
 }
 
 /**
@@ -1835,8 +1828,7 @@ export const AllMerchantPageCategoryListApi = {
             this.$CategoryListDataArray = this.$CategoryListDataArray.clear();
             this.isLoading = false;
             this.isThisCompDidMount = false;
-            // dispatch(BizDropDownMenuAndListActions.resetDropDownListHAction(BizDropDownMenuAndListApi.ApiName));
-
+            this.categoryID = -1;
         }
 
     }
@@ -1969,6 +1961,7 @@ export const AllMerchantPageCountryListApi = {
             this.$CountryListDataArray = this.$CountryListDataArray.clear();
             this.isLoading = false;
             this.isThisCompDidMount = false;
+            this.tag = '-1'
         }
 
     }
@@ -2065,6 +2058,7 @@ export const AllMerchantPageSortDropDownListApi = {
             this.$SortListDataArray = this.$SortListDataArray.clear();
             this.isLoading = false;
             this.isThisCompDidMount = false;
+            this.sort_by = '-1';
         }
 
     }
@@ -2085,7 +2079,7 @@ export const AllMerchantPageFilterDropDownListApi = {
     isPaymentsApiOk: false,// 支付方式 接口 是否 OK
     $shipsDataArr: fromJS([]),//存 ships 接口的 数据
     $paymentsDataArr: fromJS([]),//存 payments 接口的 数据
-    tagsArr:[],//此 列表 多选 的 按钮 model的 key
+    tagsArr: [],//此 列表 多选 的 按钮 model的 key
 
     /**
      * 拿 全部商家页 筛选 下拉列表   的数据
@@ -2112,7 +2106,7 @@ export const AllMerchantPageFilterDropDownListApi = {
                     this.isThisCompDidMount = true;
 
                 } else if (!this.isLoading && this.$FilterListDataArray.size > 0) {//列表挂载时, 接口已经拿到数据,列表直接切到 成功状态
-                    Log.log('BizApi fetchFilterList 列表挂载时, 接口已经拿到数据,列表直接切到 成功状态,this.$FilterListDataArray='+Log.writeObjToJson(this.$FilterListDataArray));
+                    Log.log('BizApi fetchFilterList 列表挂载时, 接口已经拿到数据,列表直接切到 成功状态,this.$FilterListDataArray=' + Log.writeObjToJson(this.$FilterListDataArray));
 
                     dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
                         couldLoadMore: false,
@@ -2170,7 +2164,7 @@ export const AllMerchantPageFilterDropDownListApi = {
                         (model, i) => {
                             {
                                 model.isSelect = false;//给每个mode 加 是否被选中 属性
-                                this.$shipsDataArr=this.$shipsDataArr.set(this.$shipsDataArr.size,model)
+                                this.$shipsDataArr = this.$shipsDataArr.set(this.$shipsDataArr.size, model)
 
                             }
                         }
@@ -2232,7 +2226,7 @@ export const AllMerchantPageFilterDropDownListApi = {
                             {
                                 model.isSelect = false;//给每个mode 加 是否被选中 属性
                                 // this.paymentsDataArr.push(model)
-                                this.$paymentsDataArr=this.$paymentsDataArr.set(this.$paymentsDataArr.size,model);
+                                this.$paymentsDataArr = this.$paymentsDataArr.set(this.$paymentsDataArr.size, model);
                             }
                         }
                     );
@@ -2318,7 +2312,7 @@ export const AllMerchantPageFilterDropDownListApi = {
      */
     fetchPaymentsGridViewData(){
         return (dispatch) => {
-            Log.log('BizApi fetchPaymentsGridViewData this.$paymentsDataArr.size='+this.$paymentsDataArr.size)
+            Log.log('BizApi fetchPaymentsGridViewData this.$paymentsDataArr.size=' + this.$paymentsDataArr.size)
             dispatch(BaseGridViewActions.changeBaseGridViewStates(this.paymentsApiName, BaseGridViewActions.BaseGridViewStates.fetchOk, this.$paymentsDataArr.toJS()));
         }
     },
@@ -2330,20 +2324,20 @@ export const AllMerchantPageFilterDropDownListApi = {
         return (dispatch) => {
             Log.log('BizApi clearSelectData ')
 
-            this.tagsArr=[];
+            this.tagsArr = [];
 
             this.$shipsDataArr.toJS().map(
-                (model,i)=>{
-                    model.isSelect=false;
-                    this.$shipsDataArr=this.$shipsDataArr.set(i,model);
+                (model, i) => {
+                    model.isSelect = false;
+                    this.$shipsDataArr = this.$shipsDataArr.set(i, model);
                 }
             );
             dispatch(BaseGridViewActions.changeBaseGridViewStates(this.shipsApiName, BaseGridViewActions.BaseGridViewStates.fetchOk, this.$shipsDataArr.toJS()));
 
             this.$paymentsDataArr.toJS().map(
-                (model,i)=>{
-                    model.isSelect=false;
-                    this.$paymentsDataArr=this.$paymentsDataArr.set(i,model);
+                (model, i) => {
+                    model.isSelect = false;
+                    this.$paymentsDataArr = this.$paymentsDataArr.set(i, model);
                 }
             );
             dispatch(BaseGridViewActions.changeBaseGridViewStates(this.paymentsApiName, BaseGridViewActions.BaseGridViewStates.fetchOk, this.$paymentsDataArr.toJS()));
@@ -2362,7 +2356,9 @@ export const AllMerchantPageFilterDropDownListApi = {
             this.isThisCompDidMount = false;
             this.$paymentsDataArr = this.$paymentsDataArr.clear();
             this.$shipsDataArr = this.$shipsDataArr.clear();
-            this.tagsArr=[];
+            this.tagsArr = [];
+            this.isShipsApiOk = false;//直邮方式 接口是否OK
+            this.isPaymentsApiOk = false;
         }
 
     }

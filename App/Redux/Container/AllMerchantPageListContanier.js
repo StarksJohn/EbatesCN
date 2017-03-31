@@ -17,7 +17,8 @@ import *as BizMerchantListCell from '../../Comp/BizCells/BizMerchantListCell'
 import GlobalStyles from '../../Global/GlobalStyles'
 import BaseListComp from '../../Comp/Base/BaseListComp'
 import MerchantListComp from '../../Comp/BizList/MerchantListComp'
-import EventListener from '../../Utils/EventListener/EventListener'
+// import EventListener from '../../Utils/EventListener/EventListener'
+// import SMSTimer from '../../Utils/SMSTimer'
 
 
 class AllMerchantPageListContanier extends Component {
@@ -32,18 +33,33 @@ class AllMerchantPageListContanier extends Component {
     };
 
     componentDidMount() {
-        this.Listener = new EventListener({
-            eventName: this.props.baseReducer.ApiName, eventCallback: ()=> {
-                this.props.dispatch(BizApi.AllMerchantPageListApi.SearchMerchants(BaseListActions.BaseListFetchDataType.REFRESH,this.props))
-
-            }
-        });
+        // let self=this;
+        //点击 全部商家页 筛选控件的 单选和多选 下拉列表的 item 或 确定 按钮后, 此控件 回调 箭头函数, 重新调 SearchMerchants 接口
+        // this.Listener = new EventListener({
+        //     eventName: this.props.baseReducer.ApiName, eventCallback: ()=> {
+        //
+        //         // this.props.dispatch(BaseListActions.InitListDataSource(this.props.baseReducer.ApiName));// 全部商家 列表的 InitListState  重置
+        //
+        //         new SMSTimer({
+        //             timerNums: 13,
+        //             callBack: (time) => {
+        //                 Log.log('time===' + time);
+        //                 if (time == -1  ) {
+        //                     // this.props.dispatch(BaseListActions.Loadinglist(BaseListActions.BaseListFetchDataType.REFRESH, this.props.baseReducer.ApiName));
+        //
+        //                     this.props.dispatch(BizApi.AllMerchantPageListApi.SearchMerchants(BaseListActions.BaseListFetchDataType.REFRESH,self.props))
+        //                 }
+        //             }
+        //         }).start()
+        //
+        //     }
+        // });
     }
 
     componentWillUnmount() {
-        if (this.Listener) {
-            this.Listener.removeEventListener();
-        }
+        // if (this.Listener) {
+        //     this.Listener.removeEventListener();
+        // }
     }
 
     /**

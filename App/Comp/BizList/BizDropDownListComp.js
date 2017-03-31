@@ -70,6 +70,7 @@ export default class BizDropDownListComp extends Component {
             BizApi.AllMerchantPageSortDropDownListApi.sort_by=rowData.id;
         }
 
+        Log.log('BizDropDownListComp onPress ');
         this.props.onPress&&this.props.onPress()
         EventListener.sendEvent(BizApi.AllMerchantPageListApi.ApiName);
 
