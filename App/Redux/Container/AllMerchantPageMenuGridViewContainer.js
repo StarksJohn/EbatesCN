@@ -71,6 +71,7 @@ export class AllMerchantPageMenuGridViewContainer extends React.Component {
                                               this.BizFilterMenuBtViewRefArr.push(r);
                                           }}
                                           model={model}
+                                          changeTitleEventName={model.changeTitleEventName}
                                           onItemPress={ (index) => {
                                               this.onItemPress(index);
                                           } }

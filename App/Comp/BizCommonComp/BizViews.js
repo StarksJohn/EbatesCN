@@ -243,6 +243,7 @@ export function renderBaseNavigationBar(titleTextView, leftButton, rightButton, 
         searchBar={searchBar}
         hide={false}
         title={title}
+        changeTitleEventName={changeTitleEventName}
         titleTextStyle={[GlobalStyles.navBarTitleTextStyle, titleTextStyle]}
     />;
 }

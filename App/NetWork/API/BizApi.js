@@ -18,7 +18,7 @@ import *as BaseGridViewActions from '../../Redux/Actions/BaseGridViewActions'
 import *as AllMerchantPageActions from '../../Redux/Actions/AllMerchantPageActions'
 import *as BizDropDownMenuAndListActions from '../../Redux/Actions/BizDropDownMenuAndListActions'
 import GlobalStyles from '../../Global/GlobalStyles'
-
+import *as AllMerchantPage from '../../Pages/AllMerchantPage'
 
 /**
  * 列表类型 接口 都会返回的 通用的 可判断 couldLoadMore 的 数据结构
@@ -1594,10 +1594,18 @@ export const AllMerchantPageApi = {
         return (dispatch) => {
             dispatch(BaseGridViewActions.changeBaseGridViewStates(this.ApiName, BaseGridViewActions.BaseGridViewStates.fetchOk, [{
                 id: 0,
-                title: '分类'
-            }, {id: 1, title: '国家'}, {id: 2, title: '排序'}, {
+                title: '分类', changeTitleEventName: AllMerchantPage.AllMerchantPageChangeCategoryMenuTitleEventName
+            }, {
+                id: 1,
+                title: '国家',
+                changeTitleEventName: AllMerchantPage.AllMerchantPageChangeCountryMenuTitleEventName
+            }, {
+                id: 2,
+                title: '排序',
+                changeTitleEventName: AllMerchantPage.AllMerchantPageChangeSortMenuTitleEventName
+            }, {
                 id: 3,
-                title: '筛选'
+                title: '筛选', changeTitleEventName: AllMerchantPage.AllMerchantPageChangeFilterMenuTitleEventName
             }]));
         }
     },
@@ -2322,7 +2330,28 @@ export const AllMerchantPageFilterDropDownListApi = {
      */
     clearSelectData(){
         return (dispatch) => {
-            Log.log('BizApi clearSelectData ')
+            Log.log('BizApi clearSelectData ');
+
+            {//重置 0和1 号 cell
+                let model0 = this.$FilterListDataArray.get(0);
+                model0.isSelect = false;
+                this.$FilterListDataArray = this.$FilterListDataArray.set(0, model0);
+
+                let model1 = this.$FilterListDataArray.get(1);
+                model1.isSelect = false;
+                this.$FilterListDataArray = this.$FilterListDataArray.set(1, model1);
+
+                dispatch(BaseListActions.ChangeListNumsItemAction(BaseListActions.BaseListFetchDataType.REFRESH, this.ApiName, {
+                    indexArr: [0, 1],
+                    newDataArr: [{...model0}, {...model1}]
+                }));
+            }
+
+            this.$FilterListDataArray = this.$FilterListDataArray.set(this.$FilterListDataArray.size, {
+                name: '只看返利商家',
+                index: 0,
+                isSelect: false
+            });
 
             this.tagsArr = [];
 

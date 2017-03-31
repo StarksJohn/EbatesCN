@@ -13,6 +13,7 @@ import *as BaseListActions from '../../Redux/Actions/BaseListActions'
 import BizFilterDropDownListCell from '../BizCells/BizFilterDropDownListCell'
 import *as BizApi from '../../NetWork/API/BizApi'
 import *as EventListener from '../../Utils/EventListener/EventListener'
+import *as AllMerchantPage from '../../Pages/AllMerchantPage'
 
 export default class BizDropDownListComp extends Component {
 
@@ -64,10 +65,20 @@ export default class BizDropDownListComp extends Component {
 
         if (this.props.baseReducer.ApiName==BizApi.AllMerchantPageCategoryListApi.ApiName){
             BizApi.AllMerchantPageCategoryListApi.categoryID=rowData.id;
+
+            EventListener.sendEvent(AllMerchantPage.AllMerchantPagechangeTitleEventName,rowData.index==0?'全部商家':rowData.name);
+
+            EventListener.sendEvent(AllMerchantPage.AllMerchantPageChangeCategoryMenuTitleEventName,rowData.index==0?'分类':rowData.name);
+
+
         }else if(this.props.baseReducer.ApiName==BizApi.AllMerchantPageCountryListApi.ApiName){
             BizApi.AllMerchantPageCountryListApi.tag=rowData.key;
+            EventListener.sendEvent(AllMerchantPage.AllMerchantPageChangeCountryMenuTitleEventName,rowData.index==0?'国家':rowData.name);
+
         }else if(this.props.baseReducer.ApiName==BizApi.AllMerchantPageSortDropDownListApi.ApiName){
             BizApi.AllMerchantPageSortDropDownListApi.sort_by=rowData.id;
+
+            EventListener.sendEvent(AllMerchantPage.AllMerchantPageChangeSortMenuTitleEventName,rowData.index==0?'排序':rowData.name);
         }
 
         Log.log('BizDropDownListComp onPress ');

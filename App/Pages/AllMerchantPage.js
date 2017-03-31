@@ -17,10 +17,24 @@ import BizMerchantListCell from '../Comp/BizCells/BizMerchantListCell'
 import AllMerchantPageListContanier from '../Redux/Container/AllMerchantPageListContanier'
 import GlobalStyles from '../Global/GlobalStyles'
 import AllMerchantPageDropDownCompContainer from '../Redux/Container/AllMerchantPageDropDownCompContainer'
-import *as EventListener from '../Utils/EventListener/EventListener'
 
 
 const DropDownListDefualtY = GlobalStyles.statusBarAndNavBarH + GlobalStyles.AllMerchantPageMenuBtH;//下拉视图 显示时 Y的 起点
+
+//改变 全部商家页 导航栏title的 事件名
+export const AllMerchantPagechangeTitleEventName='AllMerchantPagechangeTitleEventName';
+
+//改变 全部商家页 Category 下拉列表对应的MENU的title的  事件名
+export const AllMerchantPageChangeCategoryMenuTitleEventName='AllMerchantPageChangeCategoryMenuTitleEventName';
+
+//改变 全部商家页 country 下拉列表对应的MENU的title的  事件名
+export const AllMerchantPageChangeCountryMenuTitleEventName='AllMerchantPageChangeCountryMenuTitleEventName';
+
+//改变 全部商家页 sort 下拉列表对应的MENU的title的  事件名
+export const AllMerchantPageChangeSortMenuTitleEventName='AllMerchantPageChangeSortMenuTitleEventName';
+
+//改变 全部商家页 Filter 下拉列表对应的MENU的title的  事件名
+export const AllMerchantPageChangeFilterMenuTitleEventName='AllMerchantPageChangeFilterMenuTitleEventName';
 
 export class AllMerchantPage extends Component {
     constructor(props) {
@@ -108,8 +122,20 @@ export class AllMerchantPage extends Component {
         >
         </BaseImgBt>
 
-        let navigationBar = BizViews.renderBaseNavigationBar(null, NavBarButton.getBackButton(() => baseOnBackPress(navigator, this.backAndroidEventListener)), rightBt, null, '全部商家', {}, /*{position: "absolute", top: 0,  left: 0,
-         right: 0}*/ {zIndex: 2});
+        let navigationBar =<BaseNavigationBar
+            style={ [{backgroundColor: Colors.white},{zIndex: 2}] }
+            statusBarCustomStyle={GlobalStyles.statusBarDefaultProps}
+            titleTextView={null}
+            leftButton={NavBarButton.getBackButton(() => baseOnBackPress(navigator, this.backAndroidEventListener))}
+            rightButton={rightBt}
+            searchBar={null}
+            hide={false}
+            title='全部商家'
+            changeTitleEventName={AllMerchantPagechangeTitleEventName}
+            titleTextStyle={[GlobalStyles.navBarTitleTextStyle, {},]}
+        />
+            // BizViews.renderBaseNavigationBar(null, NavBarButton.getBackButton(() => baseOnBackPress(navigator, this.backAndroidEventListener)), rightBt, null, '全部商家', {}, /*{position: "absolute", top: 0,  left: 0,
+         // right: 0}*/ {zIndex: 2});
 
         return (
             <View style={{flex: 1, backgroundColor: Colors.BizCommonGrayBack,}}>

@@ -22,6 +22,7 @@ import FontAwesomeIconBts from './BaseFontAwesomeIconBts';
 import BaseTitleBt from './BaseTitleBt'
 import *as RootNavigator from '../../Root/RootNavigator'
 import BaseIoniconsBt from './BaseIoniconsBt'
+import EventListener from '../../Utils/EventListener/EventListener'
 
 
 const NAV_BAR_HEIGHT_IOS = GlobalStyles.nav_bar_height_ios;
@@ -86,6 +87,7 @@ export default class BaseNavigationBar extends Component {
             PropTypes.element,
         ]),
         titleTextNumberOfLines: PropTypes.number,//titleView里的 Text的 行数,避免 文字过多导致 显示不下
+        changeTitleEventName:PropTypes.string,//外部可 发任何 API 需要的消息,让 绑定了此消息 的 导航栏控件  监听 此消息,改变 此控件 的title,如 全部商家页的筛选控件的 母婴 列表
 
     };
     static defaultProps = {
@@ -105,8 +107,35 @@ export default class BaseNavigationBar extends Component {
         this.state = {
             // title: '',
             popEnabled: true,
-            hide: false
+            hide: false,
+            title:props.title,
         };
+    }
+
+    componentDidMount() {
+        // this._fetchData(BaseListActions.BaseListFetchDataType.INITIALIZE);
+
+        const {changeTitleEventName}=this.props
+
+        if (changeTitleEventName){//改变title事件
+            this.changeTitleEventListener = new EventListener({
+                eventName: changeTitleEventName, eventCallback: (title)=> {
+                    Log.log('BaseNavigationBar componentDidMount title='+title)
+                    this.setState({
+                        title:title
+                    })
+                }
+            });
+        }
+
+    }
+
+    componentWillUnmount() {
+
+        if (this.changeTitleEventListener) {
+            this.changeTitleEventListener.removeEventListener();
+        }
+
     }
 
     leftView() {
@@ -176,7 +205,7 @@ export default class BaseNavigationBar extends Component {
                 <Text style={[styles.defaultTitleStyle, this.props.titleTextStyle]}
                       numberOfLines={this.props.titleTextNumberOfLines}
                 >
-                    {this.props.title}
+                    {this.state.title}
                 </Text>;
         }
 

@@ -9,12 +9,15 @@ import Colors from '../../Utils/Colors'
 import BaseBt from '../Base/BaseBt'
 import *as BizViews from './BizViews'
 import GlobalStyles from '../../Global/GlobalStyles'
+import EventListener from '../../Utils/EventListener/EventListener'
 
 
 export default class BizFilterMenuBtView extends Component {
     static propTypes = {
         onItemPress: PropTypes.func,
         model: PropTypes.object,
+        changeTitleEventName:PropTypes.string,//外部可 发任何 API 需要的消息,让 绑定了消息 的 此控件 监听 此消息,改变 此控件 的title,如 全部商家页的筛选控件的 母婴 列表
+
     };
     static defaultProps = {
         onItemPress: (index) => {
@@ -28,15 +31,32 @@ export default class BizFilterMenuBtView extends Component {
         this.state = {
             // 排序三角的角度
             angleRotation: new Animated.Value(0),
-
+            title:props.model.title
         }
     }
 
     componentDidMount() {
 
+        const {changeTitleEventName}=this.props
+
+        if (changeTitleEventName){//改变title事件
+            this.changeTitleEventListener = new EventListener({
+                eventName: changeTitleEventName, eventCallback: (title)=> {
+                    // Log.log('BaseNavigationBar componentDidMount title='+title)
+                    this.setState({
+                        title:title
+                    })
+                }
+            });
+        }
+
     }
 
     componentWillUnmount() {
+
+        if (this.changeTitleEventListener) {
+            this.changeTitleEventListener.removeEventListener();
+        }
 
     }
 
@@ -103,7 +123,7 @@ export default class BizFilterMenuBtView extends Component {
                         //alignSelf: 'center',
                         //backgroundColor: Colors.getRandomColor()
                     }} numberOfLines={1} textAlign="center"
-                    >{model.title}</Text>
+                    >{this.state.title}</Text>
                     {/*三角形*/}
                     <Animated.Image
                         style={{

@@ -10,7 +10,7 @@ import InitialState, {
     InitListState,
     ListToLoadingState,
     ListSuccesState,
-    ListWillUnmount,ListChangeOneItem
+    ListWillUnmount,ListChangeOneItem,ListChangeNumsItem
 } from '../InitialState/ListInitialState'
 import *as BaseListActions from '../Actions/BaseListActions'
 import *as BizApi from '../../NetWork/API/BizApi'
@@ -65,6 +65,11 @@ export default function AllMerchantPageFilterListReducer(state = initialState, a
         case BaseListActions.BaseListStatus.ChangeOneItem: {
 
             return ListChangeOneItem(state,action);
+        }
+            break;
+        case BaseListActions.BaseListStatus.ChangeNumsItem: {
+
+            return ListChangeNumsItem(state,action);
         }
             break;
     }
