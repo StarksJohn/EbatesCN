@@ -47,9 +47,11 @@ export default class BizFilterDropDownListCell extends Component {
     renderFirstAndSecondCell() {
         const {rowData, onPress, baseReducer}=this.props;
         let isSelect = rowData.isSelect;
+        Log.log('BizFilterDropDownListCell renderFirstAndSecondCell rowData.index='+ rowData.index)
 
         return (
             <BaseBt style={{
+                //overflow:'visible',
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 height: GlobalStyles.AllMerchantPageDropDownListCellH,

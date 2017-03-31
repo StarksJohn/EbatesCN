@@ -85,7 +85,7 @@ export default class BizDropDownListComp extends Component {
      * @returns {XML}
      */
     renderRow = (rowData, sectionID, rowID, highlightRow) => {
-        Log.log('BizDropDownListComp renderRow rowID=' + rowID)
+        // Log.log('BizDropDownListComp renderRow rowID=' + rowID)
         let self = this;
         let cell = null;
         if (self.props.baseReducer.ApiName == BizApi.AllMerchantPageFilterDropDownListApi.ApiName) {//画 筛选 下拉列表的cell
@@ -128,6 +128,8 @@ export default class BizDropDownListComp extends Component {
                         }
                     }
                     initialListSize={5}
+                    removeClippedSubviews={false}
+                    //pageSize={5}
                     scrollRenderAheadDistance={300}
                     renderRow={
                         this.props.renderRow ? this.props.renderRow : this.renderRow

@@ -13,7 +13,7 @@ import {
     Image,
     Animated,
     ScrollView,
-    ActivityIndicator
+    ActivityIndicator, Easing
 } from 'react-native'
 import {connect} from 'react-redux';
 import GlobalStyles from '../../Global/GlobalStyles'
@@ -45,6 +45,8 @@ export class AllMerchantPageDropDownCompContainer extends Component {
 
     //下拉视图的 y
     orderByModalYValue = new Animated.Value(0);
+
+    fadeInOpacity= new Animated.Value(0); // 初始值
 
     state = {
         isShow: false,//是否显示 下拉列表,不显示就 不画, 节省内存, 比master 分支 的代码好
@@ -78,20 +80,43 @@ export class AllMerchantPageDropDownCompContainer extends Component {
         this.curSelctIndex = index;
 
         this.setState({isShow: true}, () => {
-            Animated.timing(this.orderByModalYValue, {
-                toValue: 1,
-                duration: 250,
-            }).start()
-        })
+            // Animated.timing(this.orderByModalYValue, {
+            //     toValue: 1,
+            //     duration: 250,
+            //     easing: Easing.sin
+            // }).start();
+
+            let timing = Animated.timing;
+            //同时执行2个动画
+            Animated.parallel(['orderByModalYValue','fadeInOpacity'].map(property => {
+                return timing(this[property], {
+                    toValue: 1,
+                    duration: 250/2,
+                    easing: Easing.sin//sin
+                });
+            })).start();
+        });
+
     }
 
     _close() {
         // this.curSelctIndex=-1;
-        let self = this
-        Animated.timing(this.orderByModalYValue, {
-            toValue: 0,
-            duration: 250,
-        }).start(() => self.setState({isShow: false}))
+        let self = this;
+        // Animated.timing(this.orderByModalYValue, {
+        //     toValue: 0,
+        //     duration: 250,easing: Easing.sin
+        // }).start(() => self.setState({isShow: false}))
+
+        let timing = Animated.timing;
+        //同时执行2个动画
+        Animated.parallel(['orderByModalYValue','fadeInOpacity'].map(property => {
+            return timing(this[property], {
+                toValue: 0,
+                duration: 250/2,
+                easing: Easing.sin
+            });
+        })).start( () => self.setState({isShow: false}) );
+
     }
 
     //改变 外部 默认列表的排序
@@ -256,7 +281,7 @@ export class AllMerchantPageDropDownCompContainer extends Component {
         const {isShow, currentType, orderAsc} = this.state
         const backgroundColor = this.orderByModalYValue.interpolate({
             inputRange: [0, 1],
-            outputRange: ['transparent', 'rgba(1,1,1,0.3)']
+            outputRange: ['transparent', 'rgba(1,1,1,0.6)']
         })
 
         //下拉列表容器 的高
@@ -265,7 +290,7 @@ export class AllMerchantPageDropDownCompContainer extends Component {
         //下拉列表容器 的 y
         const contentYPosition = this.orderByModalYValue.interpolate({
             inputRange: [0, 1],
-            outputRange: [-contentHeight, 0]
+            outputRange: [/*-contentHeight*/ (gScreen.navBarHeight + GlobalStyles.AllMerchantPageMenuBtH) * -1/*让ListView 挂载时,其Top在屏幕内,否则0号cell就显示不出来*/, 0]
         })
 
         // const rotate = isShow ? '180deg' : '0deg'
@@ -282,7 +307,9 @@ export class AllMerchantPageDropDownCompContainer extends Component {
                 <Animated.View style={[styles.animatedCover, {backgroundColor}]}
                 >
                     {/*下拉列表的容器*/}
-                    <Animated.View style={[styles.animatedContent, {top: contentYPosition, height: contentHeight}]}>
+                    <Animated.View style={[styles.animatedContent, {top: contentYPosition, height: contentHeight,
+                        opacity:this.fadeInOpacity
+                    }]}>
                         {this.renderDropDownListContainer()}
                     </Animated.View>
                     {/*下拉列表下边 可点击隐藏 下拉列表的 按钮*/}
