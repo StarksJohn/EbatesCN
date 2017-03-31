@@ -12,12 +12,14 @@ import BizDropDownListCell from '../BizCells/BizDropDownListCell'
 import *as BaseListActions from '../../Redux/Actions/BaseListActions'
 import BizFilterDropDownListCell from '../BizCells/BizFilterDropDownListCell'
 import *as BizApi from '../../NetWork/API/BizApi'
+import *as EventListener from '../../Utils/EventListener/EventListener'
 
 export default class BizDropDownListComp extends Component {
 
     static propTypes = {
         renderNoDataView: PropTypes.any,//外部可自定义如何绘制 列表无数据 状态的 view
         renderRow: PropTypes.func,
+        onPress:PropTypes.func,
     };
 
     constructor(props) {
@@ -58,8 +60,18 @@ export default class BizDropDownListComp extends Component {
                     break;
                 }
             }
-
         }
+
+        if (this.props.baseReducer.ApiName==BizApi.AllMerchantPageCategoryListApi.ApiName){
+            BizApi.AllMerchantPageCategoryListApi.categoryID=rowData.id;
+        }else if(this.props.baseReducer.ApiName==BizApi.AllMerchantPageCountryListApi.ApiName){
+            BizApi.AllMerchantPageCountryListApi.tag=rowData.key;
+        }else if(this.props.baseReducer.ApiName==BizApi.AllMerchantPageSortDropDownListApi.ApiName){
+            BizApi.AllMerchantPageSortDropDownListApi.sort_by=rowData.id;
+        }
+
+        this.props.onPress&&this.props.onPress()
+        EventListener.sendEvent(BizApi.AllMerchantPageListApi.ApiName);
 
     }
 

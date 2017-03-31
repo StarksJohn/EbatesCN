@@ -17,6 +17,7 @@ import BizMerchantListCell from '../Comp/BizCells/BizMerchantListCell'
 import AllMerchantPageListContanier from '../Redux/Container/AllMerchantPageListContanier'
 import GlobalStyles from '../Global/GlobalStyles'
 import AllMerchantPageDropDownCompContainer from '../Redux/Container/AllMerchantPageDropDownCompContainer'
+import *as EventListener from '../Utils/EventListener/EventListener'
 
 
 const DropDownListDefualtY = GlobalStyles.statusBarAndNavBarH + GlobalStyles.AllMerchantPageMenuBtH;//下拉视图 显示时 Y的 起点
@@ -76,9 +77,18 @@ export class AllMerchantPage extends Component {
     //     ]).start();
     // }
 
+
+    onPress() {
+        // this.AllMerchantPageListContanierRef.SearchMerchants();
+        // this.refs.AllMerchantPageListContanierRef.SearchMerchants();
+
+
+    }
+
     render() {
 
         Log.log('AllMerchantPage render');
+        let self = this;
 
         const {navigator} = this.props;
         let rightBt = <BaseImgBt
@@ -109,12 +119,18 @@ export class AllMerchantPage extends Component {
                 {navigationBar}
                 {BizViews.renderShadowLine({zIndex: 3, borderWidth: 0.3})}
                 <AllMerchantPageDropDownCompContainer
-                    onSelectItem={this.onSelectItem}
+                    onPress={
+                        () => {
+                            this.onPress()
+                        }
+                    }
                     //onChangeOrderAsc={this._onChangeOrderAsc}
                 />
                 {BizViews.renderShadowLine({zIndex: 3, borderWidth: 0.3})}
                 {/*商家列表*/}
                 <AllMerchantPageListContanier
+                    ref='AllMerchantPageListContanierRef'
+
                     //customContainer={{position: "absolute", top: DropDownListDefualtY, bottom: 0, left: 0, right: 0}}
                 />
 

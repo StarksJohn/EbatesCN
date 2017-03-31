@@ -23,6 +23,7 @@ class AllMerchantPageCountryListContanier extends Component {
     static propTypes = {
         // AllMerchantPageReducer:PropTypes.any ,//全部商家 页面的 reducer
         // AnimatedViewStyle:PropTypes.any,//下拉列表的容器
+        onPress:PropTypes.func
     };
 
     static defaultProps = {
@@ -42,7 +43,11 @@ class AllMerchantPageCountryListContanier extends Component {
         return (
             <BizDropDownListComp
                 {...this.props}
-
+                onPress={
+                    ()=>{
+                        this.props.onPress&&this.props.onPress()
+                    }
+                }
                 renderNetWorkAbnormalView={(props) => {
                     return BizViews.netWorkAbnormalView({}, {
                         marginTop: 60,

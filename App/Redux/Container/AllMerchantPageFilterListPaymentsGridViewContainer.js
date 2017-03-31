@@ -40,6 +40,7 @@ export class AllMerchantPageFilterListPaymentsGridViewContainer extends React.Co
     }
 
     render() {
+        Log.log('AllMerchantPageFilterListPaymentsGridViewContainer render() ')
         return (
             <BaseGridView {...this.props}
                           ref={(r) => {
@@ -65,6 +66,7 @@ export class AllMerchantPageFilterListPaymentsGridViewContainer extends React.Co
                               return (
                                   <BaseTitleBt
                                       key={model.name}
+                                      isSelect={model.isSelect}
                                       renderChildren={
                                           (state) => {
                                               return state.isSelect ? <Image

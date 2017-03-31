@@ -17,6 +17,7 @@ import *as BizMerchantListCell from '../../Comp/BizCells/BizMerchantListCell'
 import GlobalStyles from '../../Global/GlobalStyles'
 import BaseListComp from '../../Comp/Base/BaseListComp'
 import MerchantListComp from '../../Comp/BizList/MerchantListComp'
+import EventListener from '../../Utils/EventListener/EventListener'
 
 
 class AllMerchantPageListContanier extends Component {
@@ -29,6 +30,21 @@ class AllMerchantPageListContanier extends Component {
         // AllMerchantPageReducer:null
 
     };
+
+    componentDidMount() {
+        this.Listener = new EventListener({
+            eventName: this.props.baseReducer.ApiName, eventCallback: ()=> {
+                this.props.dispatch(BizApi.AllMerchantPageListApi.SearchMerchants(BaseListActions.BaseListFetchDataType.REFRESH,this.props))
+
+            }
+        });
+    }
+
+    componentWillUnmount() {
+        if (this.Listener) {
+            this.Listener.removeEventListener();
+        }
+    }
 
     /**
      * @param props

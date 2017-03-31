@@ -15,6 +15,7 @@ import BaseBt from '../Base/BaseBt'
 import *as BaseListActions from '../../Redux/Actions/BaseListActions'
 import AllMerchantPageFilterListShipsMenuGridViewContainer from '../../Redux/Container/AllMerchantPageFilterListShipsGridViewContainer'
 import AllMerchantPageFilterListPaymentsGridViewContainer from '../../Redux/Container/AllMerchantPageFilterListPaymentsGridViewContainer'
+import *as BizApi from '../../NetWork/API/BizApi'
 
 export default class BizFilterDropDownListCell extends Component {
     constructor(props) {
@@ -118,6 +119,11 @@ export default class BizFilterDropDownListCell extends Component {
                         onItemPress={
                             (key) => {
                                 Log.log(' BizFilterDropDownListCell renderShipsAndPaymentsCell onItemPress key ='+key );
+                                if (BizApi.AllMerchantPageFilterDropDownListApi.tagsArr.isContainValue(key)){
+                                    BizApi.AllMerchantPageFilterDropDownListApi.tagsArr.remove(key);
+                                }else{
+                                    BizApi.AllMerchantPageFilterDropDownListApi.tagsArr.push(key);
+                                }
                             }
                         }
                     >
@@ -146,6 +152,11 @@ export default class BizFilterDropDownListCell extends Component {
                         onItemPress={
                             (key) => {
                                 Log.log(' BizFilterDropDownListCell renderShipsAndPaymentsCell onItemPress key ='+key );
+                                if (BizApi.AllMerchantPageFilterDropDownListApi.tagsArr.isContainValue(key)){
+                                    BizApi.AllMerchantPageFilterDropDownListApi.tagsArr.remove(key);
+                                }else{
+                                    BizApi.AllMerchantPageFilterDropDownListApi.tagsArr.push(key);
+                                }
                             }
                         }
                     >

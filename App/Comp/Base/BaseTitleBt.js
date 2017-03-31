@@ -11,21 +11,13 @@ import BaseBt from './BaseBt'
 
 
 export default class BaseTitleBt extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            isSelect: false
-        }
-    }
-
     static propTypes = {
         onPress: PropTypes.func,
         backgroundColor: PropTypes.string,
         title: PropTypes.string,
         textStyle: Text.propTypes.style,
         selectTextStyle: Text.propTypes.style,//按钮 选中状态下的 文字样式, 不是 按住不放,而是用于 多选 的情况下, 此按钮 可处于 选中和未选中状态
-
+        isSelect:false,
         btStyle: View.propTypes.style,
         selectBtStyle: View.propTypes.style,//按钮 选中状态下的 按钮样式
 
@@ -40,13 +32,25 @@ export default class BaseTitleBt extends Component {
         disabled: false,
     };
 
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isSelect: props.isSelect
+        }
+    }
+
 
     componentDidMount() {
 
     }
 
     componentWillReceiveProps(nextProps) {
-
+        if (nextProps.isSelect!=this.state.isSelect){
+            this.setState({
+                isSelect:nextProps.isSelect
+            })
+        }
     }
 
     /**

@@ -1629,19 +1629,58 @@ export const AllMerchantPageListApi = {
                     Log.log('BizApi  AllMerchantPageListApi 开始请求 全部商家页 搜索商家 接口,opt=' + opt);
                     dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
 
+                    let params={
+                        include: 'hot_coupons,tags',
+                        page: BaseProps.baseReducer.meta.pagination.current_page + 1,
+                        perPage: BaseProps.baseReducer.meta.pagination.per_page,
+                    };
+                    if (AllMerchantPageCategoryListApi.categoryID!=-1){
+                        params.category=AllMerchantPageCategoryListApi.categoryID;
+                    }
+                    //添加 国家列表 或 筛选下拉列表 选中的 数据
+                    if (AllMerchantPageCountryListApi.tag!='-1' || AllMerchantPageFilterDropDownListApi.tagsArr.length>0){
+                        let tagsArr=[];
+                        if (AllMerchantPageCountryListApi.tag!='-1'){
+                            tagsArr.push(AllMerchantPageCountryListApi.tag);
+                            Log.log('BizApi  AllMerchantPageListApi  SearchMerchants AllMerchantPageCountryListApi.tag='+AllMerchantPageCountryListApi.tag);
+
+                        }
+                        if (AllMerchantPageFilterDropDownListApi.tagsArr.length>0){//筛选下拉列表有选中的数据
+                            AllMerchantPageFilterDropDownListApi.tagsArr.map(
+                                (model,i)=>{
+                                    tagsArr.push(model);
+                                }
+                            )
+                        }
+
+                        params.tag='';
+                        tagsArr.map(
+                            (model,i)=>{
+                                if (i!=0){
+                                    params.tag+=',';
+                                }
+                                params.tag+=model;
+                            }
+                        )
+
+                        Log.log('BizApi SearchMerchants params.tag='+params.tag);
+                        // params.tag=AllMerchantPageCountryListApi.tag;
+                    }
+                    if (AllMerchantPageSortDropDownListApi.sort_by!='-1'){
+                        params.sort_by=AllMerchantPageSortDropDownListApi.sort_by;
+                    }
+
+                    Log.log('BizApi SearchMerchants params='+JSON.stringify(params));
+
+
                     let url = RequestUtil.getStagingOrProductionHost() + 'search/merchants';
-                    RequestUtil.GET(url, {
-                            q: AllMerchantPageApi.SearchKeys, include: 'hot_coupons,tags', coupon_amount: 2,
-                            page: BaseProps.baseReducer.meta.pagination.current_page + 1,
-                            perPage: BaseProps.baseReducer.meta.pagination.per_page,
-                        },
+                    RequestUtil.GET(url, params ,
                         (header) => {
                             commonApiHeaderAppend(header)
                         },
                     ).then((responseData) => {
-                        Log.log('BizApi  AllMerchantPageListApi 全部商家页 搜索商家 接口OK, responseData.data =' + Log.writeObjToJson(responseData.data))
+                        // Log.log('BizApi  AllMerchantPageListApi 全部商家页 搜索商家 接口OK, responseData.data =' + Log.writeObjToJson(responseData.data))
                         Log.log('BizApi  AllMerchantPageListApi 全部商家页 搜索商家 接口OK, responseData.data.length =' + responseData.data.length)
-
 
                         dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
                             meta: responseData.meta,
@@ -1675,6 +1714,7 @@ export const AllMerchantPageCategoryListApi = {
     $CategoryListDataArray: fromJS([]), //CATEGORY LIST 接口 已经拿到的数据,immutable.List 数据类型  , 里边放 model, toJS()可转成JS 数组
     isLoading: false,//是否正在 请求接口
     isThisCompDidMount: false,//此API 对应的控件是否 挂载中
+    categoryID: -1,// 点击 Category 列表 后 选择的 model.id
 
     /**
      * CATEGORY LIST 接口 https://api-staging-current.ebates.cn/docs.html#categories-category-list-get
@@ -1733,22 +1773,28 @@ export const AllMerchantPageCategoryListApi = {
 
                             Log.log('BizApi  fetchCategoryList 全部商家页 分类下拉列表  接口OK, responseData.data.length =' + responseData.data.length)
 
-                            Log.log('BizApi  fetchCategoryList 全部商家页 分类下拉列表 接口OK, responseData.data =' + Log.writeObjToJson(responseData.data));
+                            // Log.log('BizApi  fetchCategoryList 全部商家页 分类下拉列表 接口OK, responseData.data =' + Log.writeObjToJson(responseData.data));
 
                             responseData.data.map(
                                 (v, i) => {
                                     // if (i<5)
                                     {
-                                        v.isSelect=false;//给每个mode 加 是否被选中 属性
-                                        v.index=i+1;//用于 点击 处理对号的位置
+                                        v.isSelect = false;//给每个mode 加 是否被选中 属性
+                                        v.index = i + 1;//用于 点击 处理对号的位置
 
                                         this.$CategoryListDataArray = this.$CategoryListDataArray.set(this.$CategoryListDataArray.size, v);
                                     }
                                 }
                             );
-                            this.$CategoryListDataArray=this.$CategoryListDataArray.insert(0,{id:-1,name:"全部",slug:null,isSelect:true,index:0});
+                            this.$CategoryListDataArray = this.$CategoryListDataArray.insert(0, {
+                                id: -1,
+                                name: "全部",
+                                slug: null,
+                                isSelect: true,
+                                index: 0
+                            });
 
-                            Log.log('BizApi  fetchCategoryList 全部商家页 分类下拉列表 的数据源 $CategoryListDataArray=' + Log.writeObjToJson(this.$CategoryListDataArray.toJS()))
+                            // Log.log('BizApi  fetchCategoryList 全部商家页 分类下拉列表 的数据源 $CategoryListDataArray=' + Log.writeObjToJson(this.$CategoryListDataArray.toJS()))
                             this.isLoading = false;
 
                             if (this.isThisCompDidMount) {
@@ -1805,6 +1851,7 @@ export const AllMerchantPageCountryListApi = {
     $CountryListDataArray: fromJS([]), //COUNTRIES 接口 已经拿到的数据,immutable.List 数据类型  , 里边放 model, toJS()可转成JS 数组
     isLoading: false,//是否正在 请求接口
     isThisCompDidMount: false,//此API 对应的控件是否 挂载中
+    tag: '-1',//国家列表 选择 全部时, 搜索接口 需要的字段 的默认值
 
     /**
      * 拿 全部商家页 国家 下拉列表   的数据
@@ -1834,7 +1881,7 @@ export const AllMerchantPageCountryListApi = {
                     }));
                     dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizDropDownMenuAndListApi.ApiName, this.$CountryListDataArray.size * GlobalStyles.AllMerchantPageDropDownListCellH/*每个cell 高 默认 44 ,以后 把此 常量写到 专门的 cell里*/))
 
-                    this.isThisCompDidMount=true;
+                    this.isThisCompDidMount = true;
 
                 }
                 else if (!this.isLoading && this.$CountryListDataArray.size == 0) {//刚进入 全部商家页, 主动 调此接口, 走这里的代码,此时列表可能未 挂载
@@ -1868,13 +1915,20 @@ export const AllMerchantPageCountryListApi = {
                                 (v, i) => {
                                     // if (i<5)
                                     {
-                                        v.isSelect=false;//给每个mode 加 是否被选中 属性
-                                        v.index=i+1;//用于 点击 处理对号的位置
+                                        v.isSelect = false;//给每个mode 加 是否被选中 属性
+                                        v.index = i + 1;//用于 点击 处理对号的位置
                                         this.$CountryListDataArray = this.$CountryListDataArray.set(this.$CountryListDataArray.size, v);
                                     }
                                 }
                             );
-                            this.$CountryListDataArray=this.$CountryListDataArray.insert(0,{id:-1,name:"全部",slug:null,isSelect:true,index:0});
+                            this.$CountryListDataArray = this.$CountryListDataArray.insert(0, {
+                                id: -1,
+                                key: '-1',
+                                name: "全部",
+                                slug: null,
+                                isSelect: true,
+                                index: 0
+                            });
 
                             // Log.log('BizApi  fetchCountryList 全部商家页 国家 下拉列表  的数据源 $CountryListDataArray=' + Log.writeObjToJson(this.$CategoryListDataArray.toJS()))
                             this.isLoading = false;
@@ -1914,7 +1968,7 @@ export const AllMerchantPageCountryListApi = {
         return (dispatch) => {
             this.$CountryListDataArray = this.$CountryListDataArray.clear();
             this.isLoading = false;
-            this.isThisCompDidMount=false;
+            this.isThisCompDidMount = false;
         }
 
     }
@@ -1929,6 +1983,8 @@ export const AllMerchantPageSortDropDownListApi = {
     $SortListDataArray: fromJS([]), //sort 接口 已经拿到的数据,immutable.List 数据类型  , 里边放 model, toJS()可转成JS 数组
     isLoading: false,//是否正在 请求接口
     isThisCompDidMount: false,//此API 对应的控件是否 挂载中
+    sort_by: '-1',//默认的 https://api-staging-current.ebates.cn/docs.html#search-search-merchants-get 接口的 sort_by 参数,如果
+    // 没选其他的, 此字段 不传
 
     /**
      * 拿 全部商家页 排序 下拉列表   的数据
@@ -1958,7 +2014,7 @@ export const AllMerchantPageSortDropDownListApi = {
                     }));
                     dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizDropDownMenuAndListApi.ApiName, this.$SortListDataArray.size * GlobalStyles.AllMerchantPageDropDownListCellH/*每个cell 高 默认 44 ,以后 把此 常量写到 专门的 cell里*/))
 
-                    this.isThisCompDidMount=true;
+                    this.isThisCompDidMount = true;
 
                 }
                 else if (!this.isLoading && this.$SortListDataArray.size == 0) {//刚进入 全部商家页, 主动 调此接口, 走这里的代码,此时列表可能未 挂载
@@ -1967,15 +2023,17 @@ export const AllMerchantPageSortDropDownListApi = {
 
                     {
 
-                        [{name:'智能排序'},{name:'按返利最高'},{name:'按2周内拿到返利人数最多'},{name:'按商家名首字母'}].map(
+                        [{name: '智能排序', id: '-1'}, {name: '按返利最高', id: 'cashback'}, {
+                            name: '按2周内拿到返利人数最多',
+                            id: 'transfers'
+                        }, {name: '按商家名首字母', id: 'letter'}].map(
                             (v, i) => {
                                 {
-                                    v.isSelect=false;//给每个mode 加 是否被选中 属性
-                                    if (i==0){
-                                        v.isSelect=true
+                                    v.isSelect = false;//给每个mode 加 是否被选中 属性
+                                    if (i == 0) {
+                                        v.isSelect = true
                                     }
-                                    v.index=i;//用于 点击 处理对号的位置
-                                    v.id=i;
+                                    v.index = i;//用于 点击 处理对号的位置
                                     this.$SortListDataArray = this.$SortListDataArray.set(this.$SortListDataArray.size, v);
                                 }
                             }
@@ -2006,7 +2064,7 @@ export const AllMerchantPageSortDropDownListApi = {
         return (dispatch) => {
             this.$SortListDataArray = this.$SortListDataArray.clear();
             this.isLoading = false;
-            this.isThisCompDidMount=false;
+            this.isThisCompDidMount = false;
         }
 
     }
@@ -2018,15 +2076,16 @@ export const AllMerchantPageSortDropDownListApi = {
  */
 export const AllMerchantPageFilterDropDownListApi = {
     ApiName: 'AllMerchantPageFilterDropDownListApi',
-    shipsApiName:'shipsApiName',//直邮方式api
-    paymentsApiName:'paymentsApiName',//支付方式api
+    shipsApiName: 'shipsApiName',//直邮方式api
+    paymentsApiName: 'paymentsApiName',//支付方式api
     $FilterListDataArray: fromJS([]), //筛选 接口 已经拿到的数据,immutable.List 数据类型  , 里边放 model, toJS()可转成JS 数组, 0和1号model对应 0和1 号 cell,2号model 对应直邮至 cell 的接口, 3号model 对应支付方式 cell的 接口,4号model对应 清空和确定cell
     isLoading: false,//是否正在 请求接口
     isThisCompDidMount: false,//此API 对应的控件是否 挂载中
-    isShipsApiOk:false,//直邮方式 接口是否OK
-    isPaymentsApiOk:false,// 支付方式 接口 是否 OK
-    shipsDataArr:[],//存 ships 接口的 数据
-    paymentsDataArr:[],//存 payments 接口的 数据
+    isShipsApiOk: false,//直邮方式 接口是否OK
+    isPaymentsApiOk: false,// 支付方式 接口 是否 OK
+    $shipsDataArr: fromJS([]),//存 ships 接口的 数据
+    $paymentsDataArr: fromJS([]),//存 payments 接口的 数据
+    tagsArr:[],//此 列表 多选 的 按钮 model的 key
 
     /**
      * 拿 全部商家页 筛选 下拉列表   的数据
@@ -2053,19 +2112,21 @@ export const AllMerchantPageFilterDropDownListApi = {
                     this.isThisCompDidMount = true;
 
                 } else if (!this.isLoading && this.$FilterListDataArray.size > 0) {//列表挂载时, 接口已经拿到数据,列表直接切到 成功状态
+                    Log.log('BizApi fetchFilterList 列表挂载时, 接口已经拿到数据,列表直接切到 成功状态,this.$FilterListDataArray='+Log.writeObjToJson(this.$FilterListDataArray));
+
                     dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
                         couldLoadMore: false,
                         newContentArray: this.$FilterListDataArray.toJS(),
                     }));
                     dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizDropDownMenuAndListApi.ApiName, GlobalStyles.AllMerchantPageFilterListH))
 
-                    this.isThisCompDidMount=true;
+                    this.isThisCompDidMount = true;
 
                 }
                 else if (!this.isLoading && this.$FilterListDataArray.size == 0) {//刚进入 全部商家页, 主动 调此接口, 走这里的代码,此时列表可能未 挂载
                     Log.log('BizApi  fetchFilterList 开始请求 全部商家页 筛选 下拉列表  接口 ');
 
-                    this.isLoading=true;
+                    this.isLoading = true;
                     dispatch(this.fetchShipsApi(opt));
                     dispatch(this.fetchPaymentsApi(opt));
 
@@ -2079,7 +2140,7 @@ export const AllMerchantPageFilterDropDownListApi = {
      */
     fetchShipsApi(opt){
         return (dispatch) => {
-            if (this.shipsDataArr.length>0){
+            if (this.$shipsDataArr.size > 0) {
                 return;
             }
 
@@ -2101,21 +2162,21 @@ export const AllMerchantPageFilterDropDownListApi = {
                 // }).start();
 
                 {
-                    Log.log('BizApi  fetchShipsApi 全部商家页 ships  接口OK, responseData.data =' + Log.writeObjToJson(responseData.data));
+                    Log.log('BizApi  fetchShipsApi 全部商家页 ships  接口OK, responseData.data.length =' + Log.writeObjToJson(responseData.data.length));
 
                     // this.shipsDataArr=responseData.data;
 
                     responseData.data.map(
                         (model, i) => {
                             {
-                                model.isSelect=false;//给每个mode 加 是否被选中 属性
-                                this.shipsDataArr.push(model)
+                                model.isSelect = false;//给每个mode 加 是否被选中 属性
+                                this.$shipsDataArr=this.$shipsDataArr.set(this.$shipsDataArr.size,model)
 
                             }
                         }
                     );
 
-                    this.isShipsApiOk=true;
+                    this.isShipsApiOk = true;
 
                     // this.CombineData();
                     dispatch(this.CombineData(opt));
@@ -2142,7 +2203,7 @@ export const AllMerchantPageFilterDropDownListApi = {
      */
     fetchPaymentsApi(opt){
         return (dispatch) => {
-            if (this.paymentsDataArr.length>0){
+            if (this.$paymentsDataArr.size > 0) {
                 return;
             }
 
@@ -2164,19 +2225,19 @@ export const AllMerchantPageFilterDropDownListApi = {
                 // }).start();
 
                 {
-                    Log.log('BizApi  fetchPaymentsApi 全部商家页 payments  接口OK, responseData.data =' + Log.writeObjToJson(responseData.data));
+                    Log.log('BizApi  fetchPaymentsApi 全部商家页 payments  接口OK, responseData.data .length=' + Log.writeObjToJson(responseData.data.length));
 
-                    // this.paymentsDataArr=responseData.data;
                     responseData.data.map(
                         (model, i) => {
                             {
-                                model.isSelect=false;//给每个mode 加 是否被选中 属性
-                                this.paymentsDataArr.push(model)
+                                model.isSelect = false;//给每个mode 加 是否被选中 属性
+                                // this.paymentsDataArr.push(model)
+                                this.$paymentsDataArr=this.$paymentsDataArr.set(this.$paymentsDataArr.size,model);
                             }
                         }
                     );
 
-                    this.isPaymentsApiOk=true;
+                    this.isPaymentsApiOk = true;
                     dispatch(this.CombineData(opt));
 
                 }
@@ -2203,15 +2264,29 @@ export const AllMerchantPageFilterDropDownListApi = {
      */
     CombineData(opt){
         return (dispatch) => {
-            if (this.isShipsApiOk && this.isPaymentsApiOk){
+            if (this.isShipsApiOk && this.isPaymentsApiOk) {
 
-                this.$FilterListDataArray = this.$FilterListDataArray.set(this.$FilterListDataArray.size, {name:'只看返利商家',index:0,isSelect:false});
-                this.$FilterListDataArray = this.$FilterListDataArray.set(this.$FilterListDataArray.size, {name:'收藏的商家',index:1,isSelect:false});
-                this.$FilterListDataArray = this.$FilterListDataArray.set(this.$FilterListDataArray.size, {shipsDataArr:this.shipsDataArr,index:2});
-                this.$FilterListDataArray = this.$FilterListDataArray.set(this.$FilterListDataArray.size, {paymentsDataArr:this.paymentsDataArr,index:3});
+                this.$FilterListDataArray = this.$FilterListDataArray.set(this.$FilterListDataArray.size, {
+                    name: '只看返利商家',
+                    index: 0,
+                    isSelect: false
+                });
+                this.$FilterListDataArray = this.$FilterListDataArray.set(this.$FilterListDataArray.size, {
+                    name: '收藏的商家',
+                    index: 1,
+                    isSelect: false
+                });
+                this.$FilterListDataArray = this.$FilterListDataArray.set(this.$FilterListDataArray.size, {
+                    shipsDataArr: this.$shipsDataArr,
+                    index: 2
+                });
+                this.$FilterListDataArray = this.$FilterListDataArray.set(this.$FilterListDataArray.size, {
+                    paymentsDataArr: this.$paymentsDataArr,
+                    index: 3
+                });
                 // this.$FilterListDataArray = this.$FilterListDataArray.set(this.$FilterListDataArray.size, {name:'清空确定cell',index:4});
 
-                this.isLoading=false;
+                this.isLoading = false;
 
                 if (this.isThisCompDidMount) {//列表正在挂载
                     dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
@@ -2220,7 +2295,7 @@ export const AllMerchantPageFilterDropDownListApi = {
                     }));
 
                     dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizDropDownMenuAndListApi.ApiName, GlobalStyles.AllMerchantPageFilterListH /*不想动态算了,先写死 *//*this.$FilterListDataArray.size *
-                     GlobalStyles.AllMerchantPageDropDownListCellH*/ ))
+                     GlobalStyles.AllMerchantPageDropDownListCellH*/))
                 }
             }
         }
@@ -2233,7 +2308,7 @@ export const AllMerchantPageFilterDropDownListApi = {
      */
     fetchShipsGridViewData(){
         return (dispatch) => {
-            dispatch(BaseGridViewActions.changeBaseGridViewStates(this.shipsApiName, BaseGridViewActions.BaseGridViewStates.fetchOk, this.shipsDataArr));
+            dispatch(BaseGridViewActions.changeBaseGridViewStates(this.shipsApiName, BaseGridViewActions.BaseGridViewStates.fetchOk, this.$shipsDataArr.toJS()));
         }
     },
 
@@ -2243,21 +2318,51 @@ export const AllMerchantPageFilterDropDownListApi = {
      */
     fetchPaymentsGridViewData(){
         return (dispatch) => {
-            dispatch(BaseGridViewActions.changeBaseGridViewStates(this.paymentsApiName, BaseGridViewActions.BaseGridViewStates.fetchOk, this.paymentsDataArr));
+            Log.log('BizApi fetchPaymentsGridViewData this.$paymentsDataArr.size='+this.$paymentsDataArr.size)
+            dispatch(BaseGridViewActions.changeBaseGridViewStates(this.paymentsApiName, BaseGridViewActions.BaseGridViewStates.fetchOk, this.$paymentsDataArr.toJS()));
         }
     },
 
     /**
-     * 重置 筛选 接口的 数据 和 其 列表的 高度
+     * 筛选 下拉列表 点击 清空 后 调
+     */
+    clearSelectData(){
+        return (dispatch) => {
+            Log.log('BizApi clearSelectData ')
+
+            this.tagsArr=[];
+
+            this.$shipsDataArr.toJS().map(
+                (model,i)=>{
+                    model.isSelect=false;
+                    this.$shipsDataArr=this.$shipsDataArr.set(i,model);
+                }
+            );
+            dispatch(BaseGridViewActions.changeBaseGridViewStates(this.shipsApiName, BaseGridViewActions.BaseGridViewStates.fetchOk, this.$shipsDataArr.toJS()));
+
+            this.$paymentsDataArr.toJS().map(
+                (model,i)=>{
+                    model.isSelect=false;
+                    this.$paymentsDataArr=this.$paymentsDataArr.set(i,model);
+                }
+            );
+            dispatch(BaseGridViewActions.changeBaseGridViewStates(this.paymentsApiName, BaseGridViewActions.BaseGridViewStates.fetchOk, this.$paymentsDataArr.toJS()));
+
+        }
+    },
+
+    /**
+     * 重置 筛选 接口的 数据 和 其 列表的 高度,在 整个大的筛选控件 卸载时 调
      * @returns {function(*)}
      */
     releaseFilterListData(){
         return (dispatch) => {
             this.$FilterListDataArray = this.$FilterListDataArray.clear();
             this.isLoading = false;
-            this.isThisCompDidMount=false;
-            this.paymentsDataArr=[];
-            this.shipsDataArr=[];
+            this.isThisCompDidMount = false;
+            this.$paymentsDataArr = this.$paymentsDataArr.clear();
+            this.$shipsDataArr = this.$shipsDataArr.clear();
+            this.tagsArr=[];
         }
 
     }

@@ -19,6 +19,7 @@ import BizDropDownListComp from '../../Comp/BizList/BizDropDownListComp'
 import GlobalStyles from '../../Global/GlobalStyles'
 import Colors from '../../Utils/Colors'
 import BaseTitleBt from '../../Comp/Base/BaseTitleBt'
+import *as EventListener from '../../Utils/EventListener/EventListener'
 
 
 class AllMerchantPageFilterListContanier extends Component {
@@ -26,6 +27,8 @@ class AllMerchantPageFilterListContanier extends Component {
     static propTypes = {
         // AllMerchantPageReducer:PropTypes.any ,//全部商家 页面的 reducer
         // AnimatedViewStyle:PropTypes.any,//下拉列表的容器
+        onPress:PropTypes.func
+
     };
 
     static defaultProps = {
@@ -42,10 +45,12 @@ class AllMerchantPageFilterListContanier extends Component {
 
 
     onClearBt() {
-
+        this.props.dispatch(BizApi.AllMerchantPageFilterDropDownListApi.clearSelectData())
     }
 
     onConfirmBt() {
+        EventListener.sendEvent(BizApi.AllMerchantPageListApi.ApiName);
+        this.props.onPress&&this.props.onPress();
 
     }
 

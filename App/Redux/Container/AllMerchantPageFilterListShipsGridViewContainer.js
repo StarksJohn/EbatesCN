@@ -70,9 +70,11 @@ export class AllMerchantPageFilterListShipsGridViewContainer extends React.Compo
                            "key": "direct_ship_to_CN"
                            }
                            结构*/) => {
+                              Log.log('AllMerchantPageFilterListShipsGridViewContainer render renderItem model='+Log.writeObjToJson(model));
                               return (
                                   <BaseTitleBt
                                       key={model.name}
+                                      isSelect={model.isSelect}
                                       renderChildren={
                                           (state) => {
                                               return state.isSelect ? <Image
