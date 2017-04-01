@@ -110,7 +110,7 @@ export function ListSuccesState(state, action) {
     let temp$dataArray = state.getIn(['$dataArray']);
 
     if (temp$dataArray) {
-        if (action.opt == BaseListActions.BaseListFetchDataType.REFRESH) {
+        if (action.opt == BaseListActions.BaseListFetchDataType.REFRESH) {//刷新成功,请以前的数据
             temp$dataArray = temp$dataArray.clear();
         }
         //新获取到的数据添加到数组 结尾
@@ -143,6 +143,31 @@ export function ListSuccesState(state, action) {
  */
 export function ListFailureState(state, action) {
     let _nextState = state
+        .setIn(['status'], action.type)
+        .setIn(['opt'], action.opt)
+        .setIn(['couldLoadMore'], false)
+        .setIn(['isRefreshing'], false);
+
+    return _nextState;
+}
+
+/**
+ * 通用列表 在 初始化 | 刷新 时 接口无数据返回 状态
+ * @returns {Cursor}
+ * @constructor
+ */
+export function ListNodataState(state, action) {
+    let temp$dataArray = state.getIn(['$dataArray']);
+
+    if (temp$dataArray) {
+        if (action.opt == BaseListActions.BaseListFetchDataType.REFRESH) {
+            temp$dataArray = temp$dataArray.clear();
+        }
+    }
+
+    let _nextState = state
+        .setIn(['$dataArray'], temp$dataArray)
+        .setIn(['dataSource'], state.dataSource.cloneWithRows(temp$dataArray.toJS()))
         .setIn(['status'], action.type)
         .setIn(['opt'], action.opt)
         .setIn(['couldLoadMore'], false)

@@ -17,9 +17,9 @@ import *as BizMerchantListCell from '../../Comp/BizCells/BizMerchantListCell'
 import GlobalStyles from '../../Global/GlobalStyles'
 import BaseListComp from '../../Comp/Base/BaseListComp'
 import MerchantListComp from '../../Comp/BizList/MerchantListComp'
-// import EventListener from '../../Utils/EventListener/EventListener'
+import *as EventListener from '../../Utils/EventListener/EventListener'
 // import SMSTimer from '../../Utils/SMSTimer'
-
+import *as AllMerchantPage from '../../Pages/AllMerchantPage'
 
 class AllMerchantPageListContanier extends Component {
 
@@ -80,17 +80,22 @@ class AllMerchantPageListContanier extends Component {
 
     render() {
 
+        const {dispatch}=this.props;
         return (
             <MerchantListComp
                 {...this.props}
                 renderNoDataView={(props) => {
-                    return BizViews.netWorkAbnormalView({}, {
-                        marginTop: 60,
-                        width: 90,
-                        height: 90,
-                    }, {marginTop: 25,}, {marginTop: 17}, () => {
-                        this.props.dispatch(BizApi.SearchResultPageMerchantListAPI.fetchData(BaseListActions.BaseListFetchDataType.REFRESH, props.route.value));//刷新 列表
+                    return BizViews.renderAllmerchantPageNoDataView( () => {
+                        Log.log('AllMerchantPageListContanier  render 查看全部商家')
+                        dispatch(BizApi.AllMerchantPageListApi.resetAllDropDownListSelectedInfo())
 
+                        EventListener.sendEvent(AllMerchantPage.AllMerchantPagechangeTitleEventName,'全部商家');
+                        EventListener.sendEvent(AllMerchantPage.AllMerchantPageChangeCategoryMenuTitleEventName,'分类');
+                        EventListener.sendEvent(AllMerchantPage.AllMerchantPageChangeCountryMenuTitleEventName,'国家');
+                        EventListener.sendEvent(AllMerchantPage.AllMerchantPageChangeSortMenuTitleEventName,'排序');
+
+
+                        EventListener.sendEvent(BizApi.AllMerchantPageListApi.ApiName);
                     });
                 }
                 }

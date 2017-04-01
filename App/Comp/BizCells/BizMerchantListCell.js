@@ -228,7 +228,8 @@ function renderMark(rowData) {
     if (rowData.isInTopTenList) {//只有top10 列表才 画 近两周rowData.transfers人拿到返利
         arr.push({name: '近两周' + rowData.transfers + '人拿到返利'});
     } else {
-        arr = /*rowData.tags.data=*/ ['支持直邮', '接受国卡', '接受支付宝', '联名卡推荐商家', '接受', '接支', '联名卡'];
+        arr = rowData.tags? rowData.tags.data:[];
+            //[{name:'支持直邮'}, {name:'接受国卡'}, {name:'接受支付宝'}, {name:'联名卡推荐商家'}, '联名卡'];
     }
     // let nums = Math.randomNums(1, arr.length);
     // let newArr = [];
@@ -238,7 +239,7 @@ function renderMark(rowData) {
 
     // let newArr = ['近两周66300人拿到返利'];
 
-    let content = arr.map((v, i) => {
+    let content = arr.length>0&&arr.map((v, i) => {
         return (
             <View key={i}
                   style={{

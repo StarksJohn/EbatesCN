@@ -10,7 +10,7 @@ import InitialState, {
     InitListState,
     ListToLoadingState,
     ListSuccesState,
-    ListWillUnmount
+    ListWillUnmount,ListNodataState
 } from '../InitialState/ListInitialState'
 import *as BaseListActions from '../Actions/BaseListActions'
 import *as BizApi from '../../NetWork/API/BizApi'
@@ -49,11 +49,7 @@ export default function AllMerchantPageListReducer(state = initialState, action)
 
         case BaseListActions.BaseListStatus.NODATA: {
 
-            let _nextState = state
-                .setIn(['status'], action.type)
-                .setIn(['opt'], action.opt);
-
-            return _nextState;
+            return ListNodataState(state,action);
         }
             break;
         case BaseListActions.BaseListStatus.WillUnmount: {

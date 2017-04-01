@@ -67,6 +67,20 @@ export function SuccessFetchinglist(opt, ApiName, newData) {
 }
 
 /**
+ * 列表 无数据 action
+ * @param ApiName 哪个列表
+ * @param opt
+ * @returns {{type: string, ApiName: *, opt: *}}
+ */
+export function NodataAction(ApiName,opt) {
+    return {
+        type: BaseListStatus.NODATA,
+        ApiName:ApiName,
+        opt:opt
+    }
+}
+
+/**
  * 改变列表里一个item
  * @param opt
  * @param ApiName

@@ -1684,10 +1684,17 @@ export const AllMerchantPageListApi = {
                         // Log.log('BizApi  AllMerchantPageListApi 全部商家页 搜索商家 接口OK, responseData.data =' + Log.writeObjToJson(responseData.data))
                         Log.log('BizApi  AllMerchantPageListApi 全部商家页 搜索商家 接口OK, responseData.data.length =' + responseData.data.length)
 
-                        dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
-                            meta: responseData.meta,
-                            newContentArray: responseData.data,
-                        }));
+                        //不是 加载更多 时 无数据, 列表 切换到 无数据状态
+                        if (responseData.data.length==0 && opt!=BaseListActions.BaseListFetchDataType.MORE){
+                            Log.log('BizApi  AllMerchantPageListApi 全部商家页 搜索商家 接口 无数据')
+                            dispatch(BaseListActions.NodataAction(this.ApiName, opt));
+                        }else{
+                            dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
+                                meta: responseData.meta,
+                                newContentArray: responseData.data,
+                            }));
+                        }
+
                     }).catch((error) => {
                         Log.log('BizApi  AllMerchantPageListApi 全部商家页 搜索商家 接口失败 =' + error)
                         RequestUtil.showErrorMsg(error)
@@ -1704,6 +1711,19 @@ export const AllMerchantPageListApi = {
 
         }
     },
+
+    /**
+     * 重置 全部商家页 的 筛选控件的 所有下拉列表 里 的 已选中的 信息为默认信息
+     */
+    resetAllDropDownListSelectedInfo(){
+        return (dispatch) => {
+            AllMerchantPageCategoryListApi.resetCategoryListData();
+            AllMerchantPageCountryListApi.resetCountryListData();
+            AllMerchantPageSortDropDownListApi.resetSortListData();
+            dispatch(AllMerchantPageFilterDropDownListApi.clearSelectData());
+        }
+
+    }
 }
 
 /**
@@ -1825,6 +1845,28 @@ export const AllMerchantPageCategoryListApi = {
                 }
             }
         }
+    },
+
+    /**
+     * 重置 category 下拉列表 的默认 选中 cell为 0号cell
+     */
+    resetCategoryListData(){
+        this.isLoading = false;
+        this.isThisCompDidMount = false;
+        this.categoryID = -1;
+
+        this.$CategoryListDataArray.toJS().map(
+            (model, i) => {
+                {
+                    model.isSelect = false;//给每个mode 加 是否被选中 属性
+                    if (i==0){
+                        model.isSelect = true;
+                    }
+
+                    this.$CategoryListDataArray = this.$CategoryListDataArray.set(i, model);
+                }
+            }
+        );
     },
 
     /**
@@ -1961,6 +2003,28 @@ export const AllMerchantPageCountryListApi = {
     },
 
     /**
+     * 重置 Country 下拉列表 的默认 选中 cell为 0号cell
+     */
+    resetCountryListData(){
+        this.isLoading = false;
+        this.isThisCompDidMount = false;
+        this.tag = '-1'
+
+        this.$CountryListDataArray.toJS().map(
+            (model, i) => {
+                {
+                    model.isSelect = false;//给每个mode 加 是否被选中 属性
+                    if (i==0){
+                        model.isSelect = true;
+                    }
+
+                    this.$CountryListDataArray = this.$CountryListDataArray.set(i, model);
+                }
+            }
+        );
+    },
+
+    /**
      * 重置 Country 接口的 数据 和 其 列表的 高度
      * @returns {function(*)}
      */
@@ -2055,6 +2119,28 @@ export const AllMerchantPageSortDropDownListApi = {
                 }
             }
         }
+    },
+
+    /**
+     * 重置 排序 下拉列表 的默认 选中 cell为 0号cell
+     */
+    resetSortListData(){
+        this.isLoading = false;
+        this.isThisCompDidMount = false;
+        this.sort_by = '-1'
+
+        this.$SortListDataArray.toJS().map(
+            (model, i) => {
+                {
+                    model.isSelect = false;//给每个mode 加 是否被选中 属性
+                    if (i==0){
+                        model.isSelect = true;
+                    }
+
+                    this.$SortListDataArray = this.$SortListDataArray.set(i, model);
+                }
+            }
+        );
     },
 
     /**

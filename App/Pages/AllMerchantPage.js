@@ -156,7 +156,7 @@ export class AllMerchantPage extends Component {
                 {/*商家列表*/}
                 <AllMerchantPageListContanier
                     ref='AllMerchantPageListContanierRef'
-
+                    navigator={this.props.navigator}
                     //customContainer={{position: "absolute", top: DropDownListDefualtY, bottom: 0, left: 0, right: 0}}
                 />
 

@@ -8,14 +8,14 @@ import {
 } from 'react-native';
 import BaseListComp from '../Base/BaseListComp';
 import *as BizMerchantListCell from '../BizCells/BizMerchantListCell'
-
+import MerchantDetailPage from '../../Pages/MerchantDetailPage'
 
 export default class MerchantListComp extends Component {
 
-    // static propTypes = {
-    //     renderNoDataView: PropTypes.any,//外部可自定义如何绘制 列表无数据 状态的 view
-    //
-    // };
+    static propTypes = {
+        renderNoDataView: PropTypes.any,//外部可自定义如何绘制 列表无数据 状态的 view
+
+    };
 
     constructor(props) {
         super(props);
@@ -45,13 +45,21 @@ export default class MerchantListComp extends Component {
 
         Log.log('MerchantListComp rowID==' + rowID);
 
+        const {navigator}=this.props;
+
         let paddingTop = 0;
         if (rowID != '0') {
             paddingTop = 5;
         }
-        return BizMerchantListCell.RenderBizMerchantListCell(rowData,sectionID,rowID,highlightRow,(rowData)=>{
-            Log.log('MerchantListComp renderRow callback rowData=='+rowData);
-        },paddingTop);
+
+        return BizMerchantListCell.RenderBizMerchantListCell(rowData, sectionID, rowID, highlightRow, (rowData) => {
+            Log.log('MerchantListComp renderRow callback rowData==' + rowData);
+            navigator.push({
+                component: MerchantDetailPage,
+                name: gRouteName.MerchantDetailPage,
+                merchantData: rowData,
+            });
+        }, paddingTop);
     }
 
     render() {
@@ -65,7 +73,7 @@ export default class MerchantListComp extends Component {
                         this.renderRow
                     }
                     renderNoDataView={(props) => {
-                        return this.props.renderNoDataView(props);
+                        return this.props.renderNoDataView&&this.props.renderNoDataView(props);
                     }
                     }
                     renderNetWorkAbnormalView={
