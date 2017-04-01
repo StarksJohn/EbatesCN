@@ -1,8 +1,8 @@
 /**
  * Created by Ebates on 17/3/9.
- * AllMerchantPageMenuGridViewContainer  在 全部商家页 用的 MENU 网格控件的 数据源
+ * AllCouponPageMenuGridViewContainer  在 全部优惠 页 用的 MENU 网格控件的 数据源
  */
-import React, {Component, PropTypes} from 'react';
+import React, {Component,PropTypes} from 'react';
 import {
     View, Text, Image
 } from 'react-native';
@@ -18,14 +18,13 @@ import *as BizViews from '../../Comp/BizCommonComp/BizViews'
 import BizFilterMenuBtView from '../../Comp/BizCommonComp/BizFilterMenuBtView'
 import EventListener from '../../Utils/EventListener/EventListener'
 
-//重置 全部商家页 筛选控件的 MENU 控件的 所有 箭头的方向 的 事件名
-export const AllMerchantPageMenuGridViewArrowDirResetEventName='AllMerchantPageMenuGridViewArrowDirResetEventName'
 
-export class AllMerchantPageMenuGridViewContainer extends React.Component {
+//重置 全部优惠页 筛选控件的 MENU 控件的 所有 箭头的方向 的 事件名
+export const AllCouponPageMenuGridViewArrowDirResetEventName='AllCouponPageMenuGridViewArrowDirResetEventName'
+
+export class AllCouponPageMenuGridViewContainer extends React.Component {
     static propTypes = {
         onItemPress: PropTypes.func,
-        // resetAllArrowsDirEventName:React.PropTypes.string,//重置 当前 Menu 控件的 所有 箭头 方向的 事件
-
     };
     static defaultProps = {
         onItemPress: (index) => {
@@ -40,7 +39,7 @@ export class AllMerchantPageMenuGridViewContainer extends React.Component {
     componentDidMount() {
         {//
             this.resetAllArrowsDirEventistener = new EventListener({
-                eventName: AllMerchantPageMenuGridViewArrowDirResetEventName, eventCallback: ()=> {
+                eventName: AllCouponPageMenuGridViewArrowDirResetEventName, eventCallback: ()=> {
                     this.changeArrowDir(-1);
                 }
             });
@@ -73,7 +72,6 @@ export class AllMerchantPageMenuGridViewContainer extends React.Component {
         });
     }
 
-
     render() {
         let self = this;
 
@@ -84,7 +82,7 @@ export class AllMerchantPageMenuGridViewContainer extends React.Component {
                           }}
                           fetchApi={() => {
                               return (dispatch) => {
-                                  dispatch(BizApi.AllMerchantPageApi.fetchMenuData())
+                                  dispatch(BizApi.AllCouponPageApi.fetchMenuData())
                               }
                           }}
                           containerStyle={[{
@@ -92,7 +90,7 @@ export class AllMerchantPageMenuGridViewContainer extends React.Component {
                               paddingRight: 0, paddingTop: 0, paddingBottom: 0,
                               backgroundColor: Colors.white
                           }, this.props.containerStyle]}
-                          renderItem={(model/*此处的model类似是 {id:0,title:'母婴'}  结构*/) => {
+                          renderItem={(model/*此处的model类似是 {id:0,title:'分类'}  结构*/) => {
                               return (
                                   <View style={{
                                       flex: 1, flexDirection: 'row', //alignItems:'center' ,
@@ -104,7 +102,7 @@ export class AllMerchantPageMenuGridViewContainer extends React.Component {
                                               self.BizFilterMenuBtViewRefArr.length < self.props.baseReducer.dataArray.length && self.BizFilterMenuBtViewRefArr.push(r);
                                           }}
                                           model={model}
-                                          changeTitleEventName={model.changeTitleEventName}
+                                          //changeTitleEventName={model.changeTitleEventName}
                                           onItemPress={ (index) => {
                                               this.onItemPress(index);
                                           } }
@@ -128,8 +126,8 @@ export class AllMerchantPageMenuGridViewContainer extends React.Component {
 
 function mapStateToProps(state) {
     //推荐此种  解构赋值的写法
-    const {AllMerchantPageGridViewReducer}=state;
-    return {baseReducer: AllMerchantPageGridViewReducer};
+    const {AllCouponPageGridViewReducer}=state;
+    return {baseReducer: AllCouponPageGridViewReducer};
 
 }
-export default connect(mapStateToProps)(AllMerchantPageMenuGridViewContainer);
+export default connect(mapStateToProps)(AllCouponPageMenuGridViewContainer);

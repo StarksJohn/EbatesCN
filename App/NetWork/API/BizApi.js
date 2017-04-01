@@ -1585,8 +1585,7 @@ export const EBCouponListApi = {
  */
 export const AllMerchantPageApi = {
     ApiName: 'AllMerchantPageApi',
-    SearchKeys: '',//筛选出来的关键词
-
+    // SearchKeys: '',//筛选出来的关键词
 
     /**
      * 获取 4个menu的数据
@@ -1607,6 +1606,34 @@ export const AllMerchantPageApi = {
             }, {
                 id: 3,
                 title: '筛选', changeTitleEventName: AllMerchantPage.AllMerchantPageChangeFilterMenuTitleEventName
+            }]));
+        }
+    },
+}
+
+/**
+ * 全部优惠页 api
+ * @type {{}}
+ */
+export const AllCouponPageApi = {
+    ApiName: 'AllCouponPageApi',
+    // SearchKeys: '',//筛选出来的关键词
+
+    /**
+     * 获取 3 个menu的数据
+     */
+    fetchMenuData(){
+        return (dispatch) => {
+            dispatch(BaseGridViewActions.changeBaseGridViewStates(this.ApiName, BaseGridViewActions.BaseGridViewStates.fetchOk, [{
+                id: 0,
+                title: '分类', //changeTitleEventName: AllMerchantPage.AllMerchantPageChangeCategoryMenuTitleEventName
+            }, {
+                id: 1,
+                title: '排序',
+                //changeTitleEventName: AllMerchantPage.AllMerchantPageChangeSortMenuTitleEventName
+            }, {
+                id: 2,
+                title: '商家', //changeTitleEventName: AllMerchantPage.AllMerchantPageChangeFilterMenuTitleEventName
             }]));
         }
     },

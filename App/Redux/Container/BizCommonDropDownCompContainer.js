@@ -17,12 +17,11 @@ import {
 } from 'react-native'
 import {connect} from 'react-redux';
 import GlobalStyles from '../../Global/GlobalStyles'
-import AllMerchantPageMenuGridViewContainer from './AllMerchantPageMenuGridViewContainer'
 import *as BizApi from '../../NetWork/API/BizApi'
 import BaseBt from '../../Comp/Base/BaseBt'
 import Colors from '../../Utils/Colors'
 import *as BizDropDownMenuAndListActions from '../Actions/BizDropDownMenuAndListActions'
-
+import *as EventListener from '../../Utils/EventListener/EventListener'
 
 
 export class BizCommonDropDownCompContainer extends Component {
@@ -33,6 +32,7 @@ export class BizCommonDropDownCompContainer extends Component {
         renderMenuBar: PropTypes.any,//外部画 Menu
         renderDropDownListContainer:React.PropTypes.func,//外部 画 下拉列表
         WillUnmount:React.PropTypes.func,//外部处理此控件 卸载时 的事情
+        resetAllArrowsDirEventName:React.PropTypes.string,//重置 哪个 Menu 控件的 所有 箭头 方向的 事件
     }
 
     constructor(props) {
@@ -143,7 +143,7 @@ export class BizCommonDropDownCompContainer extends Component {
 
     render() {
         Log.log('BizCommonDropDownCompContainer render()')
-        const {dataSource,} = this.props
+        const {dataSource} = this.props
         const {isShow, currentType, orderAsc} = this.state
         const backgroundColor = this.orderByModalYValue.interpolate({
             inputRange: [0, 1],
@@ -185,6 +185,9 @@ export class BizCommonDropDownCompContainer extends Component {
                         onPress={
                             () => {
                                 this._close()
+
+                                this.props.resetAllArrowsDirEventName&&EventListener.sendEvent(this.props.resetAllArrowsDirEventName);
+
                             }
                         }
                     >

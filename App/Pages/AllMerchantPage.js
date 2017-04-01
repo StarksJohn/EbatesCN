@@ -19,7 +19,7 @@ import GlobalStyles from '../Global/GlobalStyles'
 import BizCommonDropDownCompContainer from '../Redux/Container/BizCommonDropDownCompContainer'
 import *as BizDropDownMenuAndListActions from '../Redux/Actions/BizDropDownMenuAndListActions'
 import *as BizDropDownMenuAndListInit from '../Redux/InitialState/BizDropDownMenuAndListInit'
-import AllMerchantPageMenuGridViewContainer from '../Redux/Container/AllMerchantPageMenuGridViewContainer'
+import AllMerchantPageMenuGridViewContainer ,{AllMerchantPageMenuGridViewArrowDirResetEventName }from '../Redux/Container/AllMerchantPageMenuGridViewContainer'
 import AllMerchantPageCategoryListContanier from '../Redux/Container/AllMerchantPageCategoryListContanier'
 import AllMerchantPageCountryListContanier from '../Redux/Container/AllMerchantPageCountryListContanier'
 import AllMerchantPageSortListContanier from '../Redux/Container/AllMerchantPageSortListContanier'
@@ -41,6 +41,8 @@ export const AllMerchantPageChangeSortMenuTitleEventName = 'AllMerchantPageChang
 
 //改变 全部商家页 Filter 下拉列表对应的MENU的title的  事件名
 export const AllMerchantPageChangeFilterMenuTitleEventName = 'AllMerchantPageChangeFilterMenuTitleEventName';
+
+
 
 export class AllMerchantPage extends Component {
     constructor(props) {
@@ -130,6 +132,7 @@ export class AllMerchantPage extends Component {
                             this.onPress()
                         }
                     }
+                    resetAllArrowsDirEventName={AllMerchantPageMenuGridViewArrowDirResetEventName}
                     renderMenuBar={(self) => {
                         return <AllMerchantPageMenuGridViewContainer
                             {...self.props}
