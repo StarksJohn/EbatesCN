@@ -66,8 +66,10 @@ export default class BizDropDownListComp extends Component {
         if (this.props.baseReducer.ApiName==BizApi.AllMerchantPageCategoryListApi.ApiName){
             BizApi.AllMerchantPageCategoryListApi.categoryID=rowData.id;
 
+            //发 改变 全部商家页面 title的 事件
             EventListener.sendEvent(AllMerchantPage.AllMerchantPagechangeTitleEventName,rowData.index==0?'全部商家':rowData.name);
 
+            //发改变 Category下拉列表Menu的 title的 事件
             EventListener.sendEvent(AllMerchantPage.AllMerchantPageChangeCategoryMenuTitleEventName,rowData.index==0?'分类':rowData.name);
 
 

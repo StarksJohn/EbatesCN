@@ -231,6 +231,7 @@ export const ForgetPassPageApi = {
                 }).catch((error) => {
                     Log.log('BizApi ForgetPassPageApi forgetPassword 忘记密码接口返回失败 error=' + Log.writeObjToJson(error));
                     reject(error);
+                    RequestUtil.showErrorMsg(error)
                     BizLoadingView.closeBizLoadingView();
 
                 });

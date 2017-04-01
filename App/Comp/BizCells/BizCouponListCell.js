@@ -93,6 +93,8 @@ export function RenderBizCouponListCell(rowData, sectionID, rowID, highlightRow,
     //     msg=msg+msg;
     // }
 
+    let title=StringOauth.isNull(rowData.translated_highlight)?'['+rowData.merchant.now_rate+']':'['+rowData.translated_highlight+'+'+rowData.merchant.now_rate+']';
+
     return (
         // 最大的白view
         <BaseBt
@@ -142,14 +144,14 @@ export function RenderBizCouponListCell(rowData, sectionID, rowID, highlightRow,
                         ' 12, 1)', textAlign: "left", //lineHeight: 15,
                         //backgroundColor: Colors.getRandomColor()
                     }} numberOfLines={1}
-                    >{rowData.chinese_highlight}</Text>
+                    >{title}</Text>
                     {/*优惠信息*/}
                     <Text style={{
                         marginLeft: 0, marginTop: 5 + 3, fontSize: 12, color: 'rgba(85, 85,' +
                         ' 85, 1)', lineHeight: 14,
                         //backgroundColor: Colors.getRandomColor()
                     }} numberOfLines={0} textAlign="center"
-                    >{rowData.chinese_name}</Text>
+                    >{rowData.translated_name}</Text>
                     {/*最后一行,剩余时间等最大背景view*/}
                     <View style={{
                         marginTop: 10, flexDirection: 'row', justifyContent: 'flex-start', marginRight: 0, height: 14,

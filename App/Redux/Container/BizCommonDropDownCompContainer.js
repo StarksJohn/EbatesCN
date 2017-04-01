@@ -1,7 +1,7 @@
 /**
  * Created by Ebates on 2017/3/28.
  * AllMerchantPageDropDownCompContainer
- * 全部商家页 包含 menu和 下拉列表的 筛选容器控件
+ * 业务逻辑通用的 包含 menu和 下拉列表的 筛选容器控件
  */
 import React, {Component, PropTypes} from 'react'
 import {
@@ -21,20 +21,18 @@ import AllMerchantPageMenuGridViewContainer from './AllMerchantPageMenuGridViewC
 import *as BizApi from '../../NetWork/API/BizApi'
 import BaseBt from '../../Comp/Base/BaseBt'
 import Colors from '../../Utils/Colors'
-import AllMerchantPageCategoryListContanier from './AllMerchantPageCategoryListContanier'
-import AllMerchantPageCountryListContanier from './AllMerchantPageCountryListContanier'
-import AllMerchantPageSortListContanier from './AllMerchantPageSortListContanier'
-import AllMerchantPageFilterListContanier from './AllMerchantPageFilterListContanier'
 import *as BizDropDownMenuAndListActions from '../Actions/BizDropDownMenuAndListActions'
-import *as BaseListActions from '../Actions/BaseListActions'
-import *as BizDropDownMenuAndListInit from '../InitialState/BizDropDownMenuAndListInit'
 
-export class AllMerchantPageDropDownCompContainer extends Component {
+
+
+export class BizCommonDropDownCompContainer extends Component {
     static propTypes = {
         //dropDownListCompArr: React.PropTypes.array, //存 点击 不同 menu 后,下拉列表的容器里 显示的不同 数据源的 下拉列表控件
         onPress: React.PropTypes.func,//点击下拉列表里的item 回调,包括单选item和 筛选 列表的 确定按钮,都回调
-        onChangeOrderAsc: React.PropTypes.func,//改变 外部 默认列表的排序
-        renderMenuBar: PropTypes.any,
+        // onChangeOrderAsc: React.PropTypes.func,//改变 外部 默认列表的排序
+        renderMenuBar: PropTypes.any,//外部画 Menu
+        renderDropDownListContainer:React.PropTypes.func,//外部 画 下拉列表
+        WillUnmount:React.PropTypes.func,//外部处理此控件 卸载时 的事情
     }
 
     constructor(props) {
@@ -55,28 +53,31 @@ export class AllMerchantPageDropDownCompContainer extends Component {
     }
 
     componentWillMount() {
-        this.props.dispatch(BizApi.AllMerchantPageCategoryListApi.fetchCategoryList())
-        ;
-        this.props.dispatch(BizApi.AllMerchantPageCountryListApi.fetchCountryList());
-        this.props.dispatch(BizApi.AllMerchantPageSortDropDownListApi.fetchSortList());
-        this.props.dispatch(BizApi.AllMerchantPageFilterDropDownListApi.fetchFilterList());
+        // this.props.dispatch(BizApi.AllMerchantPageCategoryListApi.fetchCategoryList())
+        // ;
+        // this.props.dispatch(BizApi.AllMerchantPageCountryListApi.fetchCountryList());
+        // this.props.dispatch(BizApi.AllMerchantPageSortDropDownListApi.fetchSortList());
+        // this.props.dispatch(BizApi.AllMerchantPageFilterDropDownListApi.fetchFilterList());
 
     }
 
     componentWillUnmount() {
-        Log.log('BizDropDownMenuAndListContainer componentWillUnmount ');
-        this.props.dispatch(BizApi.AllMerchantPageCategoryListApi.releaseCategoryListData())
-        this.props.dispatch(BizApi.AllMerchantPageCountryListApi.releaseCountryListData())
-        this.props.dispatch(BizApi.AllMerchantPageSortDropDownListApi.releaseSortListData())
-        this.props.dispatch(BizApi.AllMerchantPageFilterDropDownListApi.releaseFilterListData())
+        Log.log('BizCommonDropDownCompContainer componentWillUnmount ');
 
         this.props.dispatch(BizDropDownMenuAndListActions.resetDropDownListHAction(BizApi.BizDropDownMenuAndListApi.ApiName));
+        this.props.WillUnmount&&this.props.WillUnmount();
+
+        // this.props.dispatch(BizApi.AllMerchantPageCategoryListApi.releaseCategoryListData())
+        // this.props.dispatch(BizApi.AllMerchantPageCountryListApi.releaseCountryListData())
+        // this.props.dispatch(BizApi.AllMerchantPageSortDropDownListApi.releaseSortListData())
+        // this.props.dispatch(BizApi.AllMerchantPageFilterDropDownListApi.releaseFilterListData())
+        // this.props.dispatch(BizDropDownMenuAndListActions.resetDropDownListHAction(BizApi.BizDropDownMenuAndListApi.ApiName));
 
     }
 
     //点击 Menu 按钮 回调,展开 下拉列表
     show(index) {
-        // Log.log('AllMerchantPageDropDownCompContainer show index='+index)
+        // Log.log('BizCommonDropDownCompContainer show index='+index)
         this.curSelctIndex = index;
 
         this.setState({isShow: true}, () => {
@@ -119,28 +120,6 @@ export class AllMerchantPageDropDownCompContainer extends Component {
 
     }
 
-    //改变 外部 默认列表的排序
-    // _onChangeOrderAsc = () => {
-    //     const {orderAsc} = this.state
-    //     const {onChangeOrderAsc} = this.props
-    //     this.setState({orderAsc: orderAsc == 0 ? 1 : 0}, () => {
-    //         onChangeOrderAsc && onChangeOrderAsc(orderAsc)
-    //     })
-    // }
-    //
-    // //点击 下拉列表 里的 按钮 回调
-    // _onPressSortTypeCell = type => {
-    //     const {onSelectItem} = this.props
-    //     this.setState({currentType: type.name})
-    //     Animated.timing(this.orderByModalYValue, {
-    //         toValue: 0,
-    //         duration: 250,
-    //     }).start(() => {
-    //         onSelectItem && onSelectItem(type)
-    //         this.setState({isShow: false})
-    //     })
-    // }
-
     /**
      * 计算 下拉列表的最大 高
      * @param height
@@ -150,133 +129,20 @@ export class AllMerchantPageDropDownCompContainer extends Component {
         return height < maxHeight ? height : maxHeight;
     }
 
-    /**
-     * 画 下拉列表里的 item
-     * @param type
-     * @param key
-     * @returns {XML}
-     * @private
-     */
-    // _renderSortTypeCell = (type, key) => {
-    //     const {sortTypes} = this.props
-    //     const {currentType} = this.state
-    //     const isLast = sortTypes.length - 1 == key
-    //     const titleStyle = [{fontSize: 13, color: '#333'}]
-    //     if (currentType == type.name) titleStyle.push({color: 'rgb(253,84,94)'})
-    //     return (
-    //         <TouchableOpacity
-    //             key={`${type.name}-${key}`}
-    //             activeOpacity={0.75}
-    //             style={[styles.sortTypeItem, isLast && {width: gScreen.width}]}
-    //             onPress={() => this._onPressSortTypeCell(type)}
-    //         >
-    //             <Text style={titleStyle}>{type.name}</Text>
-    //         </TouchableOpacity>
-    //     )
-    // }
-
-    renderMenuBar() {
-        let self = this;
+    renderMenuBar(self) {
+        // let self = this;
         if (this.props.renderMenuBar === false) {
             return null;
         } else if (this.props.renderMenuBar) {
-            return React.cloneElement(this.props.renderMenuBar());
+            // return React.cloneElement(this.props.renderMenuBar(self));
+            return this.props.renderMenuBar(self);
         } else {//默认 menuBar
-            return <AllMerchantPageMenuGridViewContainer
-                {...self.props}
-                containerStyle={{zIndex: 1}}
-                onItemPress={(index) => {
-
-                    if (self.curSelctIndex == index) {
-                        self.state.isShow ? self._close() : self.show(index);
-                    } else if (self.curSelctIndex != index && self.state.isShow) {//当前切换 index && 下拉列表 容器 正在显示, 就不收回了, 直接 画 对应 index的 下拉列表控件
-                        self.curSelctIndex = index;
-
-                        //改变 下拉列表 容器的 高, 让 AllMerchantPageDropDownCompContainer 重新 render, 就能 画 对应 Index 的 下拉列表控件了
-                        {
-                            if (index == 0) {//母婴列表
-                                self.props.dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizApi.BizDropDownMenuAndListApi.ApiName, BizApi.AllMerchantPageCategoryListApi.$CategoryListDataArray.size > 0 ? BizApi.AllMerchantPageCategoryListApi.$CategoryListDataArray.size * GlobalStyles.AllMerchantPageDropDownListCellH : BizDropDownMenuAndListInit.defaultH))
-                            }
-                            else if (index == 1) {//国家列表
-                                self.props.dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizApi.BizDropDownMenuAndListApi.ApiName, BizApi.AllMerchantPageCountryListApi.$CountryListDataArray.size > 0 ? BizApi.AllMerchantPageCountryListApi.$CountryListDataArray.size * GlobalStyles.AllMerchantPageDropDownListCellH : BizDropDownMenuAndListInit.defaultH))
-                            } else if (index == 2) {//排序列表
-                                self.props.dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizApi.BizDropDownMenuAndListApi.ApiName, BizApi.AllMerchantPageSortDropDownListApi.$SortListDataArray.size > 0 ? BizApi.AllMerchantPageSortDropDownListApi.$SortListDataArray.size * GlobalStyles.AllMerchantPageDropDownListCellH : BizDropDownMenuAndListInit.defaultH))
-                            } else if (index == 3) {//筛选列表
-                                self.props.dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizApi.BizDropDownMenuAndListApi.ApiName, BizApi.AllMerchantPageFilterDropDownListApi.$FilterListDataArray.size > 0 ? GlobalStyles.AllMerchantPageFilterListH : BizDropDownMenuAndListInit.defaultH))
-
-                            }
-                        }
-
-                    } else if (self.curSelctIndex != index && !self.state.isShow) {
-                        self.show(index)
-                    }
-                }
-                }
-            >
-            </AllMerchantPageMenuGridViewContainer>;
-        }
-    }
-
-    //画 下拉处理的 列表控件
-    renderDropDownListContainer() {
-        switch (this.curSelctIndex) {
-            case 0://Category 列表
-            {
-                return <AllMerchantPageCategoryListContanier
-                    onPress={
-                        () => {
-                            this.props.onPress && this.props.onPress();
-                            this._close();
-                        }
-                    }
-                >
-                </AllMerchantPageCategoryListContanier>;
-            }
-                break;
-            case 1://国家列表
-            {
-                return <AllMerchantPageCountryListContanier
-                    onPress={
-                        () => {
-                            this.props.onPress && this.props.onPress();
-                            this._close();
-                        }
-                    }
-                >
-                </AllMerchantPageCountryListContanier>;
-            }
-                break
-            case 2://排序列表
-            {
-                return <AllMerchantPageSortListContanier
-                    onPress={
-                        () => {
-                            this.props.onPress && this.props.onPress();
-                            this._close();
-                        }
-                    }
-                >
-                </AllMerchantPageSortListContanier>;
-            }
-                break
-            case 3://筛选列表
-            {
-                return <AllMerchantPageFilterListContanier
-                    onPress={
-                        () => {
-                            this.props.onPress && this.props.onPress();
-                            this._close();
-                        }
-                    }
-                >
-                </AllMerchantPageFilterListContanier>;
-            }
-                break
+            // return BizDropDownMenuAndListActions
         }
     }
 
     render() {
-        Log.log('AllMerchantPageDropDownCompContainer render()')
+        Log.log('BizCommonDropDownCompContainer render()')
         const {dataSource,} = this.props
         const {isShow, currentType, orderAsc} = this.state
         const backgroundColor = this.orderByModalYValue.interpolate({
@@ -293,14 +159,10 @@ export class AllMerchantPageDropDownCompContainer extends Component {
             outputRange: [/*-contentHeight*/ (gScreen.navBarHeight + GlobalStyles.AllMerchantPageMenuBtH) * -1/*让ListView 挂载时,其Top在屏幕内,否则0号cell就显示不出来*/, 0]
         })
 
-        // const rotate = isShow ? '180deg' : '0deg'
-        // const orderAscSrc = orderAsc == 1 ? require('../../resource/ic_food_ordering_down.png') : require('../../resource/ic_food_ordering_up.png')
-        // const orderAscStr = orderAsc == 1 ? '由高到低' : '由低到高'
-
         return (
             <View style={{zIndex: 1}}>
                 {/*MenuBar*/}
-                {this.renderMenuBar()}
+                {this.renderMenuBar(this)}
                 {/*不画时 AllMerchantPageCategoryListContanier就卸载了*/}
                 {isShow &&
                 //下拉列表的 萌层容器,包括 下拉列表和其下边的 用于点击隐藏下拉列表的蒙层按钮
@@ -310,7 +172,7 @@ export class AllMerchantPageDropDownCompContainer extends Component {
                     <Animated.View style={[styles.animatedContent, {top: contentYPosition, height: contentHeight,
                         opacity:this.fadeInOpacity
                     }]}>
-                        {this.renderDropDownListContainer()}
+                        {this.props.renderDropDownListContainer&&this.props.renderDropDownListContainer(this)}
                     </Animated.View>
                     {/*下拉列表下边 可点击隐藏 下拉列表的 按钮*/}
                     <BaseBt
@@ -325,7 +187,6 @@ export class AllMerchantPageDropDownCompContainer extends Component {
                                 this._close()
                             }
                         }
-
                     >
                     </BaseBt>
                 </Animated.View>
@@ -449,4 +310,4 @@ function mapStateToProps(state) {
 
 }
 
-export default connect(mapStateToProps)(AllMerchantPageDropDownCompContainer);
+export default connect(mapStateToProps)(BizCommonDropDownCompContainer);

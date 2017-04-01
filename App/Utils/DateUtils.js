@@ -56,7 +56,7 @@ export function CountDownUtil(start, end) {
 
     let endDate = new Date(end);//得到的是 传入的时间+8小时 后的时间,因为 服务器 发来 的都是 0时区的, 所以得到的 new Date() 也是当前时区的 时间
     // Log.log('DateUtils CountDownUtil temp.getTimezoneOffset()='+temp.getTimezoneOffset());
-    endDate.setHours(endDate.getHours()-Math.abs(temp.getTimezoneOffset())/60);
+    endDate.setHours(endDate.getHours()/*-Math.abs(temp.getTimezoneOffset())/60*/);
     Log.log('DateUtils CountDownUtil endDate=' + endDate);
 
     let leftDate = endDate - startDate;//减下来是个  Unix时间戳 形式的 数字

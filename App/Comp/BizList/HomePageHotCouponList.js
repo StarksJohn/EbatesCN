@@ -21,7 +21,7 @@ import *as BizViews from '../BizCommonComp/BizViews'
 import MerchantDetailPage from '../../Pages/MerchantDetailPage'
 import GlobalStyles from '../../Global/GlobalStyles'
 import *as BizRemainingTimeView from '../BizCommonComp/BizRemainingTimeView'
-
+import AllCouponsPage from '../../Pages/AllCouponsPage'
 
 export class HomePageHotCouponList extends Component {
 
@@ -35,6 +35,10 @@ export class HomePageHotCouponList extends Component {
     }
 
     onCheckAllMerchant() {
+        this.props.navigator.push({
+            component: AllCouponsPage,
+            name: gRouteName.AllCouponsPage,
+        });
 
     }
 

@@ -121,6 +121,7 @@ export class ForgetPassPage extends Component {
                 });
             }
         ).catch((error) => {
+            
         })
 
 

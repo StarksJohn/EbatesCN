@@ -20,6 +20,7 @@ export const routeName={
     AllMerchantPage:'AllMerchantPage',
     MerchantDetailPage:'MerchantDetailPage',
     TransferWebViewPage:'TransferWebViewPage',
+    AllCouponsPage:'AllCouponsPage',
 }
 
 

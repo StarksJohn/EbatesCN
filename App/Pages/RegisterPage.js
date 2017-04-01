@@ -139,7 +139,7 @@ export class RegisterPage extends Component {
         BizApi.RegisterPageApi.registerUser({
             email: this.email,
             password: this.password,
-            referee_email: this.inviteCode,
+            referee: this.inviteCode,
             captcha: this.imgOauthCode,
             captchaUuid: BizApi.ImgOauthCodeAPI.data.captchaUuid
         }).then(
