@@ -1,7 +1,7 @@
 /**
  * Created by Ebates on 17/1/19.
- * AllMerchantPageSortListContanier
- * 全部商家页 的 排序 下拉 列表 数据源
+ * AllCouponPageSortListContanier
+ * 全部优惠页 的 排序 下拉 列表 数据源
  */
 
 import React, {Component, PropTypes} from 'react';
@@ -16,9 +16,9 @@ import *as BizApi from '../../NetWork/API/BizApi'
 import *as BizMerchantListCell from '../../Comp/BizCells/BizMerchantListCell'
 import BaseListComp from '../../Comp/Base/BaseListComp'
 import BizDropDownListComp from '../../Comp/BizList/BizDropDownListComp'
+import *as AllCouponPageApi from '../../NetWork/API/AllCouponPageApi'
 
-
-class AllMerchantPageSortListContanier extends Component {
+class AllCouponPageSortListContanier extends Component {
 
     static propTypes = {
         // AllMerchantPageReducer:PropTypes.any ,//全部商家 页面的 reducer
@@ -34,14 +34,14 @@ class AllMerchantPageSortListContanier extends Component {
     };
 
     componentWillUnmount() {
-        Log.log('AllMerchantPageSortListContanier componentWillUnmount ')
+        Log.log('AllCouponPageSortListContanier componentWillUnmount ')
 
-        BizApi.AllMerchantPageSortDropDownListApi.isThisCompDidMount=false;
+        AllCouponPageApi.AllCouponPageSortDropDownListApi.isThisCompDidMount=false;
 
     }
 
     render() {
-        Log.log('AllMerchantPageCountryListContanier render() ')
+        Log.log('AllCouponPageSortListContanier render() ')
         return (
             <BizDropDownListComp
                 {...this.props}
@@ -76,4 +76,4 @@ function mapStateToProps(state) {
 
 }
 
-export default connect(mapStateToProps)(AllMerchantPageSortListContanier);
+export default connect(mapStateToProps)(AllCouponPageSortListContanier);

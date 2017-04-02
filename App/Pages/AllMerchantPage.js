@@ -198,7 +198,7 @@ export class AllMerchantPage extends Component {
                                 >
                                 </AllMerchantPageCountryListContanier>;
                             }
-                                break
+                                break;
                             case 2://排序列表
                             {
                                 return <AllMerchantPageSortListContanier

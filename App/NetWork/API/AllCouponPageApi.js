@@ -39,7 +39,7 @@ export const AllCouponPageApi = {
             }, {
                 id: 1,
                 title: '排序',
-                //changeTitleEventName: AllMerchantPage.AllMerchantPageChangeSortMenuTitleEventName
+                changeTitleEventName: AllCouponsPage.AllCouponPageChangeSortMenuTitleEventName
             }, {
                 id: 2,
                 title: '商家', //changeTitleEventName: AllMerchantPage.AllMerchantPageChangeFilterMenuTitleEventName
@@ -105,9 +105,9 @@ export const AllCouponPageListApi = {
                     //     Log.log('BizApi SearchMerchants params.tag=' + params.tag);
                     //     // params.tag=AllMerchantPageCountryListApi.tag;
                     // }
-                    // if (AllMerchantPageSortDropDownListApi.sort_by != '-1') {
-                    //     params.sort_by = AllMerchantPageSortDropDownListApi.sort_by;
-                    // }
+                    if (AllCouponPageSortDropDownListApi.sort_by != '-1') {
+                        params.sort_by = AllCouponPageSortDropDownListApi.sort_by;
+                    }
 
                     Log.log('AllCouponPageListApi  SearchCoupon params=' + JSON.stringify(params));
 
@@ -317,6 +317,119 @@ export const AllCouponPageCategoryListApi = {
             this.isLoading = false;
             this.isThisCompDidMount = false;
             this.categoryID = -1;
+        }
+
+    }
+}
+
+/**
+ * 全部优惠页 排序 下拉列表 API ,数据写死
+ * @type {{ApiName: string, export: AllMerchantPageCategoryListApi.export}}
+ */
+export const AllCouponPageSortDropDownListApi = {
+    ApiName: 'AllCouponPageSortDropDownListApi',
+    $SortListDataArray: fromJS([]), //sort 接口 已经拿到的数据,immutable.List 数据类型  , 里边放 model, toJS()可转成JS 数组
+    isLoading: false,//是否正在 请求接口
+    isThisCompDidMount: false,//此API 对应的控件是否 挂载中
+    sort_by: '-1',//默认的 https://api-staging-current.ebates.cn/docs.html#search-search-coupons-get 接口的 sort_by 参数,如果
+    // 没选其他的, 此字段 不传
+
+    /**
+     * 拿 全部优惠页 排序 下拉列表   的数据
+     */
+    fetchSortList(opt){
+        return (dispatch) => {
+            {
+                if (this.isLoading && this.$SortListDataArray.size == 0)//如果 列表控件 挂载时, 接口正在 请求中 ,列表控件就 切到 Loading 状态
+                {
+                    Log.log('AllCouponPageApi fetchSortList 列表控件 挂载时, 接口正在 请求中 ,列表控件就 切到 Loading 状态')
+                    // new SMSTimer({//为了能 从 初始化状态 切换到 Loading  状态, 否则太快了,切换不了
+                    //     timerNums: 1,
+                    //     callBack: (time) => {
+                    //         Log.log('time===' + time);
+                    //         if (time == -1) {
+                    //
+                    //             dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
+                    //             this.isThisCompDidMount = true;
+                    //         }
+                    //     }
+                    // }).start();
+
+                    dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
+                    this.isThisCompDidMount = true;
+
+                } else if (!this.isLoading && this.$SortListDataArray.size > 0) {//列表挂载时, 接口已经拿到数据,列表直接切到 成功状态
+                    dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
+                        couldLoadMore: false,
+                        newContentArray: this.$SortListDataArray.toJS(),
+                    }));
+                    dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizApi.BizDropDownMenuAndListApi.ApiName, this.$SortListDataArray.size * GlobalStyles.AllMerchantPageDropDownListCellH/*每个cell 高 默认 44 ,以后 把此 常量写到 专门的 cell里*/))
+
+                    this.isThisCompDidMount = true;
+
+                }
+                else if (!this.isLoading && this.$SortListDataArray.size == 0) {//刚进入 全部优惠页, 主动 调此接口, 走这里的代码,此时列表可能未 挂载
+                    Log.log('AllCouponPageApi fetchSortList  开始请求 全部优惠页 排序 下拉列表  接口 ');
+                    this.isLoading = true;
+
+                    {
+
+                        [{name: '默认排序', id: '-1'}, {name: '近期更新', id: 'cashback'}, {
+                            name: '即将过期',
+                            id: 'transfers'
+                        },].map(
+                            (v, i) => {
+                                {
+                                    v.isSelect = false;//给每个mode 加 是否被选中 属性
+                                    if (i == 0) {
+                                        v.isSelect = true
+                                    }
+                                    v.index = i;//用于 点击 处理对号的位置
+                                    this.$SortListDataArray = this.$SortListDataArray.set(this.$SortListDataArray.size, v);
+                                }
+                            }
+                        );
+
+                        this.isLoading = false;
+
+                    }
+                }
+            }
+        }
+    },
+
+    /**
+     * 重置 排序 下拉列表 的默认 选中 cell为 0号cell
+     */
+    resetSortListData(){
+        this.isLoading = false;
+        this.isThisCompDidMount = false;
+        this.sort_by = '-1'
+
+        this.$SortListDataArray.toJS().map(
+            (model, i) => {
+                {
+                    model.isSelect = false;//给每个mode 加 是否被选中 属性
+                    if (i == 0) {
+                        model.isSelect = true;
+                    }
+
+                    this.$SortListDataArray = this.$SortListDataArray.set(i, model);
+                }
+            }
+        );
+    },
+
+    /**
+     * 重置 排序 接口的 数据 和 其 列表的 高度
+     * @returns {function(*)}
+     */
+    releaseSortListData(){
+        return (dispatch) => {
+            this.$SortListDataArray = this.$SortListDataArray.clear();
+            this.isLoading = false;
+            this.isThisCompDidMount = false;
+            this.sort_by = '-1';
         }
 
     }

@@ -32,14 +32,6 @@ export default class BizDropDownListComp extends Component {
     }
 
     componentDidMount() {
-
-        // this.refs.map(
-        //     (v,i)=>{
-        //         v.measure((fx, fy, width, height, px, py) => {
-        //             Log.log('BizDropDownListComp componentDidMount  FilterDropDownListCellRef.height='+height );
-        //         })
-        //     }
-        // )
     }
 
     /**
@@ -67,6 +59,7 @@ export default class BizDropDownListComp extends Component {
             }
         }
 
+        //全部商家页 分类列表api
         if (this.props.baseReducer.ApiName == BizApi.AllMerchantPageCategoryListApi.ApiName) {
             BizApi.AllMerchantPageCategoryListApi.categoryID = rowData.id;
 
@@ -77,15 +70,16 @@ export default class BizDropDownListComp extends Component {
             EventListener.sendEvent(AllMerchantPage.AllMerchantPageChangeCategoryMenuTitleEventName, rowData.index == 0 ? '分类' : rowData.name);
 
 
-        } else if (this.props.baseReducer.ApiName == BizApi.AllMerchantPageCountryListApi.ApiName) {
+        } else if (this.props.baseReducer.ApiName == BizApi.AllMerchantPageCountryListApi.ApiName) {//全部商家页 国家下拉列表
             BizApi.AllMerchantPageCountryListApi.tag = rowData.key;
             EventListener.sendEvent(AllMerchantPage.AllMerchantPageChangeCountryMenuTitleEventName, rowData.index == 0 ? '国家' : rowData.name);
 
-        } else if (this.props.baseReducer.ApiName == BizApi.AllMerchantPageSortDropDownListApi.ApiName) {
+        } else if (this.props.baseReducer.ApiName == BizApi.AllMerchantPageSortDropDownListApi.ApiName) {//全部商家页 排序下拉列表
             BizApi.AllMerchantPageSortDropDownListApi.sort_by = rowData.id;
 
             EventListener.sendEvent(AllMerchantPage.AllMerchantPageChangeSortMenuTitleEventName, rowData.index == 0 ? '排序' : rowData.name);
-        } else if (this.props.baseReducer.ApiName == AllCouponPageApi.AllCouponPageCategoryListApi.ApiName) {
+        } else if (this.props.baseReducer.ApiName == AllCouponPageApi.AllCouponPageCategoryListApi.ApiName) {//全部优惠页
+            // 分类下拉列表
             AllCouponPageApi.AllCouponPageCategoryListApi.categoryID = rowData.id;
 
             //发 改变 全部优惠页面 title的 事件
@@ -93,8 +87,10 @@ export default class BizDropDownListComp extends Component {
 
             //发改变 Category下拉列表Menu的 title的 事件
             EventListener.sendEvent(AllCouponsPage.AllCouponPageChangeCategoryMenuTitleEventName,rowData.index==0?'分类':rowData.name);
-
-
+        }else if (this.props.baseReducer.ApiName == AllCouponPageApi.AllCouponPageSortDropDownListApi.ApiName) {//全部优惠页
+            // 排序下拉列表
+            AllCouponPageApi.AllCouponPageSortDropDownListApi.sort_by = rowData.id;
+            EventListener.sendEvent(AllCouponsPage.AllCouponPageChangeSortMenuTitleEventName, rowData.index == 0 ? '排序' : rowData.name);
         }
 
         Log.log('BizDropDownListComp onPress ');

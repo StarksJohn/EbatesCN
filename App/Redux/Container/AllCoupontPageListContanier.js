@@ -77,9 +77,7 @@ class AllCoupontPageListContanier extends Component {
 
                         EventListener.sendEvent(AllCouponsPage.AllCouponPageChangeTitleEventName,'全部优惠');
                         EventListener.sendEvent(AllCouponsPage.AllCouponPageChangeCategoryMenuTitleEventName,'分类');
-                        {/*EventListener.sendEvent(AllMerchantPage.AllMerchantPageChangeCountryMenuTitleEventName,'国家');*/}
-                        {/*EventListener.sendEvent(AllMerchantPage.AllMerchantPageChangeSortMenuTitleEventName,'排序');*/}
-
+                        EventListener.sendEvent(AllCouponsPage.AllCouponPageChangeSortMenuTitleEventName,'排序');
 
                         EventListener.sendEvent(AllCouponPageRefreshListEventName);
                     });

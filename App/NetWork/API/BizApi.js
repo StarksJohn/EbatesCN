@@ -2569,5 +2569,10 @@ export function fetchApi(opt, pageNo, BaseListCompProps) {
 
         }
             break;
+        case AllCouponPageApi.AllCouponPageSortDropDownListApi.ApiName: {
+            return AllCouponPageApi.AllCouponPageSortDropDownListApi.fetchSortList(opt);
+
+        }
+            break;
     }
 }
