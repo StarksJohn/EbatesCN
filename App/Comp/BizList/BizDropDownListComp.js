@@ -15,6 +15,7 @@ import *as BizApi from '../../NetWork/API/BizApi'
 import *as EventListener from '../../Utils/EventListener/EventListener'
 import *as AllMerchantPage from '../../Pages/AllMerchantPage'
 import *as AllCouponPageApi from '../../NetWork/API/AllCouponPageApi'
+import *as AllCouponsPage from '../../Pages/AllCouponsPage'
 
 export default class BizDropDownListComp extends Component {
 
@@ -88,10 +89,10 @@ export default class BizDropDownListComp extends Component {
             AllCouponPageApi.AllCouponPageCategoryListApi.categoryID = rowData.id;
 
             //发 改变 全部优惠页面 title的 事件
-            // EventListener.sendEvent(AllMerchantPage.AllMerchantPagechangeTitleEventName,rowData.index==0?'全部商家':rowData.name);
+            EventListener.sendEvent(AllCouponsPage.AllCouponPageChangeTitleEventName,rowData.index==0?'全部优惠':rowData.name);
 
             //发改变 Category下拉列表Menu的 title的 事件
-            // EventListener.sendEvent(AllMerchantPage.AllMerchantPageChangeCategoryMenuTitleEventName,rowData.index==0?'分类':rowData.name);
+            EventListener.sendEvent(AllCouponsPage.AllCouponPageChangeCategoryMenuTitleEventName,rowData.index==0?'分类':rowData.name);
 
 
         }

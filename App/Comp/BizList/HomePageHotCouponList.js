@@ -74,7 +74,7 @@ export class HomePageHotCouponList extends Component {
             <Text style={{
                 marginLeft: 15, marginRight: 15, marginTop: 10,
                 fontSize: 14,
-                color: Colors.BizCommonBlack, lineHeight:20
+                color: Colors.BizCommonBlack, lineHeight: 20
                 //fontWeight:'bold',
                 //backgroundColor: Colors.getRandomColor()
             }} numberOfLines={0} textAlign="center"

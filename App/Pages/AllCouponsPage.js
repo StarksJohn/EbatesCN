@@ -20,10 +20,13 @@ import *as AllCouponPageApi from '../NetWork/API/AllCouponPageApi'
 import *as BizDropDownMenuAndListActions from '../Redux/Actions/BizDropDownMenuAndListActions'
 import *as BizDropDownMenuAndListInit from '../Redux/InitialState/BizDropDownMenuAndListInit'
 import AllCouponPageCategoryListContanier from '../Redux/Container/AllCouponPageCategoryListContanier'
-import AllCoupontPageListContanier from '../Redux/Container/AllCoupontPageListContanier'
+import AllCoupontPageListContanier,{AllCouponPageRefreshListEventName} from '../Redux/Container/AllCoupontPageListContanier'
 
 //改变 全部优惠页 导航栏title的 事件名
 export const AllCouponPageChangeTitleEventName='AllCouponPageChangeTitleEventName';
+//改变 全部优惠页 Category 下拉列表对应的MENU的title的  事件名
+export const AllCouponPageChangeCategoryMenuTitleEventName = 'AllCouponPageChangeCategoryMenuTitleEventName';
+
 
 export class AllCouponsPage extends Component {
     constructor(props) {
@@ -142,6 +145,7 @@ export class AllCouponsPage extends Component {
                             case 0://Category 列表
                             {
                                 return <AllCouponPageCategoryListContanier
+                                    refreshListEventName={AllCouponPageRefreshListEventName}
                                     onPress={
                                         () => {
                                             BizCommonDropDownCompContainerRef.props.onPress && BizCommonDropDownCompContainerRef.props.onPress();

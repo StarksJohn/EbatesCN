@@ -220,6 +220,54 @@ export function renderAllmerchantPageNoDataView(  callback) {
 }
 
 /**
+ * 全部优惠 页 筛选无结果 时 显示 的 视图
+ * @param keyWord
+ * @param type
+ * @param callback
+ * @returns {XML}
+ */
+export function renderAllCouponPageNoDataView( callback) {
+    let bigText = '抱歉! 目前没有满足此过滤条件的优惠 !' ;
+    let smallText = '您可以重新筛选, 发现感兴趣的优惠. ';
+    let btTitle = '查看全部优惠';
+    return (
+        <View style={{
+            flex: 1, alignItems: 'center',
+            //backgroundColor: Colors.getRandomColor()
+        }}>
+            <Image source={require('../../Img/common_icon_noresult.png')} style={{marginTop: 60}}/>
+            <Text style={{
+                marginTop: 30, fontSize: 15, color: 'rgba(64, 64,' +
+                ' 64, 1)',
+                // backgroundColor:Colors.getRandomColor()
+            }}>{bigText}</Text>
+            <Text style={{
+                marginTop: 15, fontSize: 12, color: 'rgba(136, 136, 136, 1)',
+                //backgroundColor:Colors.getRandomColor()
+            }}>{smallText}</Text>
+            <BaseTitleBt
+                key={btTitle}
+                btStyle={[{
+                    width: 170, height: 44,
+                    borderRadius: 4, borderColor: 'rgba(54, 166, 66, 1)', borderWidth: 0.5, marginTop: 20,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: Colors.transparent,
+                }]}
+                onPress={callback}
+                textStyle={{
+                    fontSize: 15,
+                    color: 'rgba(54, 166, 66, 1)',
+                }}
+                title={btTitle}
+                disabled={false}
+            >
+            </BaseTitleBt>
+        </View>
+    );
+}
+
+/**
  * 竖线
  * @returns {XML}
  * @constructor

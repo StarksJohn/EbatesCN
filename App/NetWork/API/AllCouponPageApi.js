@@ -18,6 +18,7 @@ import *as AllMerchantPageActions from '../../Redux/Actions/AllMerchantPageActio
 import *as BizDropDownMenuAndListActions from '../../Redux/Actions/BizDropDownMenuAndListActions'
 import GlobalStyles from '../../Global/GlobalStyles'
 import *as BizApi from './BizApi'
+import *as AllCouponsPage from '../../Pages/AllCouponsPage'
 
 /**
  * 全部优惠页 api
@@ -34,7 +35,7 @@ export const AllCouponPageApi = {
         return (dispatch) => {
             dispatch(BaseGridViewActions.changeBaseGridViewStates(this.ApiName, BaseGridViewActions.BaseGridViewStates.fetchOk, [{
                 id: 0,
-                title: '分类', //changeTitleEventName: AllMerchantPage.AllMerchantPageChangeCategoryMenuTitleEventName
+                title: '分类', changeTitleEventName: AllCouponsPage.AllCouponPageChangeCategoryMenuTitleEventName
             }, {
                 id: 1,
                 title: '排序',

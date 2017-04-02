@@ -42,7 +42,7 @@ export default class MerchantListComp extends Component {
      * @param highlightRow
      * @returns {XML}
      */
-    renderRow = (rowData, sectionID, rowID, highlightRow)=> {
+    renderRow = (rowData, sectionID, rowID, highlightRow) => {
 
         Log.log('MerchantListComp rowID==' + rowID);
 
@@ -73,15 +73,16 @@ export default class MerchantListComp extends Component {
                     renderRow={
                         this.renderRow
                     }
-                    renderNoDataView={(props) => {
-                        return this.props.renderNoDataView&&this.props.renderNoDataView(props);
+                    renderNoDataView={this.props.renderNoDataView ? (props) => {
+                            return this.props.renderNoDataView(props);
+                        } : null
                     }
-                    }
-                    renderNetWorkAbnormalView={
-                        (props) => {
-                            return this.props.renderNetWorkAbnormalView(props);
+                    renderNetWorkAbnormalView=
+                        {this.props.renderNetWorkAbnormalView ? (props) => {
+                                return this.props.renderNetWorkAbnormalView(props);
+                            } : null
                         }
-                    }
+
                 />
             </View>
 

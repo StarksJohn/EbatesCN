@@ -3,7 +3,7 @@
  CouponListComp
  */
 
-import React, {Component, PropTypes } from 'react';
+import React, {Component, PropTypes} from 'react';
 import {
     View, Text
 } from 'react-native';
@@ -16,7 +16,7 @@ export default class CouponListComp extends Component {
 
     static propTypes = {
         renderNoDataView: PropTypes.any,//外部可自定义如何绘制 列表无数据 状态的 view
-        renderRow:PropTypes.func,
+        renderRow: PropTypes.func,
     };
 
     constructor(props) {
@@ -31,19 +31,18 @@ export default class CouponListComp extends Component {
      * @param highlightRow
      * @returns {XML}
      */
-    renderRow = (rowData, sectionID, rowID, highlightRow)=> {
+    renderRow = (rowData, sectionID, rowID, highlightRow) => {
 
         let paddingTop = 0;
         if (rowID != 0) {
             paddingTop = 5;
         }
 
-       return BizCouponListCell.RenderBizCouponListCell(rowData,sectionID,rowID,highlightRow,paddingTop,(rowData)=>{
-           Log.log('CouponListComp renderRow callback rowData=='+rowData);
-       });
+        return BizCouponListCell.RenderBizCouponListCell(rowData, sectionID, rowID, highlightRow, paddingTop, (rowData) => {
+            Log.log('CouponListComp renderRow callback rowData==' + rowData);
+        });
 
     }
-
 
 
     render() {
@@ -54,12 +53,11 @@ export default class CouponListComp extends Component {
                     initialListSize={5}
                     scrollRenderAheadDistance={300}
                     renderRow={
-                        this.props.renderRow ? this.props.renderRow :this.renderRow
+                        this.props.renderRow ? this.props.renderRow : this.renderRow
                     }
-                    renderNoDataView={(props) =>
-                    {
-                        return this.props.renderNoDataView(props);
-                    }
+                    renderNoDataView={this.props.renderNoDataView ? (props) => {
+                            return this.props.renderNoDataView(props);
+                        } : null
                     }
                 />
             </View>

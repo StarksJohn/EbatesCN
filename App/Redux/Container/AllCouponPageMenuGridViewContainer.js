@@ -102,7 +102,7 @@ export class AllCouponPageMenuGridViewContainer extends React.Component {
                                               self.BizFilterMenuBtViewRefArr.length < self.props.baseReducer.dataArray.length && self.BizFilterMenuBtViewRefArr.push(r);
                                           }}
                                           model={model}
-                                          //changeTitleEventName={model.changeTitleEventName}
+                                          changeTitleEventName={model.changeTitleEventName}
                                           onItemPress={ (index) => {
                                               this.onItemPress(index);
                                           } }

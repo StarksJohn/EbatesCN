@@ -19,6 +19,13 @@ import BaseListComp from '../../Comp/Base/BaseListComp'
 import MerchantListComp from '../../Comp/BizList/MerchantListComp'
 import *as EventListener from '../../Utils/EventListener/EventListener'
 // import SMSTimer from '../../Utils/SMSTimer'
+import *as AllCouponPageApi from '../../NetWork/API/AllCouponPageApi'
+import *as AllCouponsPage from '../../Pages/AllCouponsPage'
+
+
+//事件驱动,主动刷新 全部优惠页 优惠 列表的事件名
+export const AllCouponPageRefreshListEventName = 'AllCouponPageRefreshListEventName';
+
 
 class AllCoupontPageListContanier extends Component {
 
@@ -61,7 +68,23 @@ class AllCoupontPageListContanier extends Component {
         return (
             <CouponListComp
                 {...this.props}
+                refreshListEventName={AllCouponPageRefreshListEventName}
+                renderNoDataView={(props) => {
+                    return BizViews.renderAllCouponPageNoDataView( () => {
+                        {/*Log.log('AllMerchantPageListContanier  render 查看全部商家')*/}
 
+                        dispatch(AllCouponPageApi.AllCouponPageListApi.resetAllDropDownListSelectedInfo())
+
+                        EventListener.sendEvent(AllCouponsPage.AllCouponPageChangeTitleEventName,'全部优惠');
+                        EventListener.sendEvent(AllCouponsPage.AllCouponPageChangeCategoryMenuTitleEventName,'分类');
+                        {/*EventListener.sendEvent(AllMerchantPage.AllMerchantPageChangeCountryMenuTitleEventName,'国家');*/}
+                        {/*EventListener.sendEvent(AllMerchantPage.AllMerchantPageChangeSortMenuTitleEventName,'排序');*/}
+
+
+                        EventListener.sendEvent(AllCouponPageRefreshListEventName);
+                    });
+                }
+                }
                 renderNetWorkAbnormalView={(props) => {
                     return BizViews.netWorkAbnormalView({}, {
                         marginTop: 60,
