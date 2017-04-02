@@ -15,6 +15,12 @@ import GlobalStyles from '../Global/GlobalStyles'
 import BaseImgBt from '../Comp/Base/BaseImgBt'
 import BizCommonDropDownCompContainer from '../Redux/Container/BizCommonDropDownCompContainer'
 import AllCouponPageMenuGridViewContainer,{AllCouponPageMenuGridViewArrowDirResetEventName} from '../Redux/Container/AllCouponPageMenuGridViewContainer'
+import *as BizApi from '../NetWork/API/BizApi'
+import *as AllCouponPageApi from '../NetWork/API/AllCouponPageApi'
+import *as BizDropDownMenuAndListActions from '../Redux/Actions/BizDropDownMenuAndListActions'
+import *as BizDropDownMenuAndListInit from '../Redux/InitialState/BizDropDownMenuAndListInit'
+import AllCouponPageCategoryListContanier from '../Redux/Container/AllCouponPageCategoryListContanier'
+import AllCoupontPageListContanier from '../Redux/Container/AllCoupontPageListContanier'
 
 //改变 全部优惠页 导航栏title的 事件名
 export const AllCouponPageChangeTitleEventName='AllCouponPageChangeTitleEventName';
@@ -33,6 +39,7 @@ export class AllCouponsPage extends Component {
     }
 
     componentDidMount() {
+        this.props.dispatch(AllCouponPageApi.AllCouponPageCategoryListApi.fetchCategoryList())
 
     }
 
@@ -50,7 +57,7 @@ export class AllCouponsPage extends Component {
     render() {
 
         Log.log('AllCouponsPage render');
-        let self = this;
+        // let self = this;
 
         const {navigator} = this.props;
         let rightBt = <BaseImgBt
@@ -95,22 +102,22 @@ export class AllCouponsPage extends Component {
                         }
                     }
                     resetAllArrowsDirEventName={AllCouponPageMenuGridViewArrowDirResetEventName }
-                    renderMenuBar={(self) => {
+                    renderMenuBar={(BizCommonDropDownCompContainerRef) => {
                         return <AllCouponPageMenuGridViewContainer
-                            {...self.props}
+                            {...BizCommonDropDownCompContainerRef.props}
                             containerStyle={{zIndex: 1}}
                             onItemPress={(index) => {
 
-                                if (self.curSelctIndex == index) {
-                                    self.state.isShow ? self._close() : self.show(index);
-                                } else if (self.curSelctIndex != index && self.state.isShow) {//当前切换 index && 下拉列表 容器 正在显示, 就不收回了, 直接 画 对应 index的 下拉列表控件
-                                    self.curSelctIndex = index;
+                                if (BizCommonDropDownCompContainerRef.curSelctIndex == index) {
+                                    BizCommonDropDownCompContainerRef.state.isShow ? BizCommonDropDownCompContainerRef._close() : BizCommonDropDownCompContainerRef.show(index);
+                                } else if (BizCommonDropDownCompContainerRef.curSelctIndex != index && BizCommonDropDownCompContainerRef.state.isShow) {//当前切换 index && 下拉列表 容器 正在显示, 就不收回了, 直接 画 对应 index的 下拉列表控件
+                                    BizCommonDropDownCompContainerRef.curSelctIndex = index;
 
                                     //改变 下拉列表 容器的 高, 让 AllMerchantPageDropDownCompContainer 重新 render, 就能 画 对应 Index 的 下拉列表控件了
-                                    {/*{*/}
-                                        {/*if (index == 0) {//母婴列表*/}
-                                            {/*self.props.dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizApi.BizDropDownMenuAndListApi.ApiName, BizApi.AllMerchantPageCategoryListApi.$CategoryListDataArray.size > 0 ? BizApi.AllMerchantPageCategoryListApi.$CategoryListDataArray.size * GlobalStyles.AllMerchantPageDropDownListCellH : BizDropDownMenuAndListInit.defaultH))*/}
-                                        {/*}*/}
+                                    {
+                                        if (index == 0) {//分类列表
+                                            BizCommonDropDownCompContainerRef.props.dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizApi.BizDropDownMenuAndListApi.ApiName, AllCouponPageApi.AllCouponPageCategoryListApi.$CategoryListDataArray.size > 0 ? AllCouponPageApi.AllCouponPageCategoryListApi.$CategoryListDataArray.size * GlobalStyles.AllMerchantPageDropDownListCellH : BizDropDownMenuAndListInit.defaultH))
+                                        }
                                         {/*else if (index == 1) {//国家列表*/}
                                             {/*self.props.dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizApi.BizDropDownMenuAndListApi.ApiName, BizApi.AllMerchantPageCountryListApi.$CountryListDataArray.size > 0 ? BizApi.AllMerchantPageCountryListApi.$CountryListDataArray.size * GlobalStyles.AllMerchantPageDropDownListCellH : BizDropDownMenuAndListInit.defaultH))*/}
                                         {/*} else if (index == 2) {//排序列表*/}
@@ -119,10 +126,10 @@ export class AllCouponsPage extends Component {
                                             {/*self.props.dispatch(BizDropDownMenuAndListActions.changeDropDownListHAction(BizApi.BizDropDownMenuAndListApi.ApiName, BizApi.AllMerchantPageFilterDropDownListApi.$FilterListDataArray.size > 0 ? GlobalStyles.AllMerchantPageFilterListH : BizDropDownMenuAndListInit.defaultH))*/}
 
                                         {/*}*/}
-                                    {/*}*/}
+                                    }
 
-                                } else if (self.curSelctIndex != index && !self.state.isShow) {
-                                    self.show(index)
+                                } else if (BizCommonDropDownCompContainerRef.curSelctIndex != index && !BizCommonDropDownCompContainerRef.state.isShow) {
+                                    BizCommonDropDownCompContainerRef.show(index)
                                 }
                             }
                             }
@@ -130,15 +137,38 @@ export class AllCouponsPage extends Component {
                         </AllCouponPageMenuGridViewContainer>;
                     }
                     }
+                    renderDropDownListContainer={(BizCommonDropDownCompContainerRef) => {
+                        switch (BizCommonDropDownCompContainerRef.curSelctIndex) {
+                            case 0://Category 列表
+                            {
+                                return <AllCouponPageCategoryListContanier
+                                    onPress={
+                                        () => {
+                                            BizCommonDropDownCompContainerRef.props.onPress && BizCommonDropDownCompContainerRef.props.onPress();
+                                            BizCommonDropDownCompContainerRef._close();
+                                        }
+                                    }
+                                >
+                                </AllCouponPageCategoryListContanier>;
+                            }
+                                break;
+                        }
+                    }}
 
                     WillUnmount={
                         ()=>{
-                            {/*this.props.dispatch(BizApi.AllMerchantPageCategoryListApi.releaseCategoryListData())*/}
+                            this.props.dispatch(AllCouponPageApi.AllCouponPageCategoryListApi.releaseCategoryListData())
                             {/*this.props.dispatch(BizApi.AllMerchantPageCountryListApi.releaseCountryListData())*/}
                             {/*this.props.dispatch(BizApi.AllMerchantPageSortDropDownListApi.releaseSortListData())*/}
                             {/*this.props.dispatch(BizApi.AllMerchantPageFilterDropDownListApi.releaseFilterListData())*/}
                         }
                     }
+                />
+                {BizViews.renderShadowLine({zIndex: 3, borderWidth: 0.3})}
+                <AllCoupontPageListContanier
+                    ref='AllCoupontPageListContanier'
+                    navigator={this.props.navigator}
+                    //customContainer={{position: "absolute", top: DropDownListDefualtY, bottom: 0, left: 0, right: 0}}
                 />
             </View>
         );

@@ -74,7 +74,7 @@ export function isAllNum(val) {
  * @param str
  */
 export function isNull(str) {
-    return (str.length == 0 || str == "" || str.replace(/(^s*)|(s*$)/g, "").length == 0 || new RegExp("^[ ]+$").test(str) || typeof str == "null");
+    return (!str||str.length == 0 || str == "" || str.replace(/(^s*)|(s*$)/g, "").length == 0 || new RegExp("^[ ]+$").test(str) || typeof str == "null");
 }
 
 /**

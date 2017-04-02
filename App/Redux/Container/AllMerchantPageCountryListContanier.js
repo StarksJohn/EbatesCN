@@ -23,7 +23,9 @@ class AllMerchantPageCountryListContanier extends Component {
     static propTypes = {
         // AllMerchantPageReducer:PropTypes.any ,//全部商家 页面的 reducer
         // AnimatedViewStyle:PropTypes.any,//下拉列表的容器
-        onPress:PropTypes.func
+        onPress:PropTypes.func,
+        refreshListEventName: React.PropTypes.string,//主动调 某列表 控件的 刷新 逻辑 的 事件
+
     };
 
     static defaultProps = {

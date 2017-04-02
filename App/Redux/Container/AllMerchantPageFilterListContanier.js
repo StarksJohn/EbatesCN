@@ -20,7 +20,7 @@ import GlobalStyles from '../../Global/GlobalStyles'
 import Colors from '../../Utils/Colors'
 import BaseTitleBt from '../../Comp/Base/BaseTitleBt'
 import *as EventListener from '../../Utils/EventListener/EventListener'
-
+import AllMerchantPageListContanier,{AllMerchantPageRefreshListEventName} from './AllMerchantPageListContanier'
 
 class AllMerchantPageFilterListContanier extends Component {
 
@@ -49,7 +49,7 @@ class AllMerchantPageFilterListContanier extends Component {
     }
 
     onConfirmBt() {
-        EventListener.sendEvent(BizApi.AllMerchantPageListApi.ApiName);
+        EventListener.sendEvent(AllMerchantPageRefreshListEventName);
         this.props.onPress&&this.props.onPress();
 
     }

@@ -2,14 +2,14 @@
  * Created by Ebates on 17/2/27.
  * AllCouponPageGridViewReducer 全部优惠 页 筛选控件menu的 reducer
  */
-import *as BizApi from '../../NetWork/API/BizApi'
+import *as AllCouponPageApi from '../../NetWork/API/AllCouponPageApi'
 import *as BaseGridViewActions from '../Actions/BaseGridViewActions'
 
 
 import InitialState from '../InitialState/BaseGridViewInitialState'
 
 const initialState = new InitialState()
-    .setIn(['ApiName'], BizApi.AllCouponPageApi.ApiName);
+    .setIn(['ApiName'], AllCouponPageApi.AllCouponPageApi.ApiName);
 
 
 export default function AllCouponPageGridViewReducer(state = initialState, action) {

@@ -1,7 +1,7 @@
 /**
  * Created by Ebates on 17/1/19.
- * AllMerchantPageSortListContanier
- * 全部商家页 的 排序 下拉 列表 数据源
+ * AllCouponPageCategoryListContanier
+ * 全部优惠页 的 Category 下拉 列表 数据源
  */
 
 import React, {Component, PropTypes} from 'react';
@@ -14,18 +14,18 @@ import *as BizViews from '../../Comp/BizCommonComp/BizViews'
 import *as BaseListActions from '../Actions/BaseListActions'
 import *as BizApi from '../../NetWork/API/BizApi'
 import *as BizMerchantListCell from '../../Comp/BizCells/BizMerchantListCell'
+import GlobalStyles from '../../Global/GlobalStyles'
 import BaseListComp from '../../Comp/Base/BaseListComp'
 import BizDropDownListComp from '../../Comp/BizList/BizDropDownListComp'
+import *as AllCouponPageApi from '../../NetWork/API/AllCouponPageApi'
 
 
-class AllMerchantPageSortListContanier extends Component {
+class AllCouponPageCategoryListContanier extends Component {
 
     static propTypes = {
         // AllMerchantPageReducer:PropTypes.any ,//全部商家 页面的 reducer
-        // AnimatedViewStyle:PropTypes.any,//下拉列表的容器
+        AnimatedViewStyle:PropTypes.any,//下拉列表的容器
         onPress:PropTypes.func,
-        refreshListEventName: React.PropTypes.string,//主动调 某列表 控件的 刷新 逻辑 的 事件
-
     };
 
     static defaultProps = {
@@ -34,14 +34,29 @@ class AllMerchantPageSortListContanier extends Component {
     };
 
     componentWillUnmount() {
-        Log.log('AllMerchantPageSortListContanier componentWillUnmount ')
+        Log.log('AllCouponPageCategoryListContanier componentWillUnmount ')
 
-        BizApi.AllMerchantPageSortDropDownListApi.isThisCompDidMount=false;
-
+        AllCouponPageApi.AllCouponPageCategoryListApi.isThisCompDidMount=false;
     }
 
+    /**
+     * @param props
+     * @returns {XML}
+     */
+    // renderNetWorkAbnormalView(props) {
+    //
+    //     return BizViews.netWorkAbnormalView({}, {
+    //         marginTop: 60,
+    //         width: 90,
+    //         height: 90,
+    //     }, {marginTop: 25,}, {marginTop: 17}, () => {
+    //         this.props.dispatch(BizApi.SearchResultPageMerchantListAPI.fetchData(BaseListActions.BaseListFetchDataType.REFRESH, props.route.value));//刷新 列表
+    //
+    //     });
+    // }
+
     render() {
-        Log.log('AllMerchantPageCountryListContanier render() ')
+        Log.log('AllCouponPageCategoryListContanier render() ')
         return (
             <BizDropDownListComp
                 {...this.props}
@@ -69,11 +84,11 @@ class AllMerchantPageSortListContanier extends Component {
 }
 
 function mapStateToProps(state) {
-    const {AllMerchantPageSortListReducer}=state;
+    const {AllCouponPageCategoryListReducer}=state;
     return {
-        baseReducer: AllMerchantPageSortListReducer,
+        baseReducer: AllCouponPageCategoryListReducer,
     };
 
 }
 
-export default connect(mapStateToProps)(AllMerchantPageSortListContanier);
+export default connect(mapStateToProps)(AllCouponPageCategoryListContanier);

@@ -14,6 +14,7 @@ export default class MerchantListComp extends Component {
 
     static propTypes = {
         renderNoDataView: PropTypes.any,//外部可自定义如何绘制 列表无数据 状态的 view
+        refreshListEventName: React.PropTypes.string,//主动调 某列表 控件的 刷新 逻辑 的 事件
 
     };
 

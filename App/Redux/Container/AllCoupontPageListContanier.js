@@ -1,7 +1,7 @@
 /**
  * Created by Ebates on 17/1/19.
- * AllMerchantPageListContanier
- * 全部商家页 的 商家 列表 数据源
+ * AllCoupontPageListContanier
+ * 全部优惠页 的 优惠 列表 数据源
  */
 
 import React, {Component, PropTypes} from 'react';
@@ -19,16 +19,11 @@ import BaseListComp from '../../Comp/Base/BaseListComp'
 import MerchantListComp from '../../Comp/BizList/MerchantListComp'
 import *as EventListener from '../../Utils/EventListener/EventListener'
 // import SMSTimer from '../../Utils/SMSTimer'
-import *as AllMerchantPage from '../../Pages/AllMerchantPage'
 
-//事件驱动,主动刷新 全部商家页 商家 列表的事件名
-export const AllMerchantPageRefreshListEventName = 'AllMerchantPageRefreshListEventName';
-
-class AllMerchantPageListContanier extends Component {
+class AllCoupontPageListContanier extends Component {
 
     static propTypes = {
         // AllMerchantPageReducer:PropTypes.any ,//全部商家 页面的 reducer
-
     };
 
     static defaultProps = {
@@ -55,7 +50,7 @@ class AllMerchantPageListContanier extends Component {
             width: 90,
             height: 90,
         }, {marginTop: 25,}, {marginTop: 17}, () => {
-            this.props.dispatch(BizApi.SearchResultPageMerchantListAPI.fetchData(BaseListActions.BaseListFetchDataType.REFRESH, props.route.value));//刷新 列表
+            // this.props.dispatch(BizApi.SearchResultPageMerchantListAPI.fetchData(BaseListActions.BaseListFetchDataType.REFRESH, props.route.value));//刷新 列表
 
         });
     }
@@ -64,24 +59,9 @@ class AllMerchantPageListContanier extends Component {
 
         const {dispatch}=this.props;
         return (
-            <MerchantListComp
+            <CouponListComp
                 {...this.props}
-                refreshListEventName={AllMerchantPageRefreshListEventName}
-                renderNoDataView={(props) => {
-                    return BizViews.renderAllmerchantPageNoDataView( () => {
-                        Log.log('AllMerchantPageListContanier  render 查看全部商家')
-                        dispatch(BizApi.AllMerchantPageListApi.resetAllDropDownListSelectedInfo())
 
-                        EventListener.sendEvent(AllMerchantPage.AllMerchantPagechangeTitleEventName,'全部商家');
-                        EventListener.sendEvent(AllMerchantPage.AllMerchantPageChangeCategoryMenuTitleEventName,'分类');
-                        EventListener.sendEvent(AllMerchantPage.AllMerchantPageChangeCountryMenuTitleEventName,'国家');
-                        EventListener.sendEvent(AllMerchantPage.AllMerchantPageChangeSortMenuTitleEventName,'排序');
-
-
-                        EventListener.sendEvent(AllMerchantPageRefreshListEventName);
-                    });
-                }
-                }
                 renderNetWorkAbnormalView={(props) => {
                     return BizViews.netWorkAbnormalView({}, {
                         marginTop: 60,
@@ -91,6 +71,7 @@ class AllMerchantPageListContanier extends Component {
                         this.props.dispatch(BizApi.SearchResultPageMerchantListAPI.fetchData(BaseListActions.BaseListFetchDataType.REFRESH, props.route.value));//刷新 列表
 
                     });
+
                 }
                 }
             />
@@ -99,11 +80,11 @@ class AllMerchantPageListContanier extends Component {
 }
 
 function mapStateToProps(state) {
-    const {AllMerchantPageListReducer}=state;
+    const {AllCouponPageListReducer}=state;
     return {
-        baseReducer: AllMerchantPageListReducer,
+        baseReducer: AllCouponPageListReducer,
     };
 
 }
 
-export default connect(mapStateToProps)(AllMerchantPageListContanier);
+export default connect(mapStateToProps)(AllCoupontPageListContanier);

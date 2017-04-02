@@ -14,7 +14,7 @@ import BaseImgBt from '../Comp/Base/BaseImgBt'
 import SearchPage from './SearchPage'
 import *as BizApi from '../NetWork/API/BizApi'
 import BizMerchantListCell from '../Comp/BizCells/BizMerchantListCell'
-import AllMerchantPageListContanier from '../Redux/Container/AllMerchantPageListContanier'
+import AllMerchantPageListContanier,{AllMerchantPageRefreshListEventName} from '../Redux/Container/AllMerchantPageListContanier'
 import GlobalStyles from '../Global/GlobalStyles'
 import BizCommonDropDownCompContainer from '../Redux/Container/BizCommonDropDownCompContainer'
 import *as BizDropDownMenuAndListActions from '../Redux/Actions/BizDropDownMenuAndListActions'
@@ -174,6 +174,7 @@ export class AllMerchantPage extends Component {
                             case 0://Category 列表
                             {
                                 return <AllMerchantPageCategoryListContanier
+                                    refreshListEventName={AllMerchantPageRefreshListEventName}
                                     onPress={
                                         () => {
                                             self.props.onPress && self.props.onPress();
@@ -187,6 +188,7 @@ export class AllMerchantPage extends Component {
                             case 1://国家列表
                             {
                                 return <AllMerchantPageCountryListContanier
+                                    refreshListEventName={AllMerchantPageRefreshListEventName}
                                     onPress={
                                         () => {
                                             self.props.onPress && self.props.onPress();
@@ -200,6 +202,7 @@ export class AllMerchantPage extends Component {
                             case 2://排序列表
                             {
                                 return <AllMerchantPageSortListContanier
+                                    refreshListEventName={AllMerchantPageRefreshListEventName}
                                     onPress={
                                         () => {
                                             self.props.onPress && self.props.onPress();

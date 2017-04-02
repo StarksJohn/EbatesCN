@@ -19,6 +19,7 @@ import *as AllMerchantPageActions from '../../Redux/Actions/AllMerchantPageActio
 import *as BizDropDownMenuAndListActions from '../../Redux/Actions/BizDropDownMenuAndListActions'
 import GlobalStyles from '../../Global/GlobalStyles'
 import *as AllMerchantPage from '../../Pages/AllMerchantPage'
+import *as AllCouponPageApi from './AllCouponPageApi'
 
 /**
  * 列表类型 接口 都会返回的 通用的 可判断 couldLoadMore 的 数据结构
@@ -1612,34 +1613,6 @@ export const AllMerchantPageApi = {
 }
 
 /**
- * 全部优惠页 api
- * @type {{}}
- */
-export const AllCouponPageApi = {
-    ApiName: 'AllCouponPageApi',
-    // SearchKeys: '',//筛选出来的关键词
-
-    /**
-     * 获取 3 个menu的数据
-     */
-    fetchMenuData(){
-        return (dispatch) => {
-            dispatch(BaseGridViewActions.changeBaseGridViewStates(this.ApiName, BaseGridViewActions.BaseGridViewStates.fetchOk, [{
-                id: 0,
-                title: '分类', //changeTitleEventName: AllMerchantPage.AllMerchantPageChangeCategoryMenuTitleEventName
-            }, {
-                id: 1,
-                title: '排序',
-                //changeTitleEventName: AllMerchantPage.AllMerchantPageChangeSortMenuTitleEventName
-            }, {
-                id: 2,
-                title: '商家', //changeTitleEventName: AllMerchantPage.AllMerchantPageChangeFilterMenuTitleEventName
-            }]));
-        }
-    },
-}
-
-/**
  * 全部商家页 商家列表 的API https://api-staging-current.ebates.cn/docs.html#search-search-merchants-get
  */
 export const AllMerchantPageListApi = {
@@ -1713,10 +1686,10 @@ export const AllMerchantPageListApi = {
                         Log.log('BizApi  AllMerchantPageListApi 全部商家页 搜索商家 接口OK, responseData.data.length =' + responseData.data.length)
 
                         //不是 加载更多 时 无数据, 列表 切换到 无数据状态
-                        if (responseData.data.length==0 && opt!=BaseListActions.BaseListFetchDataType.MORE){
+                        if (responseData.data.length == 0 && opt != BaseListActions.BaseListFetchDataType.MORE) {
                             Log.log('BizApi  AllMerchantPageListApi 全部商家页 搜索商家 接口 无数据')
                             dispatch(BaseListActions.NodataAction(this.ApiName, opt));
-                        }else{
+                        } else {
                             dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
                                 meta: responseData.meta,
                                 newContentArray: responseData.data,
@@ -1775,17 +1748,19 @@ export const AllMerchantPageCategoryListApi = {
                 if (this.isLoading && this.$CategoryListDataArray.size == 0)//如果 列表控件 挂载时, 接口正在 请求中 ,列表控件就 切到 Loading 状态
                 {
                     Log.log('BizApi fetchCategoryList 列表控件 挂载时, 接口正在 请求中 ,列表控件就 切到 Loading 状态')
-                    new SMSTimer({//为了能 从 初始化状态 切换到 Loading  状态, 否则太快了,切换不了
-                        timerNums: 1,
-                        callBack: (time) => {
-                            Log.log('time===' + time);
-                            if (time == -1) {
-
-                                dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
-                                this.isThisCompDidMount = true;
-                            }
-                        }
-                    }).start();
+                    // new SMSTimer({//为了能 从 初始化状态 切换到 Loading  状态, 否则太快了,切换不了
+                    //     timerNums: 1,
+                    //     callBack: (time) => {
+                    //         Log.log('time===' + time);
+                    //         if (time == -1) {
+                    //
+                    //             dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
+                    //             this.isThisCompDidMount = true;
+                    //         }
+                    //     }
+                    // }).start();
+                    dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
+                    this.isThisCompDidMount = true;
 
                 } else if (!this.isLoading && this.$CategoryListDataArray.size > 0) {//列表挂载时, 接口已经拿到数据,列表直接切到 成功状态
                     dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
@@ -1887,7 +1862,7 @@ export const AllMerchantPageCategoryListApi = {
             (model, i) => {
                 {
                     model.isSelect = false;//给每个mode 加 是否被选中 属性
-                    if (i==0){
+                    if (i == 0) {
                         model.isSelect = true;
                     }
 
@@ -1932,17 +1907,19 @@ export const AllMerchantPageCountryListApi = {
                 if (this.isLoading && this.$CountryListDataArray.size == 0)//如果 列表控件 挂载时, 接口正在 请求中 ,列表控件就 切到 Loading 状态
                 {
                     Log.log('BizApi fetchCountryList 列表控件 挂载时, 接口正在 请求中 ,列表控件就 切到 Loading 状态')
-                    new SMSTimer({//为了能 从 初始化状态 切换到 Loading  状态, 否则太快了,切换不了
-                        timerNums: 0.5,
-                        callBack: (time) => {
-                            Log.log('time===' + time);
-                            if (time == -1) {
-
-                                dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
-                                this.isThisCompDidMount = true;
-                            }
-                        }
-                    }).start();
+                    // new SMSTimer({//为了能 从 初始化状态 切换到 Loading  状态, 否则太快了,切换不了
+                    //     timerNums: 0.5,
+                    //     callBack: (time) => {
+                    //         Log.log('time===' + time);
+                    //         if (time == -1) {
+                    //
+                    //             dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
+                    //             this.isThisCompDidMount = true;
+                    //         }
+                    //     }
+                    // }).start();
+                    dispatch(BaseListActions.Loadinglist(opt, this.ApiName));
+                    this.isThisCompDidMount = true;
 
                 } else if (!this.isLoading && this.$CountryListDataArray.size > 0) {//列表挂载时, 接口已经拿到数据,列表直接切到 成功状态
                     dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
@@ -2042,7 +2019,7 @@ export const AllMerchantPageCountryListApi = {
             (model, i) => {
                 {
                     model.isSelect = false;//给每个mode 加 是否被选中 属性
-                    if (i==0){
+                    if (i == 0) {
                         model.isSelect = true;
                     }
 
@@ -2161,7 +2138,7 @@ export const AllMerchantPageSortDropDownListApi = {
             (model, i) => {
                 {
                     model.isSelect = false;//给每个mode 加 是否被选中 属性
-                    if (i==0){
+                    if (i == 0) {
                         model.isSelect = true;
                     }
 
@@ -2579,6 +2556,16 @@ export function fetchApi(opt, pageNo, BaseListCompProps) {
             break;
         case AllMerchantPageFilterDropDownListApi.ApiName: {
             return AllMerchantPageFilterDropDownListApi.fetchFilterList(opt, BaseListCompProps);
+
+        }
+            break;
+        case AllCouponPageApi.AllCouponPageCategoryListApi.ApiName: {
+            return AllCouponPageApi.AllCouponPageCategoryListApi.fetchCategoryList(opt);
+
+        }
+            break;
+        case AllCouponPageApi.AllCouponPageListApi.ApiName: {
+            return AllCouponPageApi.AllCouponPageListApi.SearchCoupon(opt,BaseListCompProps);
 
         }
             break;

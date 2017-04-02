@@ -17,7 +17,7 @@ import BaseBt from '../../Comp/Base/BaseBt'
 import *as BizViews from '../../Comp/BizCommonComp/BizViews'
 import BizFilterMenuBtView from '../../Comp/BizCommonComp/BizFilterMenuBtView'
 import EventListener from '../../Utils/EventListener/EventListener'
-
+import *as AllCouponPageApi from '../../NetWork/API/AllCouponPageApi'
 
 //重置 全部优惠页 筛选控件的 MENU 控件的 所有 箭头的方向 的 事件名
 export const AllCouponPageMenuGridViewArrowDirResetEventName='AllCouponPageMenuGridViewArrowDirResetEventName'
@@ -82,7 +82,7 @@ export class AllCouponPageMenuGridViewContainer extends React.Component {
                           }}
                           fetchApi={() => {
                               return (dispatch) => {
-                                  dispatch(BizApi.AllCouponPageApi.fetchMenuData())
+                                  dispatch(AllCouponPageApi.AllCouponPageApi.fetchMenuData())
                               }
                           }}
                           containerStyle={[{

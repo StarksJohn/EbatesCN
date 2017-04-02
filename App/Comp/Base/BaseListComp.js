@@ -17,7 +17,7 @@ import GlobalStyles from '../../Global/GlobalStyles'
 import Colors from '../../Utils/Colors'
 import Spinner from 'react-native-spinkit'
 import EventListener from '../../Utils/EventListener/EventListener'
-
+import *as StringOauth from '../../Utils/StringUtils/StringOauth'
 
 export default class BaseListComp extends Component {
 
@@ -41,6 +41,8 @@ export default class BaseListComp extends Component {
         // 入屏后还没画完;如果cell 比较高,此值可设置小点,默认 1000 像素
         initialListSize: PropTypes.number,//初始状态下，要加载的数据条数等于 （默认为 10 条）；
         customContainer:PropTypes.any ,
+        refreshListEventName: React.PropTypes.string,//主动调 某列表 控件的 刷新 逻辑 的 事件
+
     };
 
     static defaultProps = {
@@ -65,11 +67,14 @@ export default class BaseListComp extends Component {
         // this._fetchData(BaseListActions.BaseListFetchDataType.INITIALIZE);
 
         //主动刷新 事件 监听,外部任何 地方都可能 让此列表 主动刷新,而不需要 下拉才能刷新
-        this.activeRefreshListener = new EventListener({
-            eventName: this.props.baseReducer.ApiName, eventCallback: ()=> {
-                this._onRefresh();
-            }
-        });
+        if (!StringOauth.isNull(this.props.refreshListEventName)){
+            this.activeRefreshListener = new EventListener({
+                eventName: this.props.refreshListEventName, eventCallback: ()=> {
+                    this._onRefresh();
+                }
+            });
+        }
+
     }
 
     componentWillUnmount() {
@@ -242,7 +247,7 @@ export default class BaseListComp extends Component {
         //
         // }
 
-        Log.log('BaseListComp _onRefresh this.props.baseReducer.meta.pagination'+this.props.baseReducer.meta.pagination);
+        // Log.log('BaseListComp _onRefresh this.props.baseReducer.meta.pagination'+this.props.baseReducer.meta.pagination);
         this._fetchData(BaseListActions.BaseListFetchDataType.REFRESH);
 
     }
