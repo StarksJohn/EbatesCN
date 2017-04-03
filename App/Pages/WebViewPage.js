@@ -42,7 +42,7 @@ export default class WebViewPage extends Component {
                 backPress: (e)=> {
                     return this.onBackPress();
                 },
-                hardwareBackPressListenerName: 'WebViewPage'
+                hardwareBackPressListenerName: gRouteName.WebViewPage//'WebViewPage'
             });
         }
         this.state = {

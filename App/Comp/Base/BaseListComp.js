@@ -42,7 +42,7 @@ export default class BaseListComp extends Component {
         initialListSize: PropTypes.number,//初始状态下，要加载的数据条数等于 （默认为 10 条）；
         customContainer:PropTypes.any ,
         refreshListEventName: React.PropTypes.string,//主动调 某列表 控件的 刷新 逻辑 的 事件
-
+        renderScrollComponent:React.PropTypes.func,//外部 控制是否 在 ListView里 画一个 scrollView
     };
 
     static defaultProps = {
@@ -53,8 +53,8 @@ export default class BaseListComp extends Component {
         customContainer:null,
         onScroll: () => {
         },
-        renderScrollComponent: () => {
-        },
+        // renderScrollComponent: () => {
+        // },
 
     };
 
@@ -339,6 +339,10 @@ export default class BaseListComp extends Component {
     //     return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
     // }
 
+    renderScrollComponent(){
+        this.props.renderScrollComponent&&this.props.renderScrollComponent(this)
+    }
+
     render() {
 
         let contentView;
@@ -379,7 +383,7 @@ export default class BaseListComp extends Component {
                             title='下拉刷新'
                             colors={['#ffaa66cc', '#ff00ddff', '#ffffbb33', '#ffff4444']}
                             progressBackgroundColor='#FFFFFF'/> : null}
-                    /*renderScrollComponent={this.props.renderScrollComponent}*/
+                    renderScrollComponent={this.renderScrollComponent()}
                     /*renderScrollComponent={
                      (props) => (
                      this.props.ParallaxScrollView

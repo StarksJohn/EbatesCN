@@ -31,7 +31,7 @@ export class ForgetPassPage extends Component {
             this.backAndroidEventListener = new BackAndroidEventListener({
                 ...props,
                 backPress: (e) => baseOnBackPress(this.props.navigator),
-                hardwareBackPressListenerName: gRouteName.SearchResultPage
+                hardwareBackPressListenerName: gRouteName.ForgetPassPage
             });
         }
 

@@ -155,7 +155,7 @@ export const AllCouponPageListApi = {
         return (dispatch) => {
             AllCouponPageCategoryListApi.resetCategoryListData();
             // AllMerchantPageCountryListApi.resetCountryListData();
-            // AllMerchantPageSortDropDownListApi.resetSortListData();
+            AllCouponPageSortDropDownListApi.resetSortListData();
             // dispatch(AllMerchantPageFilterDropDownListApi.clearSelectData());
         }
 
@@ -404,7 +404,7 @@ export const AllCouponPageSortDropDownListApi = {
     resetSortListData(){
         this.isLoading = false;
         this.isThisCompDidMount = false;
-        this.sort_by = '-1'
+        this.sort_by = '-1';
 
         this.$SortListDataArray.toJS().map(
             (model, i) => {

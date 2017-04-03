@@ -22,6 +22,8 @@ import MerchantDetailPage from '../../Pages/MerchantDetailPage'
 import GlobalStyles from '../../Global/GlobalStyles'
 import *as BizRemainingTimeView from '../BizCommonComp/BizRemainingTimeView'
 import AllCouponsPage from '../../Pages/AllCouponsPage'
+import AllMerchantPage from '../../Pages/AllMerchantPage'
+import CouponDetailPage from '../../Pages/CouponDetailPage'
 
 export class HomePageHotCouponList extends Component {
 
@@ -36,10 +38,17 @@ export class HomePageHotCouponList extends Component {
 
     onCheckAllMerchant() {
         this.props.navigator.push({
+            component: AllMerchantPage,
+            name: gRouteName.AllMerchantPage,
+        });
+
+    }
+
+    onCheckAllCoupons(){
+        this.props.navigator.push({
             component: AllCouponsPage,
             name: gRouteName.AllCouponsPage,
         });
-
     }
 
     /**
@@ -143,7 +152,7 @@ export class HomePageHotCouponList extends Component {
                     marginRight: 15,
                     backgroundColor: Colors.transparent,
                 }]}
-                onPress={() => this.onCheckAllMerchant()}
+                onPress={() => this.onCheckAllCoupons()}
                 textStyle={{
                     fontSize: 12,
                     fontWeight: 'bold',
@@ -382,6 +391,12 @@ export class HomePageHotCouponList extends Component {
 
             return BizCouponListCell.RenderBizCouponListCell(rowData, sectionID, rowID, highlightRow, paddingTop, (rowData) => {
                 Log.log('CouponListComp renderRow callback rowData==' + rowData);
+
+
+                this.props.navigator.push({
+                    component: CouponDetailPage,
+                    name: gRouteName.CouponDetailPage,
+                });
             });
         }
 

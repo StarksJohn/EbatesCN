@@ -29,7 +29,7 @@ export class MerchantDetailPage extends Component {
             this.backAndroidEventListener = new BackAndroidEventListener({
                 ...props,
                 backPress: (e) => baseOnBackPress(this.props.navigator),
-                hardwareBackPressListenerName: gRouteName.SearchResultPage
+                hardwareBackPressListenerName: gRouteName.MerchantDetailPage
             });
         }
 

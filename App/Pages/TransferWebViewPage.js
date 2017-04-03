@@ -51,7 +51,7 @@ export class TransferWebViewPage extends Component {
                 backPress: (e) => {
                     return this.onBackPress();
                 },
-                hardwareBackPressListenerName: 'WebViewPage'
+                hardwareBackPressListenerName: gRouteName.TransferWebViewPage//'WebViewPage'
             });
         }
 

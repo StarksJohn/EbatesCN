@@ -21,6 +21,7 @@ export const routeName={
     MerchantDetailPage:'MerchantDetailPage',
     TransferWebViewPage:'TransferWebViewPage',
     AllCouponsPage:'AllCouponsPage',
+    CouponDetailPage:'CouponDetailPage',
 }
 
 
