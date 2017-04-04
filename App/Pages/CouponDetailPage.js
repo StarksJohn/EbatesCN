@@ -3,7 +3,7 @@
  * CouponDetailPage.js 优惠详情页
  */
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, Platform, Image,Dimensions} from 'react-native';
+import {StyleSheet, View, Text, Platform, Image, Dimensions} from 'react-native';
 import {connect} from 'react-redux';
 import Colors from '../Utils/Colors';
 import GlobalStyles from '../Global/GlobalStyles'
@@ -20,6 +20,7 @@ import BaseBt from '../Comp/Base/BaseBt'
 import *as BizApi from '../NetWork/API/BizApi'
 import TransferWebViewPage from './TransferWebViewPage'
 import BaseParallaxListView from '../Comp/Base/BaseParallaxListView'
+import BaseListComp from '../Comp/Base/BaseListComp'
 
 export const window = Dimensions.get('window');
 
@@ -44,7 +45,7 @@ export class CouponDetailPage extends Component {
 
     }
 
-    renderRow=(rowData, sectionID, rowID, highlightRow)=> {
+    renderRow = (rowData, sectionID, rowID, highlightRow) => {
 
         Log.log('CouponDetailPage renderRow rowID=' + rowID);
 
@@ -180,12 +181,39 @@ export class CouponDetailPage extends Component {
         //         rightButton={NavBarButton.getMerchantDetailRightBt(() => baseOnBackPress(navigator, this.backAndroidEventListener))}
         //         hide={false}/>;
 
+        // return (
+        //     <BaseListComp
+        //         initialListSize={10}
+        //         scrollRenderAheadDistance={300}
+        //         renderRow={
+        //             this.renderRow
+        //         }
+        //         renderScrollComponent={
+        //             (props) => {
+        //                 Log.log('CouponDetailPage ScrollComponent ')
+        //                 return (
+        //                     < BaseParallaxListView
+        //
+        //                         {
+        //                             ...this.getParallaxRenderConfig()
+        //                         }
+        //
+        //                     />
+        //
+        //                 );
+        //
+        //             }
+        //         }
+        //         {...this.props }
+        //
+        //
+        //     />
+        // );
+
         return (
             <View style={{flex: 1, backgroundColor: Colors.white}}>
                 < BaseParallaxListView
-                    {
-                        ...this.props
-                    }
+                    {...this.props}
                     renderRow={
                         this.renderRow
                     }
@@ -195,46 +223,6 @@ export class CouponDetailPage extends Component {
 
                 />
             </View>
-
-            // <BaseListComp
-            //     {...this.props }
-            //     initialListSize={10}
-            //     scrollRenderAheadDistance={300}
-            //     renderRow={
-            //         this.renderRow
-            //     }
-            //     renderScrollComponent={
-            //         (BaseListCompRef) => {
-            //             Log.log('CouponDetailPage renderScrollComponent ')
-            //             return (
-            //                 <View style={{flex: 1, backgroundColor: Colors.white}}>
-            //                     < BaseParallaxListView
-            //                         {
-            //                             ...this.props
-            //                         }
-            //
-            //                         renderRow={
-            //                             this.renderRow
-            //                         }
-            //
-            //                         {
-            //                             ...this.getParallaxRenderConfig()
-            //                         }
-            //
-            //                     />
-            //                 </View>
-            //
-            //             );
-            //
-            //         }
-            //     }
-            // />
-
-            // {/*<View style={[GlobalStyles.pageContainer, {backgroundColor: Colors.BizCommonGrayBack}]}>*/}
-            //     {/**/}
-            //     {/*{navigationBar}*/}
-            //     {/*{this.renderFooterBar()}*/}
-            // {/*</View>*/}
         );
     }
 }

@@ -1,5 +1,6 @@
 /*
  通用的 带 视差效果的 listview 控件,
+ BaseParallaxListView
  */
 import React, {Component, PropTypes} from 'react';
 import {
@@ -16,7 +17,7 @@ import Colors from '../../Utils/Colors'
 import GlobalStyles from '../../Global/GlobalStyles'
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import BaseListComp from './BaseListComp'
-import *as CouponDetailPageApi from '../../NetWork/API/CouponDetailPageApi'
+// import *as CouponDetailPageApi from '../../NetWork/API/CouponDetailPageApi'
 
 
 // export const PARALLAX_HEADER_HEIGHT = 350;//能下拉的视图的 headerView的高,下拉的view一般是 image
@@ -60,21 +61,72 @@ export default class BaseParallaxListView extends Component {
     }
 
     componentDidMount() {
-        this.props.dispatch(CouponDetailPageApi.CouponDetailPageApi.fetchPageList(0));
+        // this.props.dispatch(CouponDetailPageApi.CouponDetailPageApi.fetchPageList(0));
 
     }
 
     render() {
         // const {} = this.props;
 
+        // return (
+        //     <ParallaxScrollView
+        //         //onScroll={onScroll}
+        //         /*headerBackgroundColor="#333"*/
+        //         backgroundColor={this.props.backgroundColor}
+        //         stickyHeaderHeight={ this.props.stickyHeaderHeight }
+        //         parallaxHeaderHeight={ this.props.parallaxHeaderHeight }
+        //         backgroundSpeed={this.props.backgroundSpeed}
+        //         renderBackground={this.props.renderBackground}
+        //         renderForeground={this.props.renderForeground}
+        //         renderStickyHeader={this.props.renderStickyHeader}
+        //         renderFixedHeader={this.props.renderFixedHeader}
+        //
+        //     />
+        // );
+
+        // return (
+        //     <ListView
+        //         style={{
+        //             flex: 1,
+        //             backgroundColor: 'red',
+        //             // margin:10
+        //         }}
+        //         dataSource={ this.props.baseReducer.dataSource }
+        //         renderRow={
+        //             this.props.renderRow
+        //         }
+        //         renderScrollComponent={
+        //             //试试把 这个 箭头函数移到
+        //             (props) => (
+        //                 <ParallaxScrollView
+        //                     //onScroll={onScroll}
+        //                     /*headerBackgroundColor="#333"*/
+        //                     backgroundColor={this.props.backgroundColor}
+        //                     stickyHeaderHeight={ this.props.stickyHeaderHeight }
+        //                     parallaxHeaderHeight={ this.props.parallaxHeaderHeight }
+        //                     backgroundSpeed={this.props.backgroundSpeed}
+        //
+        //                     renderBackground={this.props.renderBackground}
+        //
+        //                     renderForeground={this.props.renderForeground}
+        //
+        //                     renderStickyHeader={this.props.renderStickyHeader}
+        //
+        //                     renderFixedHeader={this.props.renderFixedHeader}
+        //
+        //                 />
+        //
+        //             )
+        //
+        //         }
+        //         {...this.props }
+        //
+        //     />
+        //
+        // );
+
         return (
-            <ListView
-                style={{
-                    flex: 1,
-                    backgroundColor: 'red',
-                    // margin:10
-                }}
-                dataSource={ this.props.baseReducer.dataSource }
+            <BaseListComp
                 renderRow={
                     this.props.renderRow
                 }
@@ -87,13 +139,9 @@ export default class BaseParallaxListView extends Component {
                             stickyHeaderHeight={ this.props.stickyHeaderHeight }
                             parallaxHeaderHeight={ this.props.parallaxHeaderHeight }
                             backgroundSpeed={this.props.backgroundSpeed}
-
                             renderBackground={this.props.renderBackground}
-
                             renderForeground={this.props.renderForeground}
-
                             renderStickyHeader={this.props.renderStickyHeader}
-
                             renderFixedHeader={this.props.renderFixedHeader}
 
                         />

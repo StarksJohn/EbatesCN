@@ -8,7 +8,7 @@ import {
     RefreshControl,
     Text,
     View,
-    ActivityIndicator as ProgressBar, InteractionManager, Image
+    ActivityIndicator as ProgressBar, InteractionManager, Image, RecyclerViewBackedScrollView
 } from 'react-native';
 
 import *as BaseListActions from '../../Redux/Actions/BaseListActions'
@@ -18,6 +18,10 @@ import Colors from '../../Utils/Colors'
 import Spinner from 'react-native-spinkit'
 import EventListener from '../../Utils/EventListener/EventListener'
 import *as StringOauth from '../../Utils/StringUtils/StringOauth'
+import ParallaxScrollView from 'react-native-parallax-scroll-view';
+
+export const STICKY_HEADER_HEIGHT = GlobalStyles.statusBarAndNavBarH;//状态栏+导航栏
+
 
 export default class BaseListComp extends Component {
 
@@ -36,13 +40,25 @@ export default class BaseListComp extends Component {
         // listApiTag: PropTypes.object.isRequired  // 当前列表加载的接口对应的tag,区分其它列表的接口
 
         renderNoDataView: PropTypes.any,//外部可自定义如何绘制 列表无数据 状态的 view
-        renderNetWorkAbnormalView:PropTypes.any,//外部可自定义如何绘制 列表无数据 状态的 view
+        renderNetWorkAbnormalView: PropTypes.any,//外部可自定义如何绘制 列表无数据 状态的 view
         scrollRenderAheadDistance: PropTypes.number,//下一个 屏幕外的 cell(一般cell都是 从 屏幕底部 入屏) 距离屏幕多少像素时 就开始 画出来,避免 cell
         // 入屏后还没画完;如果cell 比较高,此值可设置小点,默认 1000 像素
         initialListSize: PropTypes.number,//初始状态下，要加载的数据条数等于 （默认为 10 条）；
-        customContainer:PropTypes.any ,
+        customContainer: PropTypes.any,
         refreshListEventName: React.PropTypes.string,//主动调 某列表 控件的 刷新 逻辑 的 事件
-        renderScrollComponent:React.PropTypes.func,//外部 控制是否 在 ListView里 画一个 scrollView
+        renderScrollComponent: React.PropTypes.func,//外部 控制是否 在 ListView里 画一个 scrollView
+        // ScrollComponent:React.PropTypes.element,
+
+        //renderScrollComponent 时的 ScrollComponent 属性
+        // ParallaxScrollViewBackgroundColor: PropTypes.string,//顶部 header 的背景色
+        // stickyHeaderHeight: PropTypes.number,////如果 renderStickyHeader 设置了, 就不用画 nav 了 ,此stickyHeaderHeight 就是 renderStickyHeader 要画的高, 代替nav
+        // parallaxHeaderHeight: PropTypes.number,//视差图view的高度,在 renderStickyHeader 下边显示,看上去就在nav 下边
+        // backgroundSpeed: PropTypes.number,
+        // renderBackground: PropTypes.func,//画  parallax header 的 背景, 包括背景图和  其遮盖层
+        // renderForeground: PropTypes.func,//画 视差Img的 前景层,包括头像等
+        // renderStickyHeader: PropTypes.func, //画 替代 nav的控件,包括 title
+        // renderFixedHeader: PropTypes.func,//在 顶部 替代导航栏的 控件里 画一些固定的控件
+        // isRenderScrollComponent: PropTypes.bool,
     };
 
     static defaultProps = {
@@ -50,10 +66,25 @@ export default class BaseListComp extends Component {
         automaticallyAdjustContentInsets: false,
         scrollRenderAheadDistance: 1000,
         initialListSize: 10,
-        customContainer:null,
+        customContainer: null,
         onScroll: () => {
         },
         // renderScrollComponent: () => {
+        // },
+
+        //renderScrollComponent 时的 ScrollComponent 属性
+        // isRenderScrollComponent: false,
+        // ParallaxScrollViewBackgroundColor: Colors.appUnifiedBackColor,
+        // stickyHeaderHeight: STICKY_HEADER_HEIGHT,
+        // parallaxHeaderHeight: 100,
+        // backgroundSpeed: 10,
+        // renderBackground: () => {
+        // },
+        // renderForeground: () => {
+        // },
+        // renderStickyHeader: () => {
+        // },
+        // renderFixedHeader: () => {
         // },
 
     };
@@ -67,9 +98,9 @@ export default class BaseListComp extends Component {
         // this._fetchData(BaseListActions.BaseListFetchDataType.INITIALIZE);
 
         //主动刷新 事件 监听,外部任何 地方都可能 让此列表 主动刷新,而不需要 下拉才能刷新
-        if (!StringOauth.isNull(this.props.refreshListEventName)){
+        if (!StringOauth.isNull(this.props.refreshListEventName)) {
             this.activeRefreshListener = new EventListener({
-                eventName: this.props.refreshListEventName, eventCallback: ()=> {
+                eventName: this.props.refreshListEventName, eventCallback: () => {
                     this._onRefresh();
                 }
             });
@@ -109,10 +140,10 @@ export default class BaseListComp extends Component {
      * 画 网络异常
      * @returns {*}
      */
-    renderNetWorkAbnormalView(){
+    renderNetWorkAbnormalView() {
         if (this.props.renderNetWorkAbnormalView) {
             return React.cloneElement(this.props.renderNetWorkAbnormalView(this.props), this.props);
-        }  else {
+        } else {
             return null;
         }
     }
@@ -339,9 +370,15 @@ export default class BaseListComp extends Component {
     //     return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
     // }
 
-    renderScrollComponent(){
-        this.props.renderScrollComponent&&this.props.renderScrollComponent(this)
-    }
+    // renderScrollComponent(props) {
+    //     if (this.props.renderScrollComponent === false) {
+    //         return null;
+    //     } else if (this.props.renderScrollComponent) {
+    //         return React.cloneElement(this.props.renderScrollComponent(props), props);
+    //     } else {
+    //         return null;
+    //     }
+    // }
 
     render() {
 
@@ -351,12 +388,12 @@ export default class BaseListComp extends Component {
         // } else
         if (this.props.baseReducer.status === BaseListActions.BaseListStatus.FAILURE && this.props.baseReducer.dataArray.length == 0) {//一开始加载数据失败&&列表无数据
             // contentView = <CommonLoadView loadState={LOAD_STATE.LOAD_STATE_ERROR} onRetry={() => this._onRetry()}/>
-            contentView=this.renderNetWorkAbnormalView();
+            contentView = this.renderNetWorkAbnormalView();
         } else if (this.props.baseReducer.status === BaseListActions.BaseListStatus.NODATA) {//列表无缓存数据
             contentView = this.renderNoDataViews(); //<CommonLoadView loadState={LOAD_STATE.LOAD_STATE_NOCACHEDATA}/>
 
-        } else if (this.props.baseReducer.opt==BaseListActions.BaseListFetchDataType.REFRESH && this.props.baseReducer.status === BaseListActions.BaseListStatus.Loading){//画 下拉 刷新 时的 Loading 视图
-            contentView=this._LoadingMoreFooterView();
+        } else if (this.props.baseReducer.opt == BaseListActions.BaseListFetchDataType.REFRESH && this.props.baseReducer.status === BaseListActions.BaseListStatus.Loading) {//画 下拉 刷新 时的 Loading 视图
+            contentView = this._LoadingMoreFooterView();
         } else {
             // showToast('BaseListComp  render');
             // showToast('正在 绘制 '+ this.props.listApiTag.ApiName +'列表');
@@ -383,18 +420,21 @@ export default class BaseListComp extends Component {
                             title='下拉刷新'
                             colors={['#ffaa66cc', '#ff00ddff', '#ffffbb33', '#ffff4444']}
                             progressBackgroundColor='#FFFFFF'/> : null}
-                    renderScrollComponent={this.renderScrollComponent()}
-                    /*renderScrollComponent={
-                     (props) => (
-                     this.props.ParallaxScrollView
-                     )
-                     }*/
-                    /*{...this.props}*/
+                    renderScrollComponent={
+                        //外部 需要 自定义 ScrollComponent 控件,外部就 写一个 箭头函数,否则 就用默认的 RecyclerViewBackedScrollView
+                        this.props.renderScrollComponent ? this.props.renderScrollComponent :
+                            (props) => {
+                                //Log.log('BaseListComp render RecyclerViewBackedScrollView')
+                                return (
+                                    <RecyclerViewBackedScrollView {...props} />
+                                )
+                            }
+                    }
                 />
             );
         }
         return (
-            <View style={[styles.container,this.props.customContainer]}>
+            <View style={[styles.container, this.props.customContainer]}>
                 {contentView}
             </View>
         );
