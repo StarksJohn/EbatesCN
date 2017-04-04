@@ -20,10 +20,10 @@ import BaseListComp from './BaseListComp'
 // import *as CouponDetailPageApi from '../../NetWork/API/CouponDetailPageApi'
 
 
-// export const PARALLAX_HEADER_HEIGHT = 350;//能下拉的视图的 headerView的高,下拉的view一般是 image
+export const PARALLAX_HEADER_HEIGHT = 350;//能下拉的视图的 headerView的高,下拉的view一般是 image
 export const STICKY_HEADER_HEIGHT = GlobalStyles.statusBarAndNavBarH;//状态栏+导航栏
 export const window = Dimensions.get('window');
-
+// export const AVATAR_SIZE = 120;
 
 export default class BaseParallaxListView extends Component {
     static propTypes = {
@@ -40,9 +40,9 @@ export default class BaseParallaxListView extends Component {
     };
 
     static defaultProps = {
-        backgroundColor: Colors.appUnifiedBackColor,
+        backgroundColor: Colors.transparent,
         stickyHeaderHeight: STICKY_HEADER_HEIGHT,
-        parallaxHeaderHeight: 100,
+        parallaxHeaderHeight: 0,
         backgroundSpeed: 10,
         renderBackground: () => {
         },
@@ -82,47 +82,6 @@ export default class BaseParallaxListView extends Component {
         //         renderFixedHeader={this.props.renderFixedHeader}
         //
         //     />
-        // );
-
-        // return (
-        //     <ListView
-        //         style={{
-        //             flex: 1,
-        //             backgroundColor: 'red',
-        //             // margin:10
-        //         }}
-        //         dataSource={ this.props.baseReducer.dataSource }
-        //         renderRow={
-        //             this.props.renderRow
-        //         }
-        //         renderScrollComponent={
-        //             //试试把 这个 箭头函数移到
-        //             (props) => (
-        //                 <ParallaxScrollView
-        //                     //onScroll={onScroll}
-        //                     /*headerBackgroundColor="#333"*/
-        //                     backgroundColor={this.props.backgroundColor}
-        //                     stickyHeaderHeight={ this.props.stickyHeaderHeight }
-        //                     parallaxHeaderHeight={ this.props.parallaxHeaderHeight }
-        //                     backgroundSpeed={this.props.backgroundSpeed}
-        //
-        //                     renderBackground={this.props.renderBackground}
-        //
-        //                     renderForeground={this.props.renderForeground}
-        //
-        //                     renderStickyHeader={this.props.renderStickyHeader}
-        //
-        //                     renderFixedHeader={this.props.renderFixedHeader}
-        //
-        //                 />
-        //
-        //             )
-        //
-        //         }
-        //         {...this.props }
-        //
-        //     />
-        //
         // );
 
         return (

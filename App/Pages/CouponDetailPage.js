@@ -19,10 +19,12 @@ import *as BizViews from '../Comp/BizCommonComp/BizViews'
 import BaseBt from '../Comp/Base/BaseBt'
 import *as BizApi from '../NetWork/API/BizApi'
 import TransferWebViewPage from './TransferWebViewPage'
-import BaseParallaxListView from '../Comp/Base/BaseParallaxListView'
+import BaseParallaxListView,{
+    STICKY_HEADER_HEIGHT,
+    window,
+    AVATAR_SIZE
+} from '../Comp/Base/BaseParallaxListView'
 import BaseListComp from '../Comp/Base/BaseListComp'
-
-export const window = Dimensions.get('window');
 
 
 export class CouponDetailPage extends Component {
@@ -63,34 +65,41 @@ export class CouponDetailPage extends Component {
      */
     getParallaxRenderConfig() {
         let config = {};
+        const {navigator} = this.props;
+
+        let BackgroundH=120;//背景模糊图高
+        let couponIconH=75;//优惠图标高
+
+        config.parallaxHeaderHeight=BackgroundH+STICKY_HEADER_HEIGHT;
 
         config.renderBackground = () => (
-            <View key="background">
+            <View key="background" style={{paddingTop:STICKY_HEADER_HEIGHT}}>
                 <Image source={require('../Img/MyPageHeadrBack.jpg')}
-                       style={{width: window.width, height: 120}}/>
+                       style={{width: window.width, height: BackgroundH}}>
+
+                </Image>
                 <View style={{
                     position: 'absolute',
-                    top: 0,
+                    top: STICKY_HEADER_HEIGHT,
                     width: window.width,
-                    backgroundColor: 'rgba(0,0,0,.2)',
-                    height: 120
+                    backgroundColor: 'rgba(0,0,0,.7)',
+                    height: BackgroundH
                 }}/>
             </View>
         );
 
         config.renderForeground = () => {
             return (
-                <View key="parallax-header" style={ {
-                    alignItems: 'center',
-                    flex: 1,
-                    flexDirection: 'column',
-                    paddingTop: 100
+                <View key="parallax-header" style={ {flex: 1,//能让前景层 完全 占满 renderBackground 画出的 控件.
+                    alignItems: 'center', justifyContent:'center' ,
+                    flexDirection: 'column',paddingTop:STICKY_HEADER_HEIGHT
+                    //backgroundColor:Colors.getRandomColor()
                 } }>
                     <Image style={ {
                         marginBottom: 10,
-                        borderRadius: 120 / 2,
-                        width: 120,
-                        height: 120
+                        borderRadius: couponIconH / 2,
+                        width: couponIconH,
+                        height: couponIconH
                     }} source={
                         require('../Img/img_default_head.png')
                     }/>
@@ -101,69 +110,39 @@ export class CouponDetailPage extends Component {
 
         config.renderStickyHeader = () => {
             return (
-                <View key="sticky-header" style={{
-                    height: GlobalStyles.statusBarAndNavBarH,
-                    // width: 300,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    paddingTop: (Platform.OS === 'ios') ? 20 : 0,
-                    // backgroundColor: Colors.red
-                }}>
+                null
+                // <BaseNavigationBar
+                //     style={ {backgroundColor: Colors.getRandomColor()} }
+                //     statusBarCustomStyle={GlobalStyles.statusBarDefaultProps}
+                //     titleTextView={null}
+                //     leftButton={NavBarButton.getMerchantDetailPageBackButton(() => baseOnBackPress(navigator, this.backAndroidEventListener))}
+                //     title='优惠详情'
+                //     rightButton={NavBarButton.getMerchantDetailRightBt(() => baseOnBackPress(navigator, this.backAndroidEventListener))}
+                //     hide={false}/>
 
-                </View>
-
-                // {/*<BaseNavigationBar*/}
-                //     {/*style={ {backgroundColor: Colors.transparent} }*/}
-                //     {/*statusBarCustomStyle={GlobalStyles.statusBarDefaultProps}*/}
-                //     {/*titleTextView={null}*/}
-                //     {/*leftButton={NavBarButton.getMerchantDetailPageBackButton(() => baseOnBackPress(navigator, this.backAndroidEventListener))}*/}
-                //     {/*title='优惠详情'*/}
-                //     {/*rightButton={NavBarButton.getMerchantDetailRightBt(() => baseOnBackPress(navigator, this.backAndroidEventListener))}*/}
-                //     {/*hide={false}/>*/}
-
-                // <View style={{flex: 1}}>
-                //     <View style={ GlobalStyles.statusBarStyle}>
-                //         <StatusBar style={[GlobalStyles.statusBarStyle, {
-                //             backgroundColor: Colors.appUnifiedBackColor,
-                //             networkActivityIndicatorVisible: true,
-                //             barStyle: 'light-content'
-                //         }]}/>
-                //     </View>
-                //     <View key="sticky-header" style={styles.stickySection}>
-                //         <Text style={styles.stickySectionText}>
-                //             {this.props.pubNum}
-                //         </Text>
-                //     </View>
+                // <View key="sticky-header" style={{
+                //     height: GlobalStyles.statusBarAndNavBarH,
+                //     // width: 300,
+                //     justifyContent: 'center',
+                //     alignItems: 'center',
+                //     //paddingTop: (Platform.OS === 'ios') ? 20 : 0,
+                //     backgroundColor: Colors.getRandomColor()
+                // }}>
+                //
                 // </View>
             );
         };
 
-        //     (
-        //
-        //     <View style={{flex: 1}}>
-        //         <View style={ /*styles.statusBar*/ GlobalStyles.statusBarStyle}>
-        //             <StatusBar style={[GlobalStyles.statusBarStyle, {
-        //                 backgroundColor: Colors.appUnifiedBackColor,
-        //                 networkActivityIndicatorVisible: true,
-        //                 barStyle: 'light-content'
-        //             }]}/>
-        //         </View>
-        //         <View key="sticky-header" style={styles.stickySection}>
-        //             <Text style={styles.stickySectionText}>
-        //                 {this.props.status === LogStatus.LogIn ? this.props.userData.nickname : '我的'}
-        //             </Text>
-        //         </View>
-        //     </View>
-        // );
-
-        // config.renderFixedHeader = () => (
-        //     <View key="fixed-header" style={styles.fixedSection}>
-        //         <Text style={styles.fixedSectionText}
-        //               onPress={() => this.refs.ListView.scrollTo({x: 0, y: 0, animated: true})}>
-        //             Scroll to top
-        //         </Text>
-        //     </View>
-        // );
+        config.renderFixedHeader = () => (
+            <BaseNavigationBar
+                style={ {backgroundColor: Colors.white,position:'absolute',top:0, left:0, right:0, bottom:0} }
+                statusBarCustomStyle={GlobalStyles.statusBarDefaultProps}
+                titleTextView={null}
+                leftButton={NavBarButton.getMerchantDetailPageBackButton(() => baseOnBackPress(navigator, this.backAndroidEventListener))}
+                title='优惠详情'
+                rightButton={NavBarButton.getMerchantDetailRightBt(() => baseOnBackPress(navigator, this.backAndroidEventListener))}
+                hide={false}/>
+        );
         return config;
     }
 
