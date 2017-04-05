@@ -10,6 +10,10 @@ export const CouponDetailPageApi={
     fetchPageList(opt,BaseListCompProps){
         return (dispatch) => {
             Log.log('CouponDetailPageApi fetchPageList opt==' +opt)
+            Log.log('CouponDetailPageApi fetchPageList BaseListCompProps.route.pageData=='+ Log.log(BaseListCompProps.route.pageData))
+
+            // let pageData=BaseListCompProps.route.pageData;
+
             dispatch(BaseListActions.SuccessFetchinglist(opt, this.ApiName, {
                 couldLoadMore: false,
                 newContentArray: [{}],

@@ -89,6 +89,7 @@ export default class BaseParallaxListView extends Component {
                 renderRow={
                     this.props.renderRow
                 }
+                customContainer={{backgroundColor:Colors.white, paddingTop:0}}
                 renderScrollComponent={
                     (props) => (
                         <ParallaxScrollView

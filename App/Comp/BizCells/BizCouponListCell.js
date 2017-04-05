@@ -95,6 +95,8 @@ export function RenderBizCouponListCell(rowData, sectionID, rowID, highlightRow,
 
     let title=StringOauth.isNull(rowData.translated_highlight)?'['+rowData.merchant.now_rate+']':'['+rowData.translated_highlight+'+'+rowData.merchant.now_rate+']';
 
+    let uri=rowData.image?rowData.image:rowData.merchant.image;
+
     return (
         // 最大的白view
         <BaseBt
@@ -112,7 +114,7 @@ export function RenderBizCouponListCell(rowData, sectionID, rowID, highlightRow,
                 backgroundColor: Colors.white
             }}>
                 {/*左logo*/}
-                <Image source={ {uri: rowData.image}} style={{
+                <Image source={ {uri: uri}} style={{
                     marginLeft: 15, marginTop: 20, marginBottom: 20, width: 75, height: 75, //borderWidth: 0.5,
                     //borderColor: Colors.getRandomColor(),
                     //backgroundColor: Colors.getRandomColor()

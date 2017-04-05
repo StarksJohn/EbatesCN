@@ -375,7 +375,7 @@ export class NavBarButton extends Component {
     }
 }
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
     //包含 状态栏和导航栏
     container: {
         backgroundColor: '#4caf50',

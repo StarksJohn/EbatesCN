@@ -396,6 +396,7 @@ export class HomePageHotCouponList extends Component {
                 this.props.navigator.push({
                     component: CouponDetailPage,
                     name: gRouteName.CouponDetailPage,
+                    pageData:rowData
                 });
             });
         }
