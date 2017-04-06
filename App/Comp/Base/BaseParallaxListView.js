@@ -36,6 +36,7 @@ export default class BaseParallaxListView extends Component {
         renderForeground: PropTypes.func,//画 视差Img的 前景层,包括头像等
         renderStickyHeader: PropTypes.func, //画 替代 nav的控件,包括 title
         renderFixedHeader: PropTypes.func,//在 顶部 替代导航栏的 控件里 画一些固定的控件
+        customContainer: PropTypes.any,
 
     };
 
@@ -89,7 +90,7 @@ export default class BaseParallaxListView extends Component {
                 renderRow={
                     this.props.renderRow
                 }
-                customContainer={{backgroundColor:Colors.white, paddingTop:0}}
+                customContainer={[{backgroundColor:Colors.white, },this.props.customContainer]}
                 renderScrollComponent={
                     (props) => (
                         <ParallaxScrollView

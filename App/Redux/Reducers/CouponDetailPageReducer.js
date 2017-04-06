@@ -13,7 +13,7 @@ import InitialState, {
 } from '../InitialState/ListInitialState'
 import *as BaseListActions from '../Actions/BaseListActions'
 import *as CouponDetailPageApi from '../../NetWork/API/CouponDetailPageApi'
-
+import *as CouponDetailPageActions from '../Actions/CouponDetailPageActions'
 
 const initialState = new InitialState()
     .setIn(['ApiName'], CouponDetailPageApi.CouponDetailPageApi.ApiName)
@@ -76,6 +76,13 @@ export default function CouponDetailPageReducer(state = initialState, action) {
             return ListInsertOneItem(state, action);
         }
             break;
+        case CouponDetailPageActions.FetchPageDataSuccess:{
+            let _nextState = state
+                .setIn(['AdditionalObj'], action.pageData);
+
+            return _nextState;
+        }
+        break;
     }
 
     /**

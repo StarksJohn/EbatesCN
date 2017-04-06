@@ -107,17 +107,21 @@ export function renderBottomTabbarBackView(isInTwoLevelPage) {
 
 /**
  * 画 带阴影的 线 ,横竖线 都能画, props里可用 position: 'absolute' 控制,如 商家详情页底部的bar
+ * 画 不带阴影的分割线, 外部传
+ *  {position: 'absolute', bottom:0.0, left:15, right:15,
+                        height:0.5,borderWidth:0.0,shadowOffset: {width: 0.0, height: 0.0}, backgroundColor: '#E4E4E4'}
  * @returns {XML}
  */
 export function renderShadowLine(props) {
     return <View style={[{
-        height: 0.5, borderWidth: 0.5, //backgroundColor: 'rgba(228, 228, 228, 1)',
-        borderColor: 'rgba(228, 228, 228, 1)', //Colors.getRandomColor(),//,//'#dddddd',
+        height: 0.5, borderWidth: 0.5,
+        borderColor: '#E4E4E4',//'rgba(228, 228, 228, 1)', //Colors.getRandomColor(),//,//'#dddddd',
         borderStyle: null,
         borderRadius: 4,
         shadowColor: 'gray',
         shadowOffset: {width: 0.5, height: 0.5},
         shadowOpacity: 0.4,
+
     }, props]}>
     </View>
 }

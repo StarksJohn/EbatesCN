@@ -32,6 +32,7 @@ export default  Colors = {
     halfOpacityAppUnifiedBackColor: 'rgba(67, 187, 78, 0.5)',//app统一背景色的50%透明度
     backPopBtColor:'#626770',
     allNavTitleColor:'#404040',//所有导航栏标题颜色
+    blackText:'#555555',//app里大部分 黑色 文字
 
     /**
      * 随即色

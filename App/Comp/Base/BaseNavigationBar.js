@@ -308,7 +308,9 @@ export class NavBarButton extends Component {
                 borderRadius: 28, marginLeft: 10,
                 backgroundColor: Colors.white
             }}
-            iconStyle={{name: 'ios-more', iconSize: 20, iconColor: Colors.black}}
+            iconStyle={{name:
+                'ios-more',
+                iconSize: 20, iconColor: Colors.black}}
             onPress={callBack}
         />;
     }
