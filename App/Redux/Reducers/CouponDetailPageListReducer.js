@@ -1,6 +1,6 @@
 /**
  * Created by Ebates on 17/3/14.
- * CouponDetailPageReducer
+ * CouponDetailPageListReducer
  */
 const {Record, fromJS,} = require('immutable') //导入  Immutable.js 的 Record API
 
@@ -21,7 +21,7 @@ const initialState = new InitialState()
     .setIn(['isRenderFooterView'], false);
 
 
-export default function CouponDetailPageReducer(state = initialState, action) {
+export default function CouponDetailPageListReducer(state = initialState, action) {
     if (state.ApiName && state.ApiName != action.ApiName) {
         return state;
     }

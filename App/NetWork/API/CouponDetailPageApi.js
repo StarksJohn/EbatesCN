@@ -65,3 +65,8 @@ export const CouponDetailPageApi={
         }
     }
 };
+
+//优惠详情页 弹出层modal的api
+export const CouponDetailPageModalApi={
+    ApiName:'CouponDetailPageModalApi'
+}

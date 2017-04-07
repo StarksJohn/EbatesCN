@@ -10,7 +10,7 @@ import {
 import BaseListComp from '../Base/BaseListComp';
 import Colors from '../../Utils/Colors'
 import *as BizCouponListCell from '../BizCells/BizCouponListCell'
-
+import CouponDetailPage from '../../Pages/CouponDetailPage'
 
 export default class CouponListComp extends Component {
 
@@ -40,6 +40,11 @@ export default class CouponListComp extends Component {
 
         return BizCouponListCell.RenderBizCouponListCell(rowData, sectionID, rowID, highlightRow, paddingTop, (rowData) => {
             Log.log('CouponListComp renderRow callback rowData==' + rowData);
+            this.props.navigator.push({
+                component: CouponDetailPage,
+                name: gRouteName.CouponDetailPage,
+                pageData:rowData
+            });
         });
 
     }

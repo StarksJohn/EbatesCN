@@ -8,3 +8,4 @@ export const FetchPageDataSuccess='FetchPageDataSuccess';
 export function FetchPageDataSuccessAction(pageData,ApiName) {
     return {type:FetchPageDataSuccess,pageData,ApiName}
 }
+

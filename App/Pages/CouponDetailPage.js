@@ -3,7 +3,7 @@
  * CouponDetailPage.js 优惠详情页
  */
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, Platform, Image, Dimensions, Animated} from 'react-native';
+import {StyleSheet, View, Text, Platform, Image, Dimensions, Animated, TouchableOpacity} from 'react-native';
 import {connect} from 'react-redux';
 import Colors from '../Utils/Colors';
 import GlobalStyles from '../Global/GlobalStyles'
@@ -30,7 +30,15 @@ import BaseIoniconsBt from '../Comp/Base/BaseIoniconsBt'
 import *as BizRemainingTimeView from '../Comp/BizCommonComp/BizRemainingTimeView'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LogInPage from './LogInPage'
+// import *as EventListener from '../Utils/EventListener/EventListener'
+import *as CouponDetailPageActions from '../Redux/Actions/CouponDetailPageActions'
+import CouponDetailPageModalContainer from '../Redux/Container/CouponDetailPageModalContainer'
+import *as BaseModalActions from '../Redux/Actions/BaseModalActions'
+import *as CouponDetailPageApi from '../NetWork/API/CouponDetailPageApi'
+import MerchantDetailPage from './MerchantDetailPage'
 
+//优惠详情页 返利说明 Model的 isVisible 事件名
+// export const CouponDetailPageRebateDescriptionModelChangeStateEventName = 'CouponDetailPageRebateDescriptionModelChangeStateEventName';
 
 export class CouponDetailPage extends Component {
     constructor(props) {
@@ -43,9 +51,10 @@ export class CouponDetailPage extends Component {
             });
         }
 
-        // this.state = {
-        //     isSelectCouponsForMerchantBt: true//是否选中了 优惠及折扣按钮
-        // }
+        this.setState({
+                isVisibleRebateDescriptionModel: false
+            }
+        )
     }
 
     componentDidMount() {
@@ -55,7 +64,7 @@ export class CouponDetailPage extends Component {
     renderRow = (rowData, sectionID, rowID, highlightRow) => {
 
         Log.log('CouponDetailPage renderRow rowID=' + rowID);
-        const {navigator, route, baseReducer} = this.props;
+        const {navigator, route, baseReducer, dispatch} = this.props;
         let pageData = baseReducer.AdditionalObj ? baseReducer.AdditionalObj : route.pageData
 
         switch (rowID) {
@@ -239,7 +248,11 @@ export class CouponDetailPage extends Component {
                 }}
                                activeOpacity={0.6}
                                onPress={ () => {
-                                   //onPress(rowData);
+
+                                   //显示 BaseModal 控件里的 父节点和 子节点
+                                   dispatch(BaseModalActions.changeModelContainerVisiableAction(CouponDetailPageApi.CouponDetailPageModalApi.ApiName, true));
+                                   dispatch(BaseModalActions.changeModalVisiableAction(CouponDetailPageApi.CouponDetailPageModalApi.ApiName, true));
+
                                } }
                 >
                     <Text style={{
@@ -260,7 +273,7 @@ export class CouponDetailPage extends Component {
                     }}/>
 
                     { BizViews.renderShadowLine({
-                        position: 'absolute', bottom:0.0, left:15, right:0,
+                        position: 'absolute', bottom: 0.0, left: 15, right: 0,
                         height: 0.5,
                         borderWidth: 0.0,
                         shadowOffset: {width: 0.0, height: 0.0},
@@ -281,6 +294,12 @@ export class CouponDetailPage extends Component {
                                activeOpacity={0.6}
                                onPress={ () => {
                                    //onPress(rowData);
+
+                                   this.props.navigator.push({
+                                       component: MerchantDetailPage,
+                                       name: gRouteName.MerchantDetailPage,
+                                       merchantData: pageData.merchant,
+                                   });
                                } }
                 >
                     <Text style={{
@@ -301,7 +320,7 @@ export class CouponDetailPage extends Component {
                     }}/>
 
                     { BizViews.renderShadowLine({
-                        position: 'absolute', bottom:0.0, left:15, right:0,
+                        position: 'absolute', bottom: 0.0, left: 15, right: 0,
                         height: 0.5,
                         borderWidth: 0.0,
                         shadowOffset: {width: 0.0, height: 0.0},
@@ -309,7 +328,7 @@ export class CouponDetailPage extends Component {
                     })}
                 </BaseBt>
             }
-            break;
+                break;
         }
 
 
@@ -343,10 +362,12 @@ export class CouponDetailPage extends Component {
         config.renderBackground = () => (
             <View key="background" style={{paddingTop: 60}}>
                 <Image source={ /*require('../Img/MyPageHeadrBack.jpg')*/ {uri: uri} }
-                       style={{width: window.width, height: BackgroundH + STICKY_HEADER_HEIGHT,
-                           position: "absolute",top:0,left:0, right:0
+                       style={{
+                           width: window.width, height: BackgroundH + STICKY_HEADER_HEIGHT,
+                           position: "absolute", top: 0, left: 0, right: 0
                        }}
                        resizeMode="cover">
+                    {/*开了模糊,真机也卡的一逼*/}
                     {/*<BlurView {...BlurViewProps} style={{*/}
                     {/*position: "absolute",*/}
                     {/*left: 0,*/}
@@ -403,7 +424,7 @@ export class CouponDetailPage extends Component {
                     {<Text style={[styles.defaultTitleStyle, GlobalStyles.navBarTitleTextStyle, {color: Colors.white}]}
                            numberOfLines={1}
                     >
-                        全部优惠
+                        优惠详情
                     </Text>}
                 </View>
                 // null
@@ -453,7 +474,7 @@ export class CouponDetailPage extends Component {
                         backgroundColor: Colors.white
                     }}
                     iconStyle={{name: 'ios-more', iconSize: 20, iconColor: Colors.black}}
-                    onPress={() => baseOnBackPress(navigator, this.backAndroidEventListener)}
+                    //onPress={() => baseOnBackPress(navigator, this.backAndroidEventListener)}
                 />
             </View>
 
@@ -478,7 +499,7 @@ export class CouponDetailPage extends Component {
         }}>
             <BaseBt
                 style={{
-                    width: (GlobalStyles.window.width - 265) , height: 50, alignItems: 'center',
+                    width: (GlobalStyles.window.width - 265), height: 50, alignItems: 'center',
                     justifyContent: 'center',
                     // backgroundColor: Colors.getRandomColor(),
                 }}
@@ -543,7 +564,7 @@ export class CouponDetailPage extends Component {
             (e) => {//非登录状态
 
                 gPopBackToRouteAfteRegisterOrLoginSuceess = gRouteName.CouponDetailPage;
-                gAutoPushToRouteAfteRegisterOrLoginSuceess=gRouteName.TransferWebViewPage;
+                gAutoPushToRouteAfteRegisterOrLoginSuceess = gRouteName.TransferWebViewPage;
 
                 this.props.navigator.push({
                     component: LogInPage,
@@ -558,52 +579,16 @@ export class CouponDetailPage extends Component {
     }
 
     render() {
-        const {navigator} = this.props;
+        const {navigator, route, baseReducer, dispatch} = this.props;
 
-        // let navigationBar =
-        //     <BaseNavigationBar
-        //         style={ {backgroundColor: Colors.transparent} }
-        //         statusBarCustomStyle={GlobalStyles.statusBarDefaultProps}
-        //         titleTextView={null}
-        //         leftButton={NavBarButton.getMerchantDetailPageBackButton(() => baseOnBackPress(navigator, this.backAndroidEventListener))}
-        //         title='优惠详情'
-        //         rightButton={NavBarButton.getMerchantDetailRightBt(() => baseOnBackPress(navigator, this.backAndroidEventListener))}
-        //         hide={false}/>;
-
-        // return (
-        //     <BaseListComp
-        //         initialListSize={10}
-        //         scrollRenderAheadDistance={300}
-        //         renderRow={
-        //             this.renderRow
-        //         }
-        //         renderScrollComponent={
-        //             (props) => {
-        //                 Log.log('CouponDetailPage ScrollComponent ')
-        //                 return (
-        //                     < BaseParallaxListView
-        //
-        //                         {
-        //                             ...this.getParallaxRenderConfig()
-        //                         }
-        //
-        //                     />
-        //
-        //                 );
-        //
-        //             }
-        //         }
-        //         {...this.props }
-        //
-        //
-        //     />
-        // );
+        let self = this;
+        let pageData = baseReducer.AdditionalObj ? baseReducer.AdditionalObj : route.pageData
 
         return (
-            <View style={{flex:1,width: gScreen.width,backgroundColor: Colors.BizCommonGrayBack}}>
+            <View style={{flex: 1, width: gScreen.width, backgroundColor: Colors.BizCommonGrayBack}}>
                 < BaseParallaxListView
                     {...this.props}
-                    customContainer={{height:gScreen.height-60,flex:0,paddingTop:0,}}
+                    customContainer={{height: gScreen.height - 60, flex: 0, paddingTop: 0,}}
                     renderRow={
                         this.renderRow
                     }
@@ -613,6 +598,58 @@ export class CouponDetailPage extends Component {
 
                 />
                 {this.renderFooterBar()}
+                <CouponDetailPageModalContainer
+                    renderModalContent={
+                        () => {
+                            return <View style={{
+                                backgroundColor: Colors.white,
+                                width: 295,
+                                paddingTop: 0, paddingLeft: 0,alignSelf: 'center',
+                                //justifyContent: 'center',
+                                //alignItems: 'center',
+                                borderRadius: 8,
+                                //borderColor: 'rgba(0, 0, 0, 0.1)',
+                            }}>
+                                <Text style={{textAlign: 'left', marginTop: 25,
+                                    marginLeft:15,fontSize:15,
+                                   // backgroundColor: Colors.getRandomColor()
+                                }}>返利说明</Text>
+                                <Text style={{
+                                    fontSize: 12,
+                                    color: '#555555',
+                                    marginTop: 15,
+                                    marginLeft: 20,
+                                    marginRight: 15,
+                                    marginBottom: 20, lineHeight: 20,
+                                    //backgroundColor: Colors.getRandomColor()
+                                }}>
+                                    {/*就是 商家详情页 的 返利条件*/}
+                                    {pageData.merchant.restrictions
+                                        //='*期望带我去的无群打网球的我的我的完全大青蛙打网球打网球订位'+'\n'+'*wefewf绯闻绯闻威风额外分为额外额外'+'\n'+'*dwdqwdqwdqwdqw废弃物分期付额废弃 '
+                                    }
+                                </Text>
+                                <BaseIoniconsBt
+                                    btStyle={{
+                                        position: 'absolute',top:5, right:0,width: 35,
+                                        height: 35,
+                                        //backgroundColor: Colors.getRandomColor()
+                                    }}
+                                    iconStyle={{name: 'ios-close', iconSize: 35, iconColor: Colors.BizCommonBlack}}
+                                    onPress={()=>{
+                                        dispatch(BaseModalActions.changeModalVisiableAction(CouponDetailPageApi.CouponDetailPageModalApi.ApiName,false))
+                                    }}
+                                />
+                                {/*<TouchableOpacity onPress={*/}
+                                {/*()=>{//关闭 BaseModal 的 子节点*/}
+                                {/*dispatch(BaseModalActions.changeModalVisiableAction(baseReducer.ApiName,false));*/}
+                                {/*}*/}
+                                {/*}>*/}
+                                {/*<Text>'Close'</Text>*/}
+                                {/*</TouchableOpacity>*/}
+                            </View>
+                        }
+                    }
+                />
 
             </View>
         );
@@ -622,7 +659,7 @@ export class CouponDetailPage extends Component {
 function mapStateToProps(state) {
 
     //推荐此种  解构赋值的写法
-    const {CouponDetailPageReducer}=state;
-    return {baseReducer: CouponDetailPageReducer};
+    const {CouponDetailPageListReducer}=state;
+    return {baseReducer: CouponDetailPageListReducer};
 }
 export default connect(mapStateToProps)(CouponDetailPage);

@@ -15,6 +15,7 @@ import *as BaseListActions from '../Actions/BaseListActions'
 import *as BizApi from '../../NetWork/API/BizApi'
 import *as BizCouponListCell from '../../Comp/BizCells/BizCouponListCell'
 import GlobalStyles from '../../Global/GlobalStyles'
+import CouponDetailPage from '../../Pages/CouponDetailPage'
 
 
 class HomePageEBCouponListContanier extends React.Component {
@@ -50,6 +51,11 @@ class HomePageEBCouponListContanier extends React.Component {
 
                 return BizCouponListCell.RenderBizCouponListCell(rowData, sectionID, rowID, highlightRow, paddingTop, (rowData) => {
                 Log.log('CouponListComp renderRow callback rowData==' + rowData);
+                    this.props.navigator.push({
+                        component: CouponDetailPage,
+                        name: gRouteName.CouponDetailPage,
+                        pageData:rowData
+                    });
             });
         }
     }

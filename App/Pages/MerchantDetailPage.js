@@ -47,6 +47,8 @@ export class MerchantDetailPage extends Component {
 
     }
 
+
+
     //点击 优惠及折扣 按钮
     onCouponsForMerchant() {
 
