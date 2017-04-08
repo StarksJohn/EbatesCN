@@ -1,5 +1,5 @@
 /**
- * 根页面
+ * 根页面 RootNavigator.js
  *    1. 初始化导航器（Navigator）
  *    2. 处理Android返回键事件处理
  */

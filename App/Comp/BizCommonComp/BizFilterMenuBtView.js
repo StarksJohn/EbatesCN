@@ -136,7 +136,7 @@ export default class BizFilterMenuBtView extends Component {
                                 })
                             }]
                         }}
-                        source={require('../../Img/common_filter_arrow.png')}
+                        source={require('../../Img/common_filter_arrow@2x.png')}
                     />
                 </View>
 

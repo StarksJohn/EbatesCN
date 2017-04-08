@@ -14,7 +14,6 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-// import Icon from 'react-native-vector-icons/Ionicons';
 
 import BaseBt from './BaseBt';
 // import {changeStates,InitNormalStates} from '../../actions/ActionTypes';

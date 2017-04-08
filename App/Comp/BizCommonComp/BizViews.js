@@ -110,6 +110,7 @@ export function renderBottomTabbarBackView(isInTwoLevelPage) {
  * 画 不带阴影的分割线, 外部传
  *  {position: 'absolute', bottom:0.0, left:15, right:15,
                         height:0.5,borderWidth:0.0,shadowOffset: {width: 0.0, height: 0.0}, backgroundColor: '#E4E4E4'}
+ 如果 横线 宽度占满 控件的宽, 可用 borderBottomWidth:下边框的高度  borderBottomColor 代替
  * @returns {XML}
  */
 export function renderShadowLine(props) {

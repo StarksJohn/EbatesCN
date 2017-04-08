@@ -66,7 +66,6 @@ export  default class BaseGridView extends Component {
 
             case BaseGridViewActions.BaseGridViewStates.fetchOk: {
                 content=dataArray.map((model) => {
-                    // let i = renderItem(model);//外部绘制每个cell里的 格子
                     return renderItem(model);
                 });
             }

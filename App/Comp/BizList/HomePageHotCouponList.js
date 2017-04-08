@@ -374,7 +374,7 @@ export class HomePageHotCouponList extends Component {
                     alignItems: 'center', marginBottom: 10
                     //backgroundColor: Colors.getRandomColor(),
                 }]}
-                onPress={() => this.onCheckAllMerchant()}
+                onPress={() => this.onCheckAllCoupons()}
                 textStyle={{
                     fontSize: 15,
                     color: 'rgba(85, 85, 85, 1)',

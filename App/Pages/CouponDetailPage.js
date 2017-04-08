@@ -3,7 +3,7 @@
  * CouponDetailPage.js 优惠详情页
  */
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, Platform, Image, Dimensions, Animated, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, Text, Platform, Image, Dimensions, Animated, TouchableOpacity,InteractionManager} from 'react-native';
 import {connect} from 'react-redux';
 import Colors from '../Utils/Colors';
 import GlobalStyles from '../Global/GlobalStyles'
@@ -36,9 +36,13 @@ import CouponDetailPageModalContainer from '../Redux/Container/CouponDetailPageM
 import *as BaseModalActions from '../Redux/Actions/BaseModalActions'
 import *as CouponDetailPageApi from '../NetWork/API/CouponDetailPageApi'
 import MerchantDetailPage from './MerchantDetailPage'
+import BasePoplist from '../Comp/Base/BasePoplist'
+import AllCouponsPage from './AllCouponsPage'
+import SearchPage from './SearchPage'
+import *as RootNavigator from '../Root/RootNavigator'
+import {arrBottomTabInfo, switchBottomTabAction} from '../Redux/Actions/RootPageAction';
+import *as AllPageContainers from '../Redux/Container/AllPageContainers'
 
-//优惠详情页 返利说明 Model的 isVisible 事件名
-// export const CouponDetailPageRebateDescriptionModelChangeStateEventName = 'CouponDetailPageRebateDescriptionModelChangeStateEventName';
 
 export class CouponDetailPage extends Component {
     constructor(props) {
@@ -474,7 +478,7 @@ export class CouponDetailPage extends Component {
                         backgroundColor: Colors.white
                     }}
                     iconStyle={{name: 'ios-more', iconSize: 20, iconColor: Colors.black}}
-                    //onPress={() => baseOnBackPress(navigator, this.backAndroidEventListener)}
+                    onPress={() => this.BasePoplistRef.show()}
                 />
             </View>
 
@@ -604,15 +608,16 @@ export class CouponDetailPage extends Component {
                             return <View style={{
                                 backgroundColor: Colors.white,
                                 width: 295,
-                                paddingTop: 0, paddingLeft: 0,alignSelf: 'center',
+                                paddingTop: 0, paddingLeft: 0, alignSelf: 'center',
                                 //justifyContent: 'center',
                                 //alignItems: 'center',
                                 borderRadius: 8,
                                 //borderColor: 'rgba(0, 0, 0, 0.1)',
                             }}>
-                                <Text style={{textAlign: 'left', marginTop: 25,
-                                    marginLeft:15,fontSize:15,
-                                   // backgroundColor: Colors.getRandomColor()
+                                <Text style={{
+                                    textAlign: 'left', marginTop: 25,
+                                    marginLeft: 15, fontSize: 15,
+                                    // backgroundColor: Colors.getRandomColor()
                                 }}>返利说明</Text>
                                 <Text style={{
                                     fontSize: 12,
@@ -630,13 +635,13 @@ export class CouponDetailPage extends Component {
                                 </Text>
                                 <BaseIoniconsBt
                                     btStyle={{
-                                        position: 'absolute',top:5, right:0,width: 35,
+                                        position: 'absolute', top: 5, right: 0, width: 35,
                                         height: 35,
                                         //backgroundColor: Colors.getRandomColor()
                                     }}
                                     iconStyle={{name: 'ios-close', iconSize: 35, iconColor: Colors.BizCommonBlack}}
-                                    onPress={()=>{
-                                        dispatch(BaseModalActions.changeModalVisiableAction(CouponDetailPageApi.CouponDetailPageModalApi.ApiName,false))
+                                    onPress={() => {
+                                        dispatch(BaseModalActions.changeModalVisiableAction(CouponDetailPageApi.CouponDetailPageModalApi.ApiName, false))
                                     }}
                                 />
                                 {/*<TouchableOpacity onPress={*/}
@@ -647,6 +652,76 @@ export class CouponDetailPage extends Component {
                                 {/*<Text>'Close'</Text>*/}
                                 {/*</TouchableOpacity>*/}
                             </View>
+                        }
+                    }
+                />
+                <BasePoplist
+                    ref={r => self.BasePoplistRef = r}
+                    containerStyle={{top: gScreen.navBarHeight - 10}}
+                    arrowStyle={{transform: {rotate: '180deg'}}}
+                    dataArr={[{id: 0, title: '首页'}, {id: 1, title: '优惠券'}, {id: 2, title: '搜索'}, {
+                        id: 3,
+                        title: '我的账户'
+                    }]}
+                    renderRow={
+                        (rowData, callBack) => {
+                            return (
+                                <TouchableOpacity
+                                    key={rowData.id}
+                                    activeOpacity={0.75}
+                                    style={{
+                                        height: 40, width: 100,justifyContent: 'center',
+                                        alignItems: 'center',
+                                        paddingHorizontal: 20,//borderRadius: 4,
+                                        backgroundColor: Colors.transparent
+                                    }}
+                                    onPress={() => {
+                                        callBack();//为了 close 弹出列表 控件
+
+                                        if (rowData.id==0){
+
+                                            //pop 到 一级页面的 跟组件
+                                            RootNavigator.popToDesignatedPage(this.props.navigator,gRouteName.RootPagesContainer);
+
+                                            InteractionManager.runAfterInteractions(() => {
+                                                //实现 nav pop  完成后才回调 log 语句
+                                                Log.log('CouponDetailPage popToRootPagesContainer');
+
+                                                //主动切换 一级页面 跟组件的 tabbar
+                                                dispatch(switchBottomTabAction(AllPageContainers.AllContainers.HomePageContainer.tabBarName))
+                                            })
+
+                                        }
+                                        else if (rowData.id==1){
+                                            this.props.navigator.push({
+                                                component: AllCouponsPage,
+                                                name: gRouteName.AllCouponsPage,
+                                            });
+                                        }else if(rowData.id==2){
+                                            this.props.navigator.push({
+                                                component: SearchPage,
+                                                name: gRouteName.SearchPage,
+                                                isInTwoLevelPage: true,
+                                            });
+                                        }
+                                    }}
+                                >
+                                    <Text style={{
+                                        color: Colors.textGray, fontSize: 13, alignSelf: 'flex-start',
+                                        //backgroundColor:Colors.getRandomColor()
+                                    }}>{rowData.title}</Text>
+                                    {BizViews.renderShadowLine({
+                                        position: 'absolute',
+                                        bottom: 0.0,
+                                        left: 10,
+                                        right: 10,
+                                        height: 0.5,
+                                        borderWidth: 0.0,
+                                        shadowOffset: {width: 0.0, height: 0.0},
+                                        backgroundColor: 'rgba(95, 95, 95, 1)'
+                                    })}
+                                </TouchableOpacity>
+                            )
                         }
                     }
                 />

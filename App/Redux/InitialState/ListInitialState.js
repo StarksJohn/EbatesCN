@@ -63,21 +63,21 @@ export function InitListState(state, action) {
         .setIn(['componentDidMount'], false)
         .setIn(['isRefreshing'], false)
         .remove('meta');
-        // .setIn(['meta'],{//列表接口一般都会返回的字段,用于翻页
-        //     "pagination": {
-        //         "total": 0,
-        //         "count": 0,
-        //         "per_page": 10,
-        //         "current_page": 0,
-        //         "total_pages": 0,
-        //         "links": {
-        //             "next": 0,
-        //             "previous": 0
-        //         }
-        //     }
-        // });
+    // .setIn(['meta'],{//列表接口一般都会返回的字段,用于翻页
+    //     "pagination": {
+    //         "total": 0,
+    //         "count": 0,
+    //         "per_page": 10,
+    //         "current_page": 0,
+    //         "total_pages": 0,
+    //         "links": {
+    //             "next": 0,
+    //             "previous": 0
+    //         }
+    //     }
+    // });
 
-    Log.log('ListInitialState InitListState state.ApiName='+state.getIn(['ApiName'])+' 马上 重置完毕')
+    Log.log('ListInitialState InitListState state.ApiName=' + state.getIn(['ApiName']) + ' 马上 重置完毕')
     return _nextState;
 }
 
@@ -130,7 +130,7 @@ export function ListSuccesState(state, action) {
         .setIn(['couldLoadMore'], meta ? meta.pagination.current_page < meta.pagination.total_pages : action.newData.couldLoadMore)
         .setIn(['opt'], action.opt)
         .setIn(['isRefreshing'], false)
-        .setIn(['meta'], meta?meta:null);
+        .setIn(['meta'], meta ? meta : null);
 
     return nextState;
 
@@ -183,7 +183,7 @@ export function ListNodataState(state, action) {
  * @returns {Map<K, V>|List<T>|Cursor|*}
  * @constructor
  */
-export function ListWillUnmount(state,action) {
+export function ListWillUnmount(state, action) {
 
     let temp$dataArray = state.getIn(['$dataArray']);
     if (temp$dataArray.toJS().length > 0) {
@@ -191,14 +191,16 @@ export function ListWillUnmount(state,action) {
     }
 
     let _nextState = state
-        .setIn(['$dataArray'], temp$dataArray)
-        .setIn(['dataSource'], state.dataSource.cloneWithRows(temp$dataArray.toJS()))
-        .setIn(['status'], action.type)
-        .setIn(['couldLoadMore'], false)
-        .setIn(['opt'], action.opt)
-        .setIn(['componentDidMount'], false)
-        .setIn(['isRefreshing'], false)
-        .remove('meta');
+            .setIn(['$dataArray'], temp$dataArray)
+            .setIn(['dataSource'], state.dataSource.cloneWithRows(temp$dataArray.toJS()))
+            .setIn(['status'], action.type)
+            .setIn(['couldLoadMore'], false)
+            .setIn(['opt'], action.opt)
+            .setIn(['componentDidMount'], false)
+            .setIn(['isRefreshing'], false)
+            .remove('meta')
+            .remove('AdditionalObj')
+        ;
 
     return _nextState;
 }
@@ -232,11 +234,11 @@ export function ListRemoveOneItem(state, action) {
  * @constructor
  */
 export function ListChangeOneItem(state, action) {
-    let {index/*被改变item 在数组里的下标*/,newData/*新的数据源*/}= action.newData;
+    let {index/*被改变item 在数组里的下标*/, newData/*新的数据源*/}= action.newData;
     let temp$dataArray = state.getIn(['$dataArray']);
 
     if (temp$dataArray) {
-        temp$dataArray = temp$dataArray.set(index,newData);
+        temp$dataArray = temp$dataArray.set(index, newData);
     }
 
     let nextState = state
@@ -254,13 +256,13 @@ export function ListChangeOneItem(state, action) {
  * @constructor
  */
 export function ListChangeNumsItem(state, action) {
-    let {indexArr/*数组里放被改变item 在数组里的下标*/,newDataArr/*新的数据源数组*/}= action.newData;
+    let {indexArr/*数组里放被改变item 在数组里的下标*/, newDataArr/*新的数据源数组*/}= action.newData;
     let temp$dataArray = state.getIn(['$dataArray']);
 
     if (temp$dataArray) {
         indexArr.map(
-            (v,i)=>{
-                temp$dataArray = temp$dataArray.set(v,newDataArr[i]);
+            (v, i) => {
+                temp$dataArray = temp$dataArray.set(v, newDataArr[i]);
             }
         )
     }
@@ -278,14 +280,14 @@ export function ListChangeNumsItem(state, action) {
  * @constructor
  */
 export function ListRemoveNumsItem(state, action) {
-    let {fromIndex/*被删除元素在数组里的下标*/,toIndex}= action.newData;
+    let {fromIndex/*被删除元素在数组里的下标*/, toIndex}= action.newData;
 
-    let nums=toIndex-fromIndex+1;
+    let nums = toIndex - fromIndex + 1;
 
     let temp$dataArray = state.getIn(['$dataArray']);
 
     if (temp$dataArray) {
-        for (let i=0;i<=nums;i++){
+        for (let i = 0; i <= nums; i++) {
             temp$dataArray = temp$dataArray.delete(fromIndex);
         }
     }
@@ -305,11 +307,11 @@ export function ListRemoveNumsItem(state, action) {
  * @constructor
  */
 export function ListInsertOneItem(state, action) {
-    let {index/*被插入item 在数组里的下标*/,newData/*新的数据源*/}= action.newData;
+    let {index/*被插入item 在数组里的下标*/, newData/*新的数据源*/}= action.newData;
     let temp$dataArray = state.getIn(['$dataArray']);
 
     if (temp$dataArray) {
-        temp$dataArray = temp$dataArray.insert(index,newData);
+        temp$dataArray = temp$dataArray.insert(index, newData);
     }
 
     let nextState = state
