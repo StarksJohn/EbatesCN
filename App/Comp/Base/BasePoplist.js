@@ -113,7 +113,7 @@ export default class BasePoplist extends Component {
                 >
                     <Animated.View style={[styles.defaultAnimatedViewStyle, {top}, this.props.AnimatedViewStyle]}>
                         {/*箭头*/}
-                        <FontAwesomeIcon name='sort-up' size={20} style={styles.defaultArrowStyle} color={'rgba(43, 45, 49, 0.95)'}/>
+                        <FontAwesomeIcon name='sort-up' size={20} style={[styles.defaultArrowStyle,this.props.arrowStyle]} color={'rgba(43, 45, 49, 0.95)'}/>
                         {/*弹出列表*/}
                         <View style={[styles.defalutPopListStyle, this.props.popListStyle]}>
                             {_dataArr.map((model) => {

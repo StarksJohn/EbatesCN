@@ -3,7 +3,7 @@
  * 商家详情页 MerchantDetailPage
  */
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, Platform, Image} from 'react-native';
+import {StyleSheet, View, Text, Platform, Image,InteractionManager,TouchableOpacity} from 'react-native';
 import {connect} from 'react-redux';
 import Colors from '../Utils/Colors';
 import GlobalStyles from '../Global/GlobalStyles'
@@ -21,6 +21,13 @@ import BaseBt from '../Comp/Base/BaseBt'
 import *as BizApi from '../NetWork/API/BizApi'
 import TransferWebViewPage from './TransferWebViewPage'
 import LogInPage from './LogInPage'
+import BasePoplist from '../Comp/Base/BasePoplist'
+import SearchPage from './SearchPage'
+import *as RootNavigator from '../Root/RootNavigator'
+import {arrBottomTabInfo, switchBottomTabAction} from '../Redux/Actions/RootPageAction';
+import *as AllPageContainers from '../Redux/Container/AllPageContainers'
+import AllMerchantPage from './AllMerchantPage'
+
 
 export class MerchantDetailPage extends Component {
     constructor(props) {
@@ -52,7 +59,7 @@ export class MerchantDetailPage extends Component {
     //点击 优惠及折扣 按钮
     onCouponsForMerchant() {
 
-        if (this.props.baseReducer.AdditionalObj.isSelectCouponsForMerchantBt == false) {
+        if (this.props.baseReducer.AdditionalObj&&this.props.baseReducer.AdditionalObj.isSelectCouponsForMerchantBt == false) {
 
             this.props.dispatch(BizApi.MerchantDetailPageApi.changeToCouponList(this.props))
             this.props.dispatch(MerchantDetailPageActions.changeIsRenderFooterViewAction(true, this.props.baseReducer.ApiName))
@@ -66,7 +73,7 @@ export class MerchantDetailPage extends Component {
     onHowtoGetTheRebate() {
 
 
-        if (this.props.baseReducer.AdditionalObj.isSelectCouponsForMerchantBt) {
+        if (this.props.baseReducer.AdditionalObj&&this.props.baseReducer.AdditionalObj.isSelectCouponsForMerchantBt) {
             this.props.dispatch(BizApi.MerchantDetailPageApi.changeToHowtoGetRebatesList(this.props))
             this.props.dispatch(MerchantDetailPageActions.changeIsRenderFooterViewAction(false, this.props.baseReducer.ApiName))
 
@@ -78,7 +85,9 @@ export class MerchantDetailPage extends Component {
     renderRow = (rowData, sectionID, rowID, highlightRow) => {
         Log.log('MerchantDetailPage renderRow rowID=' + rowID);
 
-        if (rowID == '2' && this.props.baseReducer.$dataArray.size == 3 && !this.props.baseReducer.AdditionalObj.isSelectCouponsForMerchantBt) {//如何获得返利cell
+        let self=this;
+
+        if (rowID == '2' && this.props.baseReducer.$dataArray.size == 3 && (!self.props.baseReducer.AdditionalObj||!self.props.baseReducer.AdditionalObj.isSelectCouponsForMerchantBt)) {//如何获得返利cell
             return <View style={{
                 flex: 1, paddingBottom: 15, backgroundColor: Colors.white
             }}>
@@ -289,7 +298,7 @@ export class MerchantDetailPage extends Component {
                             textStyle={{
                                 fontSize: 14,
                                 //fontWeight: 'bold',
-                                color: self.props.baseReducer.AdditionalObj.isSelectCouponsForMerchantBt ? Colors.appUnifiedBackColor : Colors.allNavTitleColor,
+                                color: self.props.baseReducer.AdditionalObj&&self.props.baseReducer.AdditionalObj.isSelectCouponsForMerchantBt ? Colors.appUnifiedBackColor : Colors.allNavTitleColor,
                             }}
                             title='优惠及折扣'
                             disabled={false}
@@ -299,7 +308,7 @@ export class MerchantDetailPage extends Component {
                                 width: 70,
                                 height: 1,
                                 marginTop: 5,
-                                backgroundColor: self.props.baseReducer.AdditionalObj.isSelectCouponsForMerchantBt ? Colors.appUnifiedBackColor : Colors.transparent
+                                backgroundColor: self.props.baseReducer.AdditionalObj&&self.props.baseReducer.AdditionalObj.isSelectCouponsForMerchantBt ? Colors.appUnifiedBackColor : Colors.transparent
                             }}>
                             </View>
                             {BizViews.renderShadowLine({position: 'absolute', bottom: 0.1, left: 0, right: 0})}
@@ -319,7 +328,7 @@ export class MerchantDetailPage extends Component {
                             onPress={() => this.onHowtoGetTheRebate()}
                             textStyle={{
                                 fontSize: 14, //fontWeight: 'bold',
-                                color: !self.props.baseReducer.AdditionalObj.isSelectCouponsForMerchantBt ? Colors.appUnifiedBackColor : Colors.allNavTitleColor,
+                                color: self.props.baseReducer.AdditionalObj&&self.props.baseReducer.AdditionalObj.isSelectCouponsForMerchantBt ? Colors.allNavTitleColor  : Colors.appUnifiedBackColor,
                             }}
                             title='如何获得返利'
                             disabled={false}
@@ -329,7 +338,7 @@ export class MerchantDetailPage extends Component {
                                 width: 85,
                                 height: 1,
                                 marginTop: 5,
-                                backgroundColor: !self.props.baseReducer.AdditionalObj.isSelectCouponsForMerchantBt ? Colors.appUnifiedBackColor : Colors.transparent
+                                backgroundColor: self.props.baseReducer.AdditionalObj&&self.props.baseReducer.AdditionalObj.isSelectCouponsForMerchantBt ? Colors.transparent  : Colors.appUnifiedBackColor
                             }}>
                             </View>
                             {BizViews.renderShadowLine({position: 'absolute', bottom: 0.1, left: 0, right: 0})}
@@ -492,7 +501,8 @@ export class MerchantDetailPage extends Component {
     }
 
     render() {
-        const {navigator} = this.props;
+        const {navigator,dispatch} = this.props;
+        let self = this;
 
         let navigationBar =
             <BaseNavigationBar
@@ -500,7 +510,7 @@ export class MerchantDetailPage extends Component {
                 statusBarCustomStyle={GlobalStyles.statusBarDefaultProps}
                 titleTextView={null}
                 leftButton={NavBarButton.getMerchantDetailPageBackButton(() => baseOnBackPress(navigator, this.backAndroidEventListener))}
-                rightButton={NavBarButton.getMerchantDetailRightBt(() => baseOnBackPress(navigator, this.backAndroidEventListener))}
+                rightButton={NavBarButton.getMerchantDetailRightBt(() => this.BasePoplistRef.show())}
                 hide={false}/>;
 
         return (
@@ -509,11 +519,78 @@ export class MerchantDetailPage extends Component {
                     {...this.props }
                     customContainer={{position: "absolute", top: 0, bottom: 50, left: 0, right: 0}}
                     renderRow={
-                        this.renderRow
+                        self.renderRow
                     }
                 />
                 {navigationBar}
                 {this.renderFooterBar()}
+                <BasePoplist
+                    ref={r => self.BasePoplistRef = r}
+                    containerStyle={{top: gScreen.navBarHeight - 10}}
+                    dataArr={[{id: 0, title: '首页'}, {id: 1, title: '商家'}, {id: 2, title: '搜索'}, {
+                        id: 3,
+                        title: '我的账户'
+                    }]}
+                    renderRow={
+                        (rowData, callBack) => {
+                            return (
+                                <TouchableOpacity
+                                    key={rowData.id}
+                                    activeOpacity={0.75}
+                                    style={{
+                                        height: 40, width: 100,justifyContent: 'center',
+                                        alignItems: 'center',
+                                        paddingHorizontal: 20,//borderRadius: 4,
+                                        backgroundColor: Colors.transparent
+                                    }}
+                                    onPress={() => {
+                                        callBack();//为了 close 弹出列表 控件
+
+                                        if (rowData.id==0){
+
+
+                                            //主动切换 一级页面 跟组件的 tabbar
+                                            //pop 到 一级页面的 跟组件
+                                            RootNavigator.popToDesignatedPage(this.props.navigator,gRouteName.RootPagesContainer);
+                                            InteractionManager.runAfterInteractions(() => {
+                                                //实现 nav pop  完成后才回调 log 语句
+                                                dispatch(switchBottomTabAction(AllPageContainers.AllContainers.HomePageContainer.tabBarName))
+                                            })
+
+                                        }
+                                        else if (rowData.id==1){
+                                            this.props.navigator.push({
+                                                component: AllMerchantPage,
+                                                name: gRouteName.AllMerchantPage,
+                                            });
+                                        }else if(rowData.id==2){
+                                            this.props.navigator.push({
+                                                component: SearchPage,
+                                                name: gRouteName.SearchPage,
+                                                isInTwoLevelPage: true,
+                                            });
+                                        }
+                                    }}
+                                >
+                                    <Text style={{
+                                        color: Colors.textGray, fontSize: 13, alignSelf: 'flex-start',
+                                        //backgroundColor:Colors.getRandomColor()
+                                    }}>{rowData.title}</Text>
+                                    {BizViews.renderShadowLine({
+                                        position: 'absolute',
+                                        bottom: 0.0,
+                                        left: 10,
+                                        right: 10,
+                                        height: 0.5,
+                                        borderWidth: 0.0,
+                                        shadowOffset: {width: 0.0, height: 0.0},
+                                        backgroundColor: 'rgba(95, 95, 95, 1)'
+                                    })}
+                                </TouchableOpacity>
+                            )
+                        }
+                    }
+                />
             </View>
         );
     }

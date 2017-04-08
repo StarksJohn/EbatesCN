@@ -1014,15 +1014,13 @@ export const MerchantDetailPageApi = {
             //         index: 2
             //     }));
             // }
-
-
             {
                 dispatch(BaseListActions.Loadinglist(BaseListActions.BaseListFetchDataType.INITIALIZE, MerchantDetailPageApi.ApiName));
                 let url = RequestUtil.getStagingOrProductionHost() + 'merchants/' + id + '/coupons';
                 RequestUtil.GET(url, {
                         page: meta.pagination.current_page + 1,
                         perPage: meta.pagination.per_page,
-                        exclude: 'merchant'/*优惠及折扣 列表 因在商家详情页,故此列表的优惠cel的左下角不需要展示商家名称,故加 exclude:'merchant' 这个参数 */,
+                        include: 'merchant',
                     },
                     (header) => {
                         commonApiHeaderAppend(header)

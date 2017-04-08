@@ -658,7 +658,6 @@ export class CouponDetailPage extends Component {
                 <BasePoplist
                     ref={r => self.BasePoplistRef = r}
                     containerStyle={{top: gScreen.navBarHeight - 10}}
-                    arrowStyle={{transform: {rotate: '180deg'}}}
                     dataArr={[{id: 0, title: '首页'}, {id: 1, title: '优惠券'}, {id: 2, title: '搜索'}, {
                         id: 3,
                         title: '我的账户'

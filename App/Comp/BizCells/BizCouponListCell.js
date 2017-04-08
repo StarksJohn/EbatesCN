@@ -1,7 +1,7 @@
 /**
  * Created by Ebates on 17/2/15.
  * 优惠列表的cell
- * BizCouponListCell
+ *BizCouponListCell
  */
 import React, {Component, PropTypes} from 'react';
 import {
@@ -93,7 +93,7 @@ export function RenderBizCouponListCell(rowData, sectionID, rowID, highlightRow,
     //     msg=msg+msg;
     // }
 
-    let title=StringOauth.isNull(rowData.translated_highlight)?'['+rowData.merchant.now_rate+']':'['+rowData.translated_highlight+'+'+rowData.merchant.now_rate+']';
+    let title=StringOauth.isNull(rowData.translated_highlight)?'['+(rowData.merchant?rowData.merchant.now_rate:'')+']':'['+rowData.translated_highlight+'+'+(rowData.merchant?rowData.merchant.now_rate:'')+']';
 
     let uri=rowData.image?rowData.image:rowData.merchant.image;
 

@@ -62,6 +62,7 @@ export function InitListState(state, action) {
         .setIn(['opt'], action.opt)
         .setIn(['componentDidMount'], false)
         .setIn(['isRefreshing'], false)
+        .remove('AdditionalObj')
         .remove('meta');
     // .setIn(['meta'],{//列表接口一般都会返回的字段,用于翻页
     //     "pagination": {
