@@ -12,6 +12,8 @@ import *as BaseSpeLine from '../Base/BaseSpeLine'
 import BaseTitleBt from '../Base/BaseTitleBt'
 import BaseSearchBar from '../Base/BaseSearchBar/BaseSearchBar'
 import BaseNavigationBar, {NavBarButton, baseOnBackPress} from '../Base/BaseNavigationBar'
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import BaseBt from '../Base/BaseBt'
 
 
 /**
@@ -183,8 +185,8 @@ export function renderSearchResultPageNoDataView(keyWord, type, callback) {
  * @param callback
  * @returns {XML}
  */
-export function renderAllmerchantPageNoDataView(  callback) {
-    let bigText = '抱歉! 目前没有满足此过滤条件的商家 !' ;
+export function renderAllmerchantPageNoDataView(callback) {
+    let bigText = '抱歉! 目前没有满足此过滤条件的商家 !';
     let smallText = '您可以重新筛选, 发现感兴趣的商家. ';
     let btTitle = '查看全部商家';
     return (
@@ -231,8 +233,8 @@ export function renderAllmerchantPageNoDataView(  callback) {
  * @param callback
  * @returns {XML}
  */
-export function renderAllCouponPageNoDataView( callback) {
-    let bigText = '抱歉! 目前没有满足此过滤条件的优惠 !' ;
+export function renderAllCouponPageNoDataView(callback) {
+    let bigText = '抱歉! 目前没有满足此过滤条件的优惠 !';
     let smallText = '您可以重新筛选, 发现感兴趣的优惠. ';
     let btTitle = '查看全部优惠';
     return (
@@ -336,7 +338,7 @@ export function renderTwoLevelPageSearchBar(placeholder, value, onSubmitCallback
  */
 export function renderBaseNavigationBar(titleTextView, leftButton, rightButton, searchBar, title, titleTextStyle, containerStyle) {
     return <BaseNavigationBar
-        style={ [{backgroundColor: Colors.white},containerStyle] }
+        style={ [{backgroundColor: Colors.white}, containerStyle] }
         statusBarCustomStyle={GlobalStyles.statusBarDefaultProps}
         titleTextView={titleTextView}
         leftButton={leftButton}
@@ -418,4 +420,50 @@ export function renderBadge(containerStyle, textStyle, text) {
             {text}
         </Text>
     </View>;
+}
+
+/**
+ * 画 项目里通用的 只有一个 title,一个 右箭头,一个 下分割线 的 按钮cell
+ * @param callBack
+ * @param text
+ * @returns {XML}
+ */
+export function renderTitleAndRightArrowCellBt(callBack, text,isNeedbottomline) {
+    return <BaseBt style={{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        height: GlobalStyles.AllMerchantPageDropDownListCellH,
+        alignItems: 'center',
+        backgroundColor: Colors.white
+    }}
+                   activeOpacity={0.6}
+                   onPress={ () => {
+                       callBack();
+                   } }
+    >
+        <Text style={{
+            fontSize: 15,
+            color: Colors.blackText,
+            marginTop: 0,
+            marginLeft: 15,
+            //backgroundColor: Colors.getRandomColor()
+        }}>
+            {text}
+        </Text>
+        {/*右箭头*/}
+        <Ionicons
+            name='ios-arrow-forward'
+            size={25} color='#E4E4E4' style={{
+            marginRight: 15,
+            backgroundColor: Colors.transparent
+        }}/>
+
+        { isNeedbottomline&&this.renderShadowLine({
+            position: 'absolute', bottom: 0.0, left: 15, right: 0,
+            height: 0.5,
+            borderWidth: 0.0,
+            shadowOffset: {width: 0.0, height: 0.0},
+            backgroundColor: '#E4E4E4'
+        })}
+    </BaseBt>
 }
