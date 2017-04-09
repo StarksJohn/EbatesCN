@@ -23,6 +23,8 @@ export const routeName={
     AllCouponsPage:'AllCouponsPage',
     CouponDetailPage:'CouponDetailPage',
     SettingPage:'SettingPage',
+    FeedbackPage:'FeedbackPage',
+    AboutEbatesCnPage:'AboutEbatesCnPage'
 }
 
 

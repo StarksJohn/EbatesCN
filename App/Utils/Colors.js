@@ -28,11 +28,12 @@ export default  Colors = {
     transparent: 'transparent',//全 透明 色
     DeepPink: '#FF1493',
     HotPink: '#FF69B4',
-    appUnifiedBackColor: '#43BB01',//'rgba(67, 187, 78, 1)',//app统一背景色
+    appUnifiedBackColor: '#49B954',//'rgba(73, 185, 84, 1)',//app统一背景色
     halfOpacityAppUnifiedBackColor: 'rgba(67, 187, 78, 0.5)',//app统一背景色的50%透明度
     backPopBtColor:'#626770',
     allNavTitleColor:'#404040',//所有导航栏标题颜色
     blackText:'#555555',//app里大部分 黑色 文字
+    commonBorderColor:'#E4E4E4',//通用的 边框颜色
 
     /**
      * 随即色

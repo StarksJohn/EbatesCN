@@ -14,7 +14,7 @@ import BackAndroidEventListener from '../Utils/EventListener/BackAndroidEventLis
 import BaseBt from '../Comp/Base/BaseBt'
 import BizLogBt from '../Comp/BizCommonComp/BizLogBt'
 import *as HttpCacheSizeAction from '../Redux/Actions/HttpCacheSizeAction'
-
+import FeedbackPage from './FeedbackPage'
 
 /**
  *  展示组件
@@ -111,7 +111,11 @@ export class SettingPage extends Component {
             case '1': {
                 return BizViews.renderTitleAndRightArrowCellBt(
                     () => {
+                        self.props.navigator.push({
+                            component: FeedbackPage,
+                            name: gRouteName.FeedbackPage//'
 
+                        });
                     }, '反馈意见', true
                 )
             }
