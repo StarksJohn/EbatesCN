@@ -64,3 +64,8 @@
 -dontwarn java.nio.file.*
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 -dontwarn okio.**
+
+# https://github.com/reactnativecn/react-native-http-cache
+-keep class com.facebook.cache.disk.DiskStorageCache {
+   private boolean maybeUpdateFileCacheSize();
+}

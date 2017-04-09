@@ -11,6 +11,7 @@ import BizLogBt from '../Comp/BizCommonComp/BizLogBt'
 import LogInPage from './LogInPage'
 import BaseListComp from '../Comp/Base/BaseListComp'
 import GlobalStyles from '../Global/GlobalStyles'
+import SettingPage from './SettingPage'
 
 /**
  *  展示组件
@@ -136,7 +137,11 @@ export class PersonalPage extends Component {
                 }}>
                     {BizViews.renderTitleAndRightArrowCellBt(
                         () => {
+                            this.props.navigator.push({
+                                component: SettingPage,
+                                name: gRouteName.SettingPage//'
 
+                            });
                         },
                         '应用设置',false
                     )}

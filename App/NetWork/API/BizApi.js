@@ -22,6 +22,7 @@ import *as AllMerchantPage from '../../Pages/AllMerchantPage'
 import *as AllCouponPageApi from './AllCouponPageApi'
 import *as CouponDetailPageApi from './CouponDetailPageApi'
 import *as PersonalPageApi from './PersonalPageApi'
+import *as SettingPageApi from './SettingPageApi'
 
 /**
  * 列表类型 接口 都会返回的 通用的 可判断 couldLoadMore 的 数据结构
@@ -2584,5 +2585,10 @@ export function fetchApi(opt, pageNo, BaseListCompProps) {
             return PersonalPageApi.PersonalPageApi.fetchPageList(opt,BaseListCompProps);
         }
             break;
+        case SettingPageApi.SettingPageApi.ApiName:
+        {
+            return SettingPageApi.SettingPageApi.fetchPageList(opt,BaseListCompProps);
+        }
+        break;
     }
 }

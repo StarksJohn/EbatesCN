@@ -109,7 +109,7 @@ export function renderBottomTabbarBackView(isInTwoLevelPage) {
 
 /**
  * 画 带阴影的 线 ,横竖线 都能画, props里可用 position: 'absolute' 控制,如 商家详情页底部的bar
- * 画 不带阴影的分割线, 外部传
+ * 画 不带阴影的横向分割线, 外部传
  *  {position: 'absolute', bottom:0.0, left:15, right:15,
                         height:0.5,borderWidth:0.0,shadowOffset: {width: 0.0, height: 0.0}, backgroundColor: '#E4E4E4'}
  如果 横线 宽度占满 控件的宽, 可用 borderBottomWidth:下边框的高度  borderBottomColor 代替
@@ -428,14 +428,17 @@ export function renderBadge(containerStyle, textStyle, text) {
  * @param text
  * @returns {XML}
  */
-export function renderTitleAndRightArrowCellBt(callBack, text,isNeedbottomline) {
-    return <BaseBt style={{
+export function renderTitleAndRightArrowCellBt(callBack, text, isNeedbottomline, props) {
+    if (!props) {
+        props = {}
+    }
+    return <BaseBt style={[{
         flexDirection: 'row',
         justifyContent: 'space-between',
         height: GlobalStyles.AllMerchantPageDropDownListCellH,
         alignItems: 'center',
         backgroundColor: Colors.white
-    }}
+    }, props]}
                    activeOpacity={0.6}
                    onPress={ () => {
                        callBack();
@@ -458,7 +461,7 @@ export function renderTitleAndRightArrowCellBt(callBack, text,isNeedbottomline) 
             backgroundColor: Colors.transparent
         }}/>
 
-        { isNeedbottomline&&this.renderShadowLine({
+        { isNeedbottomline && this.renderShadowLine({
             position: 'absolute', bottom: 0.0, left: 15, right: 0,
             height: 0.5,
             borderWidth: 0.0,

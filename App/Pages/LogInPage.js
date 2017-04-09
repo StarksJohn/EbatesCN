@@ -143,6 +143,8 @@ export class LogInPage extends Component {
                 gUserDB.login({userID: this.email, password: this.password});
                 RootNavigator.popToDesignatedPage(this.props.navigator, gPopBackToRouteAfteRegisterOrLoginSuceess);
 
+
+
             }
         ).catch((error) => {
             // BizShowToast(error.error.message);

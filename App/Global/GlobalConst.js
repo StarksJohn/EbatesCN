@@ -22,6 +22,7 @@ export const routeName={
     TransferWebViewPage:'TransferWebViewPage',
     AllCouponsPage:'AllCouponsPage',
     CouponDetailPage:'CouponDetailPage',
+    SettingPage:'SettingPage',
 }
 
 

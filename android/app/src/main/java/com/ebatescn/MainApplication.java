@@ -16,6 +16,10 @@ import com.facebook.soloader.SoLoader;
 import java.util.Arrays;
 import java.util.List;
 
+import cn.reactnative.httpcache.HttpCachePackage;
+
+
+
 public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
@@ -29,6 +33,7 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
             new BlurViewPackage(),
+                      new HttpCachePackage(), // Add this line
             new VectorIconsPackage(),
             new RNSpinkitPackage()
       );

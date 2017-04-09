@@ -8,6 +8,9 @@ import BaseTitleBt from '../Base/BaseTitleBt'
 import Colors from '../../Utils/Colors';
 
 export default function logBt(callback,props) {
+    if (!props.textStyle){
+        props.textStyle={}
+    }
     return (
         <BaseTitleBt
             btStyle={[{
@@ -21,10 +24,10 @@ export default function logBt(callback,props) {
                 marginTop: 15
             },props.btStyle]}
             onPress={callback}
-            textStyle={{
+            textStyle={[{
                 fontSize: 15,
                 color: Colors.white,
-            }}
+            },props.textStyle]}
             title={props.title}
             disabled={props.disabled}
         >

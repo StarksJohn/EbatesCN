@@ -103,6 +103,7 @@ export class RegisterPage extends Component {
         BizLoadingView.closeBizLoadingView();
 
         RootNavigator.popToDesignatedPage(this.props.navigator, gPopBackToRouteAfteRegisterOrLoginSuceess);
+
     }
 
     onRegisterPress() {
