@@ -11,7 +11,7 @@ export const changeModelContainerVisiable='changeModelContainerVisiable'
  * @returns {{type: string, isVisiable: *, ApiName: *}}
  */
 export function changeModelContainerVisiableAction(ApiName,isVisiable) {
-    return {type:changeModelContainerVisiable,isVisiable,ApiName}
+    return {type:changeModelContainerVisiable,ApiName,isVisiable,}
 }
 
 export const changeModalVisiable='changeModalVisiable'

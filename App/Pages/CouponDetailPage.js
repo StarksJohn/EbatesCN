@@ -3,7 +3,17 @@
  * CouponDetailPage.js 优惠详情页
  */
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, Platform, Image, Dimensions, Animated, TouchableOpacity,InteractionManager} from 'react-native';
+import {
+    StyleSheet,
+    View,
+    Text,
+    Platform,
+    Image,
+    Dimensions,
+    Animated,
+    TouchableOpacity,
+    InteractionManager
+} from 'react-native';
 import {connect} from 'react-redux';
 import Colors from '../Utils/Colors';
 import GlobalStyles from '../Global/GlobalStyles'
@@ -629,9 +639,7 @@ export class CouponDetailPage extends Component {
                                     //backgroundColor: Colors.getRandomColor()
                                 }}>
                                     {/*就是 商家详情页 的 返利条件*/}
-                                    {pageData.merchant.restrictions
-                                        //='*期望带我去的无群打网球的我的我的完全大青蛙打网球打网球订位'+'\n'+'*wefewf绯闻绯闻威风额外分为额外额外'+'\n'+'*dwdqwdqwdqwdqw废弃物分期付额废弃 '
-                                    }
+                                    {pageData.merchant.restrictions}
                                 </Text>
                                 <BaseIoniconsBt
                                     btStyle={{
@@ -669,7 +677,7 @@ export class CouponDetailPage extends Component {
                                     key={rowData.id}
                                     activeOpacity={0.75}
                                     style={{
-                                        height: 40, width: 100,justifyContent: 'center',
+                                        height: 40, width: 100, justifyContent: 'center',
                                         alignItems: 'center',
                                         paddingHorizontal: 20,//borderRadius: 4,
                                         backgroundColor: Colors.transparent
@@ -677,10 +685,10 @@ export class CouponDetailPage extends Component {
                                     onPress={() => {
                                         callBack();//为了 close 弹出列表 控件
 
-                                        if (rowData.id==0){
+                                        if (rowData.id == 0) {
 
                                             //pop 到 一级页面的 跟组件
-                                            RootNavigator.popToDesignatedPage(this.props.navigator,gRouteName.RootPagesContainer);
+                                            RootNavigator.popToDesignatedPage(this.props.navigator, gRouteName.RootPagesContainer);
 
                                             InteractionManager.runAfterInteractions(() => {
                                                 //实现 nav pop  完成后才回调 log 语句
@@ -691,20 +699,20 @@ export class CouponDetailPage extends Component {
                                             })
 
                                         }
-                                        else if (rowData.id==1){
+                                        else if (rowData.id == 1) {
                                             this.props.navigator.push({
                                                 component: AllCouponsPage,
                                                 name: gRouteName.AllCouponsPage,
                                             });
-                                        }else if(rowData.id==2){
+                                        } else if (rowData.id == 2) {
                                             this.props.navigator.push({
                                                 component: SearchPage,
                                                 name: gRouteName.SearchPage,
                                                 isInTwoLevelPage: true,
                                             });
-                                        }else if(rowData.id==3){
+                                        } else if (rowData.id == 3) {
                                             //pop 到 一级页面的 跟组件
-                                            RootNavigator.popToDesignatedPage(this.props.navigator,gRouteName.RootPagesContainer);
+                                            RootNavigator.popToDesignatedPage(this.props.navigator, gRouteName.RootPagesContainer);
 
                                             InteractionManager.runAfterInteractions(() => {
                                                 //实现 nav pop  完成后才回调 log 语句
