@@ -1,4 +1,5 @@
 /**
+ * GlobalConst.js
  * 项目 里全局常量和 全局变量,此文件
  * @type {boolean}
  */
@@ -7,6 +8,7 @@ import {
 } from 'react-native'
 
 export const AppName = 'Ebates 中国'; // 调试模式
+export const Version='1.0';//版本号
 
 export const routeName={
     RootPagesContainer:'RootPagesContainer',

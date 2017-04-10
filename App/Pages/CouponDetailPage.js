@@ -702,6 +702,16 @@ export class CouponDetailPage extends Component {
                                                 name: gRouteName.SearchPage,
                                                 isInTwoLevelPage: true,
                                             });
+                                        }else if(rowData.id==3){
+                                            //pop 到 一级页面的 跟组件
+                                            RootNavigator.popToDesignatedPage(this.props.navigator,gRouteName.RootPagesContainer);
+
+                                            InteractionManager.runAfterInteractions(() => {
+                                                //实现 nav pop  完成后才回调 log 语句
+
+                                                //主动切换 一级页面 跟组件的 tabbar
+                                                dispatch(switchBottomTabAction(AllPageContainers.AllContainers.PersonalPageContainer.tabBarName))
+                                            })
                                         }
                                     }}
                                 >

@@ -23,6 +23,7 @@ import *as AllCouponPageApi from './AllCouponPageApi'
 import *as CouponDetailPageApi from './CouponDetailPageApi'
 import *as PersonalPageApi from './PersonalPageApi'
 import *as SettingPageApi from './SettingPageApi'
+import *as AboutEbatesCnPageApi from './AboutEbatesCnPageApi'
 
 /**
  * 列表类型 接口 都会返回的 通用的 可判断 couldLoadMore 的 数据结构
@@ -2566,7 +2567,7 @@ export function fetchApi(opt, pageNo, BaseListCompProps) {
         }
             break;
         case AllCouponPageApi.AllCouponPageListApi.ApiName: {
-            return AllCouponPageApi.AllCouponPageListApi.SearchCoupon(opt,BaseListCompProps);
+            return AllCouponPageApi.AllCouponPageListApi.SearchCoupon(opt, BaseListCompProps);
 
         }
             break;
@@ -2575,20 +2576,21 @@ export function fetchApi(opt, pageNo, BaseListCompProps) {
 
         }
             break;
-        case CouponDetailPageApi.CouponDetailPageApi.ApiName:
-        {
-            return CouponDetailPageApi.CouponDetailPageApi.fetchPageList(opt,BaseListCompProps);
-        }
-        break;
-        case PersonalPageApi.PersonalPageApi.ApiName:
-        {
-            return PersonalPageApi.PersonalPageApi.fetchPageList(opt,BaseListCompProps);
+        case CouponDetailPageApi.CouponDetailPageApi.ApiName: {
+            return CouponDetailPageApi.CouponDetailPageApi.fetchPageList(opt, BaseListCompProps);
         }
             break;
-        case SettingPageApi.SettingPageApi.ApiName:
-        {
-            return SettingPageApi.SettingPageApi.fetchPageList(opt,BaseListCompProps);
+        case PersonalPageApi.PersonalPageApi.ApiName: {
+            return PersonalPageApi.PersonalPageApi.fetchPageList(opt, BaseListCompProps);
         }
-        break;
+            break;
+        case SettingPageApi.SettingPageApi.ApiName: {
+            return SettingPageApi.SettingPageApi.fetchPageList(opt, BaseListCompProps);
+        }
+            break;
+        case AboutEbatesCnPageApi.AboutEbatesCnPageApi.ApiName: {
+            return AboutEbatesCnPageApi.AboutEbatesCnPageApi.fetchPageList(opt, BaseListCompProps);
+        }
+            break;
     }
 }
